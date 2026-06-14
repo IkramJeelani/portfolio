@@ -34,10 +34,10 @@
   let index = 0;
 
   function update() {
-    // Slide the track so the active card is in view.
+    // Slide the track so the active card is centered (neighbors peek on each side).
     const card = cards[index];
     if (!card) return;
-    const offset = card.offsetLeft - track.offsetLeft;
+    const offset = card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2;
     track.scrollTo({ left: offset, behavior: "smooth" });
     dots.forEach((d, i) => d.classList.toggle("active", i === index));
   }
