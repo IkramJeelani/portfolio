@@ -9,7 +9,7 @@
   const svg =
     "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>" +
     "<rect width='64' height='64' rx='14' fill='#0d1117'/>" +
-    "<text x='32' y='43' font-family='Segoe UI, Arial, sans-serif' font-size='" +
+    "<text x='32' y='40' font-family='Segoe UI, Arial, sans-serif' font-size='" +
     fontSize +
     "' font-weight='800' fill='#4f8cff' text-anchor='middle'>" +
     initials +
