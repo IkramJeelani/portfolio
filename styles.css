@@ -183,7 +183,7 @@ a { color: inherit; text-decoration: none; }
 .carousel.static::before,
 .carousel.static::after,
 .carousel.static .carousel-btn { display: none; }
-.carousel.static .card { flex: 0 0 340px; max-width: 90%; }
+.carousel.static .card { flex: 0 1 460px; max-width: 90%; }
 
 /* ===== Card ===== */
 .card {

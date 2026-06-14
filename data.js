@@ -6,7 +6,7 @@
 /* ---------- 1. YOU ---------- */
 const PROFILE = {
   name: "Ikram Jeelani",
-  initials: "SIJ", // shown top-left AND as the browser-tab icon (kept in sync)
+  initials: "IJ", // shown top-left AND as the browser-tab icon (kept in sync)
   role: "Engineering Portfolio",
   bio:
     "Engineer building thoughtful hardware & software. Below are a few projects " +
