@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ikram Jeelani — Engineering Portfolio</title>
+  <meta name="description" content="Engineering portfolio of Ikram Jeelani — projects, skills, and contact." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ===== Navigation ===== -->
+  <header class="site-header">
+    <a href="#home" class="brand">IJ</a>
+    <nav>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- ===== Hero / Name ===== -->
+  <section id="home" class="hero">
+    <p class="eyebrow">Engineering Portfolio</p>
+    <h1>Ikram Jeelani</h1>
+    <p class="subtitle">
+      Engineer building thoughtful hardware &amp; software. Below are a few projects
+      I'm proud of — click any card to dive deeper.
+    </p>
+    <a href="#projects" class="btn btn-primary">View my work</a>
+  </section>
+
+  <!-- ===== Projects carousel ===== -->
+  <section id="projects" class="projects">
+    <h2 class="section-title">Projects</h2>
+
+    <div class="carousel">
+      <button class="carousel-btn prev" id="prevBtn" aria-label="Previous project">&#8249;</button>
+
+      <!-- Cards get injected here by main.js -->
+      <div class="carousel-track" id="carouselTrack"></div>
+
+      <button class="carousel-btn next" id="nextBtn" aria-label="Next project">&#8250;</button>
+    </div>
+
+    <!-- Dots indicator -->
+    <div class="carousel-dots" id="carouselDots"></div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section id="contact" class="contact">
+    <h2 class="section-title">Contact</h2>
+    <p>Interested in working together or want to know more? Get in touch.</p>
+    <div class="contact-links">
+      <a class="btn" href="mailto:ikram.jeelani05@hotmail.com">Email</a>
+      <a class="btn" href="https://github.com/your-username" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> Ikram Jeelani. Built with HTML, CSS &amp; JavaScript.</p>
+  </footer>
+
+  <script src="projects.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
