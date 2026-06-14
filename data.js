@@ -183,7 +183,7 @@ const PROJECTS = [
 const CONTACTS = [
   { label: "Email", url: "mailto:ikram.jeelani05@hotmail.com" },
   { label: "GitHub", url: "https://github.com/IkramJeelani" },
-  { label: "LinkedIn", url: "https://www.linkedin.com/in/your-handle" },
+  { label: "LinkedIn", url: "https://www.linkedin.com/in/ikramjeelani/" },
 ];
 
 /* ---- (no need to edit below this line) ---- */
