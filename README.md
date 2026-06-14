@@ -7,23 +7,30 @@ step required, so it deploys to GitHub Pages instantly.
 
 | File | What it does |
 |------|--------------|
+| **`data.js`** | **Everything you edit:** your name/initials, projects, and contacts |
 | `index.html` | Home page: name/hero, project carousel, contact |
 | `project.html` | Reusable detail page (loads a project via `?id=` in the URL) |
-| `projects.js` | **Your project data** — edit this to add/change projects |
-| `main.js` | Builds the cards and runs the carousel (next/prev, dots, swipe) |
+| `branding.js` | Keeps the top-left logo and the browser-tab icon in sync from your initials |
+| `main.js` | Builds the cards + runs the infinite carousel (next/prev, dots, swipe) |
 | `project.js` | Renders the detail page for the selected project |
 | `styles.css` | All styling (responsive, dark theme) |
 | `assets/` | Project images |
 
-## Customize it
+## Customize it — just edit `data.js`
 
-1. **Your name / bio / contact** — edit the text in `index.html` (hero and contact
-   sections) and the email/GitHub/LinkedIn links.
-2. **Projects** — open `projects.js` and edit the `PROJECTS` array. Copy a `{ ... }`
-   block to add a new one. Each project needs a unique `id`.
-3. **Images** — drop your own pictures into `assets/` (e.g. `project1.jpg`) and update
-   the `image:` field in `projects.js`.
-4. **Colors** — tweak the variables at the top of `styles.css` (`:root { ... }`).
+Open **`data.js`**. Everything lives there:
+
+1. **You** — set `name`, `initials` (shown top-left *and* as the tab icon, automatically
+   matched), `role`, and `bio`.
+2. **Projects** — in the `PROJECTS` array, copy a `{ ... }` block to add one, or delete a
+   block to remove one. Each project needs a unique `id`.
+   - 3+ projects → looping carousel (one card centered, neighbors peeking).
+   - 1–2 projects → shown side by side with no navigation.
+3. **Contacts** — in the `CONTACTS` array, add/remove `{ label, url }` lines. Use a
+   `mailto:` URL for email; `https://` links open in a new tab.
+4. **Images** — drop pictures into `assets/` (e.g. `project1.jpg`) and point the `image:`
+   field at them.
+5. **Colors** — tweak the variables at the top of `styles.css` (`:root { ... }`).
 
 ## Preview locally
 
