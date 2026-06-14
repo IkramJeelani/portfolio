@@ -13,12 +13,57 @@ const PROFILE = {
     "I'm proud of — click any card to dive deeper.",
 };
 
-/* ---------- 2. PROJECTS ----------
-   ADD a project:    copy a { ... } block and edit it.
+/* ============================================================================
+   2. PROJECTS
+
+   Each project has two parts:
+   • CARD/HEADER fields:  id, title, image, tagline, tech, links
+   • body:  the free-form "in-depth" content shown on the project page.
+            Write whatever you want here using the building blocks below.
+
+   --- BODY BUILDING BLOCKS (copy/paste these into a project's `body`) ---------
+   Text:
+     <h2>Section heading</h2>
+     <h3>Smaller heading</h3>
+     <p>A paragraph. Use <strong>bold</strong>, <em>italic</em>,
+        a <a href="https://...">link</a>, or <code>inline code</code>.</p>
+     <ul><li>Bullet point</li><li>Another</li></ul>
+     <ol><li>First step</li><li>Second step</li></ol>
+     <blockquote>A pulled-out quote or key takeaway.</blockquote>
+     <div class="callout">A highlighted note / tip box.</div>
+
+   Images (put image files in the assets/ folder):
+     <img src="assets/my-photo.jpg" alt="What it shows">          (normal, centered)
+     <img class="full" src="assets/my-photo.jpg" alt="...">       (edge-to-edge)
+     <figure>
+       <img src="assets/my-photo.jpg" alt="...">
+       <figcaption>A caption under the image.</figcaption>
+     </figure>
+     <div class="gallery">                                         (grid of images)
+       <img src="assets/a.jpg" alt=""><img src="assets/b.jpg" alt="">
+     </div>
+
+   Video (YouTube/Vimeo embed — use the "embed" URL):
+     <div class="video">
+       <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+     </div>
+   Or a local video file:
+     <video class="full" controls src="assets/demo.mp4"></video>
+
+   Side-by-side blocks:
+     <div class="two-col">
+       <div><h3>Left</h3><p>...</p></div>
+       <div><h3>Right</h3><p>...</p></div>
+     </div>
+
+   TIP: write the body between the backticks ` ... `. Just avoid typing a lone
+   backtick (`) or the characters ${ inside it, since those have special meaning.
+   ----------------------------------------------------------------------------
+
+   ADD a project:    copy a whole { ... } block and edit it.
    REMOVE a project:  delete its { ... } block.
    Each project needs a unique `id` (used in the URL, no spaces).
-   With 3+ projects you get the looping carousel; with 1–2 they
-   simply show side by side.                                       */
+   ============================================================================ */
 const PROJECTS = [
   {
     id: "smart-thermostat",
@@ -26,16 +71,54 @@ const PROJECTS = [
     image: "assets/project1.svg",
     tagline: "Embedded firmware for an energy-aware HVAC system",
     tech: ["C", "STM32", "FreeRTOS", "PID Control"],
-    overview:
-      "A low-power thermostat that learns occupancy patterns and reduces energy use by up to 20%.",
-    details: [
-      "Designed and built the firmware for a connected thermostat running on an STM32 microcontroller with FreeRTOS.",
-      "Implemented a PID control loop for precise temperature regulation and a scheduling engine that adapts to household routines.",
-      "Added a Wi-Fi module for remote control and over-the-air firmware updates, with a focus on minimizing standby power draw.",
-    ],
     links: [
-      { label: "View Code", url: "https://github.com/your-username/smart-thermostat" },
+      { label: "View Code", url: "https://github.com/IkramJeelani/smart-thermostat" },
     ],
+    // ↓↓↓ This is your free-form "Notion-like" page. Edit it however you like. ↓↓↓
+    body: `
+      <p>A low-power thermostat that learns occupancy patterns and reduces energy
+      use by up to <strong>20%</strong>. This page shows the building blocks you can
+      use — replace it all with your own content.</p>
+
+      <div class="callout">
+        Tip: drop your real photos into the <code>assets/</code> folder and point the
+        <code>src</code> at them, e.g. <code>assets/thermostat.jpg</code>.
+      </div>
+
+      <h2>The hardware</h2>
+      <figure>
+        <img src="assets/project1.svg" alt="Thermostat prototype">
+        <figcaption>Replace this with a photo of your build.</figcaption>
+      </figure>
+
+      <h2>How it works</h2>
+      <p>Designed the firmware on an STM32 microcontroller running FreeRTOS, with a
+      PID control loop for precise temperature regulation.</p>
+      <ul>
+        <li>Scheduling engine that adapts to household routines</li>
+        <li>Wi-Fi module for remote control and OTA firmware updates</li>
+        <li>Aggressive low-power modes to minimise standby draw</li>
+      </ul>
+
+      <h2>Demo</h2>
+      <div class="video">
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Demo" allowfullscreen></iframe>
+      </div>
+
+      <h2>Results</h2>
+      <div class="two-col">
+        <div>
+          <h3>Before</h3>
+          <p>Manual schedule, ~15% wasted heating overnight.</p>
+        </div>
+        <div>
+          <h3>After</h3>
+          <p>Learned schedule cut overnight waste to near zero.</p>
+        </div>
+      </div>
+
+      <blockquote>"The best project teaches you something you didn't expect." — me, probably.</blockquote>
+    `,
   },
   {
     id: "bridge-sensor-net",
@@ -43,17 +126,27 @@ const PROJECTS = [
     image: "assets/project2.svg",
     tagline: "Wireless strain monitoring for civil infrastructure",
     tech: ["Python", "LoRa", "Raspberry Pi", "InfluxDB", "Grafana"],
-    overview:
-      "A distributed sensor network that monitors structural strain on bridges and flags anomalies in real time.",
-    details: [
-      "Deployed a mesh of LoRa-connected strain-gauge nodes feeding data to a Raspberry Pi gateway.",
-      "Built a Python ingestion pipeline storing time-series data in InfluxDB and visualized live readings in Grafana.",
-      "Implemented threshold-based alerting so maintenance teams are notified the moment readings exceed safe limits.",
-    ],
     links: [
-      { label: "View Code", url: "https://github.com/your-username/bridge-sensor-net" },
+      { label: "View Code", url: "https://github.com/IkramJeelani/bridge-sensor-net" },
       { label: "Live Demo", url: "#" },
     ],
+    body: `
+      <p>A distributed sensor network that monitors structural strain on bridges and
+      flags anomalies in real time.</p>
+
+      <h2>Architecture</h2>
+      <ul>
+        <li>Mesh of LoRa-connected strain-gauge nodes</li>
+        <li>Raspberry Pi gateway running a Python ingestion pipeline</li>
+        <li>Time-series storage in InfluxDB, live dashboards in Grafana</li>
+      </ul>
+
+      <img src="assets/project2.svg" alt="System diagram">
+
+      <h2>Alerting</h2>
+      <p>Threshold-based alerts notify maintenance teams the moment readings exceed
+      safe limits.</p>
+    `,
   },
   {
     id: "robotic-arm",
@@ -61,16 +154,25 @@ const PROJECTS = [
     image: "assets/project3.svg",
     tagline: "Inverse kinematics and motion planning from scratch",
     tech: ["C++", "ROS", "OpenCV", "Arduino"],
-    overview:
-      "A six-degree-of-freedom robotic arm capable of picking and placing objects identified by a camera.",
-    details: [
-      "Built the full motion-planning stack including an inverse-kinematics solver written in C++.",
-      "Integrated computer vision with OpenCV to detect and locate target objects on a work surface.",
-      "Used ROS to coordinate perception, planning, and the Arduino-based motor control layer.",
-    ],
     links: [
-      { label: "View Code", url: "https://github.com/your-username/robotic-arm" },
+      { label: "View Code", url: "https://github.com/IkramJeelani/robotic-arm" },
     ],
+    body: `
+      <p>A six-degree-of-freedom robotic arm capable of picking and placing objects
+      identified by a camera.</p>
+
+      <h2>What I built</h2>
+      <ul>
+        <li>Inverse-kinematics solver written in C++</li>
+        <li>Computer vision with OpenCV to detect and locate objects</li>
+        <li>ROS coordinating perception, planning, and Arduino motor control</li>
+      </ul>
+
+      <div class="gallery">
+        <img src="assets/project3.svg" alt="">
+        <img src="assets/project1.svg" alt="">
+      </div>
+    `,
   },
 ];
 
@@ -80,7 +182,7 @@ const PROJECTS = [
    Use a "mailto:" url for email; https links open in a new tab.   */
 const CONTACTS = [
   { label: "Email", url: "mailto:ikram.jeelani05@hotmail.com" },
-  { label: "GitHub", url: "https://github.com/your-username" },
+  { label: "GitHub", url: "https://github.com/IkramJeelani" },
   { label: "LinkedIn", url: "https://www.linkedin.com/in/your-handle" },
 ];
 

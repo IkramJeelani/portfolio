@@ -26,6 +26,11 @@ Open **`data.js`**. Everything lives there:
    block to remove one. Each project needs a unique `id`.
    - 3+ projects → looping carousel (one card centered, neighbors peeking).
    - 1–2 projects → shown side by side with no navigation.
+   - **The detail page is free-form:** each project's `body` field is your own
+     mini-page. Add headings, images, full-width images, captions, image galleries,
+     video embeds, callouts, quotes, two-column layouts, etc. The full list of
+     ready-made building blocks (with copy-paste snippets) is in the big comment
+     above the `PROJECTS` array in `data.js`.
 3. **Contacts** — in the `CONTACTS` array, add/remove `{ label, url }` lines. Use a
    `mailto:` URL for email; `https://` links open in a new tab.
 4. **Images** — drop pictures into `assets/` (e.g. `project1.jpg`) and point the `image:`
