@@ -209,19 +209,13 @@
     const cards = Array.from(sec.querySelectorAll(".cert-card"));
     if (cards.length < 2) return;
 
-    const names = cards.map((c) => c.querySelector(".cert-name")).filter(Boolean);
+    // Equalize card height; meta + "View Credential" are bottom-anchored via CSS,
+    // so they end up at the same position on every card.
     function equalize() {
-      // Reset
       cards.forEach((c) => (c.style.minHeight = ""));
-      names.forEach((n) => (n.style.minHeight = ""));
-      // 1) Equalize the name block so issuer·date starts at the same spot.
-      let maxName = 0;
-      names.forEach((n) => (maxName = Math.max(maxName, n.offsetHeight)));
-      names.forEach((n) => (n.style.minHeight = maxName + "px"));
-      // 2) Equalize the whole card so "View Credential" lines up at the bottom.
-      let maxCard = 0;
-      cards.forEach((c) => (maxCard = Math.max(maxCard, c.offsetHeight)));
-      cards.forEach((c) => (c.style.minHeight = maxCard + "px"));
+      let max = 0;
+      cards.forEach((c) => (max = Math.max(max, c.offsetHeight)));
+      cards.forEach((c) => (c.style.minHeight = max + "px"));
     }
     equalize();
     window.addEventListener("resize", equalize);
