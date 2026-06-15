@@ -31,11 +31,14 @@ Open **`data.js`**. Everything lives there:
      video embeds, callouts, quotes, two-column layouts, etc. The full list of
      ready-made building blocks (with copy-paste snippets) is in the big comment
      above the `PROJECTS` array in `data.js`.
-3. **Contacts** — in the `CONTACTS` array, add/remove `{ label, url }` lines. Use a
+3. **About / Experience / Skills / Certifications** — each has its own clearly-labelled
+   block in `data.js` (`ABOUT`, `EXPERIENCE`, `SKILLS`, `CERTIFICATIONS`). Edit the text
+   or copy/delete entries to add or remove items.
+4. **Contacts** — in the `CONTACTS` array, add/remove `{ label, url }` lines. Use a
    `mailto:` URL for email; `https://` links open in a new tab.
-4. **Images** — drop pictures into `assets/` (e.g. `project1.jpg`) and point the `image:`
+5. **Images** — drop pictures into `assets/` (e.g. `project1.jpg`) and point the `image:`
    field at them.
-5. **Colors** — tweak the variables at the top of `styles.css` (`:root { ... }`).
+6. **Colors** — tweak the variables at the top of `styles.css` (`:root { ... }`).
 
 ## Preview locally
 

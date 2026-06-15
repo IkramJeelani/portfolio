@@ -18,6 +18,61 @@
     });
   }
 
+  /* ---------- About ---------- */
+  const aboutEl = document.getElementById("aboutText");
+  if (aboutEl && window.ABOUT) aboutEl.innerHTML = window.ABOUT;
+
+  /* ---------- Experience ---------- */
+  const expWrap = document.getElementById("experienceList");
+  if (expWrap) {
+    (window.EXPERIENCE || []).forEach((e) => {
+      const item = document.createElement("div");
+      item.className = "exp-item";
+      const points = (e.points || []).map((p) => `<li>${p}</li>`).join("");
+      item.innerHTML = `
+        <div class="exp-head">
+          <span class="exp-role">${e.role || ""}${
+        e.company ? ` &middot; <span class="exp-company">${e.company}</span>` : ""
+      }</span>
+          <span class="exp-date">${e.date || ""}</span>
+        </div>
+        ${points ? `<ul class="exp-points">${points}</ul>` : ""}`;
+      expWrap.appendChild(item);
+    });
+  }
+
+  /* ---------- Skills ---------- */
+  const skillsWrap = document.getElementById("skillsList");
+  if (skillsWrap) {
+    (window.SKILLS || []).forEach((g) => {
+      const group = document.createElement("div");
+      group.className = "skill-group";
+      const tags = (g.items || []).map((i) => `<span class="tag">${i}</span>`).join("");
+      group.innerHTML = `<h3 class="skill-category">${g.category}</h3><div class="tags">${tags}</div>`;
+      skillsWrap.appendChild(group);
+    });
+  }
+
+  /* ---------- Certifications ---------- */
+  const certWrap = document.getElementById("certList");
+  if (certWrap) {
+    (window.CERTIFICATIONS || []).forEach((c) => {
+      const item = document.createElement("div");
+      item.className = "cert-item";
+      const meta = [c.issuer, c.date].filter(Boolean).join(" · ");
+      const link = c.url
+        ? `<a class="cert-link" href="${c.url}" target="_blank" rel="noopener">View &rarr;</a>`
+        : "";
+      item.innerHTML = `
+        <div class="cert-main">
+          <span class="cert-name">${c.name || ""}</span>
+          <span class="cert-meta">${meta}</span>
+        </div>
+        ${link}`;
+      certWrap.appendChild(item);
+    });
+  }
+
   /* ---------- Projects carousel ---------- */
   const carousel = document.getElementById("carousel");
   const viewport = carousel.querySelector(".carousel-viewport");

@@ -13,8 +13,55 @@ const PROFILE = {
     "I'm proud of — click any card to dive deeper.",
 };
 
+/* ---------- 2. ABOUT ----------
+   A short intro paragraph shown near the top. Plain text (you may use simple
+   HTML like <strong>…</strong> if you want). */
+const ABOUT =
+  "I'm an engineer who enjoys taking ideas from a schematic all the way to working " +
+  "hardware. I care about clean, reliable systems and understanding the 'why' behind " +
+  "every design decision.";
+
+/* ---------- 3. EXPERIENCE ----------
+   ADD/REMOVE a role by copying or deleting a { ... } block.
+   `points` is optional — leave it as [] for none. */
+const EXPERIENCE = [
+  {
+    role: "Engineering Intern",
+    company: "Acme Robotics",
+    date: "Summer 2024",
+    points: [
+      "Built automated test fixtures that cut QA time by ~30%.",
+      "Wrote firmware for a sensor-calibration rig used across the team.",
+    ],
+  },
+  {
+    role: "Undergraduate Researcher",
+    company: "University Lab",
+    date: "2023 - 2024",
+    points: [
+      "Investigated low-power wireless protocols for distributed sensor networks.",
+    ],
+  },
+];
+
+/* ---------- 4. SKILLS ----------
+   Each group is a category with a list of items (shown as tags).
+   ADD/REMOVE a category or an item by editing the arrays. */
+const SKILLS = [
+  { category: "Languages", items: ["C", "C++", "Python", "JavaScript"] },
+  { category: "Tools & Frameworks", items: ["ROS", "FreeRTOS", "Git", "Grafana"] },
+  { category: "Hardware", items: ["STM32", "Arduino", "Raspberry Pi", "PCB Design"] },
+];
+
+/* ---------- 5. CERTIFICATIONS ----------
+   `url` is optional — set it to "" for no link. */
+const CERTIFICATIONS = [
+  { name: "Certified LabVIEW Associate Developer", issuer: "NI", date: "2024", url: "" },
+  { name: "AWS Certified Cloud Practitioner", issuer: "Amazon", date: "2023", url: "" },
+];
+
 /* ============================================================================
-   2. PROJECTS
+   6. PROJECTS
 
    Each project has two parts:
    • CARD/HEADER fields:  id, title, image, date, tagline, tech, links
@@ -180,7 +227,7 @@ const PROJECTS = [
   },
 ];
 
-/* ---------- 3. CONTACTS ----------
+/* ---------- 7. CONTACTS ----------
    ADD a contact:    copy a { ... } line and edit it.
    REMOVE a contact:  delete its line.
    Use a "mailto:" url for email; https links open in a new tab.   */
@@ -192,5 +239,9 @@ const CONTACTS = [
 
 /* ---- (no need to edit below this line) ---- */
 window.PROFILE = PROFILE;
+window.ABOUT = ABOUT;
+window.EXPERIENCE = EXPERIENCE;
+window.SKILLS = SKILLS;
+window.CERTIFICATIONS = CERTIFICATIONS;
 window.PROJECTS = PROJECTS;
 window.CONTACTS = CONTACTS;
