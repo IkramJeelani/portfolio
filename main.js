@@ -85,16 +85,18 @@
     if (!list.length) return null;
     const cards = list
       .map((c, i) => {
-        // Same card as the projects, with certification fields.
         const delay = `--reveal-delay:${i * 70}ms`;
+        const meta = [c.issuer, c.date].filter(Boolean).join(" · ");
+        const logo = c.logo
+          ? `<img class="cert-logo" src="${c.logo}" alt="${c.issuer || c.name || "logo"}">`
+          : "";
         const inner = `
-          <div class="cert-card-img" style="background-image:url('${c.image || ""}')"></div>
-          <div class="card-body">
-            <h3 class="card-title">${c.name || ""}</h3>
-            ${c.date ? `<p class="card-date">${c.date}</p>` : ""}
-            ${c.issuer ? `<p class="card-tagline">${c.issuer}</p>` : ""}
-            ${c.url ? `<span class="card-cta">View Credential &rarr;</span>` : ""}
-          </div>`;
+          <div class="cert-text">
+            <span class="cert-name">${c.name || ""}</span>
+            ${meta ? `<span class="cert-meta">${meta}</span>` : ""}
+            ${c.url ? `<span class="cert-cta">View Credential &rarr;</span>` : ""}
+          </div>
+          ${logo}`;
         return c.url
           ? `<a class="cert-card reveal" style="${delay}" href="${c.url}" target="_blank" rel="noopener">${inner}</a>`
           : `<div class="cert-card reveal" style="${delay}">${inner}</div>`;

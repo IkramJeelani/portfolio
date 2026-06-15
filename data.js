@@ -80,24 +80,23 @@ const SKILLS = [
 ];
 
 /* ---------- 5. CERTIFICATIONS ----------
-   Shown as a responsive card grid (same card style as projects).
-   `image` (optional): a logo OR a picture of the certificate, shown at the top of
-       the card. Put the file in assets/ and reference it, e.g. "assets/aws-logo.png".
-       Leave it as "" for no image.
-   `url`   (optional): link to the credential ("View Credential" button). "" = none. */
+   Shown as a responsive card grid.
+   `logo` (optional): an issuer/company logo shown on the card (no certificate scan
+       is displayed). Put the file in assets/, e.g. "assets/siemens.png". "" = none.
+   `url`  (optional): link to the credential ("View Credential"). "" = none. */
 const CERTIFICATIONS = [
   {
     name: "Siemens Mechatronic Systems Certification Program (SMSCP) Assistant",
     issuer: "Siemens",
     date: "Sep 2024",
-    image: "assets/SMSCP-Assistant.pdf", // e.g. "assets/labview.png"
+    logo: "", // e.g. "assets/siemens.png"
     url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/SMSCP-Assistant.pdf",
   },
   {
     name: "AWS Certified Cloud Practitioner",
     issuer: "Amazon",
     date: "2023",
-    image: "", // e.g. "assets/aws.png"
+    logo: "", // e.g. "assets/aws.png"
     url: "",
   },
 ];
