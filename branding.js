@@ -8,10 +8,10 @@
   const fontSize = initials.length > 2 ? 22 : 32;
   const svg =
     "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>" +
-    "<rect width='64' height='64' rx='14' fill='#0d1117'/>" +
+    "<rect width='64' height='64' rx='14' fill='#0b0a12'/>" +
     "<text x='32' y='40' font-family='Segoe UI, Arial, sans-serif' font-size='" +
     fontSize +
-    "' font-weight='800' fill='#4f8cff' text-anchor='middle'>" +
+    "' font-weight='800' fill='#a855f7' text-anchor='middle'>" +
     initials +
     "</text></svg>";
 

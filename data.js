@@ -276,6 +276,7 @@ const PROJECTS = [
       </div>
     `,
   },
+  
 ];
 
 /* ---------- 7. CONTACTS ----------
