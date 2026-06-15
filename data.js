@@ -88,15 +88,15 @@ const CERTIFICATIONS = [
   {
     name: "Siemens Mechatronic Systems Certification Program (SMSCP) Assistant",
     issuer: "Siemens",
-    date: "Sep 2024",
-    logo: "assets/siemens_logo.jpg", // e.g. "assets/siemens.png"
+    date: "Nov 2025",
+    logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/siemens.png"
     url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/SMSCP-Assistant.pdf",
   },
   {
-    name: "AWS Certified Cloud Practitioner",
-    issuer: "Amazon",
+    name: "Altium Education - PCB Basic Design Course",
+    issuer: "Altium",
     date: "2023",
-    logo: "", // e.g. "assets/aws.png"
+    logo: "assets/Logos/altium_logo.jpg", // e.g. "assets/aws.png"
     url: "",
   },
 ];
