@@ -89,7 +89,7 @@ const CERTIFICATIONS = [
     name: "Siemens Mechatronic Systems Certification Program (SMSCP) Assistant",
     issuer: "Siemens",
     date: "Sep 2024",
-    logo: "", // e.g. "assets/siemens.png"
+    logo: "assets/siemens_logo.jpg", // e.g. "assets/siemens.png"
     url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/SMSCP-Assistant.pdf",
   },
   {
@@ -111,7 +111,7 @@ const EDUCATION = [
     degree: "B.Eng. in Electrical Engineering",
     date: "2021 - 2025",
     details: "Focus on embedded systems and control. Dean's List.",
-    logo: "", // e.g. "assets/university.png"
+    logo: "assets/siemens_logo.jpg", // e.g. "assets/university.png"
   },
 ];
 

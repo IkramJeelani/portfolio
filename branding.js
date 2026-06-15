@@ -50,8 +50,18 @@
   // Cursor spotlight that follows the mouse across the nav bar.
   const header = document.querySelector(".site-header");
   if (header) {
-    // Fade in a subtle frosted background once the page is scrolled.
-    const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 8);
+    // Frost the nav only WHILE scrolling; relax back to transparent once you stop.
+    let scrollIdle;
+    const onScroll = () => {
+      if (window.scrollY > 8) {
+        header.classList.add("scrolled");
+        clearTimeout(scrollIdle);
+        scrollIdle = setTimeout(() => header.classList.remove("scrolled"), 450);
+      } else {
+        clearTimeout(scrollIdle);
+        header.classList.remove("scrolled");
+      }
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
