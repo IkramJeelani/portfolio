@@ -127,7 +127,8 @@ const CERTIFICATIONS = [
    `location` + `date` shown together under the school, e.g. "Surrey, BC · 2021 - 2025"
    `degree`            normal lead-in text, e.g. "Bachelor of Engineering (Honours) in"
    `major`             the field of study — shown with a glowing gradient effect
-   `details`, `logo`   optional. */
+   `details`           optional list of bullet points (one string per point)
+   `logo`              optional university logo. */
 const EDUCATION = [
   {
     school: "University of Wollongong in Dubai",
@@ -135,7 +136,10 @@ const EDUCATION = [
     date: "2026 - 2027",
     degree: "Bachelor of Engineering (Honours) in",
     major: "Mechatronics Engineering",
-    details: "Focus on embedded systems and control. Dean's List.",
+    details: [
+      "Focus on embedded systems and control.",
+      "Dean's List.",
+    ],
     logo: "assets/Logos/university_of_wollongong_in_dubai_logo.jpg",
   },
   {
@@ -144,7 +148,10 @@ const EDUCATION = [
     date: "2024 - 2025",
     degree: "Bachelor of Applied Science (Honours) in",
     major: "Mechatronic Systems Engineering",
-    details: "Focus on embedded systems and control. Dean's List.",
+    details: [
+      "Focus on embedded systems and control.",
+      "Dean's List.",
+    ],
     logo: "assets/Logos/simon_fraser_university_logo.jpg",
   },
 ];

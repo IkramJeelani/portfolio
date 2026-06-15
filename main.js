@@ -119,13 +119,20 @@
         const major = e.major ? ` <span class="edu-major">${e.major}</span>` : "";
         const degreeLine =
           e.degree || e.major ? `<div class="edu-degree">${e.degree || ""}${major}</div>` : "";
+        let details = "";
+        if (Array.isArray(e.details)) {
+          const items = e.details.filter(Boolean).map((d) => `<li>${d}</li>`).join("");
+          if (items) details = `<ul class="edu-points">${items}</ul>`;
+        } else if (e.details) {
+          details = `<p class="edu-details">${e.details}</p>`;
+        }
         return `
           <div class="edu-item reveal">
             <div class="edu-text">
               <div class="edu-school">${e.school || ""}</div>
-              ${meta ? `<div class="edu-meta">${meta}</div>` : ""}
               ${degreeLine}
-              ${e.details ? `<p class="edu-details">${e.details}</p>` : ""}
+              ${meta ? `<div class="edu-meta">${meta}</div>` : ""}
+              ${details}
             </div>
             ${logo}
           </div>`;
