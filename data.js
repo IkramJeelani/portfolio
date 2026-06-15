@@ -96,8 +96,29 @@ const CERTIFICATIONS = [
     name: "Altium Education - PCB Basic Design Course",
     issuer: "Altium",
     date: "2023",
-    logo: "assets/Logos/altium_logo.jpg", // e.g. "assets/aws.png"
-    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/Altuim.pdf",
+    logo: "assets/Logos/altium_logo.jpg", 
+    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/Altium%20Education%20-%20PCB%20Basic%20Design%20Course.pdf",
+  },
+  {
+    name: "SOLIDWORKS Design Associate",
+    issuer: "Dassault Systèmes",
+    date: "2026",
+    logo: "assets/Logos/Dassault_Systèmes_logo.jpg", 
+    url: "",
+  },
+  {
+    name: "SOLIDWORKS Design Professional",
+    issuer: "Dassault Systèmes",
+    date: "2026",
+    logo: "assets/Logos/Dassault_Systèmes_logo.jpg", 
+    url: "",
+  },
+  {
+    name: "SOLIDWORKS Additive Manufacturing Associate",
+    issuer: "Dassault Systèmes",
+    date: "2026",
+    logo: "assets/Logos/Dassault_Systèmes_logo.jpg", 
+    url: "",
   },
 ];
 
