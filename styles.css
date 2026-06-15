@@ -29,7 +29,6 @@
   --grad: linear-gradient(120deg, #7c3aed, #db2777);
   --shadow: 0 14px 40px rgba(91, 33, 182, 0.12);
 }
-:root[data-theme="light"] .site-header.scrolled { background: rgba(244, 243, 251, 0.6); }
 :root[data-theme="light"] .hero h1 {
   background: linear-gradient(120deg, #1b1830 10%, #7c3aed 55%, #db2777);
   -webkit-background-clip: text;
@@ -101,14 +100,7 @@ h1, h2, h3,
   align-items: center;
   gap: 0.5rem 1rem;
   padding: 1rem 1.5rem;
-  background: transparent; /* seamless with the body */
-  transition: background 0.3s ease, backdrop-filter 0.3s ease;
-}
-/* Subtle frosted background fades in only once you scroll (keeps links legible) */
-.site-header.scrolled {
-  background: rgba(11, 10, 18, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: transparent; /* seamless with the body, always */
 }
 /* Cursor spotlight that follows the mouse across the nav */
 .site-header::before {
