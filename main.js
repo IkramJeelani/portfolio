@@ -70,22 +70,32 @@
   function buildCertifications() {
     const list = window.CERTIFICATIONS || [];
     if (!list.length) return null;
-    const items = list
+    const slides = list
       .map((c) => {
         const meta = [c.issuer, c.date].filter(Boolean).join(" · ");
         const link = c.url
           ? `<a class="cert-link" href="${c.url}" target="_blank" rel="noopener">View &rarr;</a>`
           : "";
         return `
-          <div class="cert-item reveal">
-            <div class="cert-main">
-              <span class="cert-name">${c.name || ""}</span>
-              <span class="cert-meta">${meta}</span>
+          <div class="cert-slide">
+            <div class="cert-item">
+              <div class="cert-main">
+                <span class="cert-name">${c.name || ""}</span>
+                <span class="cert-meta">${meta}</span>
+              </div>
+              ${link}
             </div>
-            ${link}</div>`;
+          </div>`;
       })
       .join("");
-    return { title: "Certifications", cls: "certifications", html: `<div class="cert-list">${items}</div>` };
+    const html = `
+      <div class="cert-slider reveal" id="certSlider">
+        <button class="carousel-btn prev" id="certPrev" aria-label="Previous certification">&#8249;</button>
+        <div class="cert-stack" id="certStack">${slides}</div>
+        <button class="carousel-btn next" id="certNext" aria-label="Next certification">&#8250;</button>
+      </div>
+      <div class="carousel-dots" id="certDots"></div>`;
+    return { title: "Certifications", cls: "certifications", html, mount: initCertSlider };
   }
 
   function buildEducation() {
@@ -178,6 +188,57 @@
       { threshold: 0.12 }
     );
     els.forEach((e) => io.observe(e));
+  }
+
+  /* ---------- Certifications slideshow (one at a time, fade) ---------- */
+  function initCertSlider() {
+    const stack = document.getElementById("certStack");
+    const slides = Array.from(stack.children);
+    const dotsWrap = document.getElementById("certDots");
+    const prev = document.getElementById("certPrev");
+    const next = document.getElementById("certNext");
+    const n = slides.length;
+    let index = 0;
+    let dots = [];
+
+    function setActive(i) {
+      index = (i + n) % n;
+      slides.forEach((s, j) => s.classList.toggle("active", j === index));
+      dots.forEach((d, j) => d.classList.toggle("active", j === index));
+    }
+
+    // A single certification needs no controls.
+    if (n <= 1) {
+      prev.style.display = "none";
+      next.style.display = "none";
+      dotsWrap.style.display = "none";
+      if (slides[0]) slides[0].classList.add("active");
+      return;
+    }
+
+    dots = slides.map((s, i) => {
+      const d = document.createElement("button");
+      d.className = "dot";
+      d.setAttribute("aria-label", `Go to certification ${i + 1}`);
+      d.addEventListener("click", () => setActive(i));
+      dotsWrap.appendChild(d);
+      return d;
+    });
+
+    prev.addEventListener("click", () => setActive(index - 1));
+    next.addEventListener("click", () => setActive(index + 1));
+
+    // Touch swipe.
+    let startX = null;
+    stack.addEventListener("touchstart", (e) => (startX = e.touches[0].clientX), { passive: true });
+    stack.addEventListener("touchend", (e) => {
+      if (startX === null) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 40) setActive(index + (dx < 0 ? 1 : -1));
+      startX = null;
+    });
+
+    setActive(0);
   }
 
   /* ---------- Projects carousel (seamless, centered, infinite) ---------- */

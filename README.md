@@ -46,11 +46,9 @@ Open **`data.js`**. Everything lives there:
 7. **Colors** — tweak the variables at the top of `styles.css` (`:root { ... }`).
 
 ### Extras
-- **Walking character in the nav** — a little figure strolls across the header
-  (right → left). Replace `assets/luffy.svg` with your own sprite (an animated GIF/PNG
-  works too) to customise it.
-- **Animations** — sections gently fade/slide in as you scroll. Everything is disabled
-  automatically for visitors who have "reduce motion" turned on.
+- **Animations** — sections gently fade/slide in as you scroll, and Projects and
+  Certifications are slideshows. Everything is disabled automatically for visitors who
+  have "reduce motion" turned on.
 
 ## Preview locally
 
