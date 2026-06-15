@@ -90,14 +90,14 @@ const CERTIFICATIONS = [
     issuer: "Siemens",
     date: "Nov 2025",
     logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/siemens.png"
-    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/SMSCP-Assistant.pdf",
+    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/SMSCP-Assistant.pdf",
   },
   {
     name: "Altium Education - PCB Basic Design Course",
     issuer: "Altium",
     date: "2023",
     logo: "assets/Logos/altium_logo.jpg", // e.g. "assets/aws.png"
-    url: "",
+    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/Altuim.pdf",
   },
 ];
 
