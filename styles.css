@@ -455,34 +455,67 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 }
 .certifications .cert-card { flex: 0 1 300px; }
 
-/* ===== Education ===== */
-.edu-list {
-  max-width: 760px;
+/* ===== Education: one-sided timeline (dates left · line · logo-on-top cards) ===== */
+.edu-timeline {
+  position: relative;
+  display: grid;
+  grid-template-columns: 90px auto; /* date | card; card column = widest card */
+  column-gap: 40px;
+  row-gap: 2rem;
+  width: fit-content;
+  max-width: 100%;
   margin: 0 auto;
+}
+.edu-timeline::before { /* the vertical line */
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 110px; /* 90 (date column) + 20 (half the gap) */
+  width: 2px;
+  background: var(--border);
+}
+.edu-date {
+  grid-column: 1;
+  justify-self: end;
+  padding-top: 1.4rem;
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.edu-card {
+  grid-column: 2;
+  position: relative;
+  max-width: 460px;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
-.edu-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.25rem;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1.4rem;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1rem 1.25rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.25s ease, border-color 0.2s;
 }
-.edu-text { min-width: 0; }
-.edu-logo {
-  flex: 0 0 auto;
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
+.edu-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+.edu-card::before { /* timeline dot, centred on the line */
+  content: "";
+  position: absolute;
+  left: -27px;
+  top: 1.6rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
 }
+.edu-logo { width: 56px; height: 56px; object-fit: contain; }
 .edu-school { font-weight: 700; font-size: 1.1rem; }
-.edu-degree { margin-top: 0.4rem; font-size: 1rem; color: var(--text); }
-.edu-meta { color: var(--muted); font-size: 0.9rem; margin-top: 0.3rem; }
+.edu-degree { font-size: 1rem; color: var(--text); }
+.edu-loc { color: var(--muted); font-size: 0.9rem; }
 .edu-major {
   font-family: var(--font-display);
   font-weight: 700;
@@ -501,8 +534,15 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   50%      { filter: drop-shadow(0 0 13px rgba(168, 85, 247, 0.7)); }
 }
 .edu-details { color: var(--muted); margin: 0.5rem 0 0; }
-.edu-points { margin: 0.6rem 0 0; padding-left: 1.1rem; color: var(--muted); }
+.edu-points { margin: 0.1rem 0 0; padding-left: 1.1rem; color: var(--muted); }
 .edu-points li { margin-bottom: 0.3rem; }
+/* On phones the timeline narrows and cards fill the remaining width */
+@media (max-width: 600px) {
+  .edu-timeline { width: auto; grid-template-columns: 58px 1fr; column-gap: 26px; }
+  .edu-timeline::before { left: 71px; }
+  .edu-card { max-width: none; }
+  .edu-card::before { left: -20px; }
+}
 
 /* ===== Scroll-reveal animation ===== */
 .reveal {

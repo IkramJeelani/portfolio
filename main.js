@@ -111,34 +111,32 @@
     const list = window.EDUCATION || [];
     if (!list.length) return null;
     const items = list
-      .map((e) => {
-        const meta = [e.location, e.date].filter(Boolean).join(" · ");
+      .map((e, i) => {
         const logo = e.logo
           ? `<img class="edu-logo" src="${e.logo}" alt="${e.school || "university"} logo">`
-          : "";
+          : `<div class="edu-logo" aria-hidden="true"></div>`;
         const major = e.major ? ` <span class="edu-major">${e.major}</span>` : "";
         const degreeLine =
           e.degree || e.major ? `<div class="edu-degree">${e.degree || ""}${major}</div>` : "";
         let details = "";
         if (Array.isArray(e.details)) {
-          const items = e.details.filter(Boolean).map((d) => `<li>${d}</li>`).join("");
-          if (items) details = `<ul class="edu-points">${items}</ul>`;
+          const li = e.details.filter(Boolean).map((d) => `<li>${d}</li>`).join("");
+          if (li) details = `<ul class="edu-points">${li}</ul>`;
         } else if (e.details) {
           details = `<p class="edu-details">${e.details}</p>`;
         }
         return `
-          <div class="edu-item reveal">
-            <div class="edu-text">
-              <div class="edu-school">${e.school || ""}</div>
-              ${degreeLine}
-              ${meta ? `<div class="edu-meta">${meta}</div>` : ""}
-              ${details}
-            </div>
+          <span class="edu-date">${e.date || ""}</span>
+          <div class="edu-card reveal" style="--reveal-delay:${i * 70}ms">
             ${logo}
+            <div class="edu-school">${e.school || ""}</div>
+            ${degreeLine}
+            ${e.location ? `<div class="edu-loc">${e.location}</div>` : ""}
+            ${details}
           </div>`;
       })
       .join("");
-    return { title: "Education", cls: "education", html: `<div class="edu-list">${items}</div>` };
+    return { title: "Education", cls: "education", html: `<div class="edu-timeline">${items}</div>` };
   }
 
   function buildContact() {
