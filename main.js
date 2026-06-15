@@ -78,24 +78,19 @@
     if (!list.length) return null;
     const slides = list
       .map((c) => {
-        const meta = [c.issuer, c.date].filter(Boolean).join(" · ");
-        const logo = c.image
-          ? `<img class="cert-logo" src="${c.image}" alt="${c.name || "certificate"}">`
-          : "";
-        const link = c.url
-          ? `<a class="cert-link" href="${c.url}" target="_blank" rel="noopener">View Credential</a>`
-          : "";
-        return `
-          <div class="cert-slide">
-            <div class="cert-item">
-              ${logo}
-              <div class="cert-main">
-                <span class="cert-name">${c.name || ""}</span>
-                <span class="cert-meta">${meta}</span>
-              </div>
-              ${link}
-            </div>
+        // Mirrors the project card, with certification fields.
+        const inner = `
+          <div class="cert-card-img" style="background-image:url('${c.image || ""}')"></div>
+          <div class="card-body">
+            <h3 class="card-title">${c.name || ""}</h3>
+            ${c.date ? `<p class="card-date">${c.date}</p>` : ""}
+            ${c.issuer ? `<p class="card-tagline">${c.issuer}</p>` : ""}
+            ${c.url ? `<span class="card-cta">View Credential &rarr;</span>` : ""}
           </div>`;
+        const card = c.url
+          ? `<a class="cert-card" href="${c.url}" target="_blank" rel="noopener">${inner}</a>`
+          : `<div class="cert-card">${inner}</div>`;
+        return `<div class="cert-slide">${card}</div>`;
       })
       .join("");
     const html = `

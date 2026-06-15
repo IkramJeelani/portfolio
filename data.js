@@ -87,14 +87,14 @@ const CERTIFICATIONS = [
     name: "Certified LabVIEW Associate Developer",
     issuer: "NI",
     date: "2024",
-    image: "", // e.g. "assets/labview.png"
+    image: "assets/project1.svg", // e.g. "assets/labview.png"
     url: "",
   },
   {
     name: "AWS Certified Cloud Practitioner",
     issuer: "Amazon",
     date: "2023",
-    image: "", // e.g. "assets/aws.png"
+    image: "assets/project1.svg", // e.g. "assets/aws.png"
     url: "",
   },
 ];
