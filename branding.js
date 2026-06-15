@@ -77,6 +77,33 @@
         localStorage.setItem("theme", next);
       } catch (e) {}
     });
+
+    // Hamburger menu — collapses the nav links into a dropdown on narrow screens.
+    const navEl = header.querySelector("nav");
+    if (navEl) {
+      const menuBtn = document.createElement("button");
+      menuBtn.className = "nav-toggle";
+      menuBtn.type = "button";
+      menuBtn.setAttribute("aria-label", "Open menu");
+      menuBtn.setAttribute("aria-expanded", "false");
+      menuBtn.innerHTML =
+        '<svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>' +
+        '<svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+      header.appendChild(menuBtn);
+
+      const setOpen = (open) => {
+        navEl.classList.toggle("open", open);
+        menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      };
+      menuBtn.addEventListener("click", () => setOpen(!navEl.classList.contains("open")));
+      // Close after picking a link, or when clicking outside the header.
+      navEl.addEventListener("click", (e) => {
+        if (e.target.closest("a")) setOpen(false);
+      });
+      document.addEventListener("click", (e) => {
+        if (!header.contains(e.target)) setOpen(false);
+      });
+    }
   }
 
   // Gradient scroll-progress bar at the top of every page.
