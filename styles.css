@@ -124,6 +124,7 @@ h1, h2, h3,
 
 .brand {
   grid-column: 1;
+  grid-row: 1;
   justify-self: start;
   position: relative;
   z-index: 2;
@@ -138,6 +139,7 @@ h1, h2, h3,
 }
 .site-header nav {
   grid-column: 3;
+  grid-row: 1;
   justify-self: end;
   position: relative;
   z-index: 2;
@@ -171,6 +173,7 @@ h1, h2, h3,
 /* Light/dark toggle — centred in the nav bar */
 .theme-toggle {
   grid-column: 2;
+  grid-row: 1;
   justify-self: center;
   position: relative;
   z-index: 3;
@@ -200,6 +203,7 @@ h1, h2, h3,
 .nav-toggle {
   display: none;
   grid-column: 3;
+  grid-row: 1;
   justify-self: end;
   position: relative;
   z-index: 3;
