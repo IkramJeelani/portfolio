@@ -85,7 +85,7 @@ h1, h2, h3,
 .section-title,
 .card-title,
 .tl-role,
-.edu-degree {
+.edu-school {
   font-family: var(--font-display);
   letter-spacing: -0.01em;
 }
@@ -480,8 +480,26 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   height: 64px;
   object-fit: contain;
 }
-.edu-degree { font-weight: 700; font-size: 1.05rem; }
+.edu-school { font-weight: 700; font-size: 1.1rem; }
 .edu-meta { color: var(--muted); font-size: 0.9rem; margin-top: 0.15rem; }
+.edu-degree { margin-top: 0.55rem; font-size: 1rem; color: var(--text); }
+.edu-major {
+  font-family: var(--font-display);
+  font-weight: 700;
+  background: var(--grad);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.45));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .edu-major { animation: brand-flow 5s linear infinite, edu-major-glow 3s ease-in-out infinite; }
+}
+@keyframes edu-major-glow {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.35)); }
+  50%      { filter: drop-shadow(0 0 13px rgba(168, 85, 247, 0.7)); }
+}
 .edu-details { color: var(--muted); margin: 0.5rem 0 0; }
 
 /* ===== Scroll-reveal animation ===== */

@@ -123,23 +123,29 @@ const CERTIFICATIONS = [
 ];
 
 /* ---------- 5b. EDUCATION ----------
-   ADD/REMOVE a school by copying or deleting a { ... } block.
-   `details` is optional (a short note, e.g. GPA, focus, honours).
-   `logo`    is optional — the university logo, shown on the right of the card. */
+   `school`            the university name (shown as the heading)
+   `location` + `date` shown together under the school, e.g. "Surrey, BC · 2021 - 2025"
+   `degree`            normal lead-in text, e.g. "Bachelor of Engineering (Honours) in"
+   `major`             the field of study — shown with a glowing gradient effect
+   `details`, `logo`   optional. */
 const EDUCATION = [
   {
     school: "University of Wollongong in Dubai",
-    degree: "Bachelor of Engineering (Honours) in Mechatronics Engineering",
+    location: "Dubai, UAE",
     date: "2026 - 2027",
+    degree: "Bachelor of Engineering (Honours) in",
+    major: "Mechatronics Engineering",
     details: "Focus on embedded systems and control. Dean's List.",
-    logo: "assets/Logos/university_of_wollongong_in_dubai_logo.jpg", // e.g. "assets/university.png"
+    logo: "assets/Logos/university_of_wollongong_in_dubai_logo.jpg",
   },
-    {
+  {
     school: "Simon Fraser University",
-    degree: "Bachelor of Applied Science (Honours) in Mechatronic Systems Engineering",
+    location: "Burnaby, BC",
     date: "2024 - 2025",
+    degree: "Bachelor of Applied Science (Honours) in",
+    major: "Mechatronic Systems Engineering",
     details: "Focus on embedded systems and control. Dean's List.",
-    logo: "assets/Logos/simon_fraser_university_logo.jpg", // e.g. "assets/university.png"
+    logo: "assets/Logos/simon_fraser_university_logo.jpg",
   },
 ];
 

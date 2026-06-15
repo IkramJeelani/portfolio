@@ -112,15 +112,19 @@
     if (!list.length) return null;
     const items = list
       .map((e) => {
-        const meta = [e.school, e.date].filter(Boolean).join(" · ");
+        const meta = [e.location, e.date].filter(Boolean).join(" · ");
         const logo = e.logo
           ? `<img class="edu-logo" src="${e.logo}" alt="${e.school || "university"} logo">`
           : "";
+        const major = e.major ? ` <span class="edu-major">${e.major}</span>` : "";
+        const degreeLine =
+          e.degree || e.major ? `<div class="edu-degree">${e.degree || ""}${major}</div>` : "";
         return `
           <div class="edu-item reveal">
             <div class="edu-text">
-              <div class="edu-degree">${e.degree || ""}</div>
-              <div class="edu-meta">${meta}</div>
+              <div class="edu-school">${e.school || ""}</div>
+              ${meta ? `<div class="edu-meta">${meta}</div>` : ""}
+              ${degreeLine}
               ${e.details ? `<p class="edu-details">${e.details}</p>` : ""}
             </div>
             ${logo}
