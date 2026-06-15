@@ -37,4 +37,21 @@
   if (document.body.hasAttribute("data-home")) {
     document.title = (p.name || "") + (p.role ? " — " + p.role : "");
   }
+
+  // Gradient scroll-progress bar at the top of every page.
+  const reduced =
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduced) {
+    const bar = document.createElement("div");
+    bar.className = "scroll-progress";
+    document.body.appendChild(bar);
+    const update = () => {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight;
+      bar.style.transform = `scaleX(${max > 0 ? doc.scrollTop / max : 0})`;
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  }
 })();

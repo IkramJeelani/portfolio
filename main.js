@@ -45,8 +45,8 @@
     if (!list.length) return null;
     const cards = list
       .map(
-        (p) => `
-          <a class="card reveal" href="project.html?id=${encodeURIComponent(p.id)}">
+        (p, i) => `
+          <a class="card reveal" style="--reveal-delay:${i * 70}ms" href="project.html?id=${encodeURIComponent(p.id)}">
             <div class="card-img" style="background-image:url('${p.image}')"></div>
             <div class="card-body">
               <h3 class="card-title">${p.title}</h3>
@@ -76,8 +76,9 @@
     const list = window.CERTIFICATIONS || [];
     if (!list.length) return null;
     const cards = list
-      .map((c) => {
+      .map((c, i) => {
         // Same card as the projects, with certification fields.
+        const delay = `--reveal-delay:${i * 70}ms`;
         const inner = `
           <div class="cert-card-img" style="background-image:url('${c.image || ""}')"></div>
           <div class="card-body">
@@ -87,8 +88,8 @@
             ${c.url ? `<span class="card-cta">View Credential &rarr;</span>` : ""}
           </div>`;
         return c.url
-          ? `<a class="cert-card reveal" href="${c.url}" target="_blank" rel="noopener">${inner}</a>`
-          : `<div class="cert-card reveal">${inner}</div>`;
+          ? `<a class="cert-card reveal" style="${delay}" href="${c.url}" target="_blank" rel="noopener">${inner}</a>`
+          : `<div class="cert-card reveal" style="${delay}">${inner}</div>`;
       })
       .join("");
     return { title: "Certifications", cls: "certifications", html: `<div class="card-grid">${cards}</div>` };
@@ -160,6 +161,7 @@
   });
 
   setupReveal();
+  setupTilt();
 
   /* ---------- Scroll-reveal (subtle fade/slide-up) ---------- */
   function setupReveal() {
@@ -180,5 +182,34 @@
       { threshold: 0.12 }
     );
     els.forEach((e) => io.observe(e));
+  }
+
+  /* ---------- 3D tilt on cards (pointer-following, with glare) ---------- */
+  function setupTilt() {
+    const canHover = window.matchMedia && window.matchMedia("(hover: hover)").matches;
+    if (reduced || !canHover) return;
+
+    const MAX = 8; // degrees
+    document.querySelectorAll(".card, .cert-card").forEach((card) => {
+      card.addEventListener("pointerenter", () => {
+        card.classList.add("tilting");
+        card.style.transition = "transform 0.08s linear, box-shadow 0.25s ease";
+      });
+      card.addEventListener("pointermove", (e) => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width;
+        const py = (e.clientY - r.top) / r.height;
+        const rx = (py - 0.5) * -2 * MAX;
+        const ry = (px - 0.5) * 2 * MAX;
+        card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) scale(1.03)`;
+        card.style.setProperty("--mx", px * 100 + "%");
+        card.style.setProperty("--my", py * 100 + "%");
+      });
+      card.addEventListener("pointerleave", () => {
+        card.classList.remove("tilting");
+        card.style.transition = "transform 0.4s ease, box-shadow 0.3s ease";
+        card.style.transform = "";
+      });
+    });
   }
 })();

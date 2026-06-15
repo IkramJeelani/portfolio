@@ -204,15 +204,17 @@ h1, h2, h3,
 .tl-item::after {
   content: "";
   position: absolute;
-  top: 0.3rem;
-  width: 14px;
-  height: 14px;
+  top: 0.35rem;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: var(--accent);
   border: 3px solid var(--bg);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
 }
-.tl-item:nth-child(odd)::after { right: -7px; }
-.tl-item:nth-child(even)::after { left: -7px; }
+/* Centre the dot exactly on the line regardless of its border width */
+.tl-item:nth-child(odd)::after { right: 0; transform: translateX(50%); }
+.tl-item:nth-child(even)::after { left: 0; transform: translateX(-50%); }
 .tl-role { font-weight: 700; font-size: 1.05rem; }
 .tl-company { color: var(--accent); font-weight: 600; }
 .tl-date { color: var(--muted); font-size: 0.85rem; margin: 0.2rem 0 0.5rem; }
@@ -232,6 +234,7 @@ h1, h2, h3,
 
 /* ===== Certifications: same card as projects, in the grid ===== */
 .cert-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   background: var(--card);
@@ -239,7 +242,8 @@ h1, h2, h3,
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition: transform 0.2s, border-color 0.2s;
+  transition: transform 0.25s ease, border-color 0.2s, box-shadow 0.25s ease;
+  transform-style: preserve-3d;
 }
 a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 .cert-card-img {
@@ -267,11 +271,12 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 .edu-meta { color: var(--muted); font-size: 0.9rem; margin-top: 0.15rem; }
 .edu-details { color: var(--muted); margin: 0.5rem 0 0; }
 
-/* ===== Scroll-reveal animation (subtle) ===== */
+/* ===== Scroll-reveal animation ===== */
 .reveal {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(26px) scale(0.985);
+  transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 .reveal.in {
   opacity: 1;
@@ -283,20 +288,44 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
   gap: 1.5rem;
+  perspective: 1100px; /* enables the 3D tilt of cards */
 }
 
 /* ===== Card ===== */
 .card {
+  position: relative;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition: transform 0.2s, border-color 0.2s;
+  transition: transform 0.25s ease, border-color 0.2s, box-shadow 0.25s ease;
+  transform-style: preserve-3d;
   display: flex;
   flex-direction: column;
 }
 .card:hover { transform: translateY(-6px); border-color: var(--accent); }
+
+/* Cursor-following glare for the 3D tilt (projects + certs) */
+.card::after,
+.cert-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.16),
+    transparent 42%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.card.tilting,
+.cert-card.tilting { box-shadow: 0 24px 60px rgba(168, 85, 247, 0.28); }
+.card.tilting::after,
+.cert-card.tilting::after { opacity: 1; }
 .card-img {
   height: 200px;
   background-size: cover;
@@ -503,7 +532,7 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   }
   .tl-item::after,
   .tl-item:nth-child(odd)::after,
-  .tl-item:nth-child(even)::after { left: 0; right: auto; }
+  .tl-item:nth-child(even)::after { left: 7px; right: auto; transform: translateX(-50%); }
 }
 
 @media (max-width: 600px) {
@@ -512,7 +541,39 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   .project-content img { max-width: 100%; }
 }
 
-/* Respect users who prefer reduced motion: no reveal animation */
+/* ===== Scroll progress bar (gradient, top of page) ===== */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: var(--grad);
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* ===== Smooth cross-page morph when opening / leaving a project ===== */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vt-out 0.3s ease both; }
+::view-transition-new(root) { animation: vt-in 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@keyframes vt-out { to { opacity: 0; transform: scale(0.98); } }
+@keyframes vt-in { from { opacity: 0; transform: scale(1.02); } }
+
+/* ===== Slow drift of the side gradients (ambient life) ===== */
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    animation: bg-drift 22s ease-in-out infinite alternate;
+  }
+}
+@keyframes bg-drift {
+  to { background-position: 4vw 2vh, -3vw 1vh, -2vw -2vh; }
+}
+
+/* Respect users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
+  .scroll-progress { display: none; }
 }
