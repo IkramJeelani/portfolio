@@ -100,8 +100,16 @@ h1, h2, h3,
   align-items: center;
   gap: 0.5rem 1rem;
   padding: 1rem 1.5rem;
-  background: transparent; /* seamless with the body, always */
+  background: transparent; /* seamless with the body at the top */
+  transition: background 0.3s ease, backdrop-filter 0.3s ease;
 }
+/* Frosted background once the page is scrolled (transparent only at the very top) */
+.site-header.scrolled {
+  background: rgba(11, 10, 18, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+:root[data-theme="light"] .site-header.scrolled { background: rgba(244, 243, 251, 0.6); }
 /* Cursor spotlight that follows the mouse across the nav */
 .site-header::before {
   content: "";
