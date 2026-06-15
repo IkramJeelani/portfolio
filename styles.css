@@ -26,13 +26,19 @@ body {
   color: var(--text);
   line-height: 1.6;
   background-color: var(--bg);
-  /* Purple/pink gradient glows anchored to the sides, fixed while scrolling */
-  background-image:
+}
+
+/* Purple/pink gradient glows on a fixed full-screen layer behind everything */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
     radial-gradient(55vw 70vh at 0% -5%, rgba(168, 85, 247, 0.20), transparent 60%),
     radial-gradient(50vw 60vh at 100% 12%, rgba(236, 72, 153, 0.14), transparent 60%),
     radial-gradient(48vw 60vh at 100% 100%, rgba(99, 102, 241, 0.14), transparent 60%);
-  background-attachment: fixed;
-  background-repeat: no-repeat;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -562,14 +568,15 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 @keyframes vt-out { to { opacity: 0; transform: scale(0.98); } }
 @keyframes vt-in { from { opacity: 0; transform: scale(1.02); } }
 
-/* ===== Slow drift of the side gradients (ambient life) ===== */
+/* ===== Gentle "breathe" of the side glows (never exposes edges) ===== */
 @media (prefers-reduced-motion: no-preference) {
-  body {
-    animation: bg-drift 22s ease-in-out infinite alternate;
+  body::before {
+    animation: bg-breathe 12s ease-in-out infinite alternate;
   }
 }
-@keyframes bg-drift {
-  to { background-position: 4vw 2vh, -3vw 1vh, -2vw -2vh; }
+@keyframes bg-breathe {
+  from { opacity: 0.72; transform: scale(1); }
+  to   { opacity: 1;    transform: scale(1.06); }
 }
 
 /* Respect users who prefer reduced motion */
