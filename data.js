@@ -90,8 +90,8 @@ const CERTIFICATIONS = [
     name: "Siemens Mechatronic Systems Certification Program (SMSCP) Assistant",
     issuer: "Siemens",
     date: "Sep 2024",
-    image: "", // e.g. "assets/labview.png"
-    url: "",
+    image: "assets/SMSCP-Assistant.pdf", // e.g. "assets/labview.png"
+    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/SMSCP-Assistant.pdf",
   },
   {
     name: "AWS Certified Cloud Practitioner",
