@@ -77,7 +77,7 @@ const SKILLS = [
 ];
 
 /* ---------- 5. CERTIFICATIONS ----------
-   Each cert is shown one-at-a-time in a slideshow.
+   Shown as a responsive card grid (same card style as projects).
    `image` (optional): a logo OR a picture of the certificate, shown at the top of
        the card. Put the file in assets/ and reference it, e.g. "assets/aws-logo.png".
        Leave it as "" for no image.
@@ -87,14 +87,14 @@ const CERTIFICATIONS = [
     name: "Certified LabVIEW Associate Developer",
     issuer: "NI",
     date: "2024",
-    image: "assets/project1.svg", // e.g. "assets/labview.png"
+    image: "", // e.g. "assets/labview.png"
     url: "",
   },
   {
     name: "AWS Certified Cloud Practitioner",
     issuer: "Amazon",
     date: "2023",
-    image: "assets/project1.svg", // e.g. "assets/aws.png"
+    image: "", // e.g. "assets/aws.png"
     url: "",
   },
 ];

@@ -8,10 +8,10 @@ step required, so it deploys to GitHub Pages instantly.
 | File | What it does |
 |------|--------------|
 | **`data.js`** | **Everything you edit:** your name/initials, projects, and contacts |
-| `index.html` | Home page: name/hero, project carousel, contact |
+| `index.html` | Home page: name/hero, sections, contact |
 | `project.html` | Reusable detail page (loads a project via `?id=` in the URL) |
 | `branding.js` | Keeps the top-left logo and the browser-tab icon in sync from your initials |
-| `main.js` | Builds the cards + runs the infinite carousel (next/prev, dots, swipe) |
+| `main.js` | Builds the nav + sections (projects & certifications card grids) |
 | `project.js` | Renders the detail page for the selected project |
 | `styles.css` | All styling (responsive, dark theme) |
 | `assets/` | Project images |
@@ -28,8 +28,7 @@ Open **`data.js`**. Everything lives there:
    has no content yet, so you can leave the line and it appears once you fill it in.
 3. **Projects** — in the `PROJECTS` array, copy a `{ ... }` block to add one, or delete a
    block to remove one. Each project needs a unique `id`.
-   - 3+ projects → looping carousel (one card centered, neighbors peeking).
-   - 1–2 projects → shown side by side with no navigation.
+   - Projects show as a responsive card grid (2–3 columns).
    - **The detail page is free-form:** each project's `body` field is your own
      mini-page. Add headings, images, full-width images, captions, image galleries,
      video embeds, callouts, quotes, two-column layouts, etc. The full list of
@@ -47,9 +46,8 @@ Open **`data.js`**. Everything lives there:
 7. **Colors** — tweak the variables at the top of `styles.css` (`:root { ... }`).
 
 ### Extras
-- **Animations** — sections gently fade/slide in as you scroll, and Projects and
-  Certifications are slideshows. Everything is disabled automatically for visitors who
-  have "reduce motion" turned on.
+- **Animations** — sections gently fade/slide in as you scroll. Everything is disabled
+  automatically for visitors who have "reduce motion" turned on.
 
 ## Preview locally
 
