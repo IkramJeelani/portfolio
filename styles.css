@@ -290,11 +290,30 @@ h1, h2, h3,
   background: var(--grad);
 }
 
+/* "Arrival" flash when you navigate to a section from the nav */
+.section.flash .section-title { animation: title-pop 0.9s ease; }
+.section.flash .section-title::after { animation: underline-sweep 0.9s ease; }
+@keyframes title-pop {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.1); text-shadow: 0 0 26px rgba(168, 85, 247, 0.75); }
+  100% { transform: scale(1); text-shadow: none; }
+}
+@keyframes underline-sweep {
+  0%   { width: 54px; }
+  45%  { width: 210px; }
+  100% { width: 54px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .section.flash .section-title,
+  .section.flash .section-title::after { animation: none; }
+}
+
 /* ===== Generic section wrapper ===== */
 .section {
   max-width: var(--max);
   margin: 0 auto;
   padding: 3.5rem 1.5rem;
+  scroll-margin-top: 84px; /* keeps the heading clear of the sticky nav on anchor jumps */
 }
 
 /* ===== About ===== */

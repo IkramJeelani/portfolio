@@ -162,6 +162,7 @@
 
   setupReveal();
   setupTilt();
+  setupSectionFlash();
 
   /* ---------- Scroll-reveal (subtle fade/slide-up) ---------- */
   function setupReveal() {
@@ -182,6 +183,28 @@
       { threshold: 0.12 }
     );
     els.forEach((e) => io.observe(e));
+  }
+
+  /* ---------- "Arrival" flash on the heading when navigating to a section ---------- */
+  function setupSectionFlash() {
+    function flash(id) {
+      const el = document.getElementById(id);
+      if (!el || reduced) return;
+      el.classList.remove("flash");
+      void el.offsetWidth; // restart the animation if re-triggered
+      el.classList.add("flash");
+      setTimeout(() => el.classList.remove("flash"), 1000);
+    }
+    navRoot.addEventListener("click", (e) => {
+      const a = e.target.closest("a");
+      if (!a) return;
+      const href = a.getAttribute("href") || "";
+      if (href.startsWith("#")) setTimeout(() => flash(href.slice(1)), 360);
+    });
+    // Arriving from another page with a hash (e.g. project page -> #projects).
+    if (location.hash.length > 1) {
+      setTimeout(() => flash(location.hash.slice(1)), 450);
+    }
   }
 
   /* ---------- 3D tilt on cards (pointer-following, with glare) ---------- */
