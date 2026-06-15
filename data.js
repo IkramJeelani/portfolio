@@ -88,37 +88,37 @@ const CERTIFICATIONS = [
   {
     name: "Siemens Mechatronic Systems Certification Program (SMSCP) Assistant",
     issuer: "Siemens",
-    date: "Nov 2025",
+    date: "Sep 2024",
     logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/siemens.png"
     url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/SMSCP-Assistant.pdf",
   },
   {
     name: "Altium Education - PCB Basic Design Course",
     issuer: "Altium",
-    date: "2023",
+    date: "Nov 2025",
     logo: "assets/Logos/altium_logo.jpg", 
     url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/Altium%20Education%20-%20PCB%20Basic%20Design%20Course.pdf",
   },
   {
     name: "SOLIDWORKS Design Associate",
     issuer: "Dassault Systèmes",
-    date: "2026",
+    date: "May 2026",
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg", 
-    url: "",
+    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/CSWA.pdf",
   },
   {
     name: "SOLIDWORKS Design Professional",
     issuer: "Dassault Systèmes",
-    date: "2026",
+    date: "Jun 2026",
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg", 
-    url: "",
+    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/CSWP.pdf",
   },
   {
     name: "SOLIDWORKS Additive Manufacturing Associate",
     issuer: "Dassault Systèmes",
-    date: "2026",
+    date: "Jun 2026",
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg", 
-    url: "",
+    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/CSWA_AM.pdf",
   },
 ];
 
