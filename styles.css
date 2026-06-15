@@ -466,19 +466,22 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   max-width: 100%;
   margin: 0 auto;
 }
-.edu-timeline::before { /* the vertical line */
+.edu-timeline::before { /* the vertical line, centred at x = 110 */
   content: "";
   position: absolute;
   top: 8px;
   bottom: 8px;
   left: 110px; /* 90 (date column) + 20 (half the gap) */
+  transform: translateX(-50%);
   width: 2px;
   background: var(--border);
 }
 .edu-date {
   grid-column: 1;
   justify-self: end;
-  padding-top: 1.4rem;
+  /* vertically centre the date on the dot (dot centre = top 1.6rem + half of 14px) */
+  line-height: 1;
+  padding-top: calc(1.6rem + 7px - 0.5em);
   color: var(--accent);
   font-size: 0.85rem;
   font-weight: 600;
@@ -503,7 +506,8 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 .edu-card::before { /* timeline dot, centred on the line */
   content: "";
   position: absolute;
-  left: -27px;
+  box-sizing: border-box; /* so the border doesn't widen/offset the dot */
+  left: -27px; /* dot centre lands on the line at x = 110 */
   top: 1.6rem;
   width: 14px;
   height: 14px;

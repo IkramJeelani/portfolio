@@ -115,9 +115,8 @@
         const logo = e.logo
           ? `<img class="edu-logo" src="${e.logo}" alt="${e.school || "university"} logo">`
           : `<div class="edu-logo" aria-hidden="true"></div>`;
-        const major = e.major ? ` <span class="edu-major">${e.major}</span>` : "";
-        const degreeLine =
-          e.degree || e.major ? `<div class="edu-degree">${e.degree || ""}${major}</div>` : "";
+        const degreeLine = e.degree ? `<div class="edu-degree">${e.degree}</div>` : "";
+        const majorLine = e.major ? `<div class="edu-major">${e.major}</div>` : "";
         let details = "";
         if (Array.isArray(e.details)) {
           const li = e.details.filter(Boolean).map((d) => `<li>${d}</li>`).join("");
@@ -131,6 +130,7 @@
             ${logo}
             <div class="edu-school">${e.school || ""}</div>
             ${degreeLine}
+            ${majorLine}
             ${e.location ? `<div class="edu-loc">${e.location}</div>` : ""}
             ${details}
           </div>`;
