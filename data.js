@@ -46,12 +46,14 @@ const ABOUT =
 
 /* ---------- 3. EXPERIENCE ----------
    ADD/REMOVE a role by copying or deleting a { ... } block.
-   `points` is optional — leave it as [] for none. */
+   `points` is optional — leave it as [] for none.
+   `logo`   is optional — a small company logo (put the file in assets/). "" = none. */
 const EXPERIENCE = [
   {
     role: "Engineering Intern",
     company: "Acme Robotics",
     date: "Summer 2024",
+    logo: "", // e.g. "assets/acme.png"
     points: [
       "Built automated test fixtures that cut QA time by ~30%.",
       "Wrote firmware for a sensor-calibration rig used across the team.",
@@ -61,6 +63,7 @@ const EXPERIENCE = [
     role: "Undergraduate Researcher",
     company: "University Lab",
     date: "2023 - 2024",
+    logo: "", // e.g. "assets/lab.png"
     points: [
       "Investigated low-power wireless protocols for distributed sensor networks.",
     ],
@@ -101,13 +104,15 @@ const CERTIFICATIONS = [
 
 /* ---------- 5b. EDUCATION ----------
    ADD/REMOVE a school by copying or deleting a { ... } block.
-   `details` is optional (a short note, e.g. GPA, focus, honours). */
+   `details` is optional (a short note, e.g. GPA, focus, honours).
+   `logo`    is optional — the university logo, shown on the right of the card. */
 const EDUCATION = [
   {
     school: "University of Somewhere",
     degree: "B.Eng. in Electrical Engineering",
     date: "2021 - 2025",
     details: "Focus on embedded systems and control. Dean's List.",
+    logo: "", // e.g. "assets/university.png"
   },
 ];
 

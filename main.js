@@ -25,13 +25,21 @@
     const items = list
       .map((e) => {
         const points = (e.points || []).map((p) => `<li>${p}</li>`).join("");
+        const logo = e.logo
+          ? `<img class="tl-logo" src="${e.logo}" alt="${e.company || "company"} logo">`
+          : "";
         return `
           <div class="tl-item reveal">
             <div class="tl-card">
-              <div class="tl-role">${e.role || ""}${
+              <div class="tl-head">
+                ${logo}
+                <div class="tl-headtext">
+                  <div class="tl-role">${e.role || ""}${
           e.company ? ` &middot; <span class="tl-company">${e.company}</span>` : ""
         }</div>
-              ${e.date ? `<div class="tl-date">${e.date}</div>` : ""}
+                  ${e.date ? `<div class="tl-date">${e.date}</div>` : ""}
+                </div>
+              </div>
               ${points ? `<ul class="tl-points">${points}</ul>` : ""}
             </div>
           </div>`;
@@ -101,11 +109,17 @@
     const items = list
       .map((e) => {
         const meta = [e.school, e.date].filter(Boolean).join(" · ");
+        const logo = e.logo
+          ? `<img class="edu-logo" src="${e.logo}" alt="${e.school || "university"} logo">`
+          : "";
         return `
           <div class="edu-item reveal">
-            <div class="edu-degree">${e.degree || ""}</div>
-            <div class="edu-meta">${meta}</div>
-            ${e.details ? `<p class="edu-details">${e.details}</p>` : ""}
+            <div class="edu-text">
+              <div class="edu-degree">${e.degree || ""}</div>
+              <div class="edu-meta">${meta}</div>
+              ${e.details ? `<p class="edu-details">${e.details}</p>` : ""}
+            </div>
+            ${logo}
           </div>`;
       })
       .join("");

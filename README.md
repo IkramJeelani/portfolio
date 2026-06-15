@@ -40,9 +40,9 @@ Open **`data.js`**. Everything lives there:
    items. Experience renders as a centered timeline.
 5. **Contacts** — in the `CONTACTS` array, add/remove `{ label, url }` lines. Use a
    `mailto:` URL for email; `https://` links open in a new tab.
-6. **Images** — drop pictures into `assets/` (e.g. `project1.jpg`) and point the `image:`
-   field at them. This includes certification logos / certificate scans (each
-   certification has its own optional `image:` field).
+6. **Images / logos** — drop pictures into `assets/` and point the relevant field at
+   them: projects use `image:`, certifications use `image:`, and **experience &
+   education entries each have an optional `logo:`** (company logo / university logo).
 7. **Colors** — tweak the variables at the top of `styles.css` (`:root { ... }`).
 
 ### Extras
