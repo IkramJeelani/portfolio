@@ -215,19 +215,41 @@ a { color: inherit; text-decoration: none; }
 }
 .cert-item {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  text-align: center;
+  gap: 0.35rem;
   width: 100%;
+  min-height: 240px;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.25rem 1.5rem;
+  padding: 2rem 1.75rem;
 }
-.cert-main { display: flex; flex-direction: column; gap: 0.15rem; }
-.cert-name { font-weight: 600; }
+.cert-logo {
+  height: 64px;
+  width: auto;
+  max-width: 70%;
+  object-fit: contain;
+  margin-bottom: 0.75rem;
+}
+.cert-main { display: flex; flex-direction: column; gap: 0.2rem; }
+.cert-name { font-weight: 700; font-size: 1.2rem; }
 .cert-meta { color: var(--muted); font-size: 0.9rem; }
-.cert-link { color: var(--accent); font-weight: 600; white-space: nowrap; }
+.cert-link {
+  display: inline-block;
+  margin-top: 1.1rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.cert-link:hover { border-color: var(--accent); transform: translateY(-2px); }
 
 /* ===== Education ===== */
 .edu-list {
@@ -304,16 +326,27 @@ a { color: inherit; text-decoration: none; }
   top: 50%;
   transform: translateY(-50%);
   z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 52px;
   height: 52px;
+  padding: 0;
   border-radius: 50%;
   border: 1px solid var(--border);
   background: var(--bg-soft);
   color: var(--text);
-  font-size: 1.8rem;
-  line-height: 1;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.carousel-btn .chev {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .carousel-btn.prev { left: 8px; }
 .carousel-btn.next { right: 8px; }

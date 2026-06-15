@@ -9,6 +9,12 @@
   const reduced =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Crisp, perfectly-centered arrow icons for the slideshows.
+  const CHEVRON = {
+    left: '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8 8 8"/></svg>',
+    right: '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8"/></svg>',
+  };
+
   /* ---------- Section builders ----------
      Each returns null when empty (so the section is hidden), or an object:
      { title, html, cls?, mount? }. */
@@ -45,11 +51,11 @@
     if (!list.length) return null;
     const html = `
       <div class="carousel" id="carousel">
-        <button class="carousel-btn prev" id="prevBtn" aria-label="Previous project">&#8249;</button>
+        <button class="carousel-btn prev" id="prevBtn" aria-label="Previous project">${CHEVRON.left}</button>
         <div class="carousel-viewport">
           <div class="carousel-track" id="carouselTrack"></div>
         </div>
-        <button class="carousel-btn next" id="nextBtn" aria-label="Next project">&#8250;</button>
+        <button class="carousel-btn next" id="nextBtn" aria-label="Next project">${CHEVRON.right}</button>
       </div>
       <div class="carousel-dots" id="carouselDots"></div>`;
     return { title: "Projects", cls: "projects", html, mount: initCarousel };
@@ -73,12 +79,16 @@
     const slides = list
       .map((c) => {
         const meta = [c.issuer, c.date].filter(Boolean).join(" · ");
+        const logo = c.image
+          ? `<img class="cert-logo" src="${c.image}" alt="${c.name || "certificate"}">`
+          : "";
         const link = c.url
-          ? `<a class="cert-link" href="${c.url}" target="_blank" rel="noopener">View &rarr;</a>`
+          ? `<a class="cert-link" href="${c.url}" target="_blank" rel="noopener">View Credential</a>`
           : "";
         return `
           <div class="cert-slide">
             <div class="cert-item">
+              ${logo}
               <div class="cert-main">
                 <span class="cert-name">${c.name || ""}</span>
                 <span class="cert-meta">${meta}</span>
@@ -90,9 +100,9 @@
       .join("");
     const html = `
       <div class="cert-slider reveal" id="certSlider">
-        <button class="carousel-btn prev" id="certPrev" aria-label="Previous certification">&#8249;</button>
+        <button class="carousel-btn prev" id="certPrev" aria-label="Previous certification">${CHEVRON.left}</button>
         <div class="cert-stack" id="certStack">${slides}</div>
-        <button class="carousel-btn next" id="certNext" aria-label="Next certification">&#8250;</button>
+        <button class="carousel-btn next" id="certNext" aria-label="Next certification">${CHEVRON.right}</button>
       </div>
       <div class="carousel-dots" id="certDots"></div>`;
     return { title: "Certifications", cls: "certifications", html, mount: initCertSlider };

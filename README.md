@@ -42,7 +42,8 @@ Open **`data.js`**. Everything lives there:
 5. **Contacts** — in the `CONTACTS` array, add/remove `{ label, url }` lines. Use a
    `mailto:` URL for email; `https://` links open in a new tab.
 6. **Images** — drop pictures into `assets/` (e.g. `project1.jpg`) and point the `image:`
-   field at them.
+   field at them. This includes certification logos / certificate scans (each
+   certification has its own optional `image:` field).
 7. **Colors** — tweak the variables at the top of `styles.css` (`:root { ... }`).
 
 ### Extras

@@ -77,10 +77,26 @@ const SKILLS = [
 ];
 
 /* ---------- 5. CERTIFICATIONS ----------
-   `url` is optional — set it to "" for no link. */
+   Each cert is shown one-at-a-time in a slideshow.
+   `image` (optional): a logo OR a picture of the certificate, shown at the top of
+       the card. Put the file in assets/ and reference it, e.g. "assets/aws-logo.png".
+       Leave it as "" for no image.
+   `url`   (optional): link to the credential ("View Credential" button). "" = none. */
 const CERTIFICATIONS = [
-  { name: "Certified LabVIEW Associate Developer", issuer: "NI", date: "2024", url: "" },
-  { name: "AWS Certified Cloud Practitioner", issuer: "Amazon", date: "2023", url: "" },
+  {
+    name: "Certified LabVIEW Associate Developer",
+    issuer: "NI",
+    date: "2024",
+    image: "", // e.g. "assets/labview.png"
+    url: "",
+  },
+  {
+    name: "AWS Certified Cloud Practitioner",
+    issuer: "Amazon",
+    date: "2023",
+    image: "", // e.g. "assets/aws.png"
+    url: "",
+  },
 ];
 
 /* ---------- 5b. EDUCATION ----------
