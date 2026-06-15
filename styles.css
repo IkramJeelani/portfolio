@@ -482,18 +482,20 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 0.25rem;
-  text-align: right;
+  align-items: center; /* date & location centred to each other */
+  gap: 0.2rem;
+  font-size: 0.85rem;
+  line-height: 1;
+  text-align: center;
+  /* push the text down so the date line sits level with the dot near the card top */
+  padding-top: calc(1.6rem + 7px - 0.5em);
 }
-.edu-left::after { /* timeline dot — centred on the line and on this block */
+.edu-left::after { /* timeline dot — near the top of the card, centred on the line */
   content: "";
   position: absolute;
   box-sizing: border-box;
-  right: -27px; /* lands the dot centre in the middle of the 40px gap (on the line) */
-  top: 50%;
-  transform: translateY(-50%);
+  right: -27px; /* dot centre lands in the middle of the 40px gap (on the line) */
+  top: 1.6rem;
   width: 14px;
   height: 14px;
   border-radius: 50%;
@@ -501,8 +503,8 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   border: 3px solid var(--bg);
   box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
 }
-.edu-date { color: var(--accent); font-size: 0.85rem; font-weight: 600; white-space: nowrap; }
-.edu-left .edu-loc { color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
+.edu-date { color: var(--accent); font-weight: 600; white-space: nowrap; }
+.edu-left .edu-loc { color: var(--muted); white-space: nowrap; line-height: 1.2; }
 .edu-card {
   grid-column: 2;
   position: relative;
