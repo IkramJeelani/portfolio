@@ -125,13 +125,15 @@
           details = `<p class="edu-details">${e.details}</p>`;
         }
         return `
-          <span class="edu-date">${e.date || ""}</span>
+          <div class="edu-left">
+            <span class="edu-date">${e.date || ""}</span>
+            ${e.location ? `<span class="edu-loc">${e.location}</span>` : ""}
+          </div>
           <div class="edu-card reveal" style="--reveal-delay:${i * 70}ms">
             ${logo}
             <div class="edu-school">${e.school || ""}</div>
             ${degreeLine}
             ${majorLine}
-            ${e.location ? `<div class="edu-loc">${e.location}</div>` : ""}
             ${details}
           </div>`;
       })
