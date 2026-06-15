@@ -89,7 +89,7 @@
         const meta = [c.issuer, c.date].filter(Boolean).join(" · ");
         const logo = c.logo
           ? `<img class="cert-logo" src="${c.logo}" alt="${c.issuer || c.name || "logo"}">`
-          : "";
+          : `<div class="cert-logo" aria-hidden="true"></div>`;
         const inner = `
           ${logo}
           <div class="cert-text">
@@ -209,11 +209,19 @@
     const cards = Array.from(sec.querySelectorAll(".cert-card"));
     if (cards.length < 2) return;
 
+    const names = cards.map((c) => c.querySelector(".cert-name")).filter(Boolean);
     function equalize() {
+      // Reset
       cards.forEach((c) => (c.style.minHeight = ""));
-      let max = 0;
-      cards.forEach((c) => (max = Math.max(max, c.offsetHeight)));
-      cards.forEach((c) => (c.style.minHeight = max + "px"));
+      names.forEach((n) => (n.style.minHeight = ""));
+      // 1) Equalize the name block so issuer·date starts at the same spot.
+      let maxName = 0;
+      names.forEach((n) => (maxName = Math.max(maxName, n.offsetHeight)));
+      names.forEach((n) => (n.style.minHeight = maxName + "px"));
+      // 2) Equalize the whole card so "View Credential" lines up at the bottom.
+      let maxCard = 0;
+      cards.forEach((c) => (maxCard = Math.max(maxCard, c.offsetHeight)));
+      cards.forEach((c) => (c.style.minHeight = maxCard + "px"));
     }
     equalize();
     window.addEventListener("resize", equalize);
