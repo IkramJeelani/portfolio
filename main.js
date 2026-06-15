@@ -1,205 +1,308 @@
-/* Home page: render contacts + the project carousel. */
+/* Home page: build the nav + sections dynamically from data.js.
+   - Order comes from window.SECTIONS.
+   - A section is skipped entirely if it has no content (auto-hide). */
 (function () {
-  const projects = window.PROJECTS || [];
+  const sectionsRoot = document.getElementById("sections");
+  const navRoot = document.getElementById("navLinks");
+  if (!sectionsRoot) return;
 
-  /* ---------- Contact links ---------- */
-  const contactWrap = document.getElementById("contactLinks");
-  if (contactWrap) {
-    (window.CONTACTS || []).forEach((c) => {
-      const a = document.createElement("a");
-      a.className = "btn";
-      a.href = c.url;
-      a.textContent = c.label;
-      if (/^https?:/i.test(c.url)) {
-        a.target = "_blank";
-        a.rel = "noopener";
-      }
-      contactWrap.appendChild(a);
-    });
+  const reduced =
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Section builders ----------
+     Each returns null when empty (so the section is hidden), or an object:
+     { title, html, cls?, mount? }. */
+
+  function buildAbout() {
+    const text = (window.ABOUT || "").trim();
+    if (!text) return null;
+    return { title: "About", cls: "about", html: `<p class="about-text reveal">${window.ABOUT}</p>` };
   }
 
-  /* ---------- About ---------- */
-  const aboutEl = document.getElementById("aboutText");
-  if (aboutEl && window.ABOUT) aboutEl.innerHTML = window.ABOUT;
+  function buildExperience() {
+    const list = window.EXPERIENCE || [];
+    if (!list.length) return null;
+    const items = list
+      .map((e) => {
+        const points = (e.points || []).map((p) => `<li>${p}</li>`).join("");
+        return `
+          <div class="tl-item reveal">
+            <div class="tl-card">
+              <div class="tl-role">${e.role || ""}${
+          e.company ? ` &middot; <span class="tl-company">${e.company}</span>` : ""
+        }</div>
+              ${e.date ? `<div class="tl-date">${e.date}</div>` : ""}
+              ${points ? `<ul class="tl-points">${points}</ul>` : ""}
+            </div>
+          </div>`;
+      })
+      .join("");
+    return { title: "Experience", cls: "experience", html: `<div class="timeline">${items}</div>` };
+  }
 
-  /* ---------- Experience ---------- */
-  const expWrap = document.getElementById("experienceList");
-  if (expWrap) {
-    (window.EXPERIENCE || []).forEach((e) => {
-      const item = document.createElement("div");
-      item.className = "exp-item";
-      const points = (e.points || []).map((p) => `<li>${p}</li>`).join("");
-      item.innerHTML = `
-        <div class="exp-head">
-          <span class="exp-role">${e.role || ""}${
-        e.company ? ` &middot; <span class="exp-company">${e.company}</span>` : ""
-      }</span>
-          <span class="exp-date">${e.date || ""}</span>
+  function buildProjects() {
+    const list = window.PROJECTS || [];
+    if (!list.length) return null;
+    const html = `
+      <div class="carousel" id="carousel">
+        <button class="carousel-btn prev" id="prevBtn" aria-label="Previous project">&#8249;</button>
+        <div class="carousel-viewport">
+          <div class="carousel-track" id="carouselTrack"></div>
         </div>
-        ${points ? `<ul class="exp-points">${points}</ul>` : ""}`;
-      expWrap.appendChild(item);
-    });
+        <button class="carousel-btn next" id="nextBtn" aria-label="Next project">&#8250;</button>
+      </div>
+      <div class="carousel-dots" id="carouselDots"></div>`;
+    return { title: "Projects", cls: "projects", html, mount: initCarousel };
   }
 
-  /* ---------- Skills ---------- */
-  const skillsWrap = document.getElementById("skillsList");
-  if (skillsWrap) {
-    (window.SKILLS || []).forEach((g) => {
-      const group = document.createElement("div");
-      group.className = "skill-group";
-      const tags = (g.items || []).map((i) => `<span class="tag">${i}</span>`).join("");
-      group.innerHTML = `<h3 class="skill-category">${g.category}</h3><div class="tags">${tags}</div>`;
-      skillsWrap.appendChild(group);
-    });
+  function buildSkills() {
+    const list = window.SKILLS || [];
+    if (!list.length) return null;
+    const groups = list
+      .map((g) => {
+        const tags = (g.items || []).map((i) => `<span class="tag">${i}</span>`).join("");
+        return `<div class="skill-group reveal"><h3 class="skill-category">${g.category}</h3><div class="tags">${tags}</div></div>`;
+      })
+      .join("");
+    return { title: "Skills", cls: "skills", html: `<div class="skills-list">${groups}</div>` };
   }
 
-  /* ---------- Certifications ---------- */
-  const certWrap = document.getElementById("certList");
-  if (certWrap) {
-    (window.CERTIFICATIONS || []).forEach((c) => {
-      const item = document.createElement("div");
-      item.className = "cert-item";
-      const meta = [c.issuer, c.date].filter(Boolean).join(" · ");
-      const link = c.url
-        ? `<a class="cert-link" href="${c.url}" target="_blank" rel="noopener">View &rarr;</a>`
-        : "";
-      item.innerHTML = `
-        <div class="cert-main">
-          <span class="cert-name">${c.name || ""}</span>
-          <span class="cert-meta">${meta}</span>
-        </div>
-        ${link}`;
-      certWrap.appendChild(item);
-    });
+  function buildCertifications() {
+    const list = window.CERTIFICATIONS || [];
+    if (!list.length) return null;
+    const items = list
+      .map((c) => {
+        const meta = [c.issuer, c.date].filter(Boolean).join(" · ");
+        const link = c.url
+          ? `<a class="cert-link" href="${c.url}" target="_blank" rel="noopener">View &rarr;</a>`
+          : "";
+        return `
+          <div class="cert-item reveal">
+            <div class="cert-main">
+              <span class="cert-name">${c.name || ""}</span>
+              <span class="cert-meta">${meta}</span>
+            </div>
+            ${link}</div>`;
+      })
+      .join("");
+    return { title: "Certifications", cls: "certifications", html: `<div class="cert-list">${items}</div>` };
   }
 
-  /* ---------- Projects carousel ---------- */
-  const carousel = document.getElementById("carousel");
-  const viewport = carousel.querySelector(".carousel-viewport");
-  const track = document.getElementById("carouselTrack");
-  const dotsWrap = document.getElementById("carouselDots");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-
-  function cardEl(p) {
-    const a = document.createElement("a");
-    a.className = "card";
-    a.href = `project.html?id=${encodeURIComponent(p.id)}`;
-    a.innerHTML = `
-      <div class="card-img" style="background-image:url('${p.image}')"></div>
-      <div class="card-body">
-        <h3 class="card-title">${p.title}</h3>
-        ${p.date ? `<p class="card-date">${p.date}</p>` : ""}
-        <p class="card-tagline">${p.tagline || ""}</p>
-        <span class="card-cta">View details &rarr;</span>
-      </div>`;
-    return a;
+  function buildEducation() {
+    const list = window.EDUCATION || [];
+    if (!list.length) return null;
+    const items = list
+      .map((e) => {
+        const meta = [e.school, e.date].filter(Boolean).join(" · ");
+        return `
+          <div class="edu-item reveal">
+            <div class="edu-degree">${e.degree || ""}</div>
+            <div class="edu-meta">${meta}</div>
+            ${e.details ? `<p class="edu-details">${e.details}</p>` : ""}
+          </div>`;
+      })
+      .join("");
+    return { title: "Education", cls: "education", html: `<div class="edu-list">${items}</div>` };
   }
 
-  const n = projects.length;
-
-  // Fewer than 3 projects: show them statically, no navigation.
-  if (n < 3) {
-    carousel.classList.add("static");
-    projects.forEach((p) => track.appendChild(cardEl(p)));
-    return;
+  function buildContact() {
+    const list = window.CONTACTS || [];
+    if (!list.length) return null;
+    const links = list
+      .map((c) => {
+        const ext = /^https?:/i.test(c.url) ? ` target="_blank" rel="noopener"` : "";
+        return `<a class="btn" href="${c.url}"${ext}>${c.label}</a>`;
+      })
+      .join("");
+    return {
+      title: "Contact",
+      cls: "contact",
+      html: `<p class="contact-intro reveal">Interested in working together or want to know more? Get in touch.</p>
+             <div class="contact-links reveal">${links}</div>`,
+    };
   }
 
-  // 3+ projects: seamless, centered, infinite carousel.
-  // Clone the last card before the first and the first card after the last,
-  // so wrapping around never shows an empty edge.
-  const cloneLast = cardEl(projects[n - 1]);
-  const cloneFirst = cardEl(projects[0]);
-  [cloneLast, cloneFirst].forEach((c) => {
-    c.setAttribute("aria-hidden", "true");
-    c.tabIndex = -1;
+  const BUILDERS = {
+    about: buildAbout,
+    experience: buildExperience,
+    projects: buildProjects,
+    skills: buildSkills,
+    certifications: buildCertifications,
+    education: buildEducation,
+    contact: buildContact,
+  };
+
+  /* ---------- Render in the configured order, skipping empty sections ---------- */
+  const order = window.SECTIONS || Object.keys(BUILDERS);
+  const mounts = [];
+
+  order.forEach((key) => {
+    const builder = BUILDERS[key];
+    if (!builder) return;
+    const sec = builder();
+    if (!sec) return; // no content -> auto-hidden
+
+    const el = document.createElement("section");
+    el.id = key;
+    el.className = "section" + (sec.cls ? " " + sec.cls : "");
+    el.innerHTML = `<h2 class="section-title reveal">${sec.title}</h2>${sec.html}`;
+    sectionsRoot.appendChild(el);
+
+    const link = document.createElement("a");
+    link.href = "#" + key;
+    link.textContent = sec.title;
+    navRoot.appendChild(link);
+
+    if (sec.mount) mounts.push(sec.mount);
   });
 
-  track.appendChild(cloneLast);
-  projects.forEach((p) => track.appendChild(cardEl(p)));
-  track.appendChild(cloneFirst);
+  mounts.forEach((fn) => fn());
+  setupReveal();
 
-  const cards = Array.from(track.children); // [cloneLast, ...real, cloneFirst]
-
-  // One dot per real project.
-  const dots = projects.map((p, i) => {
-    const d = document.createElement("button");
-    d.className = "dot";
-    d.setAttribute("aria-label", `Go to ${p.title}`);
-    d.addEventListener("click", () => goTo(i + 1));
-    dotsWrap.appendChild(d);
-    return d;
-  });
-
-  let pos = 1; // index into `cards`; 1 = first real project (centered, neighbors on both sides)
-  let animating = false;
-
-  function metrics() {
-    const cardWidth = cards[0].getBoundingClientRect().width;
-    const gap = parseFloat(getComputedStyle(track).gap) || 24;
-    return { cardWidth, slot: cardWidth + gap };
-  }
-
-  function apply(animate) {
-    const { cardWidth, slot } = metrics();
-    const tx = viewport.clientWidth / 2 - (pos * slot + cardWidth / 2);
-    track.style.transition = animate ? "" : "none";
-    track.style.transform = `translateX(${tx}px)`;
-    updateDots();
-  }
-
-  function updateDots() {
-    const real = (((pos - 1) % n) + n) % n;
-    dots.forEach((d, i) => d.classList.toggle("active", i === real));
-  }
-
-  function go(delta) {
-    if (animating) return;
-    animating = true;
-    pos += delta;
-    apply(true);
-  }
-
-  function goTo(targetPos) {
-    if (animating || targetPos === pos) return;
-    animating = true;
-    pos = targetPos;
-    apply(true);
-  }
-
-  // After a move lands on a clone, instantly snap to the matching real card.
-  track.addEventListener("transitionend", (e) => {
-    // Ignore bubbled transitions from cards (e.g. hover); only react to the track's own move.
-    if (e.target !== track || e.propertyName !== "transform") return;
-    animating = false;
-    if (pos === n + 1) {
-      pos = 1;
-      apply(false);
-    } else if (pos === 0) {
-      pos = n;
-      apply(false);
+  /* ---------- Scroll-reveal (subtle fade/slide-up) ---------- */
+  function setupReveal() {
+    const els = document.querySelectorAll(".reveal");
+    if (reduced || !("IntersectionObserver" in window)) {
+      els.forEach((e) => e.classList.add("in"));
+      return;
     }
-  });
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) {
+            en.target.classList.add("in");
+            io.unobserve(en.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    els.forEach((e) => io.observe(e));
+  }
 
-  prevBtn.addEventListener("click", () => go(-1));
-  nextBtn.addEventListener("click", () => go(1));
+  /* ---------- Projects carousel (seamless, centered, infinite) ---------- */
+  function initCarousel() {
+    const projects = window.PROJECTS || [];
+    const carousel = document.getElementById("carousel");
+    const viewport = carousel.querySelector(".carousel-viewport");
+    const track = document.getElementById("carouselTrack");
+    const dotsWrap = document.getElementById("carouselDots");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowLeft") go(-1);
-    if (e.key === "ArrowRight") go(1);
-  });
+    function cardEl(p) {
+      const a = document.createElement("a");
+      a.className = "card";
+      a.href = `project.html?id=${encodeURIComponent(p.id)}`;
+      a.innerHTML = `
+        <div class="card-img" style="background-image:url('${p.image}')"></div>
+        <div class="card-body">
+          <h3 class="card-title">${p.title}</h3>
+          ${p.date ? `<p class="card-date">${p.date}</p>` : ""}
+          <p class="card-tagline">${p.tagline || ""}</p>
+          <span class="card-cta">View details &rarr;</span>
+        </div>`;
+      return a;
+    }
 
-  // Touch swipe.
-  let startX = null;
-  viewport.addEventListener("touchstart", (e) => (startX = e.touches[0].clientX), { passive: true });
-  viewport.addEventListener("touchend", (e) => {
-    if (startX === null) return;
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
-    startX = null;
-  });
+    const n = projects.length;
 
-  window.addEventListener("resize", () => apply(false));
+    // Fewer than 3 projects: show them statically, no navigation.
+    if (n < 3) {
+      carousel.classList.add("static");
+      projects.forEach((p) => track.appendChild(cardEl(p)));
+      return;
+    }
 
-  apply(false); // initial position, no animation
+    // 3+ projects: clone last/first so wrapping is seamless.
+    const cloneLast = cardEl(projects[n - 1]);
+    const cloneFirst = cardEl(projects[0]);
+    [cloneLast, cloneFirst].forEach((c) => {
+      c.setAttribute("aria-hidden", "true");
+      c.tabIndex = -1;
+    });
+
+    track.appendChild(cloneLast);
+    projects.forEach((p) => track.appendChild(cardEl(p)));
+    track.appendChild(cloneFirst);
+
+    const cards = Array.from(track.children); // [cloneLast, ...real, cloneFirst]
+
+    const dots = projects.map((p, i) => {
+      const d = document.createElement("button");
+      d.className = "dot";
+      d.setAttribute("aria-label", `Go to ${p.title}`);
+      d.addEventListener("click", () => goTo(i + 1));
+      dotsWrap.appendChild(d);
+      return d;
+    });
+
+    let pos = 1;
+    let animating = false;
+
+    function metrics() {
+      const cardWidth = cards[0].getBoundingClientRect().width;
+      const gap = parseFloat(getComputedStyle(track).gap) || 24;
+      return { cardWidth, slot: cardWidth + gap };
+    }
+
+    function apply(animate) {
+      const { cardWidth, slot } = metrics();
+      const tx = viewport.clientWidth / 2 - (pos * slot + cardWidth / 2);
+      track.style.transition = animate ? "" : "none";
+      track.style.transform = `translateX(${tx}px)`;
+      updateDots();
+    }
+
+    function updateDots() {
+      const real = (((pos - 1) % n) + n) % n;
+      dots.forEach((d, i) => d.classList.toggle("active", i === real));
+    }
+
+    function go(delta) {
+      if (animating) return;
+      animating = true;
+      pos += delta;
+      apply(true);
+    }
+
+    function goTo(targetPos) {
+      if (animating || targetPos === pos) return;
+      animating = true;
+      pos = targetPos;
+      apply(true);
+    }
+
+    track.addEventListener("transitionend", (e) => {
+      if (e.target !== track || e.propertyName !== "transform") return;
+      animating = false;
+      if (pos === n + 1) {
+        pos = 1;
+        apply(false);
+      } else if (pos === 0) {
+        pos = n;
+        apply(false);
+      }
+    });
+
+    prevBtn.addEventListener("click", () => go(-1));
+    nextBtn.addEventListener("click", () => go(1));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") go(-1);
+      if (e.key === "ArrowRight") go(1);
+    });
+
+    let startX = null;
+    viewport.addEventListener("touchstart", (e) => (startX = e.touches[0].clientX), { passive: true });
+    viewport.addEventListener("touchend", (e) => {
+      if (startX === null) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+      startX = null;
+    });
+
+    window.addEventListener("resize", () => apply(false));
+    apply(false);
+  }
 })();

@@ -13,6 +13,29 @@ const PROFILE = {
     "I'm proud of — click any card to dive deeper.",
 };
 
+/* ============================================================================
+   PAGE LAYOUT  (order + visibility)
+
+   This single list controls BOTH the order the sections appear in AND which
+   ones show up:
+     • REORDER the page → just reorder the lines below.
+     • HIDE a section   → delete (or comment out) its line.
+     • A section also hides automatically if it has no content yet, so you can
+       leave a line here and it simply won't appear until you fill that section.
+
+   Valid keys: "about", "experience", "projects", "skills",
+               "certifications", "education", "contact"
+   ============================================================================ */
+const SECTIONS = [
+  "about",
+  "experience",
+  "projects",
+  "skills",
+  "certifications",
+  "education",
+  "contact",
+];
+
 /* ---------- 2. ABOUT ----------
    A short intro paragraph shown near the top. Plain text (you may use simple
    HTML like <strong>…</strong> if you want). */
@@ -58,6 +81,18 @@ const SKILLS = [
 const CERTIFICATIONS = [
   { name: "Certified LabVIEW Associate Developer", issuer: "NI", date: "2024", url: "" },
   { name: "AWS Certified Cloud Practitioner", issuer: "Amazon", date: "2023", url: "" },
+];
+
+/* ---------- 5b. EDUCATION ----------
+   ADD/REMOVE a school by copying or deleting a { ... } block.
+   `details` is optional (a short note, e.g. GPA, focus, honours). */
+const EDUCATION = [
+  {
+    school: "University of Somewhere",
+    degree: "B.Eng. in Electrical Engineering",
+    date: "2021 - 2025",
+    details: "Focus on embedded systems and control. Dean's List.",
+  },
 ];
 
 /* ============================================================================
@@ -238,10 +273,12 @@ const CONTACTS = [
 ];
 
 /* ---- (no need to edit below this line) ---- */
+window.SECTIONS = SECTIONS;
 window.PROFILE = PROFILE;
 window.ABOUT = ABOUT;
 window.EXPERIENCE = EXPERIENCE;
 window.SKILLS = SKILLS;
 window.CERTIFICATIONS = CERTIFICATIONS;
+window.EDUCATION = EDUCATION;
 window.PROJECTS = PROJECTS;
 window.CONTACTS = CONTACTS;

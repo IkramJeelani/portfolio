@@ -22,7 +22,11 @@ Open **`data.js`**. Everything lives there:
 
 1. **You** — set `name`, `initials` (shown top-left *and* as the tab icon, automatically
    matched), `role`, and `bio`.
-2. **Projects** — in the `PROJECTS` array, copy a `{ ... }` block to add one, or delete a
+2. **Page layout (order + visibility)** — the `SECTIONS` list at the top controls the
+   order sections appear in. **Reorder** the page by reordering those lines; **hide** a
+   section by deleting its line. A section also **hides itself automatically** when it
+   has no content yet, so you can leave the line and it appears once you fill it in.
+3. **Projects** — in the `PROJECTS` array, copy a `{ ... }` block to add one, or delete a
    block to remove one. Each project needs a unique `id`.
    - 3+ projects → looping carousel (one card centered, neighbors peeking).
    - 1–2 projects → shown side by side with no navigation.
@@ -31,14 +35,22 @@ Open **`data.js`**. Everything lives there:
      video embeds, callouts, quotes, two-column layouts, etc. The full list of
      ready-made building blocks (with copy-paste snippets) is in the big comment
      above the `PROJECTS` array in `data.js`.
-3. **About / Experience / Skills / Certifications** — each has its own clearly-labelled
-   block in `data.js` (`ABOUT`, `EXPERIENCE`, `SKILLS`, `CERTIFICATIONS`). Edit the text
-   or copy/delete entries to add or remove items.
-4. **Contacts** — in the `CONTACTS` array, add/remove `{ label, url }` lines. Use a
+4. **About / Experience / Skills / Certifications / Education** — each has its own
+   clearly-labelled block in `data.js` (`ABOUT`, `EXPERIENCE`, `SKILLS`,
+   `CERTIFICATIONS`, `EDUCATION`). Edit the text or copy/delete entries to add or remove
+   items. Experience renders as a centered timeline.
+5. **Contacts** — in the `CONTACTS` array, add/remove `{ label, url }` lines. Use a
    `mailto:` URL for email; `https://` links open in a new tab.
-5. **Images** — drop pictures into `assets/` (e.g. `project1.jpg`) and point the `image:`
+6. **Images** — drop pictures into `assets/` (e.g. `project1.jpg`) and point the `image:`
    field at them.
-6. **Colors** — tweak the variables at the top of `styles.css` (`:root { ... }`).
+7. **Colors** — tweak the variables at the top of `styles.css` (`:root { ... }`).
+
+### Extras
+- **Walking character in the nav** — a little figure strolls across the header
+  (right → left). Replace `assets/luffy.svg` with your own sprite (an animated GIF/PNG
+  works too) to customise it.
+- **Animations** — sections gently fade/slide in as you scroll. Everything is disabled
+  automatically for visitors who have "reduce motion" turned on.
 
 ## Preview locally
 
