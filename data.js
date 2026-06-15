@@ -87,9 +87,9 @@ const SKILLS = [
    `url`   (optional): link to the credential ("View Credential" button). "" = none. */
 const CERTIFICATIONS = [
   {
-    name: "Certified LabVIEW Associate Developer",
-    issuer: "NI",
-    date: "2024",
+    name: "Siemens Mechatronic Systems Certification Program (SMSCP) Assistant",
+    issuer: "Siemens",
+    date: "Sep 2024",
     image: "", // e.g. "assets/labview.png"
     url: "",
   },
