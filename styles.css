@@ -205,6 +205,14 @@ a { color: inherit; text-decoration: none; }
 }
 .card-body { padding: 1.25rem; }
 .card-title { margin: 0 0 0.35rem; font-size: 1.25rem; }
+.card-date {
+  margin: 0 0 0.6rem;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
 .card-tagline { margin: 0 0 1rem; color: var(--muted); font-size: 0.95rem; }
 .card-cta { color: var(--accent); font-weight: 600; font-size: 0.95rem; }
 
@@ -273,7 +281,15 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 2rem;
 }
 .project-page h1 { font-size: 2.4rem; margin: 0 0 0.5rem; }
-.project-tagline { color: var(--muted); font-size: 1.15rem; margin: 0 0 1.5rem; }
+.project-tagline { color: var(--muted); font-size: 1.15rem; margin: 0 0 0.75rem; }
+.project-date {
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin: 0 0 1.5rem;
+}
 .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
 .tag {
   font-size: 0.82rem;

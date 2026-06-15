@@ -34,6 +34,7 @@
       <div class="card-img" style="background-image:url('${p.image}')"></div>
       <div class="card-body">
         <h3 class="card-title">${p.title}</h3>
+        ${p.date ? `<p class="card-date">${p.date}</p>` : ""}
         <p class="card-tagline">${p.tagline || ""}</p>
         <span class="card-cta">View details &rarr;</span>
       </div>`;

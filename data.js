@@ -17,7 +17,8 @@ const PROFILE = {
    2. PROJECTS
 
    Each project has two parts:
-   • CARD/HEADER fields:  id, title, image, tagline, tech, links
+   • CARD/HEADER fields:  id, title, image, date, tagline, tech, links
+        (date is a free-text string, e.g. "Jan 24 - May 24" — omit it to hide it)
    • body:  the free-form "in-depth" content shown on the project page.
             Write whatever you want here using the building blocks below.
 
@@ -69,6 +70,7 @@ const PROJECTS = [
     id: "smart-thermostat",
     title: "Smart Thermostat Controller",
     image: "assets/project1.svg",
+    date: "Jan 24 - May 24",
     tagline: "Embedded firmware for an energy-aware HVAC system",
     tech: ["C", "STM32", "FreeRTOS", "PID Control"],
     links: [
@@ -124,6 +126,7 @@ const PROJECTS = [
     id: "bridge-sensor-net",
     title: "Bridge Structural Sensor Network",
     image: "assets/project2.svg",
+    date: "Jun 24 - Sep 24",
     tagline: "Wireless strain monitoring for civil infrastructure",
     tech: ["Python", "LoRa", "Raspberry Pi", "InfluxDB", "Grafana"],
     links: [
@@ -152,6 +155,7 @@ const PROJECTS = [
     id: "robotic-arm",
     title: "6-DOF Robotic Arm",
     image: "assets/project3.svg",
+    date: "Oct 24 - Dec 24",
     tagline: "Inverse kinematics and motion planning from scratch",
     tech: ["C++", "ROS", "OpenCV", "Arduino"],
     links: [
