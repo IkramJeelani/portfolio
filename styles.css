@@ -428,11 +428,29 @@ h1, h2, h3,
   transform-style: preserve-3d;
 }
 a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
-.cert-text { min-width: 0; display: flex; flex-direction: column; gap: 0.2rem; }
+.cert-text {
+  width: 100%;
+  min-width: 0;
+  flex: 1 1 auto; /* fills the card height so the CTA can sit at the bottom */
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
 .cert-name { font-weight: 700; font-size: 1.05rem; }
 .cert-meta { color: var(--muted); font-size: 0.9rem; }
-.cert-cta { color: var(--accent); font-weight: 600; font-size: 0.9rem; margin-top: 0.4rem; }
+.cert-cta { color: var(--accent); font-weight: 600; font-size: 0.9rem; margin-top: auto; padding-top: 0.8rem; }
 .cert-logo { flex: 0 0 auto; width: 56px; height: 56px; object-fit: contain; }
+
+/* Certifications grid: centred so partial rows are symmetric about the centre.
+   Caps at 3 per row; e.g. 5 cards => 3 on top, 2 centred below. */
+.certifications .card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.certifications .cert-card { flex: 0 1 300px; }
 
 /* ===== Education ===== */
 .edu-list {

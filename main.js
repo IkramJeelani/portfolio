@@ -179,6 +179,7 @@
   setupReveal();
   setupTilt();
   setupSectionFlash();
+  setupCertEqualize();
 
   /* ---------- Scroll-reveal (subtle fade/slide-up) ---------- */
   function setupReveal() {
@@ -199,6 +200,26 @@
       { threshold: 0.12 }
     );
     els.forEach((e) => io.observe(e));
+  }
+
+  /* ---------- Equal-height cert cards so "View Credential" lines up everywhere ---------- */
+  function setupCertEqualize() {
+    const sec = document.getElementById("certifications");
+    if (!sec) return;
+    const cards = Array.from(sec.querySelectorAll(".cert-card"));
+    if (cards.length < 2) return;
+
+    function equalize() {
+      cards.forEach((c) => (c.style.minHeight = ""));
+      let max = 0;
+      cards.forEach((c) => (max = Math.max(max, c.offsetHeight)));
+      cards.forEach((c) => (c.style.minHeight = max + "px"));
+    }
+    equalize();
+    window.addEventListener("resize", equalize);
+    window.addEventListener("load", equalize);
+    // Re-measure once the web fonts have loaded (they change text height).
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(equalize);
   }
 
   /* ---------- "Arrival" flash on the heading when navigating to a section ---------- */
