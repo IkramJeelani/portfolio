@@ -128,11 +128,18 @@ const CERTIFICATIONS = [
    `logo`    is optional — the university logo, shown on the right of the card. */
 const EDUCATION = [
   {
-    school: "University of Somewhere",
-    degree: "B.Eng. in Electrical Engineering",
-    date: "2021 - 2025",
+    school: "University of Wollongong in Dubai",
+    degree: "Bachelor of Engineering (Honours) in Mechatronics Engineering",
+    date: "2026 - 2027",
     details: "Focus on embedded systems and control. Dean's List.",
-    logo: "assets/siemens_logo.jpg", // e.g. "assets/university.png"
+    logo: "assets/Logos/university_of_wollongong_in_dubai_logo.jpg", // e.g. "assets/university.png"
+  },
+    {
+    school: "Simon Fraser University",
+    degree: "Bachelor of Applied Science (Honours) in Mechatronic Systems Engineering",
+    date: "2024 - 2025",
+    details: "Focus on embedded systems and control. Dean's List.",
+    logo: "assets/Logos/simon_fraser_university_logo.jpg", // e.g. "assets/university.png"
   },
 ];
 
