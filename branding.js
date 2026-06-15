@@ -55,6 +55,28 @@
       header.style.setProperty("--x", e.clientX - r.left + "px");
       header.style.setProperty("--y", e.clientY - r.top + "px");
     });
+
+    // Light/dark toggle, centred in the nav bar (dark is the default).
+    const toggle = document.createElement("button");
+    toggle.className = "theme-toggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-label", "Toggle light and dark theme");
+    toggle.innerHTML =
+      '<svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+      '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>' +
+      '<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">' +
+      '<circle cx="12" cy="12" r="4"/>' +
+      '<path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/></svg>';
+    header.appendChild(toggle);
+
+    toggle.addEventListener("click", () => {
+      const isLight = document.documentElement.getAttribute("data-theme") === "light";
+      const next = isLight ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", next);
+      try {
+        localStorage.setItem("theme", next);
+      } catch (e) {}
+    });
   }
 
   // Gradient scroll-progress bar at the top of every page.
