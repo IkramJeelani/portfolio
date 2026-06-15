@@ -42,10 +42,12 @@ body {
   filter: blur(70px);
   opacity: 0.55;
 }
-.g1 { width: 48vw; height: 48vw; left: -14vw;  top: -14vw;     background: radial-gradient(circle, rgba(168, 85, 247, 0.6), transparent 70%); }
-.g2 { width: 44vw; height: 44vw; right: -14vw; top: 2vh;       background: radial-gradient(circle, rgba(236, 72, 153, 0.5), transparent 70%); }
-.g3 { width: 42vw; height: 42vw; right: -12vw; bottom: -16vw;  background: radial-gradient(circle, rgba(99, 102, 241, 0.5), transparent 70%); }
-.g4 { width: 40vw; height: 40vw; left: -12vw;  bottom: -14vw;  background: radial-gradient(circle, rgba(139, 92, 246, 0.5), transparent 70%); }
+/* transform-origin is each blob's INNER corner, so breathing expands toward the
+   screen corner (outward) instead of pushing into the middle. */
+.g1 { width: 48vw; height: 48vw; left: -14vw;  top: -14vw;     transform-origin: bottom right; background: radial-gradient(circle, rgba(168, 85, 247, 0.6), transparent 70%); }
+.g2 { width: 44vw; height: 44vw; right: -14vw; top: 2vh;       transform-origin: bottom left;  background: radial-gradient(circle, rgba(236, 72, 153, 0.5), transparent 70%); }
+.g3 { width: 42vw; height: 42vw; right: -12vw; bottom: -16vw;  transform-origin: top left;     background: radial-gradient(circle, rgba(99, 102, 241, 0.5), transparent 70%); }
+.g4 { width: 40vw; height: 40vw; left: -12vw;  bottom: -14vw;  transform-origin: top right;    background: radial-gradient(circle, rgba(139, 92, 246, 0.5), transparent 70%); }
 
 a { color: inherit; text-decoration: none; }
 
