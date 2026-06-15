@@ -94,8 +94,10 @@
           ${logo}
           <div class="cert-text">
             <span class="cert-name">${c.name || ""}</span>
-            ${meta ? `<span class="cert-meta">${meta}</span>` : ""}
-            ${c.url ? `<span class="cert-cta">View Credential &rarr;</span>` : ""}
+            <div class="cert-foot">
+              ${meta ? `<span class="cert-meta">${meta}</span>` : ""}
+              ${c.url ? `<span class="cert-cta">View Credential &rarr;</span>` : ""}
+            </div>
           </div>`;
         return c.url
           ? `<a class="cert-card reveal" style="${delay}" href="${c.url}" target="_blank" rel="noopener">${inner}</a>`
