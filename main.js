@@ -208,16 +208,17 @@
   function setupCertEqualize() {
     const sec = document.getElementById("certifications");
     if (!sec) return;
-    const cards = Array.from(sec.querySelectorAll(".cert-card"));
-    if (cards.length < 2) return;
+    const names = Array.from(sec.querySelectorAll(".cert-name"));
+    if (names.length < 2) return;
 
-    // Equalize card height; meta + "View Credential" are bottom-anchored via CSS,
-    // so they end up at the same position on every card.
+    // Equalize the name block to the tallest name, so the issuer (and View Credential
+    // below it) land at the exact same position on every card. The fixed gap below the
+    // name (.cert-foot in CSS) gives even the tallest card space after its name.
     function equalize() {
-      cards.forEach((c) => (c.style.minHeight = ""));
+      names.forEach((n) => (n.style.minHeight = ""));
       let max = 0;
-      cards.forEach((c) => (max = Math.max(max, c.offsetHeight)));
-      cards.forEach((c) => (c.style.minHeight = max + "px"));
+      names.forEach((n) => (max = Math.max(max, n.offsetHeight)));
+      names.forEach((n) => (n.style.minHeight = max + "px"));
     }
     equalize();
     window.addEventListener("resize", equalize);

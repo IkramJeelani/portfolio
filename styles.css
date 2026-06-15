@@ -439,8 +439,9 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 .cert-name { font-weight: 700; font-size: 1.05rem; }
 .cert-meta { color: var(--muted); font-size: 0.9rem; }
 .cert-cta { color: var(--accent); font-weight: 600; font-size: 0.9rem; }
-/* issuer·date + View Credential sit together, pinned to the bottom of the card */
-.cert-foot { margin-top: auto; display: flex; flex-direction: column; gap: 0.45rem; }
+/* issuer·date + View Credential sit together, with a generous gap after the name
+   (bigger than the gap between them, so the issuer reads as closer to View Credential) */
+.cert-foot { margin-top: 1.75rem; display: flex; flex-direction: column; gap: 0.45rem; }
 .cert-logo { flex: 0 0 auto; width: 56px; height: 56px; object-fit: contain; }
 
 /* Certifications grid: centred so partial rows are symmetric about the centre.
