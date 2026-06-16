@@ -401,11 +401,11 @@ h1, h2, h3,
 /* ===== Skills ===== */
 .skills-list {
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, max-content); /* 4 per row */
-  justify-content: center; /* centre the whole block under the heading */
-  align-items: start; /* so each line spans only its own category */
-  gap: 1.75rem 2.5rem;
+  display: flex;
+  flex-wrap: nowrap; /* all categories on a single row */
+  justify-content: center; /* centred under the heading */
+  align-items: flex-start; /* each line spans only its own category */
+  gap: 2.5rem;
 }
 .skill-group {
   position: relative;
@@ -440,10 +440,6 @@ h1, h2, h3,
   align-items: flex-start;
   gap: 0.5rem;
   margin-bottom: 0;
-}
-/* Fewer columns on smaller screens */
-@media (max-width: 720px) {
-  .skills-list { grid-template-columns: repeat(2, max-content); }
 }
 
 /* ===== Certifications: same card as projects, in the grid ===== */
