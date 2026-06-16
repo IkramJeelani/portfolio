@@ -70,13 +70,10 @@
           .join("");
         return `
           <a class="dock-card${active}" href="project.html?id=${encodeURIComponent(p.id)}">
-            <div class="dock-body">
-              <div class="dock-name">${p.title}</div>
-              ${p.date ? `<div class="dock-date">${p.date}</div>` : ""}
-              ${p.tagline ? `<div class="dock-tagline">${p.tagline}</div>` : ""}
-              ${tags ? `<div class="tags dock-tags">${tags}</div>` : ""}
-            </div>
-            <div class="dock-img" style="background-image:url('${p.image}')"></div>
+            <div class="dock-name">${p.title}</div>
+            ${p.date ? `<div class="dock-date">${p.date}</div>` : ""}
+            ${p.tagline ? `<div class="dock-tagline">${p.tagline}</div>` : ""}
+            ${tags ? `<div class="tags dock-tags">${tags}</div>` : ""}
           </a>`;
       })
       .join("");
@@ -95,6 +92,28 @@
     window.addEventListener("resize", equalizeDock);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(equalizeDock);
   }
+
+  // Hover a dock card -> the project image pops out beside the dock (genie-style expand).
+  const preview = document.createElement("div");
+  preview.className = "dock-preview";
+  preview.setAttribute("aria-hidden", "true");
+  document.body.appendChild(preview);
+  const PREVIEW_H = 170;
+  dockCards.forEach((card, idx) => {
+    const p = projects[idx];
+    if (!p) return;
+    card.addEventListener("mouseenter", () => {
+      preview.style.backgroundImage = `url('${p.image}')`;
+      const r = card.getBoundingClientRect();
+      const dr = dock.getBoundingClientRect();
+      let top = r.top + r.height / 2 - PREVIEW_H / 2;
+      top = Math.max(8, Math.min(top, window.innerHeight - PREVIEW_H - 8));
+      preview.style.top = top + "px";
+      preview.style.left = dr.right + 12 + "px";
+      preview.classList.add("show");
+    });
+    card.addEventListener("mouseleave", () => preview.classList.remove("show"));
+  });
 
   // Back link goes to the home page; main.js restores scroll + morph on arrival.
   if (backLink) backLink.setAttribute("href", "index.html");
