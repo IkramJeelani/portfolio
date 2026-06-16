@@ -9,7 +9,7 @@
    particles: true  -> falling particles start ON
               false -> start OFF */
 const SETTINGS = {
-  theme: "dark",
+  theme: "light",
   particles: true,
 };
 
