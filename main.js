@@ -54,9 +54,11 @@
           <a class="card reveal" style="--reveal-delay:${i * 70}ms" href="project.html?id=${encodeURIComponent(p.id)}">
             <div class="card-img" style="background-image:url('${p.image}')"></div>
             <div class="card-body">
-              <h3 class="card-title">${p.title}</h3>
-              ${p.date ? `<p class="card-date">${p.date}</p>` : ""}
-              <p class="card-tagline">${p.tagline || ""}</p>
+              <div class="card-main">
+                <h3 class="card-title">${p.title}</h3>
+                ${p.date ? `<p class="card-date">${p.date}</p>` : ""}
+                <p class="card-tagline">${p.tagline || ""}</p>
+              </div>
               <span class="card-cta">View details &rarr;</span>
             </div>
           </a>`
@@ -189,7 +191,7 @@
   setupReveal();
   setupTilt();
   setupSectionFlash();
-  setupCertEqualize();
+  setupEqualize();
 
   /* ---------- Scroll-reveal (subtle fade/slide-up) ---------- */
   function setupReveal() {
@@ -213,26 +215,34 @@
   }
 
   /* ---------- Equal-height cert cards so "View Credential" lines up everywhere ---------- */
-  function setupCertEqualize() {
-    const sec = document.getElementById("certifications");
-    if (!sec) return;
-    const names = Array.from(sec.querySelectorAll(".cert-name"));
-    if (names.length < 2) return;
-
-    // Equalize the name block to the tallest name, so the issuer (and View Credential
-    // below it) land at the exact same position on every card. The fixed gap below the
-    // name (.cert-foot in CSS) gives even the tallest card space after its name.
-    function equalize() {
-      names.forEach((n) => (n.style.minHeight = ""));
-      let max = 0;
-      names.forEach((n) => (max = Math.max(max, n.offsetHeight)));
-      names.forEach((n) => (n.style.minHeight = max + "px"));
-    }
-    equalize();
-    window.addEventListener("resize", equalize);
-    window.addEventListener("load", equalize);
+  function setupEqualize() {
+    // For each group, stretch the measured block to the tallest one so the content
+    // below it (View Credential / View details) lines up across every card. A fixed
+    // CSS gap keeps that content clear of the text even on the tallest card.
+    const groups = [
+      { id: "certifications", sel: ".cert-name" },
+      { id: "projects", sel: ".card-main" },
+    ];
+    const runners = [];
+    groups.forEach(({ id, sel }) => {
+      const sec = document.getElementById(id);
+      if (!sec) return;
+      const els = Array.from(sec.querySelectorAll(sel));
+      if (els.length < 2) return;
+      runners.push(() => {
+        els.forEach((e) => (e.style.minHeight = ""));
+        let max = 0;
+        els.forEach((e) => (max = Math.max(max, e.offsetHeight)));
+        els.forEach((e) => (e.style.minHeight = max + "px"));
+      });
+    });
+    if (!runners.length) return;
+    const runAll = () => runners.forEach((r) => r());
+    runAll();
+    window.addEventListener("resize", runAll);
+    window.addEventListener("load", runAll);
     // Re-measure once the web fonts have loaded (they change text height).
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(equalize);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(runAll);
   }
 
   /* ---------- "Arrival" flash on the heading when navigating to a section ---------- */

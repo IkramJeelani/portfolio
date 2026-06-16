@@ -574,6 +574,15 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   gap: 1.5rem;
   perspective: 1100px; /* enables the 3D tilt of cards */
 }
+/* Projects grid: centred so partial rows are symmetric (like certifications) */
+.projects .card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.projects .card { flex: 0 1 300px; }
 
 /* ===== Card ===== */
 .card {
@@ -616,7 +625,7 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   background-position: center;
   background-color: var(--bg-soft);
 }
-.card-body { padding: 1.25rem; }
+.card-body { padding: 1.25rem; display: flex; flex-direction: column; }
 .card-title { margin: 0 0 0.35rem; font-size: 1.25rem; }
 .card-date {
   margin: 0 0 0.6rem;
@@ -626,8 +635,9 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
-.card-tagline { margin: 0 0 1rem; color: var(--muted); font-size: 0.95rem; }
-.card-cta { color: var(--accent); font-weight: 600; font-size: 0.95rem; }
+.card-tagline { margin: 0; color: var(--muted); font-size: 0.95rem; }
+/* fixed gap so "View details" sits clear of the description on the tallest card too */
+.card-cta { margin-top: 1.4rem; color: var(--accent); font-weight: 600; font-size: 0.95rem; }
 
 /* ===== Contact ===== */
 .contact {
