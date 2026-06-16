@@ -94,7 +94,7 @@
 
     // Hamburger menu — collapses the nav links into a dropdown on narrow screens.
     const navEl = header.querySelector("nav");
-    if (navEl) {
+    if (navEl && navEl.children.length) {
       const menuBtn = document.createElement("button");
       menuBtn.className = "nav-toggle";
       menuBtn.type = "button";

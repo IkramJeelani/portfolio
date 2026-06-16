@@ -44,4 +44,47 @@
     <div class="tags">${techHtml}</div>
     <div class="project-content">${bodyHtml}</div>
     <div class="project-links">${linksHtml}</div>`;
+
+  // "Back to projects" — return to the exact spot on the home page if we came from it.
+  const backLink = page.querySelector(".back-link");
+  if (backLink) {
+    backLink.addEventListener("click", (e) => {
+      let fromIndex = false;
+      try {
+        const ref = document.referrer;
+        fromIndex = ref && new URL(ref).origin === location.origin && !/project\.html/i.test(ref);
+      } catch (err) {}
+      if (fromIndex && window.history.length > 1) {
+        e.preventDefault();
+        window.history.back();
+      }
+    });
+  }
+
+  // Floating quick-access dock listing every project (shown on wide screens).
+  const dock = document.createElement("aside");
+  dock.className = "project-dock";
+  dock.setAttribute("aria-label", "Other projects");
+  dock.innerHTML =
+    '<div class="dock-title">Projects</div>' +
+    projects
+      .map((p) => {
+        const active = p.id === project.id ? " active" : "";
+        const tags = (p.tech || [])
+          .slice(0, 4)
+          .map((t) => `<span class="tag">${t}</span>`)
+          .join("");
+        return `
+          <a class="dock-card${active}" href="project.html?id=${encodeURIComponent(p.id)}">
+            <div class="dock-img" style="background-image:url('${p.image}')"></div>
+            <div class="dock-body">
+              <div class="dock-name">${p.title}</div>
+              ${p.date ? `<div class="dock-date">${p.date}</div>` : ""}
+              ${p.tagline ? `<div class="dock-tagline">${p.tagline}</div>` : ""}
+              ${tags ? `<div class="tags dock-tags">${tags}</div>` : ""}
+            </div>
+          </a>`;
+      })
+      .join("");
+  document.body.appendChild(dock);
 })();
