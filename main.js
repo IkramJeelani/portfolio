@@ -49,8 +49,9 @@
     const list = window.PROJECTS || [];
     if (!list.length) return null;
     const cards = list
-      .map(
-        (p, i) => `
+      .map((p, i) => {
+        const tech = (p.tech || []).map((t) => `<span class="tag">${t}</span>`).join("");
+        return `
           <a class="card reveal" style="--reveal-delay:${i * 70}ms" href="project.html?id=${encodeURIComponent(p.id)}">
             <div class="card-img" style="background-image:url('${p.image}')"></div>
             <div class="card-body">
@@ -58,11 +59,12 @@
                 <h3 class="card-title">${p.title}</h3>
                 ${p.date ? `<p class="card-date">${p.date}</p>` : ""}
                 <p class="card-tagline">${p.tagline || ""}</p>
+                ${tech ? `<div class="tags card-tags">${tech}</div>` : ""}
               </div>
               <span class="card-cta">View details &rarr;</span>
             </div>
-          </a>`
-      )
+          </a>`;
+      })
       .join("");
     return { title: "Projects", cls: "projects", html: `<div class="card-grid">${cards}</div>` };
   }

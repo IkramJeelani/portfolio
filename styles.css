@@ -636,7 +636,8 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   text-transform: uppercase;
 }
 .card-tagline { margin: 0; color: var(--muted); font-size: 0.95rem; }
-/* fixed gap so "View details" sits clear of the description on the tallest card too */
+.card .tags { margin: 0.85rem 0 0; } /* tech tags on the card, above View details */
+/* fixed gap so "View details" sits clear of the content on the tallest card too */
 .card-cta { margin-top: 1.4rem; color: var(--accent); font-weight: 600; font-size: 0.95rem; }
 
 /* ===== Contact ===== */
