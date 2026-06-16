@@ -9,6 +9,15 @@
   const reduced =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Turn a GitHub "blob" PDF link into a same-origin path we can embed in a popup.
+  function toEmbed(url) {
+    if (!url) return "";
+    const m = url.match(/github\.com\/[^/]+\/[^/]+\/blob\/[^/]+\/(.+\.pdf)$/i);
+    if (m) return m[1]; // e.g. "assets/Certifications/CSWA.pdf"
+    if (/\.pdf($|\?)/i.test(url)) return url;
+    return "";
+  }
+
   /* ---------- Section builders ----------
      Each returns null when empty (so the section is hidden), or an object:
      { title, html, cls?, mount? }. */
@@ -102,8 +111,10 @@
               ${c.url ? `<span class="cert-cta">View Credential &rarr;</span>` : ""}
             </div>
           </div>`;
+        const embed = toEmbed(c.url);
+        const pdfAttr = embed ? ` data-pdf="${embed}"` : "";
         return c.url
-          ? `<a class="cert-card reveal" style="${delay}" href="${c.url}" target="_blank" rel="noopener">${inner}</a>`
+          ? `<a class="cert-card reveal" style="${delay}" href="${c.url}"${pdfAttr} target="_blank" rel="noopener">${inner}</a>`
           : `<div class="cert-card reveal" style="${delay}">${inner}</div>`;
       })
       .join("");
@@ -196,6 +207,7 @@
   setupTilt();
   setupSectionFlash();
   setupEqualize();
+  setupPdfModal();
 
   /* ---------- Scroll-reveal (subtle fade/slide-up) ---------- */
   function setupReveal() {
@@ -216,6 +228,43 @@
       { threshold: 0.12 }
     );
     els.forEach((e) => io.observe(e));
+  }
+
+  /* ---------- PDF popup (View Credential opens the certificate in a modal) ---------- */
+  function setupPdfModal() {
+    let modal;
+    const open = (src) => {
+      if (!modal) {
+        modal = document.createElement("div");
+        modal.className = "pdf-modal";
+        modal.innerHTML =
+          '<div class="pdf-backdrop"></div>' +
+          '<div class="pdf-box"><button class="pdf-close" aria-label="Close">&times;</button>' +
+          '<iframe title="Certificate"></iframe></div>';
+        document.body.appendChild(modal);
+        modal.querySelector(".pdf-backdrop").addEventListener("click", close);
+        modal.querySelector(".pdf-close").addEventListener("click", close);
+      }
+      modal.querySelector("iframe").src = src;
+      modal.classList.add("open");
+      document.body.style.overflow = "hidden";
+    };
+    function close() {
+      if (!modal) return;
+      modal.classList.remove("open");
+      document.body.style.overflow = "";
+      const f = modal.querySelector("iframe");
+      setTimeout(() => f && (f.src = "about:blank"), 250);
+    }
+    document.addEventListener("click", (e) => {
+      const link = e.target.closest("a[data-pdf]");
+      if (!link) return;
+      e.preventDefault();
+      open(link.getAttribute("data-pdf"));
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
   }
 
   /* ---------- Equal-height cert cards so "View Credential" lines up everywhere ---------- */

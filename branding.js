@@ -47,6 +47,54 @@
     '<span class="glow g3"></span><span class="glow g4"></span>';
   document.body.prepend(bg);
 
+  // Custom glowing cursor (a dot + a lagging ring) on devices with a fine pointer.
+  if (window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    document.body.classList.add("has-cursor");
+    const dot = document.createElement("div");
+    dot.className = "cursor-dot";
+    const ring = document.createElement("div");
+    ring.className = "cursor-ring";
+    document.body.append(dot, ring);
+
+    let mx = window.innerWidth / 2;
+    let my = window.innerHeight / 2;
+    let rx = mx;
+    let ry = my;
+    let scale = 1;
+    let targetScale = 1;
+    let visible = false;
+
+    window.addEventListener("mousemove", (e) => {
+      mx = e.clientX;
+      my = e.clientY;
+      dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+      if (!visible) {
+        visible = true;
+        dot.style.opacity = ring.style.opacity = "1";
+      }
+    });
+    document.addEventListener("mouseleave", () => {
+      visible = false;
+      dot.style.opacity = ring.style.opacity = "0";
+    });
+
+    const interactive = "a, button, .card, .cert-card, .edu-card, .tl-card, input, textarea, [role='button']";
+    document.addEventListener("mouseover", (e) => {
+      if (e.target.closest(interactive)) targetScale = 1.9;
+    });
+    document.addEventListener("mouseout", (e) => {
+      if (e.target.closest(interactive)) targetScale = 1;
+    });
+
+    (function ring_tick() {
+      rx += (mx - rx) * 0.18;
+      ry += (my - ry) * 0.18;
+      scale += (targetScale - scale) * 0.2;
+      ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%) scale(${scale})`;
+      requestAnimationFrame(ring_tick);
+    })();
+  }
+
   // Cursor spotlight that follows the mouse across the nav bar.
   const header = document.querySelector(".site-header");
   if (header) {
