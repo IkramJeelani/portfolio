@@ -45,19 +45,13 @@
     <div class="project-content">${bodyHtml}</div>
     <div class="project-links">${linksHtml}</div>`;
 
-  // "Back to projects" — return to the exact spot on the home page if we came from it.
+  // "Back to projects" — flag a return so the home page restores scroll + morphs the hero.
   const backLink = page.querySelector(".back-link");
   if (backLink) {
-    backLink.addEventListener("click", (e) => {
-      let fromIndex = false;
+    backLink.addEventListener("click", () => {
       try {
-        const ref = document.referrer;
-        fromIndex = ref && new URL(ref).origin === location.origin && !/project\.html/i.test(ref);
-      } catch (err) {}
-      if (fromIndex && window.history.length > 1) {
-        e.preventDefault();
-        window.history.back();
-      }
+        sessionStorage.setItem("returnToProjects", "1");
+      } catch (e) {}
     });
   }
 
@@ -76,15 +70,32 @@
           .join("");
         return `
           <a class="dock-card${active}" href="project.html?id=${encodeURIComponent(p.id)}">
-            <div class="dock-img" style="background-image:url('${p.image}')"></div>
             <div class="dock-body">
               <div class="dock-name">${p.title}</div>
               ${p.date ? `<div class="dock-date">${p.date}</div>` : ""}
               ${p.tagline ? `<div class="dock-tagline">${p.tagline}</div>` : ""}
               ${tags ? `<div class="tags dock-tags">${tags}</div>` : ""}
             </div>
+            <div class="dock-img" style="background-image:url('${p.image}')"></div>
           </a>`;
       })
       .join("");
   document.body.appendChild(dock);
+
+  // Equal height for all dock cards (the tallest sets the height).
+  const dockCards = Array.from(dock.querySelectorAll(".dock-card"));
+  const equalizeDock = () => {
+    dockCards.forEach((c) => (c.style.height = ""));
+    let max = 0;
+    dockCards.forEach((c) => (max = Math.max(max, c.offsetHeight)));
+    dockCards.forEach((c) => (c.style.height = max + "px"));
+  };
+  if (dockCards.length > 1) {
+    equalizeDock();
+    window.addEventListener("resize", equalizeDock);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(equalizeDock);
+  }
+
+  // Back link goes to the home page; main.js restores scroll + morph on arrival.
+  if (backLink) backLink.setAttribute("href", "index.html");
 })();

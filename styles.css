@@ -330,54 +330,62 @@ h1, h2, h3,
   font-size: 1.15rem;
 }
 
-/* ===== Experience: one-sided timeline (line on the left, like education) ===== */
+/* ===== Experience: timeline laid out exactly like Education ===== */
 .timeline {
   position: relative;
-  max-width: 720px;
+  display: grid;
+  grid-template-columns: 120px auto; /* [date + location] | card (all cards equal width) */
+  column-gap: 40px;
+  row-gap: 2rem;
+  width: fit-content;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 0.5rem 0;
 }
 .timeline::before {
   content: "";
   position: absolute;
   top: 8px;
   bottom: 8px;
-  left: 20px;
+  left: 140px; /* 120 + 20 */
+  transform: translateX(-50%);
   width: 2px;
   background: var(--border);
-  transform: translateX(-50%);
 }
-.tl-item {
+.tl-left {
+  grid-column: 1;
   position: relative;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0 0 2rem 48px;
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.85rem;
+  line-height: 1;
+  text-align: center;
+  padding-top: calc(1.6rem + 7px - 0.5em);
 }
-.tl-card {
-  display: inline-block;
-  text-align: left;
-  max-width: 100%;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1rem 1.25rem;
-  transition: transform 0.25s ease, border-color 0.2s;
-}
-.tl-card:hover { transform: translateY(-4px); border-color: var(--accent); }
-.tl-item::after {
+.tl-left::after {
   content: "";
   position: absolute;
   box-sizing: border-box;
-  left: 20px;
-  transform: translateX(-50%);
+  right: -27px;
   top: 1.6rem;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--accent);
   border: 3px solid var(--bg);
   box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
+}
+.tl-date { color: var(--accent); font-weight: 600; white-space: nowrap; }
+.tl-loc { color: var(--muted); white-space: nowrap; line-height: 1.2; }
+.tl-card {
+  grid-column: 2;
+  position: relative;
+  max-width: 460px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
 }
 .tl-logo {
   display: block;
@@ -388,7 +396,6 @@ h1, h2, h3,
 }
 .tl-role { font-weight: 700; font-size: 1.05rem; }
 .tl-company { color: var(--accent); font-weight: 600; margin-top: 0.1rem; }
-.tl-date { color: var(--muted); font-size: 0.85rem; margin: 0.2rem 0 0; }
 .tl-points { margin: 0.7rem 0 0; padding-left: 1.1rem; color: var(--muted); }
 .tl-points li { margin-bottom: 0.3rem; }
 .tl-card .tags { margin: 0.85rem 0 0; } /* tech tags under the details */
@@ -545,7 +552,6 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   box-shadow: var(--shadow);
   transition: transform 0.25s ease, border-color 0.2s;
 }
-.edu-card:hover { transform: translateY(-4px); border-color: var(--accent); }
 .edu-logo { width: 56px; height: 56px; object-fit: contain; }
 .edu-school { font-weight: 700; font-size: 1.1rem; }
 .edu-degree { font-size: 1rem; color: var(--text); }
@@ -647,6 +653,7 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   background-size: cover;
   background-position: center;
   background-color: var(--bg-soft);
+  border-radius: var(--radius) var(--radius) 0 0; /* matches the morph target's rounding */
 }
 .card-body { padding: 1.25rem; display: flex; flex-direction: column; }
 .card-title { margin: 0 0 0.35rem; font-size: 1.25rem; }
@@ -707,7 +714,7 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   position: fixed;
   left: 1rem;
   top: 84px;
-  width: 200px;
+  width: 230px;
   max-height: calc(100vh - 104px);
   overflow-y: auto;
   display: flex;
@@ -725,36 +732,46 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   margin: 0.2rem 0 0.1rem 0.35rem;
 }
 .dock-card {
-  display: block;
+  display: flex;
+  align-items: stretch; /* image (right) fills the card height */
   border: 1px solid var(--border);
   border-radius: 10px;
-  overflow: hidden;
+  overflow: hidden; /* clips the image zoom */
   background: var(--card);
-  opacity: 0.55;
-  transition: opacity 0.2s, border-color 0.2s, transform 0.2s;
+  opacity: 0.6;
+  transition: opacity 0.2s, border-color 0.2s;
 }
-.dock-card:hover { opacity: 1; border-color: var(--accent); transform: translateX(3px); }
+.dock-card:hover { opacity: 1; border-color: var(--accent); }
 .dock-card.active { opacity: 1; border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-.dock-img {
-  height: 58px;
-  background-size: cover;
-  background-position: center;
-  background-color: var(--bg-soft);
+.dock-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  padding: 0.5rem 0.6rem;
 }
-.dock-body { padding: 0.5rem 0.6rem 0.6rem; }
-.dock-name { font-weight: 700; font-size: 0.85rem; line-height: 1.2; }
+.dock-name { font-weight: 700; font-size: 0.82rem; line-height: 1.2; }
 .dock-date {
   color: var(--accent);
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  margin-top: 0.2rem;
 }
-.dock-tagline { color: var(--muted); font-size: 0.72rem; margin-top: 0.25rem; line-height: 1.3; }
-.dock-tags { margin: 0.4rem 0 0; gap: 0.25rem; }
-.dock-tags .tag { font-size: 0.6rem; padding: 0.08rem 0.4rem; }
-@media (max-width: 1280px) { .project-dock { display: none; } }
+.dock-tagline { color: var(--muted); font-size: 0.7rem; line-height: 1.3; }
+.dock-tags { margin: 0.3rem 0 0; gap: 0.25rem; }
+.dock-tags .tag { font-size: 0.58rem; padding: 0.06rem 0.38rem; }
+.dock-img {
+  flex: 0 0 70px;
+  align-self: stretch;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--bg-soft);
+  transition: transform 0.35s ease; /* smooth Amazon-style zoom on hover */
+}
+.dock-card:hover .dock-img { transform: scale(1.2); }
+@media (max-width: 1300px) { .project-dock { display: none; } }
 
 .project-hero {
   height: 320px;
@@ -895,10 +912,11 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 
 /* ===== Responsive ===== */
 @media (max-width: 600px) {
-  /* Tighter timeline on phones */
-  .timeline::before { left: 14px; }
-  .tl-item { padding: 0 0 1.75rem 38px; }
-  .tl-item::after { left: 14px; }
+  /* Experience timeline narrows on phones (same as education) */
+  .timeline { width: auto; grid-template-columns: 96px 1fr; column-gap: 24px; }
+  .timeline::before { left: 108px; }
+  .tl-card { max-width: none; }
+  .tl-left::after { right: -19px; }
 }
 
 /* When the inline links would crowd: collapse them into a dropdown menu.
@@ -1040,7 +1058,13 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 /* Shared-element morph: the clicked project image grows into the detail hero (and back).
    main.js tags the clicked card image with this same name before navigating. */
 .project-hero { view-transition-name: project-hero; }
-::view-transition-group(project-hero) { animation-duration: 0.5s; animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
+::view-transition-group(project-hero) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  border-radius: var(--radius);
+}
+/* clip both snapshots to the same rounded shape so corners stay smooth through the morph */
+::view-transition-image-pair(project-hero) { border-radius: var(--radius); overflow: hidden; }
 
 /* ===== Corner glows breathe (scale + brightness), each on its own clock ===== */
 @media (prefers-reduced-motion: no-preference) {

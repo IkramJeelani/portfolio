@@ -32,22 +32,23 @@
     const list = window.EXPERIENCE || [];
     if (!list.length) return null;
     const items = list
-      .map((e) => {
+      .map((e, i) => {
         const points = (e.points || []).map((p) => `<li>${p}</li>`).join("");
         const logo = e.logo
           ? `<img class="tl-logo" src="${e.logo}" alt="${e.company || "company"} logo">`
           : "";
         const tech = (e.tech || []).map((t) => `<span class="tag">${t}</span>`).join("");
         return `
-          <div class="tl-item reveal">
-            <div class="tl-card">
-              ${logo}
-              <div class="tl-role">${e.role || ""}</div>
-              ${e.company ? `<div class="tl-company">${e.company}</div>` : ""}
-              ${e.date ? `<div class="tl-date">${e.date}</div>` : ""}
-              ${points ? `<ul class="tl-points">${points}</ul>` : ""}
-              ${tech ? `<div class="tags tl-tags">${tech}</div>` : ""}
-            </div>
+          <div class="tl-left">
+            <span class="tl-date">${e.date || ""}</span>
+            ${e.location ? `<span class="tl-loc">${e.location}</span>` : ""}
+          </div>
+          <div class="tl-card reveal" style="--reveal-delay:${i * 70}ms">
+            ${logo}
+            <div class="tl-role">${e.role || ""}</div>
+            ${e.company ? `<div class="tl-company">${e.company}</div>` : ""}
+            ${points ? `<ul class="tl-points">${points}</ul>` : ""}
+            ${tech ? `<div class="tags tl-tags">${tech}</div>` : ""}
           </div>`;
       })
       .join("");
@@ -237,22 +238,35 @@
     if (!projSec) return;
     const cardFor = (id) => projSec.querySelector(`a.card[href$="id=${id}"]`);
 
-    // Returning from a project: tag that card so the hero morphs back into it.
+    // Returning from a project (from any depth): tag the card so the hero morphs back
+    // into it, and restore the exact scroll position instead of jumping to the top.
     try {
       const last = sessionStorage.getItem("lastProject");
       if (last) {
         const img = cardFor(last) && cardFor(last).querySelector(".card-img");
         if (img) img.style.viewTransitionName = "project-hero";
       }
+      if (sessionStorage.getItem("returnToProjects")) {
+        sessionStorage.removeItem("returnToProjects");
+        const y = parseInt(sessionStorage.getItem("indexScroll") || "", 10);
+        if (!isNaN(y)) {
+          const root = document.documentElement;
+          const prev = root.style.scrollBehavior;
+          root.style.scrollBehavior = "auto"; // instant, no slide
+          window.scrollTo(0, y);
+          root.style.scrollBehavior = prev;
+        }
+      }
     } catch (e) {}
 
-    // Opening a project: tag the clicked card's image just before navigating.
+    // Opening a project: remember scroll + tag the clicked card's image before navigating.
     projSec.addEventListener("click", (e) => {
       const card = e.target.closest("a.card");
       if (!card) return;
       const m = (card.getAttribute("href") || "").match(/id=([^&]+)/);
       try {
         if (m) sessionStorage.setItem("lastProject", m[1]);
+        sessionStorage.setItem("indexScroll", String(window.scrollY));
       } catch (e2) {}
       projSec.querySelectorAll(".card-img").forEach((im) => (im.style.viewTransitionName = ""));
       const img = card.querySelector(".card-img");
