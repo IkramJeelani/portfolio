@@ -79,12 +79,14 @@
   dock.innerHTML = `
     <div class="dock-head">
       <span class="dock-title">Projects</span>
-      <button class="dock-collapse" type="button" aria-label="Hide projects panel">&#8249;</button>
+      <button class="dock-collapse" type="button" aria-label="Hide projects panel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
     </div>
     <div class="dock-viewport"><div class="dock-reel">${cardsHTML}</div></div>`;
-  let dockHidden = false;
+  let dockHidden = true; // hidden by default
   try {
-    dockHidden = localStorage.getItem("dockHidden") === "1";
+    dockHidden = localStorage.getItem("dockHidden") !== "0";
   } catch (e) {}
   if (dockHidden) dock.classList.add("collapsed");
   document.body.appendChild(dock);

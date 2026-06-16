@@ -767,6 +767,7 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   line-height: 1;
   transition: background 0.2s, transform 0.15s;
 }
+.dock-collapse svg { width: 15px; height: 15px; display: block; }
 .dock-collapse:hover {
   background: var(--accent);
   color: #fff;
