@@ -728,25 +728,27 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   color: var(--muted);
   margin: 0.2rem 0 0.4rem 0.35rem;
 }
-/* Scrollbar-free viewport; the reel animates inside it (fades at top/bottom) */
+/* Manually scrollable viewport with the scrollbar hidden (fades at top/bottom) */
 .dock-viewport {
   position: relative;
   flex: 1 1 auto;
-  overflow: hidden;
-  padding: 2px 16px 2px 2px; /* right room for the position dots */
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: 2px 26px 2px 2px; /* right room (gap) for the position dots */
   -webkit-mask-image: linear-gradient(180deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
   mask-image: linear-gradient(180deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
 }
-.dock-reel { display: flex; flex-direction: column; gap: 0.6rem; will-change: transform; }
+.dock-viewport::-webkit-scrollbar { display: none; }
+.dock-reel { display: flex; flex-direction: column; gap: 0.6rem; }
 /* Vertical position indicator */
 .dock-nav {
   position: absolute;
-  right: 3px;
+  right: 7px;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 9px;
   z-index: 2;
 }
 .dock-dot {

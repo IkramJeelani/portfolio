@@ -89,14 +89,11 @@
   let cards = Array.from(reel.children);
 
   // Position dots (one per project); click jumps straight to that project.
-  const dots = projects.map((p, i) => {
+  const dots = projects.map((p) => {
     const d = document.createElement("button");
     d.type = "button";
     d.className = "dock-dot" + (p.id === project.id ? " active" : "");
     d.title = p.title;
-    d.addEventListener("click", () => {
-      window.location.href = `project.html?id=${encodeURIComponent(projects[i].id)}`;
-    });
     nav.appendChild(d);
     return d;
   });
@@ -123,12 +120,13 @@
   });
   dock.addEventListener("mouseleave", () => preview.classList.remove("show"));
 
-  // Infinite spin only when the list overflows; pauses while hovering.
-  let copyBlock = 0;
-  let offset = 0;
-  let paused = false;
-  let spinning = false;
-  let lastT = 0;
+  // Manual scroll (scrollbar hidden). Dots show position and jump to a card.
+  const scrollToCard = (i, smooth) => {
+    const c = cards[i];
+    if (!c) return;
+    const target = c.offsetTop + c.offsetHeight / 2 - viewport.clientHeight / 2;
+    viewport.scrollTo({ top: Math.max(0, target), behavior: smooth ? "smooth" : "auto" });
+  };
   const highlight = () => {
     const vr = viewport.getBoundingClientRect();
     const cy = vr.top + vr.height / 2;
@@ -139,37 +137,17 @@
       const d = Math.abs(r.top + r.height / 2 - cy);
       if (d < best) {
         best = d;
-        bi = i % n;
+        bi = i;
       }
     });
     dots.forEach((d, i) => d.classList.toggle("active", i === bi));
   };
-  const tick = (t) => {
-    const dt = Math.min(50, t - lastT);
-    lastT = t;
-    if (!paused) {
-      offset += (dt / 1000) * 28; // ~28px/s drift
-      if (offset >= copyBlock) offset -= copyBlock;
-      reel.style.transform = `translateY(${-offset}px)`;
-    }
-    highlight();
-    requestAnimationFrame(tick);
-  };
-  const initSpin = () => {
-    if (spinning) return;
-    if (reel.scrollHeight > viewport.clientHeight + 12) {
-      reel.insertAdjacentHTML("beforeend", cardsHTML); // second copy for seamless loop
-      cards = Array.from(reel.children);
-      copyBlock = reel.children[n].offsetTop; // height of one copy incl. the gap
-      spinning = true;
-      lastT = performance.now();
-      requestAnimationFrame(tick);
-    }
-  };
-  dock.addEventListener("mouseenter", () => (paused = true));
-  dock.addEventListener("mouseleave", () => (paused = false));
-  initSpin();
-  window.addEventListener("resize", initSpin);
+  dots.forEach((d, i) => d.addEventListener("click", () => scrollToCard(i, true)));
+  viewport.addEventListener("scroll", highlight, { passive: true });
+  // Open with the current project centred.
+  const curIdx = projects.findIndex((p) => p.id === project.id);
+  if (curIdx >= 0) scrollToCard(curIdx, false);
+  highlight();
 
   // Back link goes to the home page; main.js restores scroll + morph on arrival.
   if (backLink) backLink.setAttribute("href", "index.html");

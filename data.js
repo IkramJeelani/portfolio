@@ -325,6 +325,60 @@ const PROJECTS = [
       </div>
     `,
   },
+    {
+    id: "robotic-arm",
+    title: "6-DOF Robotic Arm",
+    image: "assets/project3.svg",
+    date: "Oct 24 - Dec 24",
+    tagline: "Inverse kinematics and motion planning from scratch",
+    tech: ["C++", "ROS", "OpenCV", "Arduino"],
+    links: [
+      { label: "View Code", url: "https://github.com/IkramJeelani/robotic-arm" },
+    ],
+    body: `
+      <p>A six-degree-of-freedom robotic arm capable of picking and placing objects
+      identified by a camera.</p>
+
+      <h2>What I built</h2>
+      <ul>
+        <li>Inverse-kinematics solver written in C++</li>
+        <li>Computer vision with OpenCV to detect and locate objects</li>
+        <li>ROS coordinating perception, planning, and Arduino motor control</li>
+      </ul>
+
+      <div class="gallery">
+        <img src="assets/project3.svg" alt="">
+        <img src="assets/project1.svg" alt="">
+      </div>
+    `,
+  },
+    {
+    id: "robotic-arm",
+    title: "6-DOF Robotic Arm",
+    image: "assets/project3.svg",
+    date: "Oct 24 - Dec 24",
+    tagline: "Inverse kinematics and motion planning from scratch",
+    tech: ["C++", "ROS", "OpenCV", "Arduino"],
+    links: [
+      { label: "View Code", url: "https://github.com/IkramJeelani/robotic-arm" },
+    ],
+    body: `
+      <p>A six-degree-of-freedom robotic arm capable of picking and placing objects
+      identified by a camera.</p>
+
+      <h2>What I built</h2>
+      <ul>
+        <li>Inverse-kinematics solver written in C++</li>
+        <li>Computer vision with OpenCV to detect and locate objects</li>
+        <li>ROS coordinating perception, planning, and Arduino motor control</li>
+      </ul>
+
+      <div class="gallery">
+        <img src="assets/project3.svg" alt="">
+        <img src="assets/project1.svg" alt="">
+      </div>
+    `,
+  },
   
 ];
 
