@@ -759,7 +759,13 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   transition: opacity 0.2s, border-color 0.2s;
 }
 .dock-card:hover { opacity: 1; border-color: var(--accent); }
-.dock-card.active { opacity: 1; border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+/* The project you're currently viewing — thick ring + glow, no hover preview */
+.dock-card.active {
+  opacity: 1;
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 2px var(--accent), 0 0 16px rgba(168, 85, 247, 0.4);
+  cursor: default;
+}
 .dock-name { font-weight: 700; font-size: 0.82rem; line-height: 1.2; }
 .dock-date {
   color: var(--accent);

@@ -84,7 +84,21 @@
   const viewport = dock.querySelector(".dock-viewport");
   const reel = dock.querySelector(".dock-reel");
 
-  // Genie image preview beside the dock on hover (delegated).
+  // All dock cards share the same height (tallest wins).
+  const dockCards = Array.from(reel.children);
+  const equalizeDock = () => {
+    dockCards.forEach((c) => (c.style.height = ""));
+    let max = 0;
+    dockCards.forEach((c) => (max = Math.max(max, c.offsetHeight)));
+    dockCards.forEach((c) => (c.style.height = max + "px"));
+  };
+  if (dockCards.length > 1) {
+    equalizeDock();
+    window.addEventListener("resize", equalizeDock);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(equalizeDock);
+  }
+
+  // Genie image preview beside the dock on hover (delegated; skip the current project).
   const preview = document.createElement("div");
   preview.className = "dock-preview";
   preview.setAttribute("aria-hidden", "true");
@@ -92,7 +106,7 @@
   const PREVIEW_H = 170;
   reel.addEventListener("mouseover", (e) => {
     const card = e.target.closest(".dock-card");
-    if (!card) return;
+    if (!card || card.classList.contains("active")) return; // no preview for the current project
     const p = projects.find((x) => x.id === decodeURIComponent(card.dataset.id || ""));
     if (!p) return;
     preview.style.backgroundImage = `url('${p.image}')`;
