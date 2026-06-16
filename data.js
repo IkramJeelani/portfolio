@@ -80,9 +80,6 @@ const SKILLS = [
   { category: "Languages", items: ["C", "C++", "Python", "JavaScript"] },
   { category: "Tools & Frameworks", items: ["ROS", "FreeRTOS", "Git", "Grafana"] },
   { category: "Hardware", items: ["STM32", "Arduino", "Raspberry Pi", "PCB Design"] },
-  { category: "Hardware", items: ["STM32", "Arduino", "Raspberry Pi", "PCB Design"] },
-  { category: "Hardware", items: ["STM32", "Arduino", "Raspberry Pi", "PCB Design"] },
-  
 ];
 
 /* ---------- 5. CERTIFICATIONS ----------
