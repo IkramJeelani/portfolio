@@ -208,6 +208,7 @@
   setupSectionFlash();
   setupEqualize();
   setupPdfModal();
+  setupSharedTransition();
 
   /* ---------- Scroll-reveal (subtle fade/slide-up) ---------- */
   function setupReveal() {
@@ -228,6 +229,35 @@
       { threshold: 0.12 }
     );
     els.forEach((e) => io.observe(e));
+  }
+
+  /* ---------- Shared-element page transition (card image <-> detail hero) ---------- */
+  function setupSharedTransition() {
+    const projSec = document.getElementById("projects");
+    if (!projSec) return;
+    const cardFor = (id) => projSec.querySelector(`a.card[href$="id=${id}"]`);
+
+    // Returning from a project: tag that card so the hero morphs back into it.
+    try {
+      const last = sessionStorage.getItem("lastProject");
+      if (last) {
+        const img = cardFor(last) && cardFor(last).querySelector(".card-img");
+        if (img) img.style.viewTransitionName = "project-hero";
+      }
+    } catch (e) {}
+
+    // Opening a project: tag the clicked card's image just before navigating.
+    projSec.addEventListener("click", (e) => {
+      const card = e.target.closest("a.card");
+      if (!card) return;
+      const m = (card.getAttribute("href") || "").match(/id=([^&]+)/);
+      try {
+        if (m) sessionStorage.setItem("lastProject", m[1]);
+      } catch (e2) {}
+      projSec.querySelectorAll(".card-img").forEach((im) => (im.style.viewTransitionName = ""));
+      const img = card.querySelector(".card-img");
+      if (img) img.style.viewTransitionName = "project-hero";
+    });
   }
 
   /* ---------- PDF popup (View Credential opens the certificate in a modal) ---------- */

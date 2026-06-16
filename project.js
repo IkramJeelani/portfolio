@@ -14,6 +14,10 @@
   }
 
   document.title = `${project.title} — ${(window.PROFILE || {}).name || ""}`;
+  // Remember which project, so going back morphs the hero into the right card.
+  try {
+    sessionStorage.setItem("lastProject", encodeURIComponent(project.id));
+  } catch (e) {}
 
   const techHtml = (project.tech || []).map((t) => `<span class="tag">${t}</span>`).join("");
   const linksHtml = (project.links || [])

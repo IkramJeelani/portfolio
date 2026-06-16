@@ -932,15 +932,6 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   pointer-events: none;
 }
 
-/* ===== Circuit-node cursor (glowing node + trail) ===== */
-.node-cursor,
-.node-cursor * { cursor: none; }
-.cursor-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  pointer-events: none;
-}
 
 /* ===== PDF popup (certificate viewer) ===== */
 .pdf-modal {
@@ -999,10 +990,15 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 
 /* ===== Smooth cross-page morph when opening / leaving a project ===== */
 @view-transition { navigation: auto; }
-::view-transition-old(root) { animation: vt-out 0.3s ease both; }
-::view-transition-new(root) { animation: vt-in 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+::view-transition-old(root) { animation: vt-out 0.4s ease both; }
+::view-transition-new(root) { animation: vt-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 @keyframes vt-out { to { opacity: 0; transform: scale(0.98); } }
 @keyframes vt-in { from { opacity: 0; transform: scale(1.02); } }
+
+/* Shared-element morph: the clicked project image grows into the detail hero (and back).
+   main.js tags the clicked card image with this same name before navigating. */
+.project-hero { view-transition-name: project-hero; }
+::view-transition-group(project-hero) { animation-duration: 0.5s; animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
 
 /* ===== Corner glows breathe (scale + brightness), each on its own clock ===== */
 @media (prefers-reduced-motion: no-preference) {
