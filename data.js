@@ -93,10 +93,6 @@ const SKILLS = [
   { category: "Languages", items: ["C", "C++", "Python", "JavaScript"] },
   { category: "Tools & Frameworks", items: ["ROS", "FreeRTOS", "Git", "Grafana"] },
   { category: "Hardware", items: ["STM32", "Arduino", "Raspberry Pi", "PCB Design"] },
-  { category: "Hardware", items: ["STM32", "Arduino", "Raspberry Pi", "PCB Design"] },
-  { category: "Hardware", items: ["STM32", "Arduino", "Raspberry Pi", "PCB Design"] },
-  { category: "Hardware", items: ["STM32", "Arduino", "Raspberry Pi", "PCB Design"] },
-
 ];
 
 /* ---------- 5. CERTIFICATIONS ----------
@@ -266,7 +262,7 @@ const PROJECTS = [
 
       <h2>Demo</h2>
       <div class="video">
-        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Demo" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Demo" allowfullscreen></iframe>
       </div>
 
       <h2>Results</h2>

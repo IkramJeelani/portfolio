@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ikramjeelani.github.io/portfolio/sitemap.xml
