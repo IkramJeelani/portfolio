@@ -136,10 +136,105 @@
     window.addEventListener("resize", update);
     update();
 
-    // One-time light sweep across the whole page on load.
-    const sweep = document.createElement("div");
-    sweep.className = "page-sweep";
-    document.body.appendChild(sweep);
-    sweep.addEventListener("animationend", () => sweep.remove());
+    // Shining particles that drift down the sides now and then, and dodge the cursor.
+    const canvas = document.createElement("canvas");
+    canvas.className = "particles";
+    canvas.setAttribute("aria-hidden", "true");
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext("2d");
+    let W = 0;
+    let H = 0;
+    const resizeCanvas = () => {
+      const dpr = window.devicePixelRatio || 1;
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + "px";
+      canvas.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    const colors = ["#c084fc", "#f472b6", "#a78bfa", "#e9d5ff"];
+    const particles = [];
+    const mouse = { x: -9999, y: -9999 };
+    window.addEventListener("mousemove", (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener("mouseout", () => {
+      mouse.x = -9999;
+      mouse.y = -9999;
+    });
+
+    function spawnBurst() {
+      const r = Math.random();
+      const sides = r < 0.4 ? [0] : r < 0.8 ? [1] : [0, 1]; // left / right / both
+      sides.forEach((side) => {
+        const n = 2 + Math.floor(Math.random() * 5); // random count per side
+        for (let i = 0; i < n; i++) {
+          const band = W * 0.15; // keep them near the sides
+          const x = side === 0 ? Math.random() * band : W - Math.random() * band;
+          particles.push({
+            x,
+            y: -10 - Math.random() * 60,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: 0.4 + Math.random() * 0.8,
+            r: 1.2 + Math.random() * 2.4,
+            tw: Math.random() * Math.PI * 2,
+            color: colors[(Math.random() * colors.length) | 0],
+          });
+        }
+      });
+      if (particles.length > 90) particles.splice(0, particles.length - 90);
+    }
+
+    let nextBurst = 0;
+    let last = performance.now();
+    function frame(now) {
+      const dt = Math.min(48, now - last);
+      last = now;
+      if (now >= nextBurst) {
+        spawnBurst();
+        nextBurst = now + 1500 + Math.random() * 4500; // random cadence
+      }
+      ctx.clearRect(0, 0, W, H);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const d2 = dx * dx + dy * dy;
+        const R = 100;
+        if (d2 < R * R) {
+          const d = Math.sqrt(d2) || 1;
+          const f = ((R - d) / R) * 2.6; // push away from the cursor
+          p.vx += (dx / d) * f * (dt / 16);
+          p.vy += (dy / d) * f * (dt / 16);
+        }
+        p.vx *= 0.95;
+        p.vy *= 0.98;
+        p.vy += 0.03 * (dt / 16); // gentle gravity so they resume falling
+        p.x += p.vx * (dt / 16);
+        p.y += p.vy * (dt / 16);
+        if (p.y > H + 30) {
+          particles.splice(i, 1);
+          continue;
+        }
+        const tw = 0.45 + 0.55 * Math.sin(now * 0.005 + p.tw); // twinkle
+        ctx.globalAlpha = tw;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = p.color;
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
   }
 })();

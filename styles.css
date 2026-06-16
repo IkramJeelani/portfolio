@@ -924,25 +924,12 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   pointer-events: none;
 }
 
-/* One-time diagonal light streak that sweeps across the whole page on load */
-.page-sweep {
+/* Shining particles drifting down the sides (drawn on a fixed canvas behind content) */
+.particles {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: -1;
   pointer-events: none;
-  background: linear-gradient(
-    115deg,
-    transparent 36%,
-    rgba(192, 132, 252, 0.10) 47%,
-    rgba(255, 255, 255, 0.22) 50%,
-    rgba(236, 72, 153, 0.12) 53%,
-    transparent 64%
-  );
-  transform: translateX(-110%);
-  animation: page-sweep 1.15s ease-in-out 0.25s 1 forwards;
-}
-@keyframes page-sweep {
-  to { transform: translateX(110%); }
 }
 
 /* ===== Smooth cross-page morph when opening / leaving a project ===== */
