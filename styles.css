@@ -367,7 +367,9 @@ h1, h2, h3,
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1rem 1.25rem;
+  transition: transform 0.25s ease, border-color 0.2s;
 }
+.tl-card:hover { transform: translateY(-4px); border-color: var(--accent); }
 .tl-item::after {
   content: "";
   position: absolute;
