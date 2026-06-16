@@ -169,36 +169,39 @@
       mouse.y = -9999;
     });
 
-    function spawnBurst() {
-      const r = Math.random();
-      const sides = r < 0.4 ? [0] : r < 0.8 ? [1] : [0, 1]; // left / right / both
-      sides.forEach((side) => {
-        const n = 2 + Math.floor(Math.random() * 5); // random count per side
-        for (let i = 0; i < n; i++) {
-          const band = W * 0.15; // keep them near the sides
-          const x = side === 0 ? Math.random() * band : W - Math.random() * band;
-          particles.push({
-            x,
-            y: -10 - Math.random() * 60,
-            vx: (Math.random() - 0.5) * 0.3,
-            vy: 0.4 + Math.random() * 0.8,
-            r: 1.2 + Math.random() * 2.4,
-            tw: Math.random() * Math.PI * 2,
-            color: colors[(Math.random() * colors.length) | 0],
-          });
-        }
+    // The side band = the empty margin outside the ~1180px content column,
+    // so particles stay clear of the main body.
+    const bandFor = (side) => {
+      const margin = Math.max(36, (W - 1180) / 2);
+      return side === 0 ? [0, margin] : [W - margin, W];
+    };
+
+    function spawn() {
+      [0, 1].forEach((side) => {
+        // both sides together, one particle each
+        const [minX, maxX] = bandFor(side);
+        particles.push({
+          side,
+          x: minX + Math.random() * (maxX - minX),
+          y: -10 - Math.random() * 40,
+          vx: (Math.random() - 0.5) * 0.15,
+          vy: 1.0 + Math.random() * 0.9,
+          r: 1.2 + Math.random() * 1.6,
+          tw: Math.random() * Math.PI * 2,
+          color: colors[(Math.random() * colors.length) | 0],
+        });
       });
-      if (particles.length > 90) particles.splice(0, particles.length - 90);
+      if (particles.length > 16) particles.splice(0, particles.length - 16);
     }
 
-    let nextBurst = 0;
+    let nextSpawn = 0;
     let last = performance.now();
     function frame(now) {
       const dt = Math.min(48, now - last);
       last = now;
-      if (now >= nextBurst) {
-        spawnBurst();
-        nextBurst = now + 1500 + Math.random() * 4500; // random cadence
+      if (now >= nextSpawn) {
+        spawn();
+        nextSpawn = now + 1500 + Math.random() * 1300; // steady, never stops
       }
       ctx.clearRect(0, 0, W, H);
       for (let i = particles.length - 1; i >= 0; i--) {
@@ -215,9 +218,18 @@
         }
         p.vx *= 0.95;
         p.vy *= 0.98;
-        p.vy += 0.03 * (dt / 16); // gentle gravity so they resume falling
+        p.vy += 0.03 * (dt / 16); // gentle gravity so they keep falling
         p.x += p.vx * (dt / 16);
         p.y += p.vy * (dt / 16);
+        // keep within the side band so they never drift onto the body
+        const [minX, maxX] = bandFor(p.side);
+        if (p.x < minX) {
+          p.x = minX;
+          p.vx = Math.abs(p.vx) * 0.4;
+        } else if (p.x > maxX) {
+          p.x = maxX;
+          p.vx = -Math.abs(p.vx) * 0.4;
+        }
         if (p.y > H + 30) {
           particles.splice(i, 1);
           continue;
