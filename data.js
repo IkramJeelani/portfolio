@@ -47,26 +47,29 @@ const ABOUT =
 /* ---------- 3. EXPERIENCE ----------
    ADD/REMOVE a role by copying or deleting a { ... } block.
    `points` is optional — leave it as [] for none.
-   `logo`   is optional — a small company logo (put the file in assets/). "" = none. */
+   `tech`   is optional — tags for the tech used in the job (shown under the details).
+   `logo`   is optional — a company logo (put the file in assets/). "" = none. */
 const EXPERIENCE = [
   {
     role: "Engineering Intern",
     company: "Acme Robotics",
     date: "Summer 2024",
-    logo: "", // e.g. "assets/acme.png"
+    logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/acme.png"
     points: [
       "Built automated test fixtures that cut QA time by ~30%.",
       "Wrote firmware for a sensor-calibration rig used across the team.",
     ],
+    tech: ["C", "Python", "STM32"],
   },
   {
     role: "Undergraduate Researcher",
     company: "University Lab",
     date: "2023 - 2024",
-    logo: "", // e.g. "assets/lab.png"
+    logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/lab.png"
     points: [
       "Investigated low-power wireless protocols for distributed sensor networks.",
     ],
+    tech: ["LoRa", "Python", "Embedded C"],
   },
 ];
 
@@ -137,8 +140,8 @@ const EDUCATION = [
     degree: "Bachelor of Engineering (Honours) in",
     major: "Mechatronics Engineering",
     details: [
-      "Focus on embedded systems and control.",
-      "Dean's List.",
+      "Transfer student from Simon Fraser University.",
+      "",
     ],
     logo: "assets/Logos/university_of_wollongong_in_dubai_logo.jpg",
   },
@@ -149,8 +152,8 @@ const EDUCATION = [
     degree: "Bachelor of Applied Science (Honours) in",
     major: "Mechatronic Systems Engineering",
     details: [
-      "Focus on embedded systems and control.",
-      "Dean's List.",
+      "Dean's Honours List - Fall 2025",
+      "President's Honours List - Fall 2025",
     ],
     logo: "assets/Logos/simon_fraser_university_logo.jpg",
   },

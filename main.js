@@ -28,19 +28,16 @@
         const logo = e.logo
           ? `<img class="tl-logo" src="${e.logo}" alt="${e.company || "company"} logo">`
           : "";
+        const tech = (e.tech || []).map((t) => `<span class="tag">${t}</span>`).join("");
         return `
           <div class="tl-item reveal">
             <div class="tl-card">
-              <div class="tl-head">
-                ${logo}
-                <div class="tl-headtext">
-                  <div class="tl-role">${e.role || ""}${
-          e.company ? ` &middot; <span class="tl-company">${e.company}</span>` : ""
-        }</div>
-                  ${e.date ? `<div class="tl-date">${e.date}</div>` : ""}
-                </div>
-              </div>
+              ${logo}
+              <div class="tl-role">${e.role || ""}</div>
+              ${e.company ? `<div class="tl-company">${e.company}</div>` : ""}
+              ${e.date ? `<div class="tl-date">${e.date}</div>` : ""}
               ${points ? `<ul class="tl-points">${points}</ul>` : ""}
+              ${tech ? `<div class="tags tl-tags">${tech}</div>` : ""}
             </div>
           </div>`;
       })

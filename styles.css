@@ -382,19 +382,19 @@ h1, h2, h3,
 /* Centre the dot exactly on the line regardless of its border width */
 .tl-item:nth-child(odd)::after { right: 0; transform: translateX(50%); }
 .tl-item:nth-child(even)::after { left: 0; transform: translateX(-50%); }
-.tl-head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
 .tl-logo {
-  flex: 0 0 auto;
-  width: 42px;
-  height: 42px;
+  display: block;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
+  margin-bottom: 0.7rem;
 }
-.tl-headtext { min-width: 0; }
 .tl-role { font-weight: 700; font-size: 1.05rem; }
-.tl-company { color: var(--accent); font-weight: 600; }
-.tl-date { color: var(--muted); font-size: 0.85rem; margin: 0.1rem 0 0; }
-.tl-points { margin: 0; padding-left: 1.1rem; color: var(--muted); }
+.tl-company { color: var(--accent); font-weight: 600; margin-top: 0.1rem; }
+.tl-date { color: var(--muted); font-size: 0.85rem; margin: 0.2rem 0 0; }
+.tl-points { margin: 0.7rem 0 0; padding-left: 1.1rem; color: var(--muted); }
 .tl-points li { margin-bottom: 0.3rem; }
+.tl-card .tags { margin: 0.85rem 0 0; } /* tech tags under the details */
 
 /* ===== Skills ===== */
 .skills-list {
