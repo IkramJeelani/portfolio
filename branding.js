@@ -61,6 +61,15 @@
       header.style.setProperty("--y", e.clientY - r.top + "px");
     });
 
+    // Clicking the IJ logo scrolls all the way to the top (nav goes transparent).
+    const brand = header.querySelector(".brand");
+    if (brand && document.body.hasAttribute("data-home")) {
+      brand.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
+
     // Light/dark toggle, centred in the nav bar (dark is the default).
     const toggle = document.createElement("button");
     toggle.className = "theme-toggle";
@@ -126,5 +135,11 @@
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
     update();
+
+    // One-time light sweep across the whole page on load.
+    const sweep = document.createElement("div");
+    sweep.className = "page-sweep";
+    document.body.appendChild(sweep);
+    sweep.addEventListener("animationend", () => sweep.remove());
   }
 })();

@@ -664,9 +664,10 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   text-transform: uppercase;
 }
 .card-tagline { margin: 0; color: var(--muted); font-size: 0.95rem; }
-.card .tags { margin: 0.85rem 0 0; } /* tech tags on the card, above View details */
-/* fixed gap so "View details" sits clear of the content on the tallest card too */
-.card-cta { margin-top: 1.4rem; color: var(--accent); font-weight: 600; font-size: 0.95rem; }
+/* tags + View details grouped at the bottom; the gap sits above the tags (after the description) */
+.card-foot { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
+.card-foot .tags { margin: 0; align-content: flex-start; }
+.card-cta { color: var(--accent); font-weight: 600; font-size: 0.95rem; }
 
 /* ===== Contact ===== */
 .contact {
@@ -921,6 +922,27 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   background: var(--grad);
   z-index: 100;
   pointer-events: none;
+}
+
+/* One-time diagonal light streak that sweeps across the whole page on load */
+.page-sweep {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 36%,
+    rgba(192, 132, 252, 0.10) 47%,
+    rgba(255, 255, 255, 0.22) 50%,
+    rgba(236, 72, 153, 0.12) 53%,
+    transparent 64%
+  );
+  transform: translateX(-110%);
+  animation: page-sweep 1.15s ease-in-out 0.25s 1 forwards;
+}
+@keyframes page-sweep {
+  to { transform: translateX(110%); }
 }
 
 /* ===== Smooth cross-page morph when opening / leaving a project ===== */

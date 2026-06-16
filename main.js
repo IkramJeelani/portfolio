@@ -59,9 +59,11 @@
                 <h3 class="card-title">${p.title}</h3>
                 ${p.date ? `<p class="card-date">${p.date}</p>` : ""}
                 <p class="card-tagline">${p.tagline || ""}</p>
-                ${tech ? `<div class="tags card-tags">${tech}</div>` : ""}
               </div>
-              <span class="card-cta">View details &rarr;</span>
+              <div class="card-foot">
+                ${tech ? `<div class="tags">${tech}</div>` : ""}
+                <span class="card-cta">View details &rarr;</span>
+              </div>
             </div>
           </a>`;
       })
@@ -224,6 +226,7 @@
     const groups = [
       { id: "certifications", sel: ".cert-name" },
       { id: "projects", sel: ".card-main" },
+      { id: "projects", sel: ".card-foot .tags" },
     ];
     const runners = [];
     groups.forEach(({ id, sel }) => {
