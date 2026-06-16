@@ -4,10 +4,22 @@
   const p = window.PROFILE || {};
   const initials = (p.initials || "").trim();
 
-  // Whether the falling particle animation is on (toggled from the nav bar).
-  let particlesEnabled = true;
+  const settings = window.SETTINGS || {};
+
+  // Default theme from data.js (only when the visitor hasn't chosen one).
   try {
-    particlesEnabled = localStorage.getItem("particles") !== "off";
+    if (!localStorage.getItem("theme") && settings.theme === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  } catch (e) {
+    if (settings.theme === "light") document.documentElement.setAttribute("data-theme", "light");
+  }
+
+  // Falling particles: default from data.js, overridden by the visitor's choice.
+  let particlesEnabled = settings.particles !== false;
+  try {
+    const sp = localStorage.getItem("particles");
+    if (sp !== null) particlesEnabled = sp !== "off";
   } catch (e) {}
 
   // Build the tab icon from the SAME initials as the on-page logo, so they always match.
@@ -187,7 +199,11 @@
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    const colors = ["#c084fc", "#f472b6", "#a78bfa", "#e9d5ff"];
+    // Lighter glow colours on dark mode; deeper, saturated colours so they read on white.
+    const colorsDark = ["#c084fc", "#f472b6", "#a78bfa", "#e9d5ff"];
+    const colorsLight = ["#7c3aed", "#db2777", "#6d28d9", "#c026d3"];
+    const palette = () =>
+      document.documentElement.getAttribute("data-theme") === "light" ? colorsLight : colorsDark;
     const particles = [];
     const mouse = { x: -9999, y: -9999 };
     window.addEventListener("mousemove", (e) => {
@@ -235,7 +251,7 @@
           vy: 1.0 + Math.random() * 0.9,
           r: 1.2 + Math.random() * 1.6,
           tw: Math.random() * Math.PI * 2,
-          color: colors[(Math.random() * colors.length) | 0],
+          color: palette()[(Math.random() * 4) | 0],
         });
       });
       const cap = small() ? 8 : 16;

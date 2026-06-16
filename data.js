@@ -3,6 +3,16 @@
    you need to touch to change your name, projects, or contacts.
    ============================================================= */
 
+/* ---------- 0. DEFAULTS ----------
+   What a first-time visitor sees (they can still toggle either from the nav bar).
+   theme:     "dark" or "light"
+   particles: true  -> falling particles start ON
+              false -> start OFF */
+const SETTINGS = {
+  theme: "dark",
+  particles: true,
+};
+
 /* ---------- 1. YOU ---------- */
 const PROFILE = {
   name: "Ikram Jeelani",
@@ -396,6 +406,7 @@ const CONTACTS = [
 ];
 
 /* ---- (no need to edit below this line) ---- */
+window.SETTINGS = SETTINGS;
 window.SECTIONS = SECTIONS;
 window.PROFILE = PROFILE;
 window.ABOUT = ABOUT;
