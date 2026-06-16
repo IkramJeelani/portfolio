@@ -145,7 +145,7 @@
     let W = 0;
     let H = 0;
     const resizeCanvas = () => {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2); // cap for mobile GPU/perf
       W = window.innerWidth;
       H = window.innerHeight;
       canvas.width = W * dpr;
@@ -169,10 +169,27 @@
       mouse.y = -9999;
     });
 
+    const small = () => W < 700; // phones / narrow: lighter + tighter to the edge
+
+    // Persist particles across navigation so they continue from where they were
+    // (smooth when opening a project's detail page) instead of restarting.
+    const SAVE_KEY = "ij_particles";
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(SAVE_KEY) || "null");
+      if (saved && Array.isArray(saved.p) && Date.now() - saved.t < 4000) {
+        saved.p.forEach((o) => particles.push(o));
+      }
+    } catch (e) {}
+    window.addEventListener("pagehide", () => {
+      try {
+        sessionStorage.setItem(SAVE_KEY, JSON.stringify({ t: Date.now(), p: particles }));
+      } catch (e) {}
+    });
+
     // The side band = the empty margin outside the ~1180px content column,
     // so particles stay clear of the main body.
     const bandFor = (side) => {
-      const margin = Math.max(36, (W - 1180) / 2);
+      const margin = Math.max(small() ? 22 : 40, (W - 1180) / 2);
       return side === 0 ? [0, margin] : [W - margin, W];
     };
 
@@ -191,7 +208,8 @@
           color: colors[(Math.random() * colors.length) | 0],
         });
       });
-      if (particles.length > 16) particles.splice(0, particles.length - 16);
+      const cap = small() ? 8 : 16;
+      if (particles.length > cap) particles.splice(0, particles.length - cap);
     }
 
     let nextSpawn = 0;
@@ -201,7 +219,7 @@
       last = now;
       if (now >= nextSpawn) {
         spawn();
-        nextSpawn = now + 1500 + Math.random() * 1300; // steady, never stops
+        nextSpawn = now + (small() ? 2400 + Math.random() * 2200 : 1500 + Math.random() * 1300); // steady, never stops
       }
       ctx.clearRect(0, 0, W, H);
       for (let i = particles.length - 1; i >= 0; i--) {
@@ -239,7 +257,7 @@
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = small() ? 6 : 12;
         ctx.shadowColor = p.color;
         ctx.fill();
       }
