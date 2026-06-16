@@ -84,6 +84,30 @@
   const viewport = dock.querySelector(".dock-viewport");
   const reel = dock.querySelector(".dock-reel");
 
+  // Vertical location line beside the dock (custom scroll-position indicator).
+  const rail = document.createElement("div");
+  rail.className = "dock-rail";
+  const thumb = document.createElement("div");
+  thumb.className = "dock-rail-thumb";
+  rail.appendChild(thumb);
+  dock.appendChild(rail);
+  const updateRail = () => {
+    const sh = viewport.scrollHeight;
+    const ch = viewport.clientHeight;
+    if (sh <= ch + 2) {
+      rail.style.display = "none";
+      return;
+    }
+    rail.style.display = "block";
+    rail.style.top = viewport.offsetTop + "px";
+    rail.style.height = ch + "px";
+    const thumbH = Math.max(24, (ch / sh) * ch);
+    thumb.style.height = thumbH + "px";
+    const denom = sh - ch;
+    thumb.style.transform = `translateY(${denom > 0 ? (viewport.scrollTop / denom) * (ch - thumbH) : 0}px)`;
+  };
+  viewport.addEventListener("scroll", updateRail, { passive: true });
+
   // All dock cards share the same height (tallest wins).
   const dockCards = Array.from(reel.children);
   const equalizeDock = () => {
@@ -103,6 +127,7 @@
   const layoutDock = () => {
     if (dockCards.length > 1) equalizeDock();
     centerActive(false);
+    updateRail();
   };
   layoutDock();
   window.addEventListener("resize", layoutDock);
