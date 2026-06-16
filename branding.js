@@ -4,6 +4,12 @@
   const p = window.PROFILE || {};
   const initials = (p.initials || "").trim();
 
+  // Whether the falling particle animation is on (toggled from the nav bar).
+  let particlesEnabled = true;
+  try {
+    particlesEnabled = localStorage.getItem("particles") !== "off";
+  } catch (e) {}
+
   // Build the tab icon from the SAME initials as the on-page logo, so they always match.
   const fontSize = initials.length > 2 ? 22 : 32;
   const svg =
@@ -70,7 +76,12 @@
       });
     }
 
-    // Light/dark toggle, centred in the nav bar (dark is the default).
+    // Centred control group: theme toggle + particles toggle.
+    const controls = document.createElement("div");
+    controls.className = "header-controls";
+    header.appendChild(controls);
+
+    // Light/dark toggle (dark is the default).
     const toggle = document.createElement("button");
     toggle.className = "theme-toggle";
     toggle.type = "button";
@@ -81,8 +92,7 @@
       '<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">' +
       '<circle cx="12" cy="12" r="4"/>' +
       '<path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/></svg>';
-    header.appendChild(toggle);
-
+    controls.appendChild(toggle);
     toggle.addEventListener("click", () => {
       const isLight = document.documentElement.getAttribute("data-theme") === "light";
       const next = isLight ? "dark" : "light";
@@ -90,6 +100,26 @@
       try {
         localStorage.setItem("theme", next);
       } catch (e) {}
+    });
+
+    // Start/stop the falling particles.
+    const fxBtn = document.createElement("button");
+    fxBtn.className = "fx-toggle";
+    fxBtn.type = "button";
+    fxBtn.setAttribute("aria-label", "Start or stop the falling particles");
+    fxBtn.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+      '<path d="M12 2l1.6 4.4L18 8l-4.4 1.6L12 14l-1.6-4.4L6 8l4.4-1.6z"/>' +
+      '<path d="M18 13l.8 2.2L21 16l-2.2.8L18 19l-.8-2.2L15 16l2.2-.8z"/></svg>';
+    controls.appendChild(fxBtn);
+    const syncFx = () => fxBtn.classList.toggle("off", !particlesEnabled);
+    syncFx();
+    fxBtn.addEventListener("click", () => {
+      particlesEnabled = !particlesEnabled;
+      try {
+        localStorage.setItem("particles", particlesEnabled ? "on" : "off");
+      } catch (e) {}
+      syncFx();
     });
 
     // Hamburger menu — collapses the nav links into a dropdown on narrow screens.
@@ -217,6 +247,12 @@
     function frame(now) {
       const dt = Math.min(48, now - last);
       last = now;
+      if (!particlesEnabled) {
+        if (particles.length) particles.length = 0;
+        ctx.clearRect(0, 0, W, H);
+        requestAnimationFrame(frame);
+        return;
+      }
       if (now >= nextSpawn) {
         spawn();
         nextSpawn = now + (small() ? 2400 + Math.random() * 2200 : 1500 + Math.random() * 1300); // steady, never stops

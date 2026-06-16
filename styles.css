@@ -176,12 +176,19 @@ h1, h2, h3,
 .site-header nav a:hover::after { transform: scaleX(1); }
 
 /* Light/dark toggle — centred in the nav bar */
-.theme-toggle {
+/* Centred control group in the nav bar (theme toggle + particles toggle) */
+.header-controls {
   grid-column: 2;
   grid-row: 1;
   justify-self: center;
   position: relative;
   z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.theme-toggle,
+.fx-toggle {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -192,17 +199,21 @@ h1, h2, h3,
   background: var(--bg-soft);
   color: var(--accent);
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s, opacity 0.2s;
 }
-.theme-toggle:hover {
+.theme-toggle:hover,
+.fx-toggle:hover {
   border-color: var(--accent);
   transform: scale(1.1);
 }
-.theme-toggle svg { width: 20px; height: 20px; display: block; }
+.theme-toggle svg,
+.fx-toggle svg { width: 20px; height: 20px; display: block; }
 .theme-toggle .icon-sun { display: none; }
 .theme-toggle .icon-moon { display: block; }
 :root[data-theme="light"] .theme-toggle .icon-sun { display: block; }
 :root[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+/* When particles are off, the sparkle button looks dimmed */
+.fx-toggle.off { color: var(--muted); opacity: 0.6; }
 
 /* Hamburger menu button (hidden until the links would crowd) */
 .nav-toggle {
@@ -728,41 +739,16 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   color: var(--muted);
   margin: 0.2rem 0 0.4rem 0.35rem;
 }
-/* Manually scrollable viewport with the scrollbar hidden (fades at top/bottom) */
+/* Manually scrollable viewport; scrollbar hidden; scroll stays inside the dock */
 .dock-viewport {
-  position: relative;
   flex: 1 1 auto;
   overflow-y: auto;
   scrollbar-width: none;
-  padding: 2px 26px 2px 2px; /* right room (gap) for the position dots */
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
-  mask-image: linear-gradient(180deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  overscroll-behavior: contain; /* don't chain scroll to the page */
+  padding: 2px;
 }
 .dock-viewport::-webkit-scrollbar { display: none; }
 .dock-reel { display: flex; flex-direction: column; gap: 0.6rem; }
-/* Vertical position indicator */
-.dock-nav {
-  position: absolute;
-  right: 7px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  z-index: 2;
-}
-.dock-dot {
-  width: 7px;
-  height: 7px;
-  padding: 0;
-  border: none;
-  border-radius: 50%;
-  background: var(--border);
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-}
-.dock-dot:hover { background: var(--muted); }
-.dock-dot.active { background: var(--accent); transform: scale(1.5); }
 .dock-card {
   display: block;
   padding: 0.55rem 0.7rem;
@@ -784,7 +770,7 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   margin-top: 0.15rem;
 }
 .dock-tagline { color: var(--muted); font-size: 0.7rem; line-height: 1.3; margin-top: 0.2rem; }
-.dock-tags { margin: 0.45rem 0 0; gap: 0.3rem; }
+.dock-tags { margin: 0.4rem 0 0; gap: 0.3rem; }
 .dock-tags .tag { font-size: 0.58rem; padding: 0.06rem 0.4rem; }
 
 /* Hover preview image that genies out beside the dock */
@@ -1117,4 +1103,18 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   .scroll-progress { display: none; }
+}
+
+/* ===== Small-screen polish ===== */
+@media (max-width: 900px) {
+  .section { padding: 3rem 1.25rem; }
+}
+@media (max-width: 480px) {
+  .site-header { padding: 0.85rem 1rem; }
+  .header-controls { gap: 0.45rem; }
+  .hero { padding: 4rem 1.1rem 2.5rem; }
+  .hero h1 { font-size: 2.15rem; }
+  .subtitle { font-size: 0.98rem; }
+  .section-title { font-size: 1.6rem; }
+  .theme-toggle, .fx-toggle { width: 36px; height: 36px; }
 }

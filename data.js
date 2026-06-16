@@ -326,7 +326,7 @@ const PROJECTS = [
     `,
   },
     {
-    id: "robotic-arm",
+    id: "robotic-arma",
     title: "6-DOF Robotic Arm",
     image: "assets/project3.svg",
     date: "Oct 24 - Dec 24",
@@ -353,7 +353,7 @@ const PROJECTS = [
     `,
   },
     {
-    id: "robotic-arm",
+    id: "robotic-armb",
     title: "6-DOF Robotic Arm",
     image: "assets/project3.svg",
     date: "Oct 24 - Dec 24",
