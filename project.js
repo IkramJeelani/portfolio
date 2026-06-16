@@ -217,7 +217,7 @@
   reveal.className = "dock-reveal" + (dockHidden ? " show" : "");
   reveal.type = "button";
   reveal.setAttribute("aria-label", "Show projects panel");
-  reveal.innerHTML = "&#8250;";
+  reveal.textContent = "Projects ›";
   document.body.appendChild(reveal);
   const setCollapsed = (c) => {
     dock.classList.toggle("collapsed", c);
