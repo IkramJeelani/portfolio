@@ -108,6 +108,43 @@
   };
   viewport.addEventListener("scroll", updateRail, { passive: true });
 
+  // Make the line behave like a scrollbar: drag the thumb, click the track to jump.
+  let dragging = false;
+  let dragStartY = 0;
+  let dragStartScroll = 0;
+  thumb.addEventListener("pointerdown", (e) => {
+    dragging = true;
+    dragStartY = e.clientY;
+    dragStartScroll = viewport.scrollTop;
+    rail.classList.add("dragging");
+    try { thumb.setPointerCapture(e.pointerId); } catch (err) {}
+    e.preventDefault();
+  });
+  thumb.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    const maxThumb = viewport.clientHeight - thumb.offsetHeight;
+    if (maxThumb <= 0) return;
+    const dy = e.clientY - dragStartY;
+    viewport.scrollTop = dragStartScroll + (dy / maxThumb) * (viewport.scrollHeight - viewport.clientHeight);
+  });
+  const endDrag = (e) => {
+    if (!dragging) return;
+    dragging = false;
+    rail.classList.remove("dragging");
+    try { thumb.releasePointerCapture(e.pointerId); } catch (err) {}
+  };
+  thumb.addEventListener("pointerup", endDrag);
+  thumb.addEventListener("pointercancel", endDrag);
+  rail.addEventListener("pointerdown", (e) => {
+    if (e.target === thumb) return; // clicking the track jumps there
+    const rect = rail.getBoundingClientRect();
+    const frac = (e.clientY - rect.top) / rect.height;
+    viewport.scrollTo({
+      top: frac * (viewport.scrollHeight - viewport.clientHeight),
+      behavior: "smooth",
+    });
+  });
+
   // All dock cards share the same height (tallest wins).
   const dockCards = Array.from(reel.children);
   const equalizeDock = () => {

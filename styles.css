@@ -749,22 +749,30 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 }
 .dock-viewport::-webkit-scrollbar { display: none; }
 .dock-reel { display: flex; flex-direction: column; gap: 0.6rem; }
-/* Vertical location line beside the dock */
+/* Vertical scroll line beside the dock */
 .dock-rail {
   position: absolute;
   right: -10px;
   width: 3px;
-  border-radius: 3px;
+  border-radius: 6px;
   background: var(--border);
   overflow: hidden;
+  cursor: pointer;
+  transition: width 0.18s ease, background 0.18s ease;
 }
+.dock-rail:hover,
+.dock-rail.dragging { width: 8px; background: var(--bg-soft); }
 .dock-rail-thumb {
   width: 100%;
-  border-radius: 3px;
+  border-radius: 6px;
   background: var(--grad);
-  transition: transform 0.08s linear;
+  cursor: grab;
+  transition: transform 0.08s linear, box-shadow 0.18s ease;
   will-change: transform;
 }
+.dock-rail-thumb:active { cursor: grabbing; }
+.dock-rail:hover .dock-rail-thumb,
+.dock-rail.dragging .dock-rail-thumb { box-shadow: 0 0 10px rgba(168, 85, 247, 0.65); }
 .dock-card {
   display: block;
   padding: 0.55rem 0.7rem;
