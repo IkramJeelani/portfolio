@@ -932,33 +932,21 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   pointer-events: none;
 }
 
-/* ===== Custom cursor (dot + lagging ring) ===== */
-.has-cursor,
-.has-cursor * { cursor: none; }
-.cursor-dot,
-.cursor-ring {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 9999;
-  border-radius: 50%;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  will-change: transform;
-}
-.cursor-dot {
-  width: 7px;
-  height: 7px;
-  background: var(--accent);
-  box-shadow: 0 0 10px var(--accent);
-}
-.cursor-ring {
-  width: 34px;
-  height: 34px;
-  border: 2px solid var(--accent);
-  box-shadow: 0 0 12px rgba(168, 85, 247, 0.5);
-}
+/* ===== Pixel-art (Minecraft-style) cursor ===== */
+html { cursor: url("assets/cursor.svg") 3 3, auto; }
+a,
+button,
+input,
+textarea,
+select,
+label,
+[role="button"],
+.card,
+.cert-card,
+.dot,
+.theme-toggle,
+.nav-toggle,
+.pdf-close { cursor: url("assets/cursor.svg") 3 3, auto; }
 
 /* ===== PDF popup (certificate viewer) ===== */
 .pdf-modal {
