@@ -81,15 +81,12 @@ python -m http.server 8000
 
 ## Search engines (SEO)
 
-The site ships with: meta description/keywords/author, Open Graph + Twitter preview
-tags, a `Person` JSON-LD block (rich results), a social banner (`assets/og.svg`),
-`robots.txt`, and `sitemap.xml`.
+The site ships with: meta description/keywords/author, a canonical URL, a `Person`
+JSON-LD block (rich results), `robots.txt`, and `sitemap.xml`.
 
 These use the live URL **`https://ikramjeelani.github.io/portfolio/`**. If your site
-lives somewhere else, update that URL in: `index.html` (canonical + `og:`/`twitter:`
-tags + JSON-LD), `robots.txt`, and `sitemap.xml`.
+lives somewhere else, update that URL in: `index.html` (canonical + JSON-LD),
+`robots.txt`, and `sitemap.xml`.
 
 After it's live, you can submit the site to
 [Google Search Console](https://search.google.com/search-console) to speed up indexing.
-For the richest social previews, export `assets/og.svg` to a 1200×630 PNG (some
-platforms don't render SVG) and point the `og:image`/`twitter:image` tags at it.
