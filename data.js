@@ -158,7 +158,6 @@ const EDUCATION = [
     major: "Mechatronics Engineering",
     details: [
       "Transfer student from Simon Fraser University.",
-      "",
     ],
     logo: "assets/Logos/university_of_wollongong_in_dubai_logo.jpg",
   },
