@@ -55,65 +55,121 @@
     });
   }
 
-  // Floating quick-access dock listing every project (shown on wide screens).
+  // Floating quick-access dock: an infinite vertical reel + position dots (no scrollbar).
+  const n = projects.length;
+  const cardsHTML = projects
+    .map((p) => {
+      const active = p.id === project.id ? " active" : "";
+      const tags = (p.tech || [])
+        .slice(0, 4)
+        .map((t) => `<span class="tag">${t}</span>`)
+        .join("");
+      return `
+        <a class="dock-card${active}" data-id="${encodeURIComponent(p.id)}" href="project.html?id=${encodeURIComponent(p.id)}">
+          <div class="dock-name">${p.title}</div>
+          ${p.date ? `<div class="dock-date">${p.date}</div>` : ""}
+          ${p.tagline ? `<div class="dock-tagline">${p.tagline}</div>` : ""}
+          ${tags ? `<div class="tags dock-tags">${tags}</div>` : ""}
+        </a>`;
+    })
+    .join("");
+
   const dock = document.createElement("aside");
   dock.className = "project-dock";
   dock.setAttribute("aria-label", "Other projects");
-  dock.innerHTML =
-    '<div class="dock-title">Projects</div>' +
-    projects
-      .map((p) => {
-        const active = p.id === project.id ? " active" : "";
-        const tags = (p.tech || [])
-          .slice(0, 4)
-          .map((t) => `<span class="tag">${t}</span>`)
-          .join("");
-        return `
-          <a class="dock-card${active}" href="project.html?id=${encodeURIComponent(p.id)}">
-            <div class="dock-name">${p.title}</div>
-            ${p.date ? `<div class="dock-date">${p.date}</div>` : ""}
-            ${p.tagline ? `<div class="dock-tagline">${p.tagline}</div>` : ""}
-            ${tags ? `<div class="tags dock-tags">${tags}</div>` : ""}
-          </a>`;
-      })
-      .join("");
+  dock.innerHTML = `
+    <div class="dock-title">Projects</div>
+    <div class="dock-viewport"><div class="dock-reel">${cardsHTML}</div></div>
+    <div class="dock-nav" aria-hidden="true"></div>`;
   document.body.appendChild(dock);
 
-  // Equal height for all dock cards (the tallest sets the height).
-  const dockCards = Array.from(dock.querySelectorAll(".dock-card"));
-  const equalizeDock = () => {
-    dockCards.forEach((c) => (c.style.height = ""));
-    let max = 0;
-    dockCards.forEach((c) => (max = Math.max(max, c.offsetHeight)));
-    dockCards.forEach((c) => (c.style.height = max + "px"));
-  };
-  if (dockCards.length > 1) {
-    equalizeDock();
-    window.addEventListener("resize", equalizeDock);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(equalizeDock);
-  }
+  const viewport = dock.querySelector(".dock-viewport");
+  const reel = dock.querySelector(".dock-reel");
+  const nav = dock.querySelector(".dock-nav");
+  let cards = Array.from(reel.children);
 
-  // Hover a dock card -> the project image pops out beside the dock (genie-style expand).
+  // Position dots (one per project); click jumps straight to that project.
+  const dots = projects.map((p, i) => {
+    const d = document.createElement("button");
+    d.type = "button";
+    d.className = "dock-dot" + (p.id === project.id ? " active" : "");
+    d.title = p.title;
+    d.addEventListener("click", () => {
+      window.location.href = `project.html?id=${encodeURIComponent(projects[i].id)}`;
+    });
+    nav.appendChild(d);
+    return d;
+  });
+
+  // Genie image preview beside the dock on hover (delegated so clones work too).
   const preview = document.createElement("div");
   preview.className = "dock-preview";
   preview.setAttribute("aria-hidden", "true");
   document.body.appendChild(preview);
   const PREVIEW_H = 170;
-  dockCards.forEach((card, idx) => {
-    const p = projects[idx];
+  reel.addEventListener("mouseover", (e) => {
+    const card = e.target.closest(".dock-card");
+    if (!card) return;
+    const p = projects.find((x) => x.id === decodeURIComponent(card.dataset.id || ""));
     if (!p) return;
-    card.addEventListener("mouseenter", () => {
-      preview.style.backgroundImage = `url('${p.image}')`;
-      const r = card.getBoundingClientRect();
-      const dr = dock.getBoundingClientRect();
-      let top = r.top + r.height / 2 - PREVIEW_H / 2;
-      top = Math.max(8, Math.min(top, window.innerHeight - PREVIEW_H - 8));
-      preview.style.top = top + "px";
-      preview.style.left = dr.right + 12 + "px";
-      preview.classList.add("show");
-    });
-    card.addEventListener("mouseleave", () => preview.classList.remove("show"));
+    preview.style.backgroundImage = `url('${p.image}')`;
+    const r = card.getBoundingClientRect();
+    const dr = dock.getBoundingClientRect();
+    let top = r.top + r.height / 2 - PREVIEW_H / 2;
+    top = Math.max(8, Math.min(top, window.innerHeight - PREVIEW_H - 8));
+    preview.style.top = top + "px";
+    preview.style.left = dr.right + 14 + "px";
+    preview.classList.add("show");
   });
+  dock.addEventListener("mouseleave", () => preview.classList.remove("show"));
+
+  // Infinite spin only when the list overflows; pauses while hovering.
+  let copyBlock = 0;
+  let offset = 0;
+  let paused = false;
+  let spinning = false;
+  let lastT = 0;
+  const highlight = () => {
+    const vr = viewport.getBoundingClientRect();
+    const cy = vr.top + vr.height / 2;
+    let best = Infinity;
+    let bi = 0;
+    cards.forEach((c, i) => {
+      const r = c.getBoundingClientRect();
+      const d = Math.abs(r.top + r.height / 2 - cy);
+      if (d < best) {
+        best = d;
+        bi = i % n;
+      }
+    });
+    dots.forEach((d, i) => d.classList.toggle("active", i === bi));
+  };
+  const tick = (t) => {
+    const dt = Math.min(50, t - lastT);
+    lastT = t;
+    if (!paused) {
+      offset += (dt / 1000) * 28; // ~28px/s drift
+      if (offset >= copyBlock) offset -= copyBlock;
+      reel.style.transform = `translateY(${-offset}px)`;
+    }
+    highlight();
+    requestAnimationFrame(tick);
+  };
+  const initSpin = () => {
+    if (spinning) return;
+    if (reel.scrollHeight > viewport.clientHeight + 12) {
+      reel.insertAdjacentHTML("beforeend", cardsHTML); // second copy for seamless loop
+      cards = Array.from(reel.children);
+      copyBlock = reel.children[n].offsetTop; // height of one copy incl. the gap
+      spinning = true;
+      lastT = performance.now();
+      requestAnimationFrame(tick);
+    }
+  };
+  dock.addEventListener("mouseenter", () => (paused = true));
+  dock.addEventListener("mouseleave", () => (paused = false));
+  initSpin();
+  window.addEventListener("resize", initSpin);
 
   // Back link goes to the home page; main.js restores scroll + morph on arrival.
   if (backLink) backLink.setAttribute("href", "index.html");

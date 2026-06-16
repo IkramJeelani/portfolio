@@ -716,11 +716,8 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   top: 84px;
   width: 230px;
   max-height: calc(100vh - 104px);
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: 0.4rem;
   z-index: 40;
 }
 .dock-title {
@@ -729,8 +726,41 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: var(--muted);
-  margin: 0.2rem 0 0.1rem 0.35rem;
+  margin: 0.2rem 0 0.4rem 0.35rem;
 }
+/* Scrollbar-free viewport; the reel animates inside it (fades at top/bottom) */
+.dock-viewport {
+  position: relative;
+  flex: 1 1 auto;
+  overflow: hidden;
+  padding: 2px 16px 2px 2px; /* right room for the position dots */
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+}
+.dock-reel { display: flex; flex-direction: column; gap: 0.6rem; will-change: transform; }
+/* Vertical position indicator */
+.dock-nav {
+  position: absolute;
+  right: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 2;
+}
+.dock-dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--border);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.dock-dot:hover { background: var(--muted); }
+.dock-dot.active { background: var(--accent); transform: scale(1.5); }
 .dock-card {
   display: block;
   padding: 0.55rem 0.7rem;
