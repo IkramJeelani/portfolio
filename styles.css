@@ -730,6 +730,20 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   display: flex;
   flex-direction: column;
   z-index: 40;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.project-dock.collapsed {
+  transform: translateX(calc(-100% - 1.5rem));
+  opacity: 0;
+  pointer-events: none;
+}
+.dock-no-anim { transition: none !important; }
+.dock-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.2rem 0 0.45rem;
+  padding-left: 0.35rem;
 }
 .dock-title {
   font-family: var(--font-display);
@@ -737,8 +751,41 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: var(--muted);
-  margin: 0.2rem 0 0.4rem 0.35rem;
 }
+.dock-collapse {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1.15rem;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+.dock-collapse:hover { color: var(--accent); }
+/* Edge tab to bring the panel back when hidden */
+.dock-reveal {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 48px;
+  border: 1px solid var(--border);
+  border-left: none;
+  border-radius: 0 10px 10px 0;
+  background: var(--bg-soft);
+  color: var(--accent);
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 41;
+  transition: border-color 0.2s, background 0.2s;
+}
+.dock-reveal.show { display: flex; }
+.dock-reveal:hover { border-color: var(--accent); }
 /* Manually scrollable viewport; scrollbar hidden; scroll stays inside the dock */
 .dock-viewport {
   flex: 1 1 auto;
@@ -752,16 +799,17 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 /* Vertical scroll line beside the dock */
 .dock-rail {
   position: absolute;
-  right: -10px;
-  width: 3px;
+  right: -18px; /* sits clear of the dock */
+  width: 4px;
   border-radius: 6px;
   background: var(--border);
   overflow: hidden;
   cursor: pointer;
-  transition: width 0.18s ease, background 0.18s ease;
+  transition: width 0.18s ease, right 0.18s ease, background 0.18s ease;
 }
+/* grows on both sides on hover (right shifts so the centre stays put) */
 .dock-rail:hover,
-.dock-rail.dragging { width: 8px; background: var(--bg-soft); }
+.dock-rail.dragging { width: 10px; right: -21px; background: var(--bg-soft); }
 .dock-rail-thumb {
   width: 100%;
   border-radius: 6px;
@@ -834,7 +882,11 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   transition: opacity 0.18s ease, transform 0.34s cubic-bezier(0.2, 0.95, 0.25, 1);
 }
 .dock-preview.show { opacity: 1; transform: scale(1); }
-@media (max-width: 1300px) { .project-dock, .dock-preview { display: none; } }
+@media (max-width: 1300px) {
+  .project-dock,
+  .dock-preview,
+  .dock-reveal { display: none !important; }
+}
 
 .project-hero {
   height: 320px;

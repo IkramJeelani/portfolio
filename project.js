@@ -74,12 +74,21 @@
     .join("");
 
   const dock = document.createElement("aside");
-  dock.className = "project-dock";
+  dock.className = "project-dock dock-no-anim";
   dock.setAttribute("aria-label", "Other projects");
   dock.innerHTML = `
-    <div class="dock-title">Projects</div>
+    <div class="dock-head">
+      <span class="dock-title">Projects</span>
+      <button class="dock-collapse" type="button" aria-label="Hide projects panel">&#8249;</button>
+    </div>
     <div class="dock-viewport"><div class="dock-reel">${cardsHTML}</div></div>`;
+  let dockHidden = false;
+  try {
+    dockHidden = localStorage.getItem("dockHidden") === "1";
+  } catch (e) {}
+  if (dockHidden) dock.classList.add("collapsed");
   document.body.appendChild(dock);
+  requestAnimationFrame(() => dock.classList.remove("dock-no-anim")); // avoid initial slide
 
   const viewport = dock.querySelector(".dock-viewport");
   const reel = dock.querySelector(".dock-reel");
@@ -187,7 +196,7 @@
     let top = r.top + r.height / 2 - PREVIEW_H / 2;
     top = Math.max(8, Math.min(top, window.innerHeight - PREVIEW_H - 8));
     preview.style.top = top + "px";
-    preview.style.left = dr.right + 14 + "px";
+    preview.style.left = dr.right + 28 + "px"; // clear of the scroll line
     preview.classList.add("show");
   });
   dock.addEventListener("mouseleave", () => preview.classList.remove("show"));
@@ -201,6 +210,24 @@
     },
     { passive: false }
   );
+
+  // Show / hide the floating dock (collapse button in it + a reveal tab on the edge).
+  const collapseBtn = dock.querySelector(".dock-collapse");
+  const reveal = document.createElement("button");
+  reveal.className = "dock-reveal" + (dockHidden ? " show" : "");
+  reveal.type = "button";
+  reveal.setAttribute("aria-label", "Show projects panel");
+  reveal.innerHTML = "&#8250;";
+  document.body.appendChild(reveal);
+  const setCollapsed = (c) => {
+    dock.classList.toggle("collapsed", c);
+    reveal.classList.toggle("show", c);
+    try {
+      localStorage.setItem("dockHidden", c ? "1" : "0");
+    } catch (e) {}
+  };
+  collapseBtn.addEventListener("click", () => setCollapsed(true));
+  reveal.addEventListener("click", () => setCollapsed(false));
 
   // Back link goes to the home page; main.js restores scroll + morph on arrival.
   if (backLink) backLink.setAttribute("href", "index.html");
