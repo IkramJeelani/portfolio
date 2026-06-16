@@ -92,11 +92,21 @@
     dockCards.forEach((c) => (max = Math.max(max, c.offsetHeight)));
     dockCards.forEach((c) => (c.style.height = max + "px"));
   };
-  if (dockCards.length > 1) {
-    equalizeDock();
-    window.addEventListener("resize", equalizeDock);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(equalizeDock);
-  }
+  // Centre the current project in the dock (clamped — as close to the middle as it can get).
+  const centerActive = (smooth) => {
+    const cur = reel.querySelector(".dock-card.active");
+    if (!cur) return;
+    const max = Math.max(0, viewport.scrollHeight - viewport.clientHeight);
+    const target = cur.offsetTop + cur.offsetHeight / 2 - viewport.clientHeight / 2;
+    viewport.scrollTo({ top: Math.max(0, Math.min(target, max)), behavior: smooth ? "smooth" : "auto" });
+  };
+  const layoutDock = () => {
+    if (dockCards.length > 1) equalizeDock();
+    centerActive(false);
+  };
+  layoutDock();
+  window.addEventListener("resize", layoutDock);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutDock);
 
   // Genie image preview beside the dock on hover (delegated; skip the current project).
   const preview = document.createElement("div");
@@ -129,12 +139,6 @@
     },
     { passive: false }
   );
-
-  // Open with the current project in view.
-  const cur = reel.querySelector(".dock-card.active");
-  if (cur) {
-    viewport.scrollTop = Math.max(0, cur.offsetTop + cur.offsetHeight / 2 - viewport.clientHeight / 2);
-  }
 
   // Back link goes to the home page; main.js restores scroll + morph on arrival.
   if (backLink) backLink.setAttribute("href", "index.html");
