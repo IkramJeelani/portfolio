@@ -56,6 +56,7 @@ const ABOUT =
 
 /* ---------- 3. EXPERIENCE ----------
    ADD/REMOVE a role by copying or deleting a { ... } block.
+   `location` + `date` show on the left of the timeline (like education).
    `points` is optional — leave it as [] for none.
    `tech`   is optional — tags for the tech used in the job (shown under the details).
    `logo`   is optional — a company logo (put the file in assets/). "" = none. */
@@ -63,6 +64,7 @@ const EXPERIENCE = [
   {
     role: "Engineering Intern",
     company: "Acme Robotics",
+    location: "Dubai, UAE",
     date: "Summer 2024",
     logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/acme.png"
     points: [
@@ -74,6 +76,7 @@ const EXPERIENCE = [
   {
     role: "Undergraduate Researcher",
     company: "University Lab",
+    location: "Burnaby, BC",
     date: "2023 - 2024",
     logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/lab.png"
     points: [
