@@ -415,10 +415,10 @@ h1, h2, h3,
 .skills-list {
   margin: 0 auto;
   display: flex;
-  flex-wrap: nowrap; /* all categories on a single row */
+  flex-wrap: wrap; /* prefers one row; wraps automatically when it won't fit */
   justify-content: center; /* centred under the heading */
   align-items: flex-start; /* each line spans only its own category */
-  gap: 2.5rem;
+  gap: 1.75rem 2.5rem;
 }
 .skill-group {
   position: relative;
