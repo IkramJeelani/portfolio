@@ -49,7 +49,7 @@ const SECTIONS = [
    A short intro paragraph shown near the top. Plain text (you may use simple
    HTML like <strong>…</strong> if you want). */
 const ABOUT =
-  "I started engineering for the freedom it offers. The fact that, with enough " +
+  "I started engineering for the freedom it offers. With enough " +
   "knowledge, you're limited only by your own imagination. That pursuit of " +
   "capability is what drew me to mechatronics and the challenge of building " +
   "complete systems from the ground up. " +
