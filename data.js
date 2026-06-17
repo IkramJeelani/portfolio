@@ -19,8 +19,7 @@ const PROFILE = {
   initials: "IJ", // shown top-left AND as the browser-tab icon (kept in sync)
   role: "Engineering Portfolio",
   bio:
-    "Engineer building thoughtful hardware & software. Below are a few projects " +
-    "I'm proud of — click any card to dive deeper.",
+    "\"The best way to predict the future is to engineer it.\"",
 };
 
 /* ============================================================================
