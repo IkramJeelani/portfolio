@@ -414,11 +414,14 @@ h1, h2, h3,
 /* ===== Skills ===== */
 .skills-list {
   margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap; /* prefers one row; wraps automatically when it won't fit */
+  display: grid;
+  /* fixed columns => categories stack in aligned columns (lines line up);
+     190px is the max category width. Wraps to fewer columns on small screens. */
+  grid-template-columns: repeat(auto-fit, 190px);
   justify-content: center; /* centred under the heading */
-  align-items: flex-start; /* each line spans only its own category */
-  gap: 1.75rem 2.5rem;
+  align-items: start; /* each line spans only its own category */
+  gap: 1.75rem 2.25rem;
+  max-width: 100%;
 }
 .skill-group {
   position: relative;

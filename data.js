@@ -92,9 +92,26 @@ const EXPERIENCE = [
    Each group is a category with a list of items (shown as tags).
    ADD/REMOVE a category or an item by editing the arrays. */
 const SKILLS = [
-  { category: "Languages", items: ["C", "C++", "Python", "JavaScript"] },
-  { category: "Tools & Frameworks", items: ["ROS", "FreeRTOS", "Git", "Grafana"] },
-  { category: "Hardware", items: ["STM32", "Arduino", "Raspberry Pi", "PCB Design"] },
+  {
+    category: "Programming",
+    items: ["C", "C++", "Python", "MATLAB"]
+  },
+  {
+    category: "Mechanical Design, Analysis & Manufacturing",
+    items: ["SOLIDWORKS", "Fusion 360", "Cura","FDM 3D Printing"]
+  },
+  {
+    category: "Electronics & Embedded Systems",
+    items: ["Arduino", "PCB design (KiCad/Altium)", "Soldering", "Multimeter", "Oscilloscopes"]
+  },
+  {
+    category: "Controls & Automations",
+    items: ["PID Control", "Sensors & Actuators"]
+  },
+  {
+    category: "Tools",
+    items: ["Git/Github", "MS Office"]
+  },
 ];
 
 /* ---------- 5. CERTIFICATIONS ----------
