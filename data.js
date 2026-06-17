@@ -102,11 +102,11 @@ const SKILLS = [
   },
   {
     category: "Electronics & Embedded Systems",
-    items: ["Arduino", "PCB design (KiCad/Altium)", "Soldering", "Multimeter", "Oscilloscopes"]
+    items: ["Arduino", "PCB design (KiCad/Altium)", "LTspice", "Soldering", "Multimeter", "Oscilloscopes"]
   },
   {
     category: "Controls & Automations",
-    items: ["PID Control", "Sensors & Actuators"]
+    items: ["PID Control", "Sensors & Actuators", "Simulink"]
   },
   {
     category: "Tools",
