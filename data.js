@@ -9,7 +9,7 @@
    particles: true  -> falling particles start ON
               false -> start OFF */
 const SETTINGS = {
-  theme: "light",
+  theme: "dark",
   particles: true,
 };
 
@@ -50,15 +50,15 @@ const SECTIONS = [
    HTML like <strong>…</strong> if you want). */
 const ABOUT =
   "I started engineering for the freedom it offers. The fact that, with enough " +
-  "knowledge, you're limited only by your own imagination. That drive toward " +
+  "knowledge, you're limited only by your own imagination. That pursuit of " +
   "capability is what drew me to mechatronics and the challenge of building " +
   "complete systems from the ground up. " +
   "Today, I enjoy working across the full stack of a system: mechanical design, " +
-  "electronics, and the software that brings everything together." +
+  "electronics, and the software that brings everything together. " +
 
-  "My goal is to become a design engineer in the robotics industry, developing " +
-  "intelligent systems that bridge hardware and software. Away from engineering, " +
-  "you'll usually find me gaming, playing cricket, or searching for great food.";
+  "My goal is to become a design engineer in the robotics/automation industry, developing " +
+  "intelligent systems that connect bits of different engineering domains. Away from engineering, " +
+  "you'll usually find me gaming, watching cricket, or searching for great food.";
 
 
 
