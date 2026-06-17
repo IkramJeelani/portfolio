@@ -37,11 +37,11 @@
 }
 :root[data-theme="light"] .project-content strong { color: #1b1830; }
 /* Stronger, more saturated glows so they read on a white background */
-:root[data-theme="light"] .bg-fx { opacity: 0.95; }
-:root[data-theme="light"] .g1 { background: radial-gradient(circle, rgba(124, 58, 237, 0.5), transparent 70%); }
-:root[data-theme="light"] .g2 { background: radial-gradient(circle, rgba(219, 39, 119, 0.42), transparent 70%); }
-:root[data-theme="light"] .g3 { background: radial-gradient(circle, rgba(79, 70, 229, 0.42), transparent 70%); }
-:root[data-theme="light"] .g4 { background: radial-gradient(circle, rgba(139, 92, 246, 0.45), transparent 70%); }
+:root[data-theme="light"] .bg-fx { opacity: 1; }
+:root[data-theme="light"] .g1 { background: radial-gradient(circle, rgba(124, 58, 237, 0.72), transparent 70%); }
+:root[data-theme="light"] .g2 { background: radial-gradient(circle, rgba(219, 39, 119, 0.62), transparent 70%); }
+:root[data-theme="light"] .g3 { background: radial-gradient(circle, rgba(79, 70, 229, 0.62), transparent 70%); }
+:root[data-theme="light"] .g4 { background: radial-gradient(circle, rgba(139, 92, 246, 0.64), transparent 70%); }
 
 * { box-sizing: border-box; }
 

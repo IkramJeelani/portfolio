@@ -49,9 +49,18 @@ const SECTIONS = [
    A short intro paragraph shown near the top. Plain text (you may use simple
    HTML like <strong>…</strong> if you want). */
 const ABOUT =
-  "I'm an engineer who enjoys taking ideas from a schematic all the way to working " +
-  "hardware. I care about clean, reliable systems and understanding the 'why' behind " +
-  "every design decision.";
+  "I started engineering for the freedom it offers. The fact that, with enough " +
+  "knowledge, you're limited only by your own imagination. That drive toward " +
+  "capability is what drew me to mechatronics and the challenge of building " +
+  "complete systems from the ground up. " +
+  "Today, I enjoy working across the full stack of a system: mechanical design, " +
+  "electronics, and the software that brings everything together." +
+
+  "My goal is to become a design engineer in the robotics industry, developing " +
+  "intelligent systems that bridge hardware and software. Away from engineering, " +
+  "you'll usually find me gaming, playing cricket, or searching for great food.";
+
+
 
 /* ---------- 3. EXPERIENCE ----------
    ADD/REMOVE a role by copying or deleting a { ... } block.
@@ -243,6 +252,7 @@ const EDUCATION = [
    Each project needs a unique `id` (used in the URL, no spaces).
    ============================================================================ */
 const PROJECTS = [
+/*
   {
     id: "smart-thermostat",
     title: "Smart Thermostat Controller",
@@ -355,6 +365,7 @@ const PROJECTS = [
       </div>
     `,
   },
+  */
 ];
 
 /* ---------- 7. CONTACTS ----------

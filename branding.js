@@ -188,8 +188,9 @@
     let H = 0;
     const resizeCanvas = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2); // cap for mobile GPU/perf
-      W = window.innerWidth;
-      H = window.innerHeight;
+      // Use the visible width (excludes the scrollbar) so both edges are symmetric.
+      W = document.documentElement.clientWidth || window.innerWidth;
+      H = document.documentElement.clientHeight || window.innerHeight;
       canvas.width = W * dpr;
       canvas.height = H * dpr;
       canvas.style.width = W + "px";
@@ -274,6 +275,7 @@
         nextSpawn = now + (small() ? 2400 + Math.random() * 2200 : 1500 + Math.random() * 1300); // steady, never stops
       }
       ctx.clearRect(0, 0, W, H);
+      const light = document.documentElement.getAttribute("data-theme") === "light";
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         const dx = p.x - mouse.x;
@@ -305,11 +307,12 @@
           continue;
         }
         const tw = 0.45 + 0.55 * Math.sin(now * 0.005 + p.tw); // twinkle
-        ctx.globalAlpha = tw;
+        // Boost alpha + glow in light mode so they're as visible as on dark.
+        ctx.globalAlpha = light ? Math.min(1, tw + 0.25) : tw;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, p.r * (light ? 1.15 : 1), 0, Math.PI * 2);
         ctx.fillStyle = p.color;
-        ctx.shadowBlur = small() ? 6 : 12;
+        ctx.shadowBlur = (small() ? 6 : 12) * (light ? 1.5 : 1);
         ctx.shadowColor = p.color;
         ctx.fill();
       }
