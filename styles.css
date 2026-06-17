@@ -413,19 +413,19 @@ h1, h2, h3,
 
 /* ===== Skills ===== */
 .skills-list {
+  max-width: 640px;
   margin: 0 auto;
-  display: grid;
-  /* fixed columns => categories stack in aligned columns (lines line up);
-     190px is the max category width. Wraps to fewer columns on small screens. */
-  grid-template-columns: repeat(auto-fit, 190px);
-  justify-content: center; /* centred under the heading */
-  align-items: start; /* each line spans only its own category */
-  gap: 1.75rem 2.25rem;
-  max-width: 100%;
+  /* Masonry via CSS columns: ~190px-wide columns (the max category width), filled and
+     balanced so short categories stack beside a tall one. Columns keep lines aligned. */
+  column-width: 190px;
+  column-gap: 2.25rem;
 }
 .skill-group {
   position: relative;
   padding-left: 1rem; /* room for the line */
+  margin: 0 0 1.75rem; /* vertical gap between stacked categories */
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
 }
 /* Animated gradient "energy" line from the category down to the last skill */
 .skill-group::before {
