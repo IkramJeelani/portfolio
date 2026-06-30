@@ -179,7 +179,7 @@ const EDUCATION = [
     location: "Dubai, UAE",
     date: "2026 - 2027",
     degree: "Bachelor of Engineering (Honours) in",
-    major: "Mechatronics Engineering",
+    major: "Mechatronic Engineering",
     details: [
       "Transfer student from Simon Fraser University.",
     ],
