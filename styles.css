@@ -245,11 +245,40 @@ h1, h2, h3,
 .nav-toggle[aria-expanded="true"] .icon-close { display: block; }
 
 /* ===== Hero ===== */
+/* Fills the first viewport (minus the 72px sticky header) so the landing
+   screen shows only the name — the About section starts below the fold. */
 .hero {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 6rem 1.5rem 4rem;
+  padding: 2rem 1.5rem;
   text-align: center;
+  min-height: calc(100vh - 72px);
+  min-height: calc(100svh - 72px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+/* Subtle cue that there's more below */
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 2.2rem;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: translateX(-50%) rotate(45deg);
+  opacity: 0.7;
+}
+.hero { position: relative; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero::after { animation: hero-cue 2.2s ease-in-out infinite; }
+}
+@keyframes hero-cue {
+  0%, 100% { transform: translateX(-50%) translateY(0) rotate(45deg); opacity: 0.7; }
+  50%      { transform: translateX(-50%) translateY(7px) rotate(45deg); opacity: 0.3; }
 }
 .eyebrow {
   text-transform: uppercase;
