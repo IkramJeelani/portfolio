@@ -244,7 +244,7 @@
     // aim below the horizon, and the elbow/wrist can't fold back on themselves —
     // no more impossible zig-zag poses.
     const wrapPi = (a) => Math.atan2(Math.sin(a), Math.cos(a));
-    const LIM1 = [-2.94, -0.2]; //  shoulder (absolute angle)
+    const LIM1 = [-2.7, -0.45]; //  shoulder (absolute angle; never lies flat)
     const LIM2 = [-2.25, 2.25]; //  elbow (relative to shoulder)
     const LIM3 = [-1.75, 1.75]; //  wrist (relative to forearm)
     // `hit[i]` reports which joints actually slammed a stop (used to bleed
@@ -319,6 +319,7 @@
     const target = { x: base.x + 120, y: base.y - 230 };
     const goal = { x: target.x, y: target.y };
     let mouseIn = false;
+    let stall = 0; // seconds the IK solver has been unable to reach the target
 
     const colors = () => {
       const light = document.documentElement.getAttribute("data-theme") === "light";
@@ -436,14 +437,6 @@
       ctx.shadowBlur = 0;
     };
 
-    // Perpendicular-offset point along a link — used to pin the actuator lugs.
-    const lug = (p, q, t, off) => {
-      const dx = q.x - p.x;
-      const dy = q.y - p.y;
-      const len = Math.hypot(dx, dy) || 1;
-      return { x: p.x + dx * t - (dy / len) * off, y: p.y + dy * t + (dx / len) * off };
-    };
-
     const trail = [];
 
     const drawFrame = () => {
@@ -535,75 +528,6 @@
       ctx.fillRect(base.x - 52, base.y + 10, 104, 5);
       ctx.globalAlpha = 1;
 
-      // Service cable: sags from the base plate up to the forearm like a
-      // real cable harness, following the arm as it moves.
-      const cabEnd = lug(pts[1], pts[2], 0.14, -8);
-      ctx.strokeStyle = c.slot;
-      ctx.lineWidth = 2;
-      ctx.lineCap = "round";
-      ctx.beginPath();
-      ctx.moveTo(base.x - 26, base.y + 6);
-      ctx.quadraticCurveTo(
-        (base.x - 26 + cabEnd.x) / 2 - 16,
-        Math.min(floorY + 4, (base.y + cabEnd.y) / 2 + 46),
-        cabEnd.x,
-        cabEnd.y
-      );
-      ctx.stroke();
-
-      // Shoulder actuator: cylinder pinned between the base plate and a lug
-      // on the lower link — extends/retracts as the shoulder rotates.
-      const S1 = { x: base.x + 36, y: base.y + 6 };
-      const S2 = lug(pts[0], pts[1], 0.46, 11);
-      ctx.strokeStyle = c.slot;
-      ctx.lineWidth = 6.5;
-      ctx.beginPath();
-      ctx.moveTo(S1.x, S1.y);
-      ctx.lineTo(S1.x + (S2.x - S1.x) * 0.58, S1.y + (S2.y - S1.y) * 0.58);
-      ctx.stroke();
-      ctx.strokeStyle = c.link2;
-      ctx.lineWidth = 2.4;
-      ctx.beginPath();
-      ctx.moveTo(S1.x + (S2.x - S1.x) * 0.5, S1.y + (S2.y - S1.y) * 0.5);
-      ctx.lineTo(S2.x, S2.y);
-      ctx.stroke();
-      [S1, S2].forEach((p) => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-        ctx.fillStyle = c.bolt;
-        ctx.fill();
-        ctx.lineWidth = 1.4;
-        ctx.strokeStyle = c.link;
-        ctx.stroke();
-      });
-
-      // Elbow actuator: cylinder pinned to a lug on the lower link, rod-end
-      // pinned to a lug on the forearm — extends as the elbow opens.
-      const A = lug(pts[0], pts[1], 0.5, -11);
-      const B = lug(pts[1], pts[2], 0.24, -9);
-      ctx.lineCap = "round";
-      ctx.strokeStyle = c.slot;
-      ctx.lineWidth = 6.5;
-      ctx.beginPath();
-      ctx.moveTo(A.x, A.y);
-      ctx.lineTo(A.x + (B.x - A.x) * 0.58, A.y + (B.y - A.y) * 0.58);
-      ctx.stroke();
-      ctx.strokeStyle = c.link2;
-      ctx.lineWidth = 2.4;
-      ctx.beginPath();
-      ctx.moveTo(A.x + (B.x - A.x) * 0.5, A.y + (B.y - A.y) * 0.5);
-      ctx.lineTo(B.x, B.y);
-      ctx.stroke();
-      [A, B].forEach((p) => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-        ctx.fillStyle = c.bolt;
-        ctx.fill();
-        ctx.lineWidth = 1.4;
-        ctx.strokeStyle = c.link;
-        ctx.stroke();
-      });
-
       drawLink(pts[0], pts[1], 11, 8.5);
       drawLink(pts[1], pts[2], 8.5, 6.5);
       drawLink(pts[2], pts[3], 6, 4, c.link2);
@@ -668,7 +592,7 @@
     armBox.addEventListener("click", (e) => {
       const p = toCanvas(e);
       if (!p) return;
-      if (parts.filter((q) => q.state !== "binned").length >= 3) return;
+      if (parts.filter((q) => q.state !== "binned").length >= 1) return; // one part at a time
       parts.push({
         x: Math.min(W - 36, Math.max(bin.x + bin.w + 46, p.x)),
         y: Math.min(floorY - 90, Math.max(36, p.y)),
@@ -768,6 +692,21 @@
         target.x += (g.x - target.x) * Math.min(1, 7 * dts);
         target.y += (g.y - target.y) * Math.min(1, 7 * dts);
         solveIK(desired, target.x, target.y);
+        // Stall recovery: if the solver has wedged itself into a corner pose
+        // it can't escape (folded against its limits), command the home pose —
+        // the servos unfold smoothly and the solver re-converges from there.
+        const dtip = fk(desired)[3];
+        if (Math.hypot(dtip.x - target.x, dtip.y - target.y) > 30) {
+          stall += dts;
+          if (stall > 1.1) {
+            desired[0] = -1.8;
+            desired[1] = -1.0;
+            desired[2] = -0.35;
+            stall = 0;
+          }
+        } else {
+          stall = 0;
+        }
         // IK solution → relative joint commands (each already limit-clamped).
         const dq = [
           Math.min(LIM1[1], Math.max(LIM1[0], wrapPi(desired[0]))),
