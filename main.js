@@ -212,13 +212,12 @@
   setupSharedTransition();
   setupHeroArm();
 
-  setupCircuitSpine();
-
-  /* ---------- Hero: 3-link robotic arm with a pick-and-place demo ----------
-     Idle: glides through poses, tip leaves a fading light trail.
-     Hover inside its box: the arm tracks the cursor (damped CCD IK).
-     Click inside its box: drops a part — the arm picks it up with the
-     gripper and places it in the OUT bin, like an industrial cell. */
+  /* ---------- Hero: 3-link robotic arm with servo physics + pick-and-place ----------
+     The IK solver produces DESIRED joint angles; each joint then behaves like
+     a real servo — PD control with acceleration and velocity limits — so the
+     arm has genuine inertia: it winds up, follows through, and settles.
+     Idle: glides through poses. Hover in its box: tracks the cursor.
+     Click in its box: drops a part that the arm picks and places in the bin. */
   function setupHeroArm() {
     const canvas = document.querySelector(".hero-arm");
     if (!canvas) return;
@@ -232,30 +231,35 @@
 
     const base = { x: W * 0.54, y: H * 0.87 };
     const L = [148, 116, 82];
-    const ang = [-1.9, -1.1, -0.4]; // absolute link angles
+    const ang = [-1.9, -1.1, -0.4]; // actual joint state (absolute link angles)
+    const desired = ang.slice(); //   IK solution the servos chase
+    const vel = [0, 0, 0]; //         joint angular velocities (rad/s)
+    const MAXV = 3.0; //              velocity limit, rad/s
+    const MAXA = 9; //                acceleration limit, rad/s^2
     const maxR = L[0] + L[1] + L[2] - 8;
     const floorY = base.y;
     const bin = { x: 58, y: floorY - 6, w: 66, h: 30 };
 
-    const jointPts = () => {
+    const fk = (a) => {
       const pts = [{ x: base.x, y: base.y }];
       for (let i = 0; i < 3; i++) {
         const p = pts[i];
-        pts.push({ x: p.x + Math.cos(ang[i]) * L[i], y: p.y + Math.sin(ang[i]) * L[i] });
+        pts.push({ x: p.x + Math.cos(a[i]) * L[i], y: p.y + Math.sin(a[i]) * L[i] });
       }
       return pts;
     };
+    const jointPts = () => fk(ang);
 
-    // Cyclic Coordinate Descent, damped so motion reads as servo-driven.
-    const solveIK = (tx, ty) => {
-      for (let pass = 0; pass < 3; pass++) {
+    // Damped CCD writes into `a` (used on the desired-angle shadow copy).
+    const solveIK = (a, tx, ty) => {
+      for (let pass = 0; pass < 4; pass++) {
         for (let i = 2; i >= 0; i--) {
-          const pts = jointPts();
+          const pts = fk(a);
           const j = pts[i];
           const tip = pts[3];
           let d = Math.atan2(ty - j.y, tx - j.x) - Math.atan2(tip.y - j.y, tip.x - j.x);
-          d = Math.atan2(Math.sin(d), Math.cos(d)) * 0.3;
-          for (let k = i; k < 3; k++) ang[k] += d;
+          d = Math.atan2(Math.sin(d), Math.cos(d)) * 0.5;
+          for (let k = i; k < 3; k++) a[k] += d;
         }
       }
     };
@@ -272,10 +276,10 @@
     };
 
     /* --- pick-and-place state --- */
-    const parts = []; // {x,y,vy,rot,state:'fall'|'rest'|'held'|'binned',fade,tone}
+    const parts = [];
     let job = null; // { part, phase: 'reach' | 'carry' }
     let placed = 0;
-    let grip = 0.55; // 0 = closed, 1 = wide open
+    let grip = 0.55;
     const target = { x: base.x + 120, y: base.y - 230 };
     const goal = { x: target.x, y: target.y };
     let mouseIn = false;
@@ -298,11 +302,8 @@
         light,
       };
     };
-
-    /* --- drawing helpers --- */
     let c = colors();
 
-    // Tapered two-tone link with a machined groove down the middle.
     const drawLink = (a, b, w1, w2, colEnd) => {
       const dx = b.x - a.x;
       const dy = b.y - a.y;
@@ -332,7 +333,6 @@
       ctx.stroke();
     };
 
-    // Joint disc with a bolt circle that visibly rotates with the link.
     const drawJoint = (p, r, a) => {
       const rg = ctx.createRadialGradient(p.x - r * 0.35, p.y - r * 0.35, r * 0.15, p.x, p.y, r);
       rg.addColorStop(0, c.jointHi);
@@ -357,7 +357,6 @@
       ctx.fill();
     };
 
-    // Two-jaw gripper; `open` 0..1 spreads the jaws.
     const drawGripper = (tip, a, open) => {
       ctx.strokeStyle = c.link2;
       ctx.lineWidth = 3.4;
@@ -401,13 +400,21 @@
       ctx.shadowBlur = 0;
     };
 
+    // Perpendicular-offset point along a link — used to pin the actuator lugs.
+    const lug = (p, q, t, off) => {
+      const dx = q.x - p.x;
+      const dy = q.y - p.y;
+      const len = Math.hypot(dx, dy) || 1;
+      return { x: p.x + dx * t - (dy / len) * off, y: p.y + dy * t + (dx / len) * off };
+    };
+
     const trail = [];
 
-    const drawFrame = (now) => {
+    const drawFrame = () => {
       c = colors();
       ctx.clearRect(0, 0, W, H);
 
-      // Blueprint grid + dashed reach envelope + work surface.
+      // Blueprint grid, reach envelope, work surface.
       ctx.strokeStyle = c.grid;
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -433,7 +440,7 @@
       ctx.lineTo(W - 16, floorY + 12);
       ctx.stroke();
 
-      // OUT bin.
+      // OUT bin (label above so nothing overlaps it).
       ctx.strokeStyle = c.link;
       ctx.globalAlpha = 0.55;
       ctx.lineWidth = 2;
@@ -460,7 +467,6 @@
         }
       }
 
-      // Parts on the floor / falling / fading out in the bin.
       parts.forEach((p) => {
         if (p.state === "held") return;
         drawPart(p, p.state === "binned" ? p.fade : 1);
@@ -469,7 +475,7 @@
       const pts = jointPts();
       const tip = pts[3];
 
-      // Soft shadow under the tip on the work surface.
+      // Tip shadow on the work surface.
       const hgt = Math.max(0, floorY - tip.y);
       const sa = Math.max(0, 0.16 - hgt / 2200);
       if (sa > 0.02) {
@@ -493,33 +499,41 @@
       ctx.fillRect(base.x - 52, base.y + 10, 104, 5);
       ctx.globalAlpha = 1;
 
-      // Links (arm), actuator rod, joints, gripper.
+      // Hydraulic actuator BEHIND the links: cylinder pinned to a lug on the
+      // lower link, rod-end pinned to a lug on the forearm. It genuinely
+      // extends and retracts as the elbow angle changes.
+      const A = lug(pts[0], pts[1], 0.5, -11);
+      const B = lug(pts[1], pts[2], 0.24, -9);
+      ctx.lineCap = "round";
+      ctx.strokeStyle = c.slot;
+      ctx.lineWidth = 6.5;
+      ctx.beginPath();
+      ctx.moveTo(A.x, A.y);
+      ctx.lineTo(A.x + (B.x - A.x) * 0.58, A.y + (B.y - A.y) * 0.58);
+      ctx.stroke();
+      ctx.strokeStyle = c.link2;
+      ctx.lineWidth = 2.4;
+      ctx.beginPath();
+      ctx.moveTo(A.x + (B.x - A.x) * 0.5, A.y + (B.y - A.y) * 0.5);
+      ctx.lineTo(B.x, B.y);
+      ctx.stroke();
+      [A, B].forEach((p) => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = c.bolt;
+        ctx.fill();
+        ctx.lineWidth = 1.4;
+        ctx.strokeStyle = c.link;
+        ctx.stroke();
+      });
+
       drawLink(pts[0], pts[1], 11, 8.5);
       drawLink(pts[1], pts[2], 8.5, 6.5);
       drawLink(pts[2], pts[3], 6, 4, c.link2);
-
-      // Piston actuator between link 1 and link 2 — extends/retracts as the elbow moves.
-      const aA = { x: pts[0].x + (pts[1].x - pts[0].x) * 0.3, y: pts[0].y + (pts[1].y - pts[0].y) * 0.3 };
-      const aB = { x: pts[1].x + (pts[2].x - pts[1].x) * 0.28, y: pts[1].y + (pts[2].y - pts[1].y) * 0.28 };
-      ctx.strokeStyle = c.slot;
-      ctx.lineWidth = 5;
-      ctx.lineCap = "round";
-      ctx.beginPath();
-      ctx.moveTo(aA.x, aA.y);
-      ctx.lineTo(aA.x + (aB.x - aA.x) * 0.55, aA.y + (aB.y - aA.y) * 0.55);
-      ctx.stroke();
-      ctx.strokeStyle = c.link2;
-      ctx.lineWidth = 2.2;
-      ctx.beginPath();
-      ctx.moveTo(aA.x, aA.y);
-      ctx.lineTo(aB.x, aB.y);
-      ctx.stroke();
-
       drawJoint(pts[0], 12, ang[0]);
       drawJoint(pts[1], 8.5, ang[1]);
       drawJoint(pts[2], 6.5, ang[2]);
 
-      // Part held between the jaws rides with the tip.
       const held = parts.find((p) => p.state === "held");
       if (held) {
         held.x = tip.x + Math.cos(ang[2]) * 9;
@@ -529,7 +543,7 @@
       }
       drawGripper(tip, ang[2], grip);
 
-      // Engineering HUD: live joint angles + cell counter.
+      // HUD: top-left so it never collides with the bin or the arm.
       ctx.fillStyle = c.hud;
       ctx.font = "500 12px Consolas, 'Courier New', monospace";
       const deg = (r) => {
@@ -538,21 +552,21 @@
         if (v > 180) v -= 360;
         return (v >= 0 ? " " : "") + v.toFixed(1) + "°";
       };
-      ctx.fillText("θ1 " + deg(ang[0]), 16, H - 70);
-      ctx.fillText("θ2 " + deg(ang[1] - ang[0]), 16, H - 52);
-      ctx.fillText("θ3 " + deg(ang[2] - ang[1]), 16, H - 34);
-      ctx.fillText("PLACED " + placed, 16, H - 16);
+      ctx.fillText("θ1 " + deg(ang[0]), 16, 24);
+      ctx.fillText("θ2 " + deg(ang[1] - ang[0]), 16, 42);
+      ctx.fillText("θ3 " + deg(ang[2] - ang[1]), 16, 60);
+      ctx.fillText("PLACED " + placed, 16, 82);
       ctx.font = "500 10px Consolas, 'Courier New', monospace";
-      ctx.fillText("click to drop a part", W - 126, H - 16);
+      ctx.fillText("click to drop a part", W - 126, H - 12);
     };
 
     if (reduced) {
-      for (let i = 0; i < 40; i++) solveIK(base.x + 130, base.y - 235);
-      drawFrame(0);
+      solveIK(desired, base.x + 130, base.y - 235);
+      for (let i = 0; i < 3; i++) ang[i] = desired[i];
+      drawFrame();
       return;
     }
 
-    // Track the cursor only inside the arm's own box.
     const armBox = canvas.closest(".hero-visual") || canvas;
     const toCanvas = (e) => {
       const r = canvas.getBoundingClientRect();
@@ -570,12 +584,11 @@
     armBox.addEventListener("pointerleave", () => (mouseIn = false));
     armBox.style.cursor = "crosshair";
 
-    // Click drops a part for the arm to pick up and bin.
-    armBox.addEventListener("pointerdown", (e) => {
+    // A deliberate click/tap (not a scroll gesture or drag) drops a part.
+    armBox.addEventListener("click", (e) => {
       const p = toCanvas(e);
       if (!p) return;
-      const active = parts.filter((q) => q.state !== "binned").length;
-      if (active >= 3) return;
+      if (parts.filter((q) => q.state !== "binned").length >= 3) return;
       parts.push({
         x: Math.min(W - 36, Math.max(bin.x + bin.w + 46, p.x)),
         y: Math.min(floorY - 90, Math.max(36, p.y)),
@@ -592,14 +605,17 @@
       new IntersectionObserver((en) => (running = en[0].isIntersecting), { threshold: 0.05 }).observe(canvas);
     }
 
+    let last = performance.now();
     const frame = (now) => {
+      const dts = Math.min(0.05, (now - last) / 1000);
+      last = now;
       if (running) {
-        // Part physics: fall, small bounce, settle on the work surface.
+        // Part physics: gravity, bounce, settle.
         for (let i = parts.length - 1; i >= 0; i--) {
           const p = parts[i];
           if (p.state === "fall") {
-            p.vy += 0.5;
-            p.y += p.vy;
+            p.vy += 30 * dts;
+            p.y += p.vy * 60 * dts;
             if (p.y >= floorY - 8) {
               p.y = floorY - 8;
               if (p.vy > 2.4) p.vy *= -0.3;
@@ -609,18 +625,17 @@
               }
             }
           } else if (p.state === "binned") {
-            p.fade -= 0.02;
+            p.fade -= 1.2 * dts;
             if (p.fade <= 0) parts.splice(i, 1);
           }
         }
 
-        // Take the next resting part as a job.
         if (!job) {
           const next = parts.find((p) => p.state === "rest");
           if (next) job = { part: next, phase: "reach" };
         }
 
-        // Goal priority: active job > cursor > idle sweep.
+        // Goal priority: job > cursor > idle sweep.
         let gripGoal = 0.55;
         if (job) {
           const p = job.part;
@@ -630,7 +645,7 @@
             const tip = jointPts()[3];
             const d = Math.hypot(tip.x - p.x, tip.y - p.y);
             gripGoal = d < 70 ? 1 : 0.55;
-            if (d < 14) {
+            if (d < 16) {
               p.state = "held";
               job.phase = "carry";
             }
@@ -641,7 +656,7 @@
             goal.y = by;
             gripGoal = 0.12;
             const tip = jointPts()[3];
-            if (Math.hypot(tip.x - bx, tip.y - by) < 15) {
+            if (Math.hypot(tip.x - bx, tip.y - by) < 16) {
               const p2 = job.part;
               p2.state = "binned";
               p2.x = bx;
@@ -657,133 +672,33 @@
           goal.x = base.x + Math.cos(t * 1.3) * 165 + Math.sin(t * 2.1) * 45;
           goal.y = base.y - 195 + Math.sin(t * 1.7) * 80;
         }
-        grip += (gripGoal - grip) * 0.14;
+        grip += (gripGoal - grip) * Math.min(1, 8 * dts);
 
+        // IK -> desired angles; servos chase them under physics limits.
         const g = clampReach(goal.x, goal.y);
-        target.x += (g.x - target.x) * 0.09;
-        target.y += (g.y - target.y) * 0.09;
-        solveIK(target.x, target.y);
+        target.x += (g.x - target.x) * Math.min(1, 7 * dts);
+        target.y += (g.y - target.y) * Math.min(1, 7 * dts);
+        solveIK(desired, target.x, target.y);
+        for (let i = 0; i < 3; i++) {
+          let err = desired[i] - ang[i];
+          err = Math.atan2(Math.sin(err), Math.cos(err));
+          let acc = 60 * err - 9 * vel[i];
+          if (acc > MAXA) acc = MAXA;
+          else if (acc < -MAXA) acc = -MAXA;
+          vel[i] += acc * dts;
+          if (vel[i] > MAXV) vel[i] = MAXV;
+          else if (vel[i] < -MAXV) vel[i] = -MAXV;
+          ang[i] += vel[i] * dts;
+        }
+
         const tip = jointPts()[3];
         trail.push({ x: tip.x, y: tip.y });
         if (trail.length > 36) trail.shift();
-        drawFrame(now);
+        drawFrame();
       }
       requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);
-  }
-
-  /* ---------- Circuit-trace spine ----------
-     A PCB-style trace that draws itself down the page as you scroll,
-     linking every section; the via at each section lights up as the
-     trace reaches it. Desktop-only (needs the side margin), and static
-     (fully drawn) for reduced-motion visitors. */
-  function setupCircuitSpine() {
-    const mql = window.matchMedia("(min-width: 1240px)");
-    let wrap, path, total = 0, y0 = 0, vias = [];
-
-    const docTop = (el) => el.getBoundingClientRect().top + window.scrollY;
-
-    const build = () => {
-      if (wrap) {
-        wrap.remove();
-        wrap = null;
-        path = null;
-        vias = [];
-      }
-      if (!mql.matches) return;
-      const secs = Array.from(document.querySelectorAll("#sections .section"));
-      if (secs.length < 2) return;
-
-      y0 = docTop(secs[0]) + 10;
-      const last = secs[secs.length - 1];
-      const hgt = docTop(last) + last.offsetHeight - 30 - y0;
-      if (hgt < 200) return;
-
-      const xA = 40;
-      const xB = 62;
-      let x = xA;
-      let d = "M " + xA + " 0";
-      const nodes = secs.map((s, i) => {
-        const t = s.querySelector(".section-title");
-        const y = (t ? docTop(t) + t.offsetHeight / 2 : docTop(s)) - y0;
-        return { y: Math.max(20, y), alt: i % 2 === 1 };
-      });
-      nodes.forEach((n) => {
-        const nx = n.alt ? xB : xA;
-        if (nx !== x) {
-          const jog = Math.abs(nx - x);
-          d += " L " + x + " " + (n.y - 40 - jog) + " L " + nx + " " + (n.y - 40);
-          x = nx;
-        }
-        d += " L " + x + " " + n.y;
-        n.x = x;
-      });
-      d += " L " + x + " " + hgt;
-
-      wrap = document.createElement("div");
-      wrap.className = "spine";
-      wrap.setAttribute("aria-hidden", "true");
-      wrap.style.top = y0 + "px";
-      wrap.style.height = hgt + "px";
-      wrap.innerHTML =
-        '<svg width="90" height="' + hgt + '" viewBox="0 0 90 ' + hgt + '" fill="none">' +
-        '<path class="spine-track" d="' + d + '"/>' +
-        '<path class="spine-draw" d="' + d + '"/>' +
-        nodes
-          .map(function (n) {
-            return (
-              '<g class="spine-via" data-y="' + Math.round(n.y) + '">' +
-              '<line x1="' + n.x + '" y1="' + n.y + '" x2="' + (n.x + 15) + '" y2="' + n.y + '"/>' +
-              '<circle cx="' + n.x + '" cy="' + n.y + '" r="4.5"/>' +
-              '<circle class="pad" cx="' + (n.x + 19) + '" cy="' + n.y + '" r="2.2"/>' +
-              "</g>"
-            );
-          })
-          .join("") +
-        "</svg>";
-      document.body.appendChild(wrap);
-      path = wrap.querySelector(".spine-draw");
-      total = path.getTotalLength();
-      path.style.strokeDasharray = total;
-      path.style.strokeDashoffset = total;
-      vias = Array.from(wrap.querySelectorAll(".spine-via"));
-      update();
-    };
-
-    const update = () => {
-      if (!path) return;
-      if (reduced) {
-        path.style.strokeDashoffset = 0;
-        vias.forEach((v) => v.classList.add("lit"));
-        return;
-      }
-      const lead = window.scrollY + window.innerHeight * 0.8 - y0;
-      const frac = Math.max(0, Math.min(1, lead / (parseFloat(wrap.style.height) || 1)));
-      path.style.strokeDashoffset = total * (1 - frac);
-      vias.forEach((v) => v.classList.toggle("lit", +v.dataset.y <= lead));
-    };
-
-    let ticking = false;
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(() => {
-          update();
-          ticking = false;
-        });
-      }
-    };
-
-    build();
-    window.addEventListener("load", build);
-    let rt;
-    window.addEventListener("resize", () => {
-      clearTimeout(rt);
-      rt = setTimeout(build, 200);
-    });
-    if (mql.addEventListener) mql.addEventListener("change", build);
-    if (!reduced) window.addEventListener("scroll", onScroll, { passive: true });
   }
 
   /* ---------- Scroll-reveal (subtle fade/slide-up) ---------- */
