@@ -246,18 +246,41 @@ h1, h2, h3,
 
 /* ===== Hero ===== */
 /* Fills the first viewport (minus the 72px sticky header) so the landing
-   screen shows only the name — the About section starts below the fold. */
+   screen shows only the name — the About section starts below the fold.
+   Two columns: interactive robotic arm on the left, name on the right. */
 .hero {
   max-width: var(--max);
   margin: 0 auto;
   padding: 2rem 1.5rem;
-  text-align: center;
+  text-align: left;
   min-height: calc(100vh - 72px);
   min-height: calc(100svh - 72px);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: clamp(1rem, 4vw, 3.5rem);
+}
+.hero-visual {
+  flex: 0 1 500px;
+  min-width: 0;
+}
+.hero-arm {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.hero-text { max-width: 600px; }
+.hero-text .subtitle { margin-left: 0; }
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  .hero-text { order: 1; }
+  .hero-visual { order: 2; width: min(72vw, 330px); flex: 0 0 auto; }
+  .hero-text .subtitle { margin-left: auto; }
 }
 /* Subtle cue that there's more below */
 .hero::after {

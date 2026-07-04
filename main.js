@@ -210,6 +210,239 @@
   setupEqualize();
   setupPdfModal();
   setupSharedTransition();
+  setupHeroArm();
+
+  /* ---------- Hero: 3-link robotic arm that solves IK toward the cursor ----------
+     Idle: glides through poses on a slow curve, tip leaves a fading light trail.
+     Hover anywhere on the hero: the arm reaches for the pointer (CCD inverse
+     kinematics with damping so the motion looks servo-driven, not snappy). */
+  function setupHeroArm() {
+    const canvas = document.querySelector(".hero-arm");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const S = 520; // logical drawing space (CSS scales it responsively)
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = S * dpr;
+    canvas.height = S * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const base = { x: S * 0.5, y: S * 0.84 };
+    const L = [150, 118, 84]; // link lengths
+    const ang = [-1.9, -1.1, -0.4]; // absolute angle of each link (radians)
+    const maxR = L[0] + L[1] + L[2] - 8;
+
+    const jointPts = () => {
+      const pts = [{ x: base.x, y: base.y }];
+      for (let i = 0; i < 3; i++) {
+        const p = pts[i];
+        pts.push({ x: p.x + Math.cos(ang[i]) * L[i], y: p.y + Math.sin(ang[i]) * L[i] });
+      }
+      return pts;
+    };
+
+    // Cyclic Coordinate Descent, damped — a few passes per frame is plenty.
+    const solveIK = (tx, ty) => {
+      for (let pass = 0; pass < 3; pass++) {
+        for (let i = 2; i >= 0; i--) {
+          const pts = jointPts();
+          const j = pts[i];
+          const tip = pts[3];
+          let d =
+            Math.atan2(ty - j.y, tx - j.x) - Math.atan2(tip.y - j.y, tip.x - j.x);
+          d = Math.atan2(Math.sin(d), Math.cos(d)) * 0.3; // damping = servo feel
+          for (let k = i; k < 3; k++) ang[k] += d;
+        }
+      }
+    };
+
+    // Keep the target inside the arm's reach and above the base plate.
+    const clampReach = (x, y) => {
+      const dx = x - base.x;
+      const dy = y - base.y;
+      const d = Math.hypot(dx, dy) || 1;
+      const r = Math.min(d, maxR);
+      let cx = base.x + (dx / d) * r;
+      let cy = base.y + (dy / d) * r;
+      if (cy > base.y - 14) cy = base.y - 14;
+      return { x: cx, y: cy };
+    };
+
+    const target = { x: base.x + 120, y: base.y - 230 }; // eased toward goal each frame
+    const goal = { x: target.x, y: target.y };
+    let mouseIn = false;
+
+    const hero = document.querySelector(".hero");
+    hero.addEventListener("pointermove", (e) => {
+      const r = canvas.getBoundingClientRect();
+      if (!r.width) return;
+      const k = S / r.width;
+      goal.x = (e.clientX - r.left) * k;
+      goal.y = (e.clientY - r.top) * k;
+      mouseIn = true;
+    });
+    hero.addEventListener("pointerleave", () => (mouseIn = false));
+
+    const trail = [];
+    const colors = () => {
+      const light = document.documentElement.getAttribute("data-theme") === "light";
+      return {
+        grid: light ? "rgba(109, 40, 217, 0.10)" : "rgba(168, 85, 247, 0.09)",
+        arc: light ? "rgba(109, 40, 217, 0.18)" : "rgba(168, 85, 247, 0.16)",
+        link: light ? "#6d28d9" : "#a855f7",
+        link2: light ? "#be185d" : "#ec4899",
+        joint: light ? "#f4f3fb" : "#181526",
+        tip: light ? "#be185d" : "#f472b6",
+        hud: light ? "rgba(92, 88, 111, 0.75)" : "rgba(163, 157, 181, 0.7)",
+        trail: light ? "190, 24, 93" : "244, 114, 182",
+        glow: light ? 10 : 16,
+      };
+    };
+
+    const drawFrame = (now) => {
+      const c = colors();
+      ctx.clearRect(0, 0, S, S);
+
+      // Faint blueprint grid + dashed reach envelope.
+      ctx.strokeStyle = c.grid;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let g = 40; g < S; g += 40) {
+        ctx.moveTo(g, 0);
+        ctx.lineTo(g, S);
+        ctx.moveTo(0, g);
+        ctx.lineTo(S, g);
+      }
+      ctx.stroke();
+      ctx.setLineDash([5, 7]);
+      ctx.strokeStyle = c.arc;
+      ctx.beginPath();
+      ctx.arc(base.x, base.y, maxR, Math.PI, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Fading light trail behind the tip.
+      if (trail.length > 1) {
+        for (let i = 1; i < trail.length; i++) {
+          const a = (i / trail.length) * 0.5;
+          ctx.strokeStyle = "rgba(" + c.trail + "," + a.toFixed(3) + ")";
+          ctx.lineWidth = 1 + (i / trail.length) * 2.4;
+          ctx.lineCap = "round";
+          ctx.beginPath();
+          ctx.moveTo(trail[i - 1].x, trail[i - 1].y);
+          ctx.lineTo(trail[i].x, trail[i].y);
+          ctx.stroke();
+        }
+      }
+
+      const pts = jointPts();
+
+      // Base plate.
+      ctx.fillStyle = c.link;
+      ctx.globalAlpha = 0.25;
+      ctx.fillRect(base.x - 54, base.y, 108, 14);
+      ctx.globalAlpha = 1;
+
+      // Links: tapered strokes with a soft glow, purple fading to pink.
+      const widths = [13, 10, 7];
+      for (let i = 0; i < 3; i++) {
+        const g = ctx.createLinearGradient(pts[i].x, pts[i].y, pts[i + 1].x, pts[i + 1].y);
+        g.addColorStop(0, c.link);
+        g.addColorStop(1, i === 2 ? c.link2 : c.link);
+        ctx.strokeStyle = g;
+        ctx.lineWidth = widths[i];
+        ctx.lineCap = "round";
+        ctx.shadowBlur = c.glow;
+        ctx.shadowColor = i === 2 ? c.link2 : c.link;
+        ctx.beginPath();
+        ctx.moveTo(pts[i].x, pts[i].y);
+        ctx.lineTo(pts[i + 1].x, pts[i + 1].y);
+        ctx.stroke();
+      }
+      ctx.shadowBlur = 0;
+
+      // Joints.
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.arc(pts[i].x, pts[i].y, i === 0 ? 11 : 8, 0, Math.PI * 2);
+        ctx.fillStyle = c.joint;
+        ctx.fill();
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = c.link;
+        ctx.stroke();
+      }
+
+      // Gripper: two splayed fingers + glowing tip.
+      const tip = pts[3];
+      const a = ang[2];
+      ctx.strokeStyle = c.link2;
+      ctx.lineWidth = 4;
+      ctx.lineCap = "round";
+      [0.5, -0.5].forEach((s) => {
+        ctx.beginPath();
+        ctx.moveTo(tip.x, tip.y);
+        ctx.lineTo(tip.x + Math.cos(a + s) * 16, tip.y + Math.sin(a + s) * 16);
+        ctx.stroke();
+      });
+      ctx.beginPath();
+      ctx.arc(tip.x, tip.y, 4.5, 0, Math.PI * 2);
+      ctx.fillStyle = c.tip;
+      ctx.shadowBlur = 14;
+      ctx.shadowColor = c.tip;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Engineering HUD: live joint angles.
+      ctx.fillStyle = c.hud;
+      ctx.font = "500 12px Consolas, 'Courier New', monospace";
+      const deg = (r) => {
+        let v = ((r * 180) / Math.PI) % 360;
+        if (v < -180) v += 360;
+        if (v > 180) v -= 360;
+        return (v >= 0 ? " " : "") + v.toFixed(1) + "°";
+      };
+      ctx.fillText("θ1 " + deg(ang[0]), 16, S - 52);
+      ctx.fillText("θ2 " + deg(ang[1] - ang[0]), 16, S - 34);
+      ctx.fillText("θ3 " + deg(ang[2] - ang[1]), 16, S - 16);
+    };
+
+    if (reduced) {
+      // Static, dignified pose — no animation for reduced-motion visitors.
+      solveIK(base.x + 130, base.y - 240);
+      for (let i = 0; i < 40; i++) solveIK(base.x + 130, base.y - 240);
+      drawFrame(0);
+      return;
+    }
+
+    // Only animate while the hero is on screen.
+    let running = true;
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(
+        (en) => (running = en[0].isIntersecting),
+        { threshold: 0.05 }
+      ).observe(canvas);
+    }
+
+    const frame = (now) => {
+      if (running) {
+        if (!mouseIn) {
+          // Idle: a slow, figure-eight-ish sweep inside the workspace.
+          const t = now * 0.00032;
+          goal.x = base.x + Math.cos(t * 1.3) * 165 + Math.sin(t * 2.1) * 45;
+          goal.y = base.y - 205 + Math.sin(t * 1.7) * 85;
+        }
+        const g = clampReach(goal.x, goal.y);
+        target.x += (g.x - target.x) * 0.09;
+        target.y += (g.y - target.y) * 0.09;
+        solveIK(target.x, target.y);
+        const tip = jointPts()[3];
+        trail.push({ x: tip.x, y: tip.y });
+        if (trail.length > 46) trail.shift();
+        drawFrame(now);
+      }
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  }
 
   /* ---------- Scroll-reveal (subtle fade/slide-up) ---------- */
   function setupReveal() {
