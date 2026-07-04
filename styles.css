@@ -5,6 +5,8 @@
   --card: #181526;
   --border: #2a2540;
   --text: #ece9f3;
+  /* long-form copy: a notch dimmer than headings to avoid halation on dark */
+  --text-body: #d8d4e6;
   --muted: #a39db5;
   --accent: #a855f7;
   --accent-hover: #c084fc;
@@ -23,14 +25,15 @@
   --card: #ffffff;
   --border: #e4e1f0;
   --text: #1b1830;
+  --text-body: #1b1830; /* no halation on light — full contrast is fine */
   --muted: #5c586f;
-  --accent: #7c3aed;
-  --accent-hover: #6d28d9;
-  --grad: linear-gradient(120deg, #7c3aed, #db2777);
+  --accent: #6d28d9; /* deeper than dark mode's purple so small text clears AA on white */
+  --accent-hover: #5b21b6;
+  --grad: linear-gradient(120deg, #7c3aed, #be185d);
   --shadow: 0 14px 40px rgba(91, 33, 182, 0.12);
 }
 :root[data-theme="light"] .hero h1 {
-  background: linear-gradient(120deg, #1b1830 10%, #7c3aed 55%, #db2777);
+  background: linear-gradient(120deg, #1b1830 10%, #7c3aed 55%, #be185d);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -50,7 +53,7 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   font-family: var(--font-body);
-  color: var(--text);
+  color: var(--text-body);
   line-height: 1.6;
   background-color: var(--bg);
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -88,6 +91,7 @@ h1, h2, h3,
 .edu-school {
   font-family: var(--font-display);
   letter-spacing: -0.01em;
+  color: var(--text); /* headings keep full brightness; body copy is a notch dimmer */
 }
 
 /* ===== Header ===== */
