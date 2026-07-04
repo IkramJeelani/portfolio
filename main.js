@@ -300,11 +300,18 @@
       }
     };
 
+    const tipErr = (a, tx, ty) => {
+      const t = fk(a)[3];
+      return Math.hypot(t.x - tx, t.y - ty);
+    };
+
     const clampReach = (x, y) => {
       const dx = x - base.x;
       const dy = y - base.y;
       const d = Math.hypot(dx, dy) || 1;
-      const r = Math.min(d, maxR);
+      // Outer limit = arm length; inner limit keeps targets out of the
+      // cramped zone right at the base where only extreme folds reach.
+      const r = Math.min(Math.max(d, 70), maxR);
       let cx = base.x + (dx / d) * r;
       let cy = base.y + (dy / d) * r;
       if (cy > floorY - 10) cy = floorY - 10;
@@ -320,6 +327,7 @@
     const goal = { x: target.x, y: target.y };
     let mouseIn = false;
     let stall = 0; // seconds the IK solver has been unable to reach the target
+    let recoverUntil = 0; // while set, the solver pauses so the arm can unfold
 
     const colors = () => {
       const light = document.documentElement.getAttribute("data-theme") === "light";
@@ -593,8 +601,11 @@
       const p = toCanvas(e);
       if (!p) return;
       if (parts.filter((q) => q.state !== "binned").length >= 1) return; // one part at a time
+      // Keep drops clear of the bin AND of the cramped zone at the base.
+      let px = Math.min(W - 36, Math.max(bin.x + bin.w + 46, p.x));
+      if (Math.abs(px - base.x) < 85) px = px < base.x ? base.x - 85 : base.x + 85;
       parts.push({
-        x: Math.min(W - 36, Math.max(bin.x + bin.w + 46, p.x)),
+        x: px,
         y: Math.min(floorY - 90, Math.max(36, p.y)),
         vy: 0,
         rot: (Math.random() - 0.5) * 0.8,
@@ -691,21 +702,38 @@
         const g = clampReach(goal.x, goal.y);
         target.x += (g.x - target.x) * Math.min(1, 7 * dts);
         target.y += (g.y - target.y) * Math.min(1, 7 * dts);
-        solveIK(desired, target.x, target.y);
-        // Stall recovery: if the solver has wedged itself into a corner pose
-        // it can't escape (folded against its limits), command the home pose —
-        // the servos unfold smoothly and the solver re-converges from there.
-        const dtip = fk(desired)[3];
-        if (Math.hypot(dtip.x - target.x, dtip.y - target.y) > 30) {
-          stall += dts;
-          if (stall > 1.1) {
-            desired[0] = -1.8;
-            desired[1] = -1.0;
-            desired[2] = -0.35;
+        if (now >= recoverUntil) {
+          solveIK(desired, target.x, target.y);
+          // CCD is greedy: it can wedge into one elbow-fold family when the
+          // target needs the mirrored one. If the solution is off, also solve
+          // the mirror configuration and adopt it when it's clearly better.
+          const e1 = tipErr(desired, target.x, target.y);
+          if (e1 > 12) {
+            const alt = [desired[0], 0, 0];
+            alt[1] = alt[0] - wrapPi(desired[1] - desired[0]); // flip elbow fold
+            alt[2] = alt[1] - wrapPi(desired[2] - desired[1]); // flip wrist fold
+            applyLimits(alt);
+            solveIK(alt, target.x, target.y);
+            if (tipErr(alt, target.x, target.y) < e1 - 8) {
+              desired[0] = alt[0];
+              desired[1] = alt[1];
+              desired[2] = alt[2];
+            }
+          }
+          // Last-resort stall net: command home and pause solving so the arm
+          // fully unfolds before trying again.
+          if (tipErr(desired, target.x, target.y) > 30) {
+            stall += dts;
+            if (stall > 1.1) {
+              desired[0] = -1.8;
+              desired[1] = -1.0;
+              desired[2] = -0.35;
+              stall = 0;
+              recoverUntil = now + 650;
+            }
+          } else {
             stall = 0;
           }
-        } else {
-          stall = 0;
         }
         // IK solution → relative joint commands (each already limit-clamped).
         const dq = [
