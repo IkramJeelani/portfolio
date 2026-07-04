@@ -271,8 +271,10 @@
     const goal = { x: target.x, y: target.y };
     let mouseIn = false;
 
-    const hero = document.querySelector(".hero");
-    hero.addEventListener("pointermove", (e) => {
+    // Track the cursor only while it's inside the arm's own box — hovering
+    // the name/text leaves the arm in its idle sweep.
+    const armBox = canvas.closest(".hero-visual") || canvas;
+    armBox.addEventListener("pointermove", (e) => {
       const r = canvas.getBoundingClientRect();
       if (!r.width) return;
       const k = S / r.width;
@@ -280,7 +282,7 @@
       goal.y = (e.clientY - r.top) * k;
       mouseIn = true;
     });
-    hero.addEventListener("pointerleave", () => (mouseIn = false));
+    armBox.addEventListener("pointerleave", () => (mouseIn = false));
 
     const trail = [];
     const colors = () => {
