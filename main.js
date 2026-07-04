@@ -274,37 +274,137 @@
     });
   }
 
-  /* ---------- PDF popup (View Credential opens the certificate in a modal) ---------- */
+  /* ---------- PDF popup (View Credential opens the certificate in a modal) ----------
+     Renders the PDF with pdf.js into theme-styled canvases (custom toolbar with
+     zoom / download / open-in-tab) instead of the browser's grey default viewer.
+     Falls back to a plain iframe if the pdf.js CDN can't be reached. */
   function setupPdfModal() {
-    let modal;
-    const open = (src) => {
-      if (!modal) {
-        modal = document.createElement("div");
-        modal.className = "pdf-modal";
-        modal.innerHTML =
-          '<div class="pdf-backdrop"></div>' +
-          '<div class="pdf-box"><button class="pdf-close" aria-label="Close">&times;</button>' +
-          '<iframe title="Certificate"></iframe></div>';
-        document.body.appendChild(modal);
-        modal.querySelector(".pdf-backdrop").addEventListener("click", close);
-        modal.querySelector(".pdf-close").addEventListener("click", close);
+    const PDFJS_CDN = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174";
+    let modal, pdfDoc, libPromise;
+    let zoom = 1;
+    let curSrc = "";
+
+    const loadLib = () => {
+      if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+      if (!libPromise) {
+        libPromise = new Promise((resolve, reject) => {
+          const s = document.createElement("script");
+          s.src = PDFJS_CDN + "/pdf.min.js";
+          s.onload = () => {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_CDN + "/pdf.worker.min.js";
+            resolve(window.pdfjsLib);
+          };
+          s.onerror = () => reject(new Error("pdf.js failed to load"));
+          document.head.appendChild(s);
+        });
       }
-      modal.querySelector("iframe").src = src;
+      return libPromise;
+    };
+
+    const icoDownload =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>';
+    const icoNewTab =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M14 4h6v6M20 4L10 14M9 5H5v14h14v-4"/></svg>';
+
+    const build = () => {
+      modal = document.createElement("div");
+      modal.className = "pdf-modal";
+      modal.innerHTML =
+        '<div class="pdf-backdrop"></div>' +
+        '<div class="pdf-box">' +
+        '<div class="pdf-toolbar">' +
+        '<span class="pdf-title"></span>' +
+        '<div class="pdf-tools">' +
+        '<button class="pdf-tool-btn pdf-zoom-out" aria-label="Zoom out">&minus;</button>' +
+        '<span class="pdf-zoom-label">100%</span>' +
+        '<button class="pdf-tool-btn pdf-zoom-in" aria-label="Zoom in">+</button>' +
+        '<a class="pdf-tool-btn pdf-download" aria-label="Download" download>' + icoDownload + "</a>" +
+        '<a class="pdf-tool-btn pdf-newtab" aria-label="Open in new tab" target="_blank" rel="noopener">' + icoNewTab + "</a>" +
+        '<button class="pdf-tool-btn pdf-close" aria-label="Close">&times;</button>' +
+        "</div></div>" +
+        '<div class="pdf-pages"></div></div>';
+      document.body.appendChild(modal);
+      modal.querySelector(".pdf-backdrop").addEventListener("click", close);
+      modal.querySelector(".pdf-close").addEventListener("click", close);
+      modal.querySelector(".pdf-zoom-in").addEventListener("click", () => setZoom(zoom + 0.25));
+      modal.querySelector(".pdf-zoom-out").addEventListener("click", () => setZoom(zoom - 0.25));
+    };
+
+    const setZoom = (z) => {
+      zoom = Math.min(3, Math.max(0.5, z));
+      modal.querySelector(".pdf-zoom-label").textContent = Math.round(zoom * 100) + "%";
+      if (pdfDoc) renderPages();
+    };
+
+    async function renderPages() {
+      const box = modal.querySelector(".pdf-pages");
+      const doc = pdfDoc;
+      box.classList.remove("fallback");
+      box.innerHTML = "";
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      for (let n = 1; n <= doc.numPages; n++) {
+        if (doc !== pdfDoc) return; // a newer document replaced this one mid-render
+        const page = await doc.getPage(n);
+        const vp1 = page.getViewport({ scale: 1 });
+        const fit = (box.clientWidth - 44) / vp1.width; // fit page to the modal width
+        const vp = page.getViewport({ scale: fit * zoom * dpr });
+        const canvas = document.createElement("canvas");
+        canvas.width = vp.width;
+        canvas.height = vp.height;
+        canvas.style.width = vp.width / dpr + "px";
+        canvas.style.height = vp.height / dpr + "px";
+        box.appendChild(canvas);
+        await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
+      }
+    }
+
+    async function open(src, title) {
+      if (!modal) build();
+      modal.querySelector(".pdf-title").textContent = title || "Certificate";
+      modal.querySelector(".pdf-download").href = src;
+      modal.querySelector(".pdf-newtab").href = src;
       modal.classList.add("open");
       document.body.style.overflow = "hidden";
-    };
+      const box = modal.querySelector(".pdf-pages");
+      box.classList.remove("fallback");
+      box.innerHTML = '<div class="pdf-spinner" aria-label="Loading"></div>';
+      zoom = 1;
+      modal.querySelector(".pdf-zoom-label").textContent = "100%";
+      try {
+        const lib = await loadLib();
+        if (curSrc !== src || !pdfDoc) {
+          if (pdfDoc) pdfDoc.destroy();
+          pdfDoc = await lib.getDocument(src).promise;
+          curSrc = src;
+        }
+        await renderPages();
+      } catch (err) {
+        // CDN blocked or the PDF failed to parse — browser's viewer still works.
+        box.classList.add("fallback");
+        box.innerHTML = '<iframe title="Certificate" src="' + src + '"></iframe>';
+      }
+    }
+
     function close() {
       if (!modal) return;
       modal.classList.remove("open");
       document.body.style.overflow = "";
-      const f = modal.querySelector("iframe");
-      setTimeout(() => f && (f.src = "about:blank"), 250);
+      setTimeout(() => {
+        if (pdfDoc) pdfDoc.destroy();
+        pdfDoc = null;
+        curSrc = "";
+        modal.querySelector(".pdf-pages").innerHTML = "";
+      }, 250);
     }
+
     document.addEventListener("click", (e) => {
       const link = e.target.closest("a[data-pdf]");
       if (!link) return;
       e.preventDefault();
-      open(link.getAttribute("data-pdf"));
+      const name = link.querySelector(".cert-name");
+      open(link.getAttribute("data-pdf"), name ? name.textContent.trim() : "");
     });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") close();

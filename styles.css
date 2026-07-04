@@ -1152,6 +1152,7 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   width: min(900px, 92vw);
   height: min(90vh, 1000px);
   display: flex;
+  flex-direction: column;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1161,26 +1162,86 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   transition: transform 0.25s ease;
 }
 .pdf-modal.open .pdf-box { transform: scale(1); }
-.pdf-box iframe { flex: 1; width: 100%; height: 100%; border: 0; background: #fff; }
-.pdf-close {
-  position: absolute;
-  top: 8px;
-  right: 10px;
-  z-index: 2;
-  width: 36px;
-  height: 36px;
+/* Custom viewer chrome: title + zoom / download / new-tab / close */
+.pdf-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+.pdf-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pdf-tools { display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0; }
+.pdf-tool-btn {
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  padding: 0;
+  border-radius: 9px;
   border: 1px solid var(--border);
-  background: var(--bg-soft);
+  background: var(--card);
   color: var(--text);
-  font-size: 1.4rem;
+  font-size: 1.05rem;
   line-height: 1;
   cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
 }
-.pdf-close:hover { border-color: var(--accent); }
+.pdf-tool-btn:hover { border-color: var(--accent); color: var(--accent); }
+.pdf-tool-btn svg { width: 16px; height: 16px; }
+.pdf-close { font-size: 1.3rem; }
+.pdf-zoom-label {
+  min-width: 3em;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+/* Rendered pages scroll on the page background; margin auto keeps zoomed-in
+   pages reachable by scrolling (flex centering would clip their left edge). */
+.pdf-pages {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.3rem;
+  background: var(--bg);
+}
+.pdf-pages canvas {
+  margin-inline: auto;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
+}
+.pdf-spinner {
+  width: 42px;
+  height: 42px;
+  margin: auto;
+  border-radius: 50%;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  animation: pdf-spin 0.8s linear infinite;
+}
+@keyframes pdf-spin { to { transform: rotate(360deg); } }
+/* iframe fallback when pdf.js can't load */
+.pdf-pages.fallback { padding: 0; }
+.pdf-pages.fallback iframe { flex: 1; width: 100%; border: 0; background: #fff; }
+@media (max-width: 600px) {
+  .pdf-title { display: none; }
+  .pdf-box { width: 96vw; height: 92vh; }
+}
 
 /* ===== Smooth cross-page morph when opening / leaving a project ===== */
 @view-transition { navigation: auto; }
