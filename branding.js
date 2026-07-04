@@ -21,6 +21,9 @@
     const sp = localStorage.getItem("particles");
     if (sp !== null) particlesEnabled = sp !== "off";
   } catch (e) {}
+  // Set by the particle system below; lets the toggle button play the
+  // explode-away / fade-back transition instead of an instant switch.
+  let onParticlesToggle = null;
 
   // Build the tab icon from the SAME initials as the on-page logo, so they always match.
   const fontSize = initials.length > 2 ? 22 : 32;
@@ -175,6 +178,7 @@
         localStorage.setItem("particles", particlesEnabled ? "on" : "off");
       } catch (e) {}
       syncFx();
+      if (onParticlesToggle) onParticlesToggle(particlesEnabled);
     });
 
     // Hamburger menu — collapses the nav links into a dropdown on narrow screens.
@@ -302,23 +306,91 @@
       if (particles.length > cap) particles.splice(0, particles.length - cap);
     }
 
+    // Toggling off: each particle remembers its spot, bursts outward and fades.
+    // Toggling on: they reappear at those same spots, fade in, and keep falling.
+    let fxMode = particlesEnabled ? "on" : "off";
+    let fxT0 = 0;
+    const EXPLODE_MS = 650;
+    const RETURN_MS = 500;
+    onParticlesToggle = (enabled) => {
+      fxT0 = performance.now();
+      if (!enabled) {
+        particles.forEach((p) => {
+          p.hx = p.x;
+          p.hy = p.y;
+          const a = Math.random() * Math.PI * 2;
+          const s = 2 + Math.random() * 3.5;
+          p.ex = Math.cos(a) * s;
+          p.ey = Math.sin(a) * s - 1; // slight upward pop
+        });
+        fxMode = "exploding";
+      } else {
+        particles.forEach((p) => {
+          if (p.hx !== undefined) {
+            p.x = p.hx;
+            p.y = p.hy;
+          }
+        });
+        fxMode = "returning";
+      }
+    };
+
     let nextSpawn = 0;
     let last = performance.now();
     function frame(now) {
       const dt = Math.min(48, now - last);
       last = now;
-      if (!particlesEnabled) {
-        if (particles.length) particles.length = 0;
-        ctx.clearRect(0, 0, W, H);
+      ctx.clearRect(0, 0, W, H);
+      const light = document.documentElement.getAttribute("data-theme") === "light";
+
+      if (fxMode === "off") {
+        // Keep the particles in memory (frozen at their saved spots) but draw nothing.
         requestAnimationFrame(frame);
         return;
       }
+
+      if (fxMode === "exploding") {
+        const t = Math.min(1, (now - fxT0) / EXPLODE_MS);
+        for (const p of particles) {
+          p.x += p.ex * (dt / 16);
+          p.y += p.ey * (dt / 16);
+          p.ex *= 0.96; // burst slows as it fades
+          p.ey *= 0.96;
+          const tw = 0.45 + 0.55 * Math.sin(now * 0.005 + p.tw);
+          ctx.globalAlpha = tw * (1 - t);
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r * (1 + t * 0.6) * (light ? 1.15 : 1), 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.shadowBlur = (small() ? 6 : 12) * (light ? 1.5 : 1);
+          ctx.shadowColor = p.color;
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+        if (t >= 1) {
+          fxMode = "off";
+          particles.forEach((p) => {
+            if (p.hx !== undefined) {
+              p.x = p.hx;
+              p.y = p.hy;
+            }
+          });
+        }
+        requestAnimationFrame(frame);
+        return;
+      }
+
+      // "returning" fades them in at their old spots while normal physics resumes.
+      let fadeIn = 1;
+      if (fxMode === "returning") {
+        fadeIn = Math.min(1, (now - fxT0) / RETURN_MS);
+        if (fadeIn >= 1) fxMode = "on";
+      }
+
       if (now >= nextSpawn) {
         spawn();
         nextSpawn = now + (small() ? 2400 + Math.random() * 2200 : 1500 + Math.random() * 1300); // steady, never stops
       }
-      ctx.clearRect(0, 0, W, H);
-      const light = document.documentElement.getAttribute("data-theme") === "light";
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         const dx = p.x - mouse.x;
@@ -351,7 +423,7 @@
         }
         const tw = 0.45 + 0.55 * Math.sin(now * 0.005 + p.tw); // twinkle
         // Boost alpha + glow in light mode so they're as visible as on dark.
-        ctx.globalAlpha = light ? Math.min(1, tw + 0.25) : tw;
+        ctx.globalAlpha = (light ? Math.min(1, tw + 0.25) : tw) * fadeIn;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r * (light ? 1.15 : 1), 0, Math.PI * 2);
         ctx.fillStyle = p.color;
