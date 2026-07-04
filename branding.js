@@ -306,22 +306,52 @@
       if (particles.length > cap) particles.splice(0, particles.length - cap);
     }
 
-    // Toggling off: each particle remembers its spot, bursts outward and fades.
-    // Toggling on: they reappear at those same spots, fade in, and keep falling.
+    // Toggling off: spawning stops and each particle bursts into 3–5 tiny
+    // fragments that drift apart, slow under drag, shrink and dissolve —
+    // each with its own direction, speed, curl, lifetime and fade delay so
+    // the burst looks organic. Positions are remembered while off.
+    // Toggling on: fragments fly back in and the particles re-form at those
+    // same spots, then resume falling exactly as they were.
     let fxMode = particlesEnabled ? "on" : "off";
     let fxT0 = 0;
-    const EXPLODE_MS = 650;
-    const RETURN_MS = 500;
+    let frags = [];
+    const RETURN_MS = 520;
+    const rand = (a, b) => a + Math.random() * (b - a);
+
+    const burstFrom = (p) => {
+      const n = 3 + ((Math.random() * 3) | 0);
+      for (let j = 0; j < n; j++) {
+        const a = Math.random() * Math.PI * 2;
+        const s = rand(1.4, 4.5);
+        frags.push({
+          // outward burst (explode) starts here and moves by velocity…
+          x: p.x,
+          y: p.y,
+          vx: Math.cos(a) * s,
+          vy: Math.sin(a) * s - rand(0, 0.8),
+          // …while the reverse (return) eases from a scattered start back home
+          sx: p.x + Math.cos(a) * rand(26, 72),
+          sy: p.y + Math.sin(a) * rand(26, 72),
+          tx: p.x,
+          ty: p.y,
+          r: p.r * rand(0.35, 0.75),
+          life: rand(280, 520),
+          delay: rand(0, 80),
+          drag: rand(0.86, 0.94),
+          spin: rand(-0.22, 0.22),
+          color: p.color,
+        });
+      }
+    };
+
     onParticlesToggle = (enabled) => {
       fxT0 = performance.now();
+      frags = [];
       if (!enabled) {
         particles.forEach((p) => {
           p.hx = p.x;
           p.hy = p.y;
-          const a = Math.random() * Math.PI * 2;
-          const s = 2 + Math.random() * 3.5;
-          p.ex = Math.cos(a) * s;
-          p.ey = Math.sin(a) * s - 1; // slight upward pop
+          burstFrom(p);
         });
         fxMode = "exploding";
       } else {
@@ -330,9 +360,20 @@
             p.x = p.hx;
             p.y = p.hy;
           }
+          burstFrom(p);
         });
         fxMode = "returning";
       }
+    };
+
+    const drawDot = (x, y, r, color, alpha, light) => {
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.arc(x, y, Math.max(0.2, r), 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.shadowBlur = (small() ? 5 : 9) * (light ? 1.5 : 1);
+      ctx.shadowColor = color;
+      ctx.fill();
     };
 
     let nextSpawn = 0;
@@ -350,24 +391,31 @@
       }
 
       if (fxMode === "exploding") {
-        const t = Math.min(1, (now - fxT0) / EXPLODE_MS);
-        for (const p of particles) {
-          p.x += p.ex * (dt / 16);
-          p.y += p.ey * (dt / 16);
-          p.ex *= 0.96; // burst slows as it fades
-          p.ey *= 0.96;
-          const tw = 0.45 + 0.55 * Math.sin(now * 0.005 + p.tw);
-          ctx.globalAlpha = tw * (1 - t);
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r * (1 + t * 0.6) * (light ? 1.15 : 1), 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.shadowBlur = (small() ? 6 : 12) * (light ? 1.5 : 1);
-          ctx.shadowColor = p.color;
-          ctx.fill();
+        let alive = false;
+        for (const f of frags) {
+          const t = (now - fxT0 - f.delay) / f.life;
+          if (t >= 1) continue; // this fragment has fully dissolved
+          alive = true;
+          const tc = Math.max(0, t); // holds still + opaque until its delay is up
+          if (t > 0) {
+            // curl the path a little, then bleed speed off with drag
+            const c = f.spin * (dt / 16);
+            const cos = Math.cos(c);
+            const sin = Math.sin(c);
+            const nvx = f.vx * cos - f.vy * sin;
+            f.vy = f.vx * sin + f.vy * cos;
+            f.vx = nvx;
+            const d = Math.pow(f.drag, dt / 16);
+            f.vx *= d;
+            f.vy *= d;
+            f.x += f.vx * (dt / 16);
+            f.y += f.vy * (dt / 16);
+          }
+          drawDot(f.x, f.y, f.r * (1 - 0.45 * tc), f.color, 1 - tc, light);
         }
         ctx.globalAlpha = 1;
         ctx.shadowBlur = 0;
-        if (t >= 1) {
+        if (!alive) {
           fxMode = "off";
           particles.forEach((p) => {
             if (p.hx !== undefined) {
@@ -380,11 +428,42 @@
         return;
       }
 
-      // "returning" fades them in at their old spots while normal physics resumes.
-      let fadeIn = 1;
       if (fxMode === "returning") {
-        fadeIn = Math.min(1, (now - fxT0) / RETURN_MS);
-        if (fadeIn >= 1) fxMode = "on";
+        // Particles fade up at their old spots while their fragments ease
+        // back in and hand their brightness over to the re-formed dot.
+        const T = Math.min(1, (now - fxT0) / RETURN_MS);
+        for (const p of particles) {
+          const tw = 0.45 + 0.55 * Math.sin(now * 0.005 + p.tw);
+          drawDot(
+            p.x,
+            p.y,
+            p.r * (light ? 1.15 : 1),
+            p.color,
+            (light ? Math.min(1, tw + 0.25) : tw) * T * T,
+            light
+          );
+        }
+        let alive = false;
+        for (const f of frags) {
+          const t = (now - fxT0 - f.delay) / f.life;
+          if (t >= 1) continue;
+          alive = true;
+          const tc = Math.max(0, t);
+          const e = 1 - Math.pow(1 - tc, 3); // decelerate into home
+          drawDot(
+            f.sx + (f.tx - f.sx) * e,
+            f.sy + (f.ty - f.sy) * e,
+            f.r * (0.55 + 0.45 * tc),
+            f.color,
+            1 - tc,
+            light
+          );
+        }
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+        if (!alive && T >= 1) fxMode = "on";
+        requestAnimationFrame(frame);
+        return;
       }
 
       if (now >= nextSpawn) {
@@ -423,7 +502,7 @@
         }
         const tw = 0.45 + 0.55 * Math.sin(now * 0.005 + p.tw); // twinkle
         // Boost alpha + glow in light mode so they're as visible as on dark.
-        ctx.globalAlpha = (light ? Math.min(1, tw + 0.25) : tw) * fadeIn;
+        ctx.globalAlpha = light ? Math.min(1, tw + 0.25) : tw;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r * (light ? 1.15 : 1), 0, Math.PI * 2);
         ctx.fillStyle = p.color;
