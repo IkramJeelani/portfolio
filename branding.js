@@ -182,6 +182,9 @@
     });
 
     // Hamburger menu — collapses the nav links into a dropdown on narrow screens.
+    // Deferred to DOMContentLoaded because main.js fills in the nav links AFTER
+    // this script runs — checking children now would always find an empty nav.
+    const setupMenu = () => {
     const navEl = header.querySelector("nav");
     if (navEl && navEl.children.length) {
       const menuBtn = document.createElement("button");
@@ -206,6 +209,12 @@
       document.addEventListener("click", (e) => {
         if (!header.contains(e.target)) setOpen(false);
       });
+    }
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", setupMenu);
+    } else {
+      setupMenu();
     }
   }
 
