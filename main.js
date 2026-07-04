@@ -231,11 +231,39 @@
 
     const base = { x: W * 0.54, y: H * 0.87 };
     const L = [148, 116, 82];
-    const ang = [-1.9, -1.1, -0.4]; // actual joint state (absolute link angles)
+    const ang = [-1.9, -1.1, -0.4]; // actual link angles (absolute, for drawing/FK)
     const desired = ang.slice(); //   IK solution the servos chase
+    // True joint state lives in RELATIVE coordinates (shoulder abs, elbow rel,
+    // wrist rel) so servo errors are plain differences — a joint always travels
+    // through its allowed range, never "the short way" through a hard stop.
+    const q = [-1.9, 0.8, 0.7];
     const vel = [0, 0, 0]; //         joint angular velocities (rad/s)
     const MAXV = 3.0; //              velocity limit, rad/s
     const MAXA = 9; //                acceleration limit, rad/s^2
+    // Mechanical joint limits, like real hard stops: the shoulder can never
+    // aim below the horizon, and the elbow/wrist can't fold back on themselves —
+    // no more impossible zig-zag poses.
+    const wrapPi = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+    const LIM1 = [-2.94, -0.2]; //  shoulder (absolute angle)
+    const LIM2 = [-2.25, 2.25]; //  elbow (relative to shoulder)
+    const LIM3 = [-1.75, 1.75]; //  wrist (relative to forearm)
+    // `hit[i]` reports which joints actually slammed a stop (used to bleed
+    // servo velocity) — the rebuild itself has float drift, so comparing
+    // angles before/after would false-positive every frame.
+    const applyLimits = (a, hit) => {
+      const w0 = wrapPi(a[0]);
+      const c0 = Math.min(LIM1[1], Math.max(LIM1[0], w0));
+      if (hit && c0 !== w0) hit[0] = true;
+      a[0] = c0;
+      let r = wrapPi(a[1] - a[0]);
+      let rc = Math.min(LIM2[1], Math.max(LIM2[0], r));
+      if (hit && rc !== r) hit[1] = true;
+      a[1] = a[0] + rc;
+      r = wrapPi(a[2] - a[1]);
+      rc = Math.min(LIM3[1], Math.max(LIM3[0], r));
+      if (hit && rc !== r) hit[2] = true;
+      a[2] = a[1] + rc;
+    };
     const maxR = L[0] + L[1] + L[2] - 8;
     const floorY = base.y;
     const bin = { x: 58, y: floorY - 6, w: 66, h: 30 };
@@ -261,6 +289,14 @@
           d = Math.atan2(Math.sin(d), Math.cos(d)) * 0.5;
           for (let k = i; k < 3; k++) a[k] += d;
         }
+        applyLimits(a); // limits enforced per pass so CCD can still converge
+      }
+      // Keep the elbow from actually punching through the work surface.
+      for (let n = 0; n < 16; n++) {
+        const pts = fk(a);
+        if (pts[2].y <= floorY - 2) break;
+        a[1] += wrapPi(-Math.PI / 2 - a[1]) > 0 ? 0.03 : -0.03;
+        applyLimits(a);
       }
     };
 
@@ -499,9 +535,50 @@
       ctx.fillRect(base.x - 52, base.y + 10, 104, 5);
       ctx.globalAlpha = 1;
 
-      // Hydraulic actuator BEHIND the links: cylinder pinned to a lug on the
-      // lower link, rod-end pinned to a lug on the forearm. It genuinely
-      // extends and retracts as the elbow angle changes.
+      // Service cable: sags from the base plate up to the forearm like a
+      // real cable harness, following the arm as it moves.
+      const cabEnd = lug(pts[1], pts[2], 0.14, -8);
+      ctx.strokeStyle = c.slot;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(base.x - 26, base.y + 6);
+      ctx.quadraticCurveTo(
+        (base.x - 26 + cabEnd.x) / 2 - 16,
+        Math.min(floorY + 4, (base.y + cabEnd.y) / 2 + 46),
+        cabEnd.x,
+        cabEnd.y
+      );
+      ctx.stroke();
+
+      // Shoulder actuator: cylinder pinned between the base plate and a lug
+      // on the lower link — extends/retracts as the shoulder rotates.
+      const S1 = { x: base.x + 36, y: base.y + 6 };
+      const S2 = lug(pts[0], pts[1], 0.46, 11);
+      ctx.strokeStyle = c.slot;
+      ctx.lineWidth = 6.5;
+      ctx.beginPath();
+      ctx.moveTo(S1.x, S1.y);
+      ctx.lineTo(S1.x + (S2.x - S1.x) * 0.58, S1.y + (S2.y - S1.y) * 0.58);
+      ctx.stroke();
+      ctx.strokeStyle = c.link2;
+      ctx.lineWidth = 2.4;
+      ctx.beginPath();
+      ctx.moveTo(S1.x + (S2.x - S1.x) * 0.5, S1.y + (S2.y - S1.y) * 0.5);
+      ctx.lineTo(S2.x, S2.y);
+      ctx.stroke();
+      [S1, S2].forEach((p) => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = c.bolt;
+        ctx.fill();
+        ctx.lineWidth = 1.4;
+        ctx.strokeStyle = c.link;
+        ctx.stroke();
+      });
+
+      // Elbow actuator: cylinder pinned to a lug on the lower link, rod-end
+      // pinned to a lug on the forearm — extends as the elbow opens.
       const A = lug(pts[0], pts[1], 0.5, -11);
       const B = lug(pts[1], pts[2], 0.24, -9);
       ctx.lineCap = "round";
@@ -574,11 +651,14 @@
       const k = W / r.width;
       return { x: (e.clientX - r.left) * k, y: (e.clientY - r.top) * k };
     };
+    // Remember where the cursor is so the arm can come back to it on its own
+    // after finishing a pick-and-place job (no mouse move needed).
+    const cursor = { x: 0, y: 0 };
     armBox.addEventListener("pointermove", (e) => {
       const p = toCanvas(e);
       if (!p) return;
-      goal.x = p.x;
-      goal.y = p.y;
+      cursor.x = p.x;
+      cursor.y = p.y;
       mouseIn = true;
     });
     armBox.addEventListener("pointerleave", () => (mouseIn = false));
@@ -632,7 +712,7 @@
 
         if (!job) {
           const next = parts.find((p) => p.state === "rest");
-          if (next) job = { part: next, phase: "reach" };
+          if (next) job = { part: next, phase: "reach", t0: now };
         }
 
         // Goal priority: job > cursor > idle sweep.
@@ -641,13 +721,17 @@
           const p = job.part;
           if (job.phase === "reach") {
             goal.x = p.x;
-            goal.y = p.y - 2;
+            goal.y = p.y - 4;
             const tip = jointPts()[3];
             const d = Math.hypot(tip.x - p.x, tip.y - p.y);
             gripGoal = d < 70 ? 1 : 0.55;
-            if (d < 16) {
+            // Grab tolerance grows the longer the approach takes, so an
+            // awkward corner pose can never soft-lock the arm.
+            const tol = 20 + Math.min(26, ((now - job.t0) / 1000) * 7);
+            if (d < tol) {
               p.state = "held";
               job.phase = "carry";
+              job.t0 = now;
             }
           } else {
             const bx = bin.x + bin.w / 2;
@@ -656,7 +740,8 @@
             goal.y = by;
             gripGoal = 0.12;
             const tip = jointPts()[3];
-            if (Math.hypot(tip.x - bx, tip.y - by) < 16) {
+            const tol = 18 + Math.min(26, ((now - job.t0) / 1000) * 7);
+            if (Math.hypot(tip.x - bx, tip.y - by) < tol) {
               const p2 = job.part;
               p2.state = "binned";
               p2.x = bx;
@@ -667,7 +752,11 @@
               gripGoal = 1;
             }
           }
-        } else if (!mouseIn) {
+        } else if (mouseIn) {
+          // No job: head straight back to the cursor, wherever it's resting.
+          goal.x = cursor.x;
+          goal.y = cursor.y;
+        } else {
           const t = now * 0.00032;
           goal.x = base.x + Math.cos(t * 1.3) * 165 + Math.sin(t * 2.1) * 45;
           goal.y = base.y - 195 + Math.sin(t * 1.7) * 80;
@@ -679,17 +768,34 @@
         target.x += (g.x - target.x) * Math.min(1, 7 * dts);
         target.y += (g.y - target.y) * Math.min(1, 7 * dts);
         solveIK(desired, target.x, target.y);
+        // IK solution → relative joint commands (each already limit-clamped).
+        const dq = [
+          Math.min(LIM1[1], Math.max(LIM1[0], wrapPi(desired[0]))),
+          Math.min(LIM2[1], Math.max(LIM2[0], wrapPi(desired[1] - desired[0]))),
+          Math.min(LIM3[1], Math.max(LIM3[0], wrapPi(desired[2] - desired[1]))),
+        ];
+        const LIMS = [LIM1, LIM2, LIM3];
         for (let i = 0; i < 3; i++) {
-          let err = desired[i] - ang[i];
-          err = Math.atan2(Math.sin(err), Math.cos(err));
+          const err = dq[i] - q[i]; // plain difference: no wrap through a stop
           let acc = 60 * err - 9 * vel[i];
           if (acc > MAXA) acc = MAXA;
           else if (acc < -MAXA) acc = -MAXA;
           vel[i] += acc * dts;
           if (vel[i] > MAXV) vel[i] = MAXV;
           else if (vel[i] < -MAXV) vel[i] = -MAXV;
-          ang[i] += vel[i] * dts;
+          q[i] += vel[i] * dts;
+          // Hard stop: clamp and bleed velocity, like real hardware.
+          if (q[i] < LIMS[i][0]) {
+            q[i] = LIMS[i][0];
+            vel[i] *= 0.25;
+          } else if (q[i] > LIMS[i][1]) {
+            q[i] = LIMS[i][1];
+            vel[i] *= 0.25;
+          }
         }
+        ang[0] = q[0];
+        ang[1] = q[0] + q[1];
+        ang[2] = ang[1] + q[2];
 
         const tip = jointPts()[3];
         trail.push({ x: tip.x, y: tip.y });
