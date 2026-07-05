@@ -69,6 +69,7 @@ const ABOUT =
    `tech`   is optional — tags for the tech used in the job (shown under the details).
    `logo`   is optional — a company logo (put the file in assets/). "" = none. */
 const EXPERIENCE = [
+  /* 
   {
     role: "Engineering Intern",
     company: "Acme Robotics",
@@ -92,6 +93,7 @@ const EXPERIENCE = [
     ],
     tech: ["LoRa", "Python", "Embedded C"],
   },
+  */
 ];
 
 
@@ -250,7 +252,7 @@ const EDUCATION = [
    Each project needs a unique `id` (used in the URL, no spaces).
    ============================================================================ */
 const PROJECTS = [
-
+/* 
   {
     id: "smart-thermostat",
     title: "Smart Thermostat Controller",
@@ -416,7 +418,7 @@ const PROJECTS = [
         <img src="assets/project1.svg" alt="">
       </div>
     `,
-  },
+  },*/
 ];
 
 /* ---------- 7. CONTACTS ----------
