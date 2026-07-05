@@ -219,14 +219,9 @@
     });
   });
 
-  // All dock cards share the same height (tallest wins).
-  const dockCards = Array.from(reel.children);
-  const equalizeDock = () => {
-    dockCards.forEach((c) => (c.style.height = ""));
-    let max = 0;
-    dockCards.forEach((c) => (max = Math.max(max, c.offsetHeight)));
-    dockCards.forEach((c) => (c.style.height = max + "px"));
-  };
+  // Cards are a fixed height in CSS, so the active card's "Now viewing" flag
+  // never resizes the row — the dock stays exactly the same size on every
+  // project (previously the JS "tallest wins" equalizer made it jump).
   // Centre the current project in the dock (clamped — as close to the middle as it can get).
   const centerActive = (smooth) => {
     const cur = reel.querySelector(".dock-card.active");
@@ -236,7 +231,6 @@
     viewport.scrollTo({ top: Math.max(0, Math.min(target, max)), behavior: smooth ? "smooth" : "auto" });
   };
   const layoutDock = () => {
-    if (dockCards.length > 1) equalizeDock();
     centerActive(false);
     updateRail();
   };
@@ -251,7 +245,6 @@
     savedReel = sessionStorage.getItem("dockScroll");
     sessionStorage.removeItem("dockNav");
   } catch (e) {}
-  if (dockCards.length > 1) equalizeDock();
   if (cameFromProject && savedReel !== null) {
     viewport.scrollTop = +savedReel;
     updateRail();
@@ -263,7 +256,6 @@
   window.addEventListener("resize", layoutDock);
   if (document.fonts && document.fonts.ready)
     document.fonts.ready.then(() => {
-      if (dockCards.length > 1) equalizeDock();
       updateRail();
     });
 

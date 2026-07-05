@@ -1051,9 +1051,13 @@
     // For each group, stretch the measured block to the tallest one so the content
     // below it (View Credential / View details) lines up across every card. A fixed
     // CSS gap keeps that content clear of the text even on the tallest card.
+    // Equalize each row separately (not the whole block) so the date, the
+    // description, the tags and "View details" all line up at the same
+    // position across every project card, whatever the title/description length.
     const groups = [
       { id: "certifications", sel: ".cert-name" },
-      { id: "projects", sel: ".card-main" },
+      { id: "projects", sel: ".card-title" },
+      { id: "projects", sel: ".card-tagline" },
       { id: "projects", sel: ".card-foot .tags" },
     ];
     const runners = [];

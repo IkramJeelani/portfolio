@@ -789,8 +789,12 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 .back-link {
   color: var(--muted);
   font-weight: 600;
-  display: inline-block;
-  margin-bottom: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  /* padding (offset by negative margins) gives a comfortable tap target
+     without shifting the link's visual position */
+  padding: 0.5rem 0.4rem;
+  margin: -0.5rem -0.4rem 1.1rem;
 }
 .back-link:hover { color: var(--accent); }
 
@@ -930,6 +934,9 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   align-items: center;
   gap: 0.6rem;
   scroll-snap-align: center;
+  /* Fixed height: fits thumbnail + 2-line title + date + the active flag, so
+     every row is identical and the dock never resizes between projects. */
+  min-height: 84px;
   padding: 0.45rem 0.55rem;
   border: 1px solid var(--border);
   border-left: 3px solid transparent;
@@ -1292,6 +1299,9 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   .project-hero { height: 200px; }
   .project-page h1 { font-size: 1.9rem; }
   .project-page { padding: 2rem 1.25rem 3rem; }
+  /* Full-width, easy-to-tap action buttons on phones */
+  .project-links { flex-direction: column; align-items: stretch; }
+  .project-links .btn { width: 100%; text-align: center; padding: 0.85rem 1.4rem; }
 }
 
 /* ===== Scroll progress bar (gradient, top of page) ===== */
