@@ -9,7 +9,7 @@
    particles: true  -> falling particles start ON
               false -> start OFF */
 const SETTINGS = {
-  theme: "dark",
+  theme: "light",
   particles: true,
 };
 
@@ -365,7 +365,7 @@ const PROJECTS = [
   },
   {
     id: "robotic-armm",
-    title: "6-DOF Robotic Arm",
+    title: "6-DOF Robotic Armm",
     image: "assets/project3.svg",
     date: "Oct 24 - Dec 24",
     tagline: "Inverse kinematics and motion planning from scratch",
@@ -392,7 +392,7 @@ const PROJECTS = [
   },
     {
     id: "robotic-armmm",
-    title: "6-DOF Robotic Arm",
+    title: "6-DOF Robotic Armmmm",
     image: "assets/project3.svg",
     date: "Oct 24 - Dec 24",
     tagline: "Inverse kinematics and motion planning from scratch",
