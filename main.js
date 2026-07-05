@@ -211,6 +211,55 @@
   setupPdfModal();
   setupSharedTransition();
   setupHeroArm();
+  setupSkillsMasonry();
+
+  /* ---------- Skills: balanced masonry ----------
+     CSS columns can only split between categories in source order, which
+     leaves one column hanging long (e.g. a short "Tools" dangling at the
+     bottom). Instead, measure each category and deal them into flex columns
+     shortest-first — the columns always end nearly level, whatever the
+     content in data.js grows into. */
+  function setupSkillsMasonry() {
+    const wrap = document.querySelector(".skills-list");
+    if (!wrap) return;
+    const groups = Array.from(wrap.querySelectorAll(".skill-group"));
+    if (!groups.length) return;
+    const GAP = 36; // keep in sync with the CSS column gap
+    const COLW = 190;
+
+    const layout = () => {
+      const w = wrap.clientWidth || 640;
+      const n = Math.max(1, Math.floor((w + GAP) / (COLW + GAP)));
+      wrap.innerHTML = "";
+      const cols = [];
+      for (let i = 0; i < n; i++) {
+        const c = document.createElement("div");
+        c.className = "skill-col";
+        wrap.appendChild(c);
+        cols.push(c);
+      }
+      // Park everything in the first column to measure at real column width…
+      groups.forEach((g) => cols[0].appendChild(g));
+      if (n === 1) return;
+      const hs = groups.map((g) => g.offsetHeight);
+      // …then deal each category (in order) onto the currently shortest column.
+      const tot = cols.map(() => 0);
+      groups.forEach((g, i) => {
+        let k = 0;
+        for (let j = 1; j < n; j++) if (tot[j] < tot[k] - 1) k = j;
+        cols[k].appendChild(g);
+        tot[k] += hs[i];
+      });
+    };
+
+    layout();
+    window.addEventListener("load", layout);
+    let rt;
+    window.addEventListener("resize", () => {
+      clearTimeout(rt);
+      rt = setTimeout(layout, 150);
+    });
+  }
 
   /* ---------- Hero: 3-link robotic arm with servo physics + pick-and-place ----------
      The IK solver produces DESIRED joint angles; each joint then behaves like

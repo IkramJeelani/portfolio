@@ -482,17 +482,21 @@ h1, h2, h3,
 .skills-list {
   max-width: 640px;
   margin: 0 auto;
-  /* Masonry via CSS columns: ~190px-wide columns (the max category width), filled and
-     balanced so short categories stack beside a tall one. Columns keep lines aligned. */
-  column-width: 190px;
-  column-gap: 2.25rem;
+  /* True masonry: main.js measures each category and deals them into these
+     flex columns shortest-first, so the columns always end nearly level. */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2.25rem;
+}
+.skill-col {
+  flex: 1 1 0;
+  min-width: 0;
 }
 .skill-group {
   position: relative;
   padding-left: 1rem; /* room for the line */
   margin: 0 0 1.75rem; /* vertical gap between stacked categories */
-  break-inside: avoid;
-  -webkit-column-break-inside: avoid;
 }
 /* Animated gradient "energy" line from the category down to the last skill */
 .skill-group::before {
