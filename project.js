@@ -100,19 +100,23 @@
   }
 
   // Floating quick-access dock: a manually-scrollable list of projects.
+  // Each row leads with the project's own image as a thumbnail (the clearest
+  // at-a-glance identifier) and a position number, so it's obvious which
+  // project you're on and what else is in the list.
   const cardsHTML = projects
-    .map((p) => {
+    .map((p, i) => {
       const active = p.id === project.id ? " active" : "";
-      const tags = (p.tech || [])
-        .slice(0, 4)
-        .map((t) => `<span class="tag">${t}</span>`)
-        .join("");
+      const num = String(i + 1).padStart(2, "0");
       return `
         <a class="dock-card${active}" data-id="${encodeURIComponent(p.id)}" href="project.html?id=${encodeURIComponent(p.id)}">
-          <div class="dock-name">${p.title}</div>
-          ${p.date ? `<div class="dock-date">${p.date}</div>` : ""}
-          ${p.tagline ? `<div class="dock-tagline">${p.tagline}</div>` : ""}
-          ${tags ? `<div class="tags dock-tags">${tags}</div>` : ""}
+          <span class="dock-thumb" style="background-image:url('${p.image}')">
+            <span class="dock-num">${num}</span>
+          </span>
+          <span class="dock-body">
+            ${active ? '<span class="dock-flag">Now viewing</span>' : ""}
+            <span class="dock-name">${p.title}</span>
+            ${p.date ? `<span class="dock-date">${p.date}</span>` : ""}
+          </span>
         </a>`;
     })
     .join("");
