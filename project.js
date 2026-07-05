@@ -35,6 +35,27 @@
       (project.details || []).map((d) => `<p>${d}</p>`).join("");
   }
 
+  // Previous / next projects (data.js order) — pager cards at the end of the
+  // page so a reader is never left at a dead end, plus ←/→ keyboard nav.
+  const idx = projects.indexOf(project);
+  const prevP = idx > 0 ? projects[idx - 1] : null;
+  const nextP = idx < projects.length - 1 ? projects[idx + 1] : null;
+  const pagerCard = (p, dir) => `
+    <a class="pager-card pager-${dir}" href="project.html?id=${encodeURIComponent(p.id)}">
+      <span class="pager-thumb" style="background-image:url('${p.image}')"></span>
+      <span class="pager-text">
+        <span class="pager-dir">${dir === "prev" ? "&larr; Previous" : "Next &rarr;"}</span>
+        <span class="pager-title">${p.title}</span>
+      </span>
+    </a>`;
+  const pagerHtml =
+    prevP || nextP
+      ? `<nav class="project-pager" aria-label="More projects">
+          ${prevP ? pagerCard(prevP, "prev") : "<span></span>"}
+          ${nextP ? pagerCard(nextP, "next") : "<span></span>"}
+        </nav>`
+      : "";
+
   page.innerHTML = `
     <a class="back-link" href="index.html#projects">&larr; Back to projects</a>
     <div class="project-hero" style="background-image:url('${project.image}')"></div>
@@ -43,7 +64,30 @@
     ${project.date ? `<p class="project-date">${project.date}</p>` : ""}
     <div class="tags">${techHtml}</div>
     <div class="project-content">${bodyHtml}</div>
-    <div class="project-links">${linksHtml}</div>`;
+    <div class="project-links">${linksHtml}</div>
+    ${pagerHtml}`;
+
+  // Any project→project hop records the dock's reel position first, so the
+  // next page can pick the list up exactly where it was (assigned below,
+  // once the dock exists).
+  let saveDock = () => {};
+
+  // ←/→ step through projects (ignored while typing or with modifiers held).
+  document.addEventListener("keydown", (e) => {
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    const t = e.target;
+    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+    if (e.key === "ArrowLeft" && prevP) {
+      saveDock();
+      location.href = "project.html?id=" + encodeURIComponent(prevP.id);
+    } else if (e.key === "ArrowRight" && nextP) {
+      saveDock();
+      location.href = "project.html?id=" + encodeURIComponent(nextP.id);
+    }
+  });
+  page.querySelectorAll(".pager-card").forEach((a) =>
+    a.addEventListener("click", () => saveDock())
+  );
 
   // "Back to projects" — flag a return so the home page restores scroll + morphs the hero.
   const backLink = page.querySelector(".back-link");
@@ -84,9 +128,12 @@
       </button>
     </div>
     <div class="dock-viewport"><div class="dock-reel">${cardsHTML}</div></div>`;
-  let dockHidden = true; // hidden by default
+  // First visit: show the dock so people discover it. After that, respect
+  // whatever the visitor chose (collapse state persists in localStorage).
+  let dockHidden = false;
   try {
-    dockHidden = localStorage.getItem("dockHidden") !== "0";
+    const stored = localStorage.getItem("dockHidden");
+    if (stored !== null) dockHidden = stored !== "0";
   } catch (e) {}
   if (dockHidden) dock.classList.add("collapsed");
   document.body.appendChild(dock);
@@ -94,6 +141,18 @@
 
   const viewport = dock.querySelector(".dock-viewport");
   const reel = dock.querySelector(".dock-reel");
+  const reducedMotion =
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  saveDock = () => {
+    try {
+      sessionStorage.setItem("dockScroll", String(Math.round(viewport.scrollTop)));
+      sessionStorage.setItem("dockNav", "1");
+    } catch (e) {}
+  };
+  reel.addEventListener("click", (e) => {
+    if (e.target.closest(".dock-card")) saveDock();
+  });
 
   // Vertical location line beside the dock (custom scroll-position indicator).
   const rail = document.createElement("div");
@@ -177,9 +236,32 @@
     centerActive(false);
     updateRail();
   };
-  layoutDock();
+  // Arriving from another project (dock / pager / arrow keys): start the reel
+  // exactly where it was on the previous page, then GLIDE the new selection
+  // into the centre — you see the list move to the new spot instead of an
+  // instant, disorienting reshuffle.
+  let cameFromProject = false;
+  let savedReel = null;
+  try {
+    cameFromProject = sessionStorage.getItem("dockNav") === "1";
+    savedReel = sessionStorage.getItem("dockScroll");
+    sessionStorage.removeItem("dockNav");
+  } catch (e) {}
+  if (dockCards.length > 1) equalizeDock();
+  if (cameFromProject && savedReel !== null) {
+    viewport.scrollTop = +savedReel;
+    updateRail();
+    setTimeout(() => centerActive(!reducedMotion), 450); // after the page transition settles
+  } else {
+    centerActive(false);
+    updateRail();
+  }
   window.addEventListener("resize", layoutDock);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutDock);
+  if (document.fonts && document.fonts.ready)
+    document.fonts.ready.then(() => {
+      if (dockCards.length > 1) equalizeDock();
+      updateRail();
+    });
 
   // Genie image preview beside the dock on hover (delegated; skip the current project).
   const preview = document.createElement("div");
@@ -204,11 +286,35 @@
   dock.addEventListener("mouseleave", () => preview.classList.remove("show"));
 
   // Scrolling over the dock scrolls only the dock — never the whole page.
+  // Wheel input is eased through a small inertia loop instead of jumping,
+  // so the reel glides and settles like a native momentum scroller.
+  let glideTarget = 0;
+  let gliding = false;
+  const glideStep = () => {
+    const d = glideTarget - viewport.scrollTop;
+    if (Math.abs(d) < 0.5) {
+      viewport.scrollTop = glideTarget;
+      gliding = false;
+      return;
+    }
+    viewport.scrollTop += d * 0.18;
+    requestAnimationFrame(glideStep);
+  };
   viewport.addEventListener(
     "wheel",
     (e) => {
       e.preventDefault();
-      viewport.scrollTop += e.deltaY;
+      const max = Math.max(0, viewport.scrollHeight - viewport.clientHeight);
+      if (reducedMotion) {
+        viewport.scrollTop += e.deltaY;
+        return;
+      }
+      if (!gliding) glideTarget = viewport.scrollTop;
+      glideTarget = Math.max(0, Math.min(glideTarget + e.deltaY, max));
+      if (!gliding) {
+        gliding = true;
+        requestAnimationFrame(glideStep);
+      }
     },
     { passive: false }
   );
@@ -216,7 +322,8 @@
   // Show / hide the floating dock (collapse button in it + a reveal tab on the edge).
   const collapseBtn = dock.querySelector(".dock-collapse");
   const reveal = document.createElement("button");
-  reveal.className = "dock-reveal" + (dockHidden ? " show" : "");
+  // "pulse" nudges attention at the tab a couple of times, then stops (CSS).
+  reveal.className = "dock-reveal" + (dockHidden ? " show pulse" : "");
   reveal.type = "button";
   reveal.setAttribute("aria-label", "Show projects panel");
   reveal.textContent = "Projects ›";

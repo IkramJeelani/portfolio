@@ -872,6 +872,14 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 }
 .dock-reveal.show { display: block; }
 .dock-reveal:hover { padding-right: 0.7rem; box-shadow: 0 6px 26px rgba(168, 85, 247, 0.8); }
+/* One-time attention nudge so visitors notice the hidden panel exists */
+@media (prefers-reduced-motion: no-preference) {
+  .dock-reveal.pulse { animation: dock-tab-pulse 1.5s ease 1s 2; }
+}
+@keyframes dock-tab-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(168, 85, 247, 0); }
+  50% { box-shadow: 0 0 22px rgba(168, 85, 247, 0.9); padding-right: 0.7rem; }
+}
 /* Manually scrollable viewport; scrollbar hidden; scroll stays inside the dock */
 .dock-viewport {
   flex: 1 1 auto;
@@ -967,7 +975,13 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   transform-origin: left center;
   transition: opacity 0.18s ease, transform 0.34s cubic-bezier(0.2, 0.95, 0.25, 1);
 }
-.dock-preview.show { opacity: 1; transform: scale(1); }
+/* Once visible, the preview glides between cards instead of teleporting */
+.dock-preview.show {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.18s ease, transform 0.34s cubic-bezier(0.2, 0.95, 0.25, 1),
+    top 0.24s cubic-bezier(0.3, 0.8, 0.3, 1);
+}
 @media (max-width: 1300px) {
   .project-dock,
   .dock-preview,
@@ -1003,6 +1017,54 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   color: var(--accent);
 }
 .project-links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.5rem; }
+
+/* ===== Prev / next project pager at the end of a project page ===== */
+.project-pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.pager-card {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.pager-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.18);
+}
+.pager-next { flex-direction: row-reverse; text-align: right; justify-self: end; width: 100%; }
+.pager-thumb {
+  flex: 0 0 64px;
+  height: 48px;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--border);
+}
+.pager-text { min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+.pager-dir { font-size: 0.78rem; color: var(--accent); font-weight: 600; }
+.pager-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .project-pager { grid-template-columns: 1fr; }
+  .pager-next { flex-direction: row; text-align: left; }
+}
 
 /* ===== Free-form project content (the `body` field) ===== */
 .project-content { font-size: 1.08rem; color: var(--text); }
@@ -1327,6 +1389,19 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 }
 /* clip both snapshots to the same rounded shape so corners stay smooth through the morph */
 ::view-transition-image-pair(project-hero) { border-radius: var(--radius); overflow: hidden; }
+
+/* Project→project navigation: the dock (and its reveal tab) get their own
+   snapshots so they stay ANCHORED while the page content swaps around them,
+   and the "active card" highlight visibly slides from the old selection to
+   the new one — you always know where you are in the list. */
+.project-dock { view-transition-name: project-dock; }
+.dock-reveal.show { view-transition-name: dock-tab; }
+.dock-card.active { view-transition-name: dock-active; }
+::view-transition-group(dock-active) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+::view-transition-image-pair(dock-active) { border-radius: 12px; overflow: hidden; }
 
 /* ===== Theme toggle: new theme expands as a circle from the toggle button =====
    .theme-vt is set by branding.js only for the toggle's own view transition. */
