@@ -69,7 +69,6 @@ const ABOUT =
    `tech`   is optional — tags for the tech used in the job (shown under the details).
    `logo`   is optional — a company logo (put the file in assets/). "" = none. */
 const EXPERIENCE = [
-  /*
   {
     role: "Engineering Intern",
     company: "Acme Robotics",
@@ -77,7 +76,7 @@ const EXPERIENCE = [
     date: "Summer 2024",
     logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/acme.png"
     points: [
-      "Built automated test fixtures that cut QA time by ~30%.",
+      "Built automated test fixtures that cut QA time by ~30%.Built automated test fixtures that cut QA time by ~30%.",
       "Wrote firmware for a sensor-calibration rig used across the team.",
     ],
     tech: ["C", "Python", "STM32"],
@@ -93,7 +92,6 @@ const EXPERIENCE = [
     ],
     tech: ["LoRa", "Python", "Embedded C"],
   },
-  */
 ];
 
 

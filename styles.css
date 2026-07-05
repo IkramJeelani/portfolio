@@ -887,6 +887,14 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   scrollbar-width: none;
   overscroll-behavior: contain; /* don't chain scroll to the page */
   padding: 2px;
+  /* Native momentum + gentle snap: the reel coasts with the browser's own
+     inertia and settles with a card neatly framed (proximity = only snaps
+     when already near one, so free scrolling never fights back). */
+  scroll-snap-type: y proximity;
+  scroll-padding-block: 6px;
+  /* soft fade at the ends so cards ease in/out instead of clipping hard */
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
 }
 .dock-viewport::-webkit-scrollbar { display: none; }
 .dock-reel { display: flex; flex-direction: column; gap: 0.6rem; }
@@ -917,6 +925,7 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 .dock-rail.dragging .dock-rail-thumb { box-shadow: 0 0 10px rgba(168, 85, 247, 0.65); }
 .dock-card {
   display: block;
+  scroll-snap-align: center;
   padding: 0.55rem 0.7rem;
   border: 1px solid var(--border);
   border-radius: 10px;

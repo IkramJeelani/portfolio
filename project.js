@@ -285,39 +285,10 @@
   });
   dock.addEventListener("mouseleave", () => preview.classList.remove("show"));
 
-  // Scrolling over the dock scrolls only the dock — never the whole page.
-  // Wheel input is eased through a small inertia loop instead of jumping,
-  // so the reel glides and settles like a native momentum scroller.
-  let glideTarget = 0;
-  let gliding = false;
-  const glideStep = () => {
-    const d = glideTarget - viewport.scrollTop;
-    if (Math.abs(d) < 0.5) {
-      viewport.scrollTop = glideTarget;
-      gliding = false;
-      return;
-    }
-    viewport.scrollTop += d * 0.18;
-    requestAnimationFrame(glideStep);
-  };
-  viewport.addEventListener(
-    "wheel",
-    (e) => {
-      e.preventDefault();
-      const max = Math.max(0, viewport.scrollHeight - viewport.clientHeight);
-      if (reducedMotion) {
-        viewport.scrollTop += e.deltaY;
-        return;
-      }
-      if (!gliding) glideTarget = viewport.scrollTop;
-      glideTarget = Math.max(0, Math.min(glideTarget + e.deltaY, max));
-      if (!gliding) {
-        gliding = true;
-        requestAnimationFrame(glideStep);
-      }
-    },
-    { passive: false }
-  );
+  // Scrolling: fully native. The browser's own momentum/inertia (mouse,
+  // trackpad, touch) is smoother than anything reimplemented in JS, CSS
+  // scroll-snap settles cards neatly, and `overscroll-behavior: contain`
+  // keeps the scroll inside the dock without a preventDefault handler.
 
   // Show / hide the floating dock (collapse button in it + a reveal tab on the edge).
   const collapseBtn = dock.querySelector(".dock-collapse");
