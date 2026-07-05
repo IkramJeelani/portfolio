@@ -208,10 +208,33 @@
   setupTilt();
   setupSectionFlash();
   setupEqualize();
+  setupTimelineWidth();
   setupPdfModal();
   setupSharedTransition();
   setupHeroArm();
   setupSkillsMasonry();
+
+  /* ---------- Experience + Education: one shared card width ----------
+     Each timeline is its own grid, so their card columns size independently
+     (Experience might be wider than Education, or vice-versa). Measure the
+     widest card across BOTH sections and pin every card to that width so the
+     two sections line up. Cleared below the mobile breakpoint, where cards
+     are meant to fill the row fluidly. */
+  function setupTimelineWidth() {
+    const cards = Array.from(document.querySelectorAll(".tl-card, .edu-card"));
+    if (cards.length < 2) return;
+    const apply = () => {
+      cards.forEach((c) => (c.style.width = ""));
+      if (window.innerWidth <= 640) return; // fluid on phones
+      let max = 0;
+      cards.forEach((c) => (max = Math.max(max, c.offsetWidth)));
+      cards.forEach((c) => (c.style.width = max + "px"));
+    };
+    apply();
+    window.addEventListener("resize", apply);
+    window.addEventListener("load", apply);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(apply);
+  }
 
   /* ---------- Skills: balanced masonry ----------
      CSS columns can only split between categories in source order, which
