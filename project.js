@@ -271,9 +271,17 @@
   const PREVIEW_H = 170;
   reel.addEventListener("mouseover", (e) => {
     const card = e.target.closest(".dock-card");
-    if (!card || card.classList.contains("active")) return; // no preview for the current project
+    // Moving onto the current project (or a gap) hides any lingering preview —
+    // otherwise the last unselected card's image would stay stuck on screen.
+    if (!card || card.classList.contains("active")) {
+      preview.classList.remove("show");
+      return;
+    }
     const p = projects.find((x) => x.id === decodeURIComponent(card.dataset.id || ""));
-    if (!p) return;
+    if (!p) {
+      preview.classList.remove("show");
+      return;
+    }
     preview.style.backgroundImage = `url('${p.image}')`;
     const r = card.getBoundingClientRect();
     const dr = dock.getBoundingClientRect();
