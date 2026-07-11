@@ -253,8 +253,11 @@ h1, h2, h3,
   margin: 0 auto;
   padding: 2rem 1.5rem;
   text-align: left;
-  min-height: calc(100vh - 72px);
-  min-height: calc(100svh - 72px);
+  /* Full viewport height, pulled up under the transparent sticky header, so
+     the content centres in the whole screen rather than the area below it. */
+  min-height: 100vh;
+  min-height: 100svh;
+  margin-top: calc(-1 * var(--header-h, 72px));
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -290,7 +293,7 @@ h1, h2, h3,
 /* Short viewports (landscape phones, small laptops with the window snapped):
    don't force a full-screen hero — let it size to its content. */
 @media (max-height: 620px) {
-  .hero { min-height: 0; padding: 4.5rem 1.5rem 3.5rem; }
+  .hero { min-height: 0; margin-top: 0; padding: 4.5rem 1.5rem 3.5rem; }
   .hero::after { display: none; }
 }
 /* Subtle cue that there's more below */

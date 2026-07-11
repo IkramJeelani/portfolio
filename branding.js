@@ -71,6 +71,18 @@
   // Cursor spotlight that follows the mouse across the nav bar.
   const header = document.querySelector(".site-header");
   if (header) {
+    // Publish the header's real height as --header-h. The header is transparent
+    // over the hero, so the hero uses this to centre its content in the FULL
+    // viewport (pulling up under the header) instead of the space below it.
+    const setHeaderH = () =>
+      document.documentElement.style.setProperty(
+        "--header-h",
+        header.getBoundingClientRect().height + "px"
+      );
+    setHeaderH();
+    window.addEventListener("resize", setHeaderH);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(setHeaderH);
+
     // Transparent at the very top; frosted background once scrolled.
     const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 8);
     window.addEventListener("scroll", onScroll, { passive: true });
