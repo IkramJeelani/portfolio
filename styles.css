@@ -1486,9 +1486,10 @@ html.theme-vt::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
 }
-/* keep the old theme fully visible underneath while the circle grows on top */
-html.theme-vt::view-transition-old(root) { z-index: 0; }
-html.theme-vt::view-transition-new(root) { z-index: 1; }
+/* The OLD theme stays on top while its clip circle collapses into the toggle
+   button ("black hole" absorption); the new theme waits underneath. */
+html.theme-vt::view-transition-old(root) { z-index: 1; }
+html.theme-vt::view-transition-new(root) { z-index: 0; }
 /* no separate snapshots during the theme switch — everything stays inside the circle */
 html.theme-vt * { view-transition-name: none !important; }
 
