@@ -130,11 +130,8 @@
         } catch (e) {}
       };
 
-      // "Black hole" absorption: the OLD theme sits on top and its clip circle
-      // collapses INTO the toggle button — the button swallows the old theme,
-      // revealing the new one that was underneath the whole time. Falls back
-      // to an instant switch when the View Transitions API is missing or
-      // motion is reduced.
+      // Circular reveal from the toggle button. Falls back to an instant
+      // switch when the View Transitions API is missing or motion is reduced.
       const noMotion =
         window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (!document.startViewTransition || noMotion) {
@@ -145,7 +142,7 @@
       const r = toggle.getBoundingClientRect();
       const cx = r.left + r.width / 2;
       const cy = r.top + r.height / 2;
-      // Radius to the farthest viewport corner so the circle starts covering everything.
+      // Radius to the farthest viewport corner so the circle always covers everything.
       const radius = Math.hypot(
         Math.max(cx, window.innerWidth - cx),
         Math.max(cy, window.innerHeight - cy)
@@ -160,29 +157,19 @@
           document.documentElement.animate(
             {
               clipPath: [
-                `circle(${radius}px at ${cx}px ${cy}px)`,
                 `circle(0px at ${cx}px ${cy}px)`,
+                `circle(${radius}px at ${cx}px ${cy}px)`,
               ],
             },
             {
-              duration: 480,
-              // starts gently, then accelerates into the button — gravity.
-              easing: "cubic-bezier(0.55, 0, 0.85, 0.4)",
-              pseudoElement: "::view-transition-old(root)",
+              duration: 420,
+              easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+              pseudoElement: "::view-transition-new(root)",
             }
           );
         })
         .catch(() => {});
-      vt.finished.finally(() => {
-        document.documentElement.classList.remove("theme-vt");
-        // A tiny "gulp" as the button finishes swallowing the old theme.
-        if (toggle.animate) {
-          toggle.animate(
-            { transform: ["scale(1)", "scale(1.22)", "scale(1)"] },
-            { duration: 240, easing: "ease-out" }
-          );
-        }
-      });
+      vt.finished.finally(() => document.documentElement.classList.remove("theme-vt"));
     });
 
     // Start/stop the falling particles.
