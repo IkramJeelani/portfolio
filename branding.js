@@ -25,25 +25,39 @@
   // explode-away / fade-back transition instead of an instant switch.
   let onParticlesToggle = null;
 
-  // Build the tab icon from the SAME initials as the on-page logo, so they always match.
+  // Build the tab icon from the SAME initials AND the same gradient as the
+  // on-page logo (.brand), so the two actually match. Kept on a page
+  // background-coloured backdrop (rather than transparent) so it stays
+  // legible in both light- and dark-chrome browser tabs.
   const fontSize = initials.length > 2 ? 22 : 32;
-  const svg =
-    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>" +
-    "<rect width='64' height='64' rx='14' fill='#0b0a12'/>" +
-    "<text x='32' y='40' font-family='Segoe UI, Arial, sans-serif' font-size='" +
-    fontSize +
-    "' font-weight='800' fill='#a855f7' text-anchor='middle'>" +
-    initials +
-    "</text></svg>";
+  const buildFavicon = () => {
+    const light = document.documentElement.getAttribute("data-theme") === "light";
+    const bg = light ? "#f4f3fb" : "#0b0a12";
+    const g1 = light ? "#7c3aed" : "#a855f7";
+    const g2 = light ? "#be185d" : "#ec4899";
+    const svg =
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>" +
+      "<defs><linearGradient id='g' x1='0%' y1='100%' x2='100%' y2='0%'>" +
+      "<stop offset='0%' stop-color='" + g1 + "'/>" +
+      "<stop offset='100%' stop-color='" + g2 + "'/>" +
+      "</linearGradient></defs>" +
+      "<rect width='64' height='64' rx='14' fill='" + bg + "'/>" +
+      "<text x='32' y='40' font-family='Segoe UI, Arial, sans-serif' font-size='" +
+      fontSize +
+      "' font-weight='800' fill='url(#g)' text-anchor='middle'>" +
+      initials +
+      "</text></svg>";
 
-  let link = document.querySelector("link[rel='icon']");
-  if (!link) {
-    link = document.createElement("link");
-    link.rel = "icon";
-    document.head.appendChild(link);
-  }
-  link.type = "image/svg+xml";
-  link.href = "data:image/svg+xml," + encodeURIComponent(svg);
+    let link = document.querySelector("link[rel='icon']");
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.type = "image/svg+xml";
+    link.href = "data:image/svg+xml," + encodeURIComponent(svg);
+  };
+  buildFavicon();
 
   // Fill placeholders found on the page.
   const fill = (attr, value) =>
@@ -56,7 +70,9 @@
   fill("data-year", new Date().getFullYear());
 
   if (document.body.hasAttribute("data-home")) {
-    document.title = (p.name || "") + (p.role ? " — " + p.role : "");
+    // Fixed "Portfolio" suffix for the browser tab — independent of
+    // PROFILE.role, which still drives the hero eyebrow text separately.
+    document.title = (p.name || "") + " - Portfolio";
   }
 
   // Background glow layer — corners "breathe" via CSS.
@@ -125,6 +141,7 @@
       const next = isLight ? "dark" : "light";
       const apply = () => {
         document.documentElement.setAttribute("data-theme", next);
+        buildFavicon(); // keep the tab icon's gradient in sync with the theme
         try {
           localStorage.setItem("theme", next);
         } catch (e) {}
