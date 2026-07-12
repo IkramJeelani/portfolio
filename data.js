@@ -19,7 +19,7 @@ const PROFILE = {
   initials: "IJ", // shown top-left AND as the browser-tab icon (kept in sync)
   role: "Engineering Portfolio",
   bio:
-    "\"The best way to predict the future is to engineer it.\"",
+    "",
 };
 
 /* ============================================================================
