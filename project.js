@@ -14,6 +14,29 @@
   }
 
   document.title = `${project.title} — ${(window.PROFILE || {}).name || ""}`;
+
+  // Refine the sharing/SEO tags for this specific project so a shared project
+  // link shows its own title, description and URL.
+  (function updateMeta() {
+    const site = "https://ikramjeelani.github.io/portfolio/";
+    const url = site + "project.html?id=" + encodeURIComponent(project.id);
+    const desc =
+      project.tagline || `An in-depth look at ${project.title} by ${(window.PROFILE || {}).name || ""}.`;
+    // These tags all exist statically in project.html — just update them.
+    const set = (sel, val) => {
+      const el = document.head.querySelector(sel);
+      if (el) el.setAttribute("content", val);
+    };
+    set('meta[name="description"]', desc);
+    set('meta[property="og:title"]', document.title);
+    set('meta[property="og:description"]', desc);
+    set('meta[property="og:url"]', url);
+    set('meta[name="twitter:title"]', document.title);
+    set('meta[name="twitter:description"]', desc);
+    const canon = document.head.querySelector('link[rel="canonical"]');
+    if (canon) canon.href = url;
+  })();
+
   // Remember which project, so going back morphs the hero into the right card.
   try {
     sessionStorage.setItem("lastProject", encodeURIComponent(project.id));
