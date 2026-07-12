@@ -42,7 +42,10 @@
       "<stop offset='100%' stop-color='" + g2 + "'/>" +
       "</linearGradient></defs>" +
       "<rect width='64' height='64' rx='14' fill='" + bg + "'/>" +
-      "<text x='32' y='40' font-family='Segoe UI, Arial, sans-serif' font-size='" +
+      // dominant-baseline="central" true-centers on font metrics instead of a
+      // guessed y-offset — the old fixed baseline made the letters sit low
+      // and look vertically squeezed at favicon size.
+      "<text x='32' y='33' dominant-baseline='central' font-family='Segoe UI, Arial, sans-serif' font-size='" +
       fontSize +
       "' font-weight='800' fill='url(#g)' text-anchor='middle'>" +
       initials +
