@@ -1072,11 +1072,11 @@
       'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
       '<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>';
 
-    // Appended as a sibling of .hero-text / .hero-visual (not nested inside
-    // .hero-text) so the hero's CSS grid can place it independently —
-    // "under the name" on desktop, but "after the arm" once stacked on
-    // mobile, via grid-template-areas rather than DOM order.
-    const heroSection = document.querySelector(".hero");
+    // Appended into .hero-right (a sibling of .hero-text, both inside the
+    // wrapper) so desktop treats [text + button] as ONE grid item beside the
+    // arm, while mobile's display:contents on the wrapper promotes it back
+    // to an independent grid item so it can sit after the arm there.
+    const heroSection = document.querySelector(".hero-right") || document.querySelector(".hero");
     let heroBtn = null;
     if (heroSection) {
       heroBtn = document.createElement("a");
@@ -1106,12 +1106,82 @@
       themeToggle.insertAdjacentElement("afterend", navBtn); // between the two toggles
     }
 
+    // A small burst of gradient sparks that fly from one button's position to
+    // the other's, so it visibly reads as "the same button moved" rather than
+    // one button fading out while an unrelated icon fades in elsewhere.
+    const reducedMotion =
+      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let lastFlightAt = 0;
+    const flySparks = (fromX, fromY, toX, toY) => {
+      if (reducedMotion) return;
+      const now = performance.now();
+      if (now - lastFlightAt < 500) return; // ignore rapid back-and-forth scroll jitter
+      lastFlightAt = now;
+      const dx = toX - fromX;
+      const dy = toY - fromY;
+      for (let i = 0; i < 3; i++) {
+        const delay = i * 55;
+        const size = 12 - i * 2;
+        const spark = document.createElement("div");
+        spark.className = "resume-spark";
+        spark.style.width = spark.style.height = size + "px";
+        spark.style.left = fromX + "px";
+        spark.style.top = fromY + "px";
+        document.body.appendChild(spark);
+        const midX = fromX + dx * 0.5 + (i - 1) * 14;
+        const midY = Math.min(fromY, toY) - 46 - i * 8; // arcs up and over
+        const anim = spark.animate(
+          [
+            { transform: "translate(-50%,-50%) scale(1)", offset: 0, opacity: 0 },
+            { transform: "translate(-50%,-50%) scale(1)", offset: 0.06, opacity: 1 },
+            {
+              transform: `translate(${midX - fromX}px, ${midY - fromY}px) translate(-50%,-50%) scale(0.85)`,
+              offset: 0.55,
+              opacity: 1,
+            },
+            {
+              transform: `translate(${dx}px, ${dy}px) translate(-50%,-50%) scale(0.2)`,
+              offset: 1,
+              opacity: 0,
+            },
+          ],
+          { duration: 620, delay, easing: "cubic-bezier(0.3, 0, 0.2, 1)", fill: "forwards" }
+        );
+        anim.onfinish = () => spark.remove();
+      }
+    };
+
+    // Nav button's shown position, computed from the theme toggle (already
+    // on-screen and stable) rather than the nav button's own rect, which
+    // isn't meaningful before its reveal transition has actually run.
+    const navTargetCenter = () => {
+      const r = themeToggle.getBoundingClientRect();
+      const small = window.innerWidth <= 480;
+      const gap = (small ? 0.45 : 0.6) * 16;
+      const size = small ? 36 : 40;
+      return { x: r.right + gap + size / 2, y: r.top + r.height / 2 };
+    };
+
     // The nav button only appears once the hero button is no longer visible
     // (scrolled under the sticky header) — never both at once.
     if (heroBtn && navBtn) {
       if ("IntersectionObserver" in window) {
+        let firstCallback = true;
         const io = new IntersectionObserver(
-          (entries) => navBtn.classList.toggle("show", !entries[0].isIntersecting),
+          (entries) => {
+            const showingNav = !entries[0].isIntersecting;
+            navBtn.classList.toggle("show", showingNav);
+            // Skip the spark burst on IO's initial "here's the current state"
+            // callback — only real, scroll-triggered flips should launch it.
+            if (!firstCallback) {
+              const heroR = entries[0].boundingClientRect;
+              const heroCenter = { x: heroR.left + heroR.width / 2, y: heroR.top + heroR.height / 2 };
+              const navCenter = navTargetCenter();
+              if (showingNav) flySparks(heroCenter.x, heroCenter.y, navCenter.x, navCenter.y);
+              else flySparks(navCenter.x, navCenter.y, heroCenter.x, heroCenter.y);
+            }
+            firstCallback = false;
+          },
           { rootMargin: "-73px 0px 0px 0px", threshold: 0 }
         );
         io.observe(heroBtn);

@@ -306,10 +306,9 @@ h1, h2, h3,
 /* ===== Hero ===== */
 /* Fills the first viewport (minus the 72px sticky header) so the landing
    screen shows only the name — the About section starts below the fold.
-   A CSS grid (not flex) so the résumé button — a sibling of hero-visual and
-   hero-text, not nested inside either — can be placed independently per
-   breakpoint via grid-template-areas: under the name on desktop, but after
-   the arm once the layout stacks on mobile. */
+   Desktop: 2 columns, arm | (text+button as ONE grid item — see .hero-right).
+   Mobile: .hero-right unwraps via display:contents so the arm can sit
+   between the text block and the résumé button in a single stacked column. */
 .hero {
   max-width: var(--max);
   margin: 0 auto;
@@ -322,42 +321,46 @@ h1, h2, h3,
   margin-top: calc(-1 * var(--header-h, 72px));
   display: grid;
   grid-template-columns: minmax(0, 500px) 1fr;
-  grid-template-areas:
-    "visual text"
-    "visual button";
+  grid-template-areas: "visual right";
   align-items: center;
-  /* Grid's equivalent of the old flex-column's justify-content:center: packs
-     the row tracks tightly (row-gap only between them) and centers that
-     whole group vertically within the tall min-height box. Without this the
-     rows default to stretching across the leftover space instead. */
+  /* Packs row tracks tightly (spacing comes only from row-gap/margins) and
+     centers that group vertically within the tall min-height box — without
+     this, auto-sized rows stretch across the leftover space instead. Mostly
+     matters once mobile stacks into 3 rows; harmless as a single row too. */
   align-content: center;
   justify-content: center;
   column-gap: clamp(1rem, 4vw, 3.5rem);
 }
-/* No résumé button: drop the empty second row so it can't leave a gap. */
-.hero:not(:has(.resume-btn)) { grid-template-areas: "visual text"; }
 .hero-visual { grid-area: visual; min-width: 0; }
 .hero-arm {
   width: 100%;
   height: auto;
   display: block;
 }
-.hero-text { grid-area: text; max-width: 600px; }
-.hero-text .subtitle { margin-left: 0; }
-.resume-btn { grid-area: button; }
-/* Grid items stretch to fill their column by default — without this the
-   button stretched to the full width of the text column instead of sizing
-   to its own content. Scoped to the 2-column layout only: on the mobile
-   stacked layout the button should stay centred like everything else there. */
-@media (min-width: 1001px) {
-  .resume-btn { justify-self: start; }
+/* IMPORTANT: hero-visual must NOT span multiple rows shared with hero-text/
+   resume-btn. It's much taller than they are (arm graphic vs. a few lines of
+   text), and CSS Grid inflates auto-sized rows to fit whatever spans them —
+   that's what caused a ~150px phantom gap between the name and the button
+   when this used to be "visual text" / "visual button" as two rows. Grouping
+   text+button into one .hero-right item sidesteps the whole problem: now
+   there's only ONE row, sized by the taller of the two columns, and
+   align-items:center centers each column within it independently. */
+.hero-right {
+  grid-area: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
+.hero-text { max-width: 600px; }
+.hero-text .subtitle { margin-left: 0; }
 /* Tablets: keep the two columns but let the arm shrink before the text wraps badly. */
 @media (max-width: 1180px) {
   .hero { grid-template-columns: minmax(0, min(44vw, 460px)) 1fr; }
 }
 /* Below ~1000px the columns get cramped — stack: name, then arm, then button.
-   A single row-gap gives equal spacing between every stacked piece. */
+   Unwrap .hero-right (display:contents) so hero-text and resume-btn become
+   independent grid items again and the arm can sit between them; a single
+   row-gap then gives equal spacing across all three. */
 @media (max-width: 1000px) {
   .hero {
     grid-template-columns: 1fr;
@@ -366,6 +369,9 @@ h1, h2, h3,
     row-gap: 2rem;
     text-align: center;
   }
+  .hero-right { display: contents; }
+  .hero-text { grid-area: text; }
+  .resume-btn { grid-area: button; }
   .hero:not(:has(.resume-btn)) { grid-template-areas: "text" "visual"; }
   .hero-visual { width: min(72vw, 340px); }
   .hero-text .subtitle { margin-left: auto; margin-bottom: 0; }
@@ -419,24 +425,29 @@ h1, h2, h3,
   color: var(--muted);
   font-size: 1.1rem;
 }
+/* No bio text set: an empty paragraph still carries its 2rem margin, which
+   read as a mysterious, oversized, unexplained gap between the name and the
+   résumé button below it. Collapse it when there's nothing in it. */
+.subtitle:empty { display: none; }
 
 /* ===== Résumé / CV button (hero) =====
-   The one "special" CTA on the page: gradient pill + soft breathing glow
-   halo behind it (same breathing-glow language as the corner blobs/skill
-   lines elsewhere on the site) so it reads as more than an ordinary button. */
+   The one "special" CTA on the page: gradient pill, a size bump so it holds
+   its own visually under the large name, and a soft breathing glow halo
+   (same breathing-glow language as the corner blobs/skill lines elsewhere
+   on the site) so it reads as more than an ordinary button. */
 .resume-btn {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  margin-top: 0.5rem;
-  padding: 0.85rem 1.7rem;
+  gap: 0.65rem;
+  margin-top: 1.75rem;
+  padding: 1rem 2.1rem;
   border-radius: 999px;
   background: var(--grad);
   background-size: 200% auto;
   color: #fff;
   font-weight: 700;
-  font-size: 0.98rem;
+  font-size: 1.05rem;
   box-shadow: 0 8px 26px rgba(168, 85, 247, 0.35);
   transition: transform 0.2s ease, box-shadow 0.25s ease, background-position 0.4s ease;
 }
@@ -445,29 +456,47 @@ h1, h2, h3,
   box-shadow: 0 14px 34px rgba(168, 85, 247, 0.5);
   background-position: 100% center;
 }
-.resume-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+.resume-btn svg { width: 19px; height: 19px; flex-shrink: 0; }
 .resume-btn::before {
   content: "";
   position: absolute;
-  inset: -4px;
+  inset: -2px;
   z-index: -1;
   border-radius: inherit;
   background: var(--grad);
   opacity: 0;
-  filter: blur(12px);
+  filter: blur(8px);
 }
 @media (prefers-reduced-motion: no-preference) {
   .resume-btn::before { animation: resume-glow 2.8s ease-in-out infinite; }
 }
+/* Toned down from scale(1.1)/opacity 0.6 — at full strength the halo visibly
+   crept into the gap above the button on mobile, making it look closer to
+   the arm above it than the arm was to the name above that. */
 @keyframes resume-glow {
   0%, 100% { opacity: 0; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.1); }
+  50% { opacity: 0.5; transform: scale(1.04); }
 }
 /* Stacked mobile hero: row-gap alone provides the spacing between the three
    pieces — zero out the button's own top margin (meant for sitting snug
    under the name on desktop) so name→arm and arm→button come out equal. */
 @media (max-width: 1000px) {
   .resume-btn { margin-top: 0; }
+}
+
+/* Flying spark trail: a small burst that visibly travels between the hero
+   button and the nav button when one swaps for the other on scroll, so the
+   nav icon reads as "that same button, now up here" rather than an unrelated
+   download icon appearing out of nowhere. Position/motion are driven by
+   Web Animations calls in JS; this just sets the look of each particle. */
+.resume-spark {
+  position: fixed;
+  border-radius: 50%;
+  background: var(--grad);
+  box-shadow: 0 0 14px 3px rgba(168, 85, 247, 0.75);
+  pointer-events: none;
+  z-index: 250;
+  will-change: transform, opacity;
 }
 
 /* ===== Buttons ===== */

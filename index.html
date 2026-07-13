@@ -68,10 +68,17 @@
     <div class="hero-visual" aria-hidden="true">
       <canvas class="hero-arm"></canvas>
     </div>
-    <div class="hero-text">
-      <p class="eyebrow" data-role>Engineering Portfolio</p>
-      <h1 data-name>Ikram Jeelani</h1>
-      <p class="subtitle" data-bio></p>
+    <!-- Groups the text block + résumé button (JS-appended) into ONE grid
+         item on desktop, so the arm doesn't have to span two separate rows
+         shared with them (see styles.css for why that mattered). On mobile
+         this wrapper goes display:contents, "unwrapping" its children back
+         into independent grid items so the arm can sit between them. -->
+    <div class="hero-right">
+      <div class="hero-text">
+        <p class="eyebrow" data-role>Engineering Portfolio</p>
+        <h1 data-name>Ikram Jeelani</h1>
+        <p class="subtitle" data-bio></p>
+      </div>
     </div>
   </section>
 
