@@ -343,7 +343,10 @@ h1, h2, h3,
   .hero {
     flex-direction: column;
     text-align: center;
-    gap: 0.5rem;
+    /* Comfortable breathing room between the text block (which now often
+       ends in the résumé button) and the arm below it — 0.5rem read as the
+       button being crushed right up against the arm. */
+    gap: 2rem;
   }
   .hero-text { order: 1; }
   .hero-visual { order: 2; width: min(72vw, 340px); flex: 0 0 auto; }
@@ -398,10 +401,6 @@ h1, h2, h3,
   color: var(--muted);
   font-size: 1.1rem;
 }
-/* No bio text set (PROFILE.bio is empty): collapse the paragraph itself so
-   its own margins don't leave a dead gap between the name and the résumé
-   button below it — same auto-hide-when-empty convention used elsewhere. */
-.subtitle:empty { display: none; margin: 0; }
 
 /* ===== Résumé / CV button (hero) =====
    The one "special" CTA on the page: gradient pill + soft breathing glow
@@ -412,12 +411,7 @@ h1, h2, h3,
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  /* h1's own margin-bottom (1rem) already adds space below the name; this
-     negative offset trims the total gap down to 0.5rem — matching the
-     eyebrow-to-name gap above it, as requested. (resume-btn is inline-flex,
-     so its margin doesn't collapse with h1's — the two add together, hence
-     the compensation.) */
-  margin-top: -0.5rem;
+  margin-top: 0.5rem;
   padding: 0.85rem 1.7rem;
   border-radius: 999px;
   background: var(--grad);
