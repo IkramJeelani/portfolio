@@ -1106,134 +1106,19 @@
       themeToggle.insertAdjacentElement("afterend", navBtn); // between the two toggles
     }
 
-    const reducedMotion =
-      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    // Nav button's shown geometry, computed from the theme toggle (already
-    // on-screen and stable) rather than the nav button's own rect, which
-    // isn't meaningful before its reveal transition has actually run.
-    const navRect = () => {
-      const r = themeToggle.getBoundingClientRect();
-      const small = window.innerWidth <= 480;
-      const gap = (small ? 0.45 : 0.6) * 16;
-      const size = small ? 36 : 40;
-      return { left: r.right + gap, top: r.top + (r.height - size) / 2, width: size, height: size };
-    };
-
-    // The hero<->nav swap is played as ONE button visibly flying and
-    // reshaping between the two positions (a cloned element animated with
-    // transform: translate+scale — cheap, GPU-only, no layout thrash) rather
-    // than a fade in one spot and an unrelated icon fading in elsewhere.
-    //
-    // Only TWO keyframes (start, end) for every transform animation here —
-    // on purpose. WAAPI re-applies its easing independently to EACH segment
-    // between keyframes, so a multi-keyframe animation sharing one easing
-    // curve visibly hitches (decelerates, then re-accelerates) at every
-    // internal keyframe boundary. A single start->end pair is one continuous
-    // curve with no seam anywhere. Deliberately no overshoot/bounce curve
-    // here either — with the icon's independent counter-scale animation
-    // layered on top (see below), an overshoot briefly desyncs the two by a
-    // hair, which reads as a tiny wobble on the icon. A clean monotonic
-    // ease-out has no such risk; the "arrival pulse" after landing (on the
-    // real, stationary button, not the flying clone) supplies the flourish
-    // instead, with none of that risk.
-    const FLY_EASING = "cubic-bezier(0.16, 1, 0.3, 1)";
-    const DURATION = 560;
-
-    // Wrinkles this accounts for:
-    //  - The box goes from a wide pill to a small square, so scaleX and
-    //    scaleY differ. Scaling the WHOLE clone by those factors would also
-    //    scale the icon down to near-nothing at the compact end (unlike the
-    //    real nav button, whose icon is a fixed size). The icon gets its own
-    //    counter-scale animation, same easing/duration so it stays locked to
-    //    the parent's motion, so it stays legible instead of shrinking with
-    //    the box.
-    //  - The label is positioned absolutely (not laid out in flex flow), so
-    //    it can never distort the icon's centering at any box size — it
-    //    just overlays/fades, unaffected by how cramped the box briefly is.
-    //  - If a flight gets interrupted mid-way (user scrolls back before it
-    //    lands), the NEXT flight starts from the clone's actual current
-    //    on-screen position rather than stacking a second clone on top —
-    //    otherwise reversing direction quickly looks like total chaos.
-    let active = null; // { clone, anim }
-
-    const morphFly = (fromRectIn, toRect, growing) => {
-      if (reducedMotion) return;
-      let fromRect = fromRectIn;
-      if (active) {
-        fromRect = active.clone.getBoundingClientRect();
-        active.anim.cancel();
-        active.clone.remove();
-        active = null;
-      }
-
-      const clone = document.createElement("div");
-      clone.className = "resume-fly-clone";
-      clone.innerHTML = heroBtn.innerHTML; // same icon + label, always
-      clone.style.left = fromRect.left + "px";
-      clone.style.top = fromRect.top + "px";
-      clone.style.width = fromRect.width + "px";
-      clone.style.height = fromRect.height + "px";
-      document.body.appendChild(clone);
-
-      const span = clone.querySelector("span");
-      const svg = clone.querySelector("svg");
-      const dx = toRect.left + toRect.width / 2 - (fromRect.left + fromRect.width / 2);
-      const dy = toRect.top + toRect.height / 2 - (fromRect.top + fromRect.height / 2);
-      const scaleX = toRect.width / fromRect.width;
-      const scaleY = toRect.height / fromRect.height;
-
-      const flight = clone.animate(
-        [
-          { transform: "translate(0px,0px) scale(1,1)" },
-          { transform: `translate(${dx}px,${dy}px) scale(${scaleX},${scaleY})` },
-        ],
-        { duration: DURATION, easing: FLY_EASING, fill: "forwards" }
-      );
-      active = { clone, anim: flight };
-
-      // Inverse of the box's own scale — a wide-to-narrow transition needs a
-      // much bigger counter-scale on X than Y — clamped generously (not
-      // tightly) so it actually reaches the cancellation it needs on both.
-      if (svg) {
-        const inv = (s) => Math.max(0.3, Math.min(8, 1 / s));
-        svg.style.transformOrigin = "center center";
-        svg.animate(
-          [{ transform: "scale(1,1)" }, { transform: `scale(${inv(scaleX)},${inv(scaleY)})` }],
-          { duration: DURATION, easing: FLY_EASING, fill: "forwards" }
-        );
-      }
-      if (span) {
-        span.style.opacity = growing ? "0" : "1";
-        span.animate([{ opacity: growing ? 0 : 1 }, { opacity: growing ? 1 : 0 }], {
-          duration: growing ? 200 : 160,
-          delay: growing ? DURATION - 220 : 0,
-          easing: growing ? "ease-out" : "ease-in",
-          fill: "forwards",
-        });
-      }
-      flight.onfinish = () => {
-        if (active && active.clone === clone) active = null;
-        clone.remove();
-        // A quick "arrival" pulse on whichever real button just got delivered.
-        const landed = growing ? heroBtn : navBtn;
-        if (landed && landed.animate) {
-          landed.animate(
-            [{ transform: "scale(1)" }, { transform: "scale(1.12)" }, { transform: "scale(1)" }],
-            { duration: 220, easing: "ease-out" }
-          );
-        }
-      };
-    };
-
     // The nav button only appears once the hero button is no longer visible
     // (scrolled under the sticky header) — never both at once. Driven by a
     // rAF-throttled scroll check rather than IntersectionObserver: IO's
     // callback can lag behind the actual scroll, so by the time it fires the
-    // button may already be far off-screen, making the flight start from a
-    // position the user never saw. Checking every frame keeps it accurate.
-    // A small hysteresis gap between the hide/show thresholds stops scroll
-    // jitter right at the boundary from re-triggering the flight repeatedly.
+    // button may already be far off-screen. A small hysteresis gap between
+    // the hide/show thresholds stops scroll jitter at the boundary from
+    // re-triggering the swap repeatedly.
+    //
+    // Plain crossfade, not a flying/morphing clone: an earlier version
+    // animated a clone's scale(x,y) from the hero pill's shape to the nav
+    // circle's shape, but those two shapes have very different aspect
+    // ratios, so the box visibly warped into an ellipse mid-flight no matter
+    // how the easing was tuned. A fade+slide has no shape to distort.
     if (heroBtn && navBtn) {
       const HIDE_AT = 73;
       const SHOW_AT = 93;
@@ -1248,10 +1133,7 @@
         if (isVisible === heroVisible && !firstCheck) return;
         heroVisible = isVisible;
         navBtn.classList.toggle("show", !isVisible);
-        if (!firstCheck) {
-          if (!isVisible) morphFly(r, navRect(), false);
-          else morphFly(navRect(), r, true);
-        }
+        heroBtn.classList.toggle("resume-btn-faded", !isVisible);
         firstCheck = false;
       };
       check(); // establish the correct initial state without animating

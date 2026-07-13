@@ -449,13 +449,17 @@ h1, h2, h3,
   font-weight: 700;
   font-size: 1.05rem;
   box-shadow: 0 8px 26px rgba(168, 85, 247, 0.35);
-  transition: transform 0.2s ease, box-shadow 0.25s ease, background-position 0.4s ease;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, background-position 0.4s ease,
+    opacity 0.3s ease;
 }
 .resume-btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 14px 34px rgba(168, 85, 247, 0.5);
   background-position: 100% center;
 }
+/* Faded out once the nav button takes over on scroll — a plain crossfade,
+   not a morphing flight (see main.js setupResumeButton for why). */
+.resume-btn-faded { opacity: 0; pointer-events: none; }
 .resume-btn svg { width: 19px; height: 19px; flex-shrink: 0; }
 .resume-btn::before {
   content: "";
@@ -482,44 +486,6 @@ h1, h2, h3,
    under the name on desktop) so name→arm and arm→button come out equal. */
 @media (max-width: 1000px) {
   .resume-btn { margin-top: 0; }
-}
-
-/* Flying morph clone: a full visual copy of the résumé button that visibly
-   flies + reshapes between the hero position and the nav slot when one swaps
-   for the other on scroll — so it reads as "that same button, now up here,"
-   not a fade here and an unrelated icon appearing there. Self-contained
-   (doesn't reuse .resume-btn's padding-based layout, which only makes sense
-   at the hero button's own size): the icon is flex-centered in the box at
-   ANY size, and the label sits OUTSIDE flex flow via absolute positioning,
-   so it can never distort the icon's centering while the box is briefly
-   tiny mid-flight. JS sets left/top/width/height and drives the transform. */
-.resume-fly-clone {
-  position: fixed;
-  z-index: 260;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  background: var(--grad);
-  color: #fff;
-  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.45);
-  pointer-events: none;
-  transform-origin: center center;
-  overflow: visible;
-  will-change: transform;
-}
-.resume-fly-clone svg { width: 19px; height: 19px; flex-shrink: 0; display: block; }
-.resume-fly-clone span {
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: 0.6rem;
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: #fff;
-  white-space: nowrap;
-  will-change: opacity;
 }
 
 /* ===== Buttons ===== */

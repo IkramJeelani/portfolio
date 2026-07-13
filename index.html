@@ -29,7 +29,8 @@
   <meta name="twitter:description" content="Projects, experience, skills, certifications and education — by Ikram Jeelani." />
   <meta name="twitter:image" content="https://ikramjeelani.github.io/portfolio/assets/og-image.png" />
 
-  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <script src="data.js"></script>
+  <script>try{var t=localStorage.getItem('theme')||((window.SETTINGS||{}).theme==='light'?'light':null);if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -89,7 +90,6 @@
     <p>&copy; <span data-year></span> <span data-name></span>. Built with HTML, CSS &amp; JavaScript.</p>
   </footer>
 
-  <script src="data.js"></script>
   <script src="branding.js"></script>
   <script src="main.js"></script>
 </body>

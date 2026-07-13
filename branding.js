@@ -6,15 +6,6 @@
 
   const settings = window.SETTINGS || {};
 
-  // Default theme from data.js (only when the visitor hasn't chosen one).
-  try {
-    if (!localStorage.getItem("theme") && settings.theme === "light") {
-      document.documentElement.setAttribute("data-theme", "light");
-    }
-  } catch (e) {
-    if (settings.theme === "light") document.documentElement.setAttribute("data-theme", "light");
-  }
-
   // Falling particles: default from data.js, overridden by the visitor's choice.
   let particlesEnabled = settings.particles !== false;
   try {
