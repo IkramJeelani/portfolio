@@ -1106,88 +1106,150 @@
       themeToggle.insertAdjacentElement("afterend", navBtn); // between the two toggles
     }
 
-    // A small burst of gradient sparks that fly from one button's position to
-    // the other's, so it visibly reads as "the same button moved" rather than
-    // one button fading out while an unrelated icon fades in elsewhere.
     const reducedMotion =
       window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let lastFlightAt = 0;
-    const flySparks = (fromX, fromY, toX, toY) => {
-      if (reducedMotion) return;
-      const now = performance.now();
-      if (now - lastFlightAt < 500) return; // ignore rapid back-and-forth scroll jitter
-      lastFlightAt = now;
-      const dx = toX - fromX;
-      const dy = toY - fromY;
-      for (let i = 0; i < 3; i++) {
-        const delay = i * 55;
-        const size = 12 - i * 2;
-        const spark = document.createElement("div");
-        spark.className = "resume-spark";
-        spark.style.width = spark.style.height = size + "px";
-        spark.style.left = fromX + "px";
-        spark.style.top = fromY + "px";
-        document.body.appendChild(spark);
-        const midX = fromX + dx * 0.5 + (i - 1) * 14;
-        const midY = Math.min(fromY, toY) - 46 - i * 8; // arcs up and over
-        const anim = spark.animate(
-          [
-            { transform: "translate(-50%,-50%) scale(1)", offset: 0, opacity: 0 },
-            { transform: "translate(-50%,-50%) scale(1)", offset: 0.06, opacity: 1 },
-            {
-              transform: `translate(${midX - fromX}px, ${midY - fromY}px) translate(-50%,-50%) scale(0.85)`,
-              offset: 0.55,
-              opacity: 1,
-            },
-            {
-              transform: `translate(${dx}px, ${dy}px) translate(-50%,-50%) scale(0.2)`,
-              offset: 1,
-              opacity: 0,
-            },
-          ],
-          { duration: 620, delay, easing: "cubic-bezier(0.3, 0, 0.2, 1)", fill: "forwards" }
-        );
-        anim.onfinish = () => spark.remove();
-      }
-    };
 
-    // Nav button's shown position, computed from the theme toggle (already
+    // Nav button's shown geometry, computed from the theme toggle (already
     // on-screen and stable) rather than the nav button's own rect, which
     // isn't meaningful before its reveal transition has actually run.
-    const navTargetCenter = () => {
+    const navRect = () => {
       const r = themeToggle.getBoundingClientRect();
       const small = window.innerWidth <= 480;
       const gap = (small ? 0.45 : 0.6) * 16;
       const size = small ? 36 : 40;
-      return { x: r.right + gap + size / 2, y: r.top + r.height / 2 };
+      return { left: r.right + gap, top: r.top + (r.height - size) / 2, width: size, height: size };
+    };
+
+    // The hero<->nav swap is played as ONE button visibly flying and
+    // reshaping between the two positions (a cloned element animated with
+    // transform: translate+scale — cheap, GPU-only, no layout thrash) rather
+    // than a fade in one spot and an unrelated icon fading in elsewhere.
+    //
+    // Two wrinkles this accounts for:
+    //  - The box goes from a wide pill to a small square, so scaleX and
+    //    scaleY differ. Scaling the WHOLE clone by those factors would also
+    //    scale the icon down to near-nothing at the compact end (unlike the
+    //    real nav button, whose icon is a fixed size). The icon gets its own
+    //    counter-scale animation so it stays a legible, roughly constant
+    //    size throughout instead of shrinking with the box.
+    //  - The label is positioned absolutely (not laid out in flex flow), so
+    //    it can never distort the icon's centering at any box size — it
+    //    just overlays/fades, unaffected by how cramped the box briefly is.
+    const morphFly = (fromRect, toRect, growing) => {
+      if (reducedMotion) return;
+      const clone = document.createElement("div");
+      clone.className = "resume-fly-clone";
+      clone.innerHTML = heroBtn.innerHTML; // same icon + label, always
+      clone.style.left = fromRect.left + "px";
+      clone.style.top = fromRect.top + "px";
+      clone.style.width = fromRect.width + "px";
+      clone.style.height = fromRect.height + "px";
+      document.body.appendChild(clone);
+
+      const span = clone.querySelector("span");
+      const svg = clone.querySelector("svg");
+      const dx = toRect.left + toRect.width / 2 - (fromRect.left + fromRect.width / 2);
+      const dy = toRect.top + toRect.height / 2 - (fromRect.top + fromRect.height / 2);
+      const scaleX = toRect.width / fromRect.width;
+      const scaleY = toRect.height / fromRect.height;
+      // A faint overshoot on the last stretch — the flight settles into place
+      // instead of stopping dead, without becoming a cartoonish bounce.
+      const over = 1.045;
+      const sx = (t) => 1 + (scaleX - 1) * t;
+      const sy = (t) => 1 + (scaleY - 1) * t;
+      const DURATION = 620;
+      const EASE = "cubic-bezier(0.5, 0, 0.15, 1)";
+
+      const flight = clone.animate(
+        [
+          { transform: "translate(0px,0px) scale(1,1)", offset: 0 },
+          {
+            transform: `translate(${dx * 0.82}px,${dy * 0.82}px) scale(${sx(0.82)},${sy(0.82)})`,
+            offset: 0.78,
+          },
+          {
+            transform: `translate(${dx * over}px,${dy * over}px) scale(${scaleX * (2 - over)},${scaleY * (2 - over)})`,
+            offset: 0.92,
+          },
+          { transform: `translate(${dx}px,${dy}px) scale(${scaleX},${scaleY})`, offset: 1 },
+        ],
+        { duration: DURATION, easing: EASE, fill: "forwards" }
+      );
+      // Inverse of the box's own scale keeps the icon at its natural rendered
+      // size instead of shrinking to a sliver as the box narrows from a wide
+      // pill down to a small circle (a wide-to-narrow transition needs a much
+      // bigger counter-scale on X than Y — clamped generously, not tightly,
+      // so it actually reaches the cancellation it needs on both axes).
+      if (svg) {
+        const inv = (s) => Math.max(0.3, Math.min(8, 1 / s));
+        svg.style.transformOrigin = "center center";
+        svg.animate(
+          [
+            { transform: "scale(1,1)", offset: 0 },
+            { transform: `scale(${inv(sx(0.82))},${inv(sy(0.82))})`, offset: 0.78 },
+            {
+              transform: `scale(${inv(scaleX * (2 - over))},${inv(scaleY * (2 - over))})`,
+              offset: 0.92,
+            },
+            { transform: `scale(${inv(scaleX)},${inv(scaleY)})`, offset: 1 },
+          ],
+          { duration: DURATION, easing: EASE, fill: "forwards" }
+        );
+      }
+      if (span) {
+        span.animate(
+          growing
+            ? [{ opacity: 0, offset: 0 }, { opacity: 0, offset: 0.6 }, { opacity: 1, offset: 1 }]
+            : [{ opacity: 1, offset: 0 }, { opacity: 0, offset: 0.32 }, { opacity: 0, offset: 1 }],
+          { duration: DURATION, easing: "ease", fill: "forwards" }
+        );
+      }
+      flight.onfinish = () => {
+        clone.remove();
+        // A quick "arrival" pulse on whichever real button just got delivered.
+        const landed = growing ? heroBtn : navBtn;
+        if (landed && landed.animate) {
+          landed.animate(
+            [{ transform: "scale(1)" }, { transform: "scale(1.12)" }, { transform: "scale(1)" }],
+            { duration: 260, easing: "ease-out" }
+          );
+        }
+      };
     };
 
     // The nav button only appears once the hero button is no longer visible
-    // (scrolled under the sticky header) — never both at once.
+    // (scrolled under the sticky header) — never both at once. Driven by a
+    // rAF-throttled scroll check rather than IntersectionObserver: IO's
+    // callback can lag behind the actual scroll, so by the time it fires the
+    // button may already be far off-screen, making the flight start from a
+    // position the user never saw. Checking every frame keeps it accurate.
     if (heroBtn && navBtn) {
-      if ("IntersectionObserver" in window) {
-        let firstCallback = true;
-        const io = new IntersectionObserver(
-          (entries) => {
-            const showingNav = !entries[0].isIntersecting;
-            navBtn.classList.toggle("show", showingNav);
-            // Skip the spark burst on IO's initial "here's the current state"
-            // callback — only real, scroll-triggered flips should launch it.
-            if (!firstCallback) {
-              const heroR = entries[0].boundingClientRect;
-              const heroCenter = { x: heroR.left + heroR.width / 2, y: heroR.top + heroR.height / 2 };
-              const navCenter = navTargetCenter();
-              if (showingNav) flySparks(heroCenter.x, heroCenter.y, navCenter.x, navCenter.y);
-              else flySparks(navCenter.x, navCenter.y, heroCenter.x, heroCenter.y);
-            }
-            firstCallback = false;
-          },
-          { rootMargin: "-73px 0px 0px 0px", threshold: 0 }
-        );
-        io.observe(heroBtn);
-      } else {
-        navBtn.classList.add("show"); // no IO support: keep it simply visible
-      }
+      const HEADER_H = 73;
+      let heroVisible = true;
+      let firstCheck = true;
+      let ticking = false;
+      const check = () => {
+        ticking = false;
+        const r = heroBtn.getBoundingClientRect();
+        const isVisible = r.bottom > HEADER_H && r.top < window.innerHeight;
+        if (isVisible === heroVisible && !firstCheck) return;
+        heroVisible = isVisible;
+        navBtn.classList.toggle("show", !isVisible);
+        if (!firstCheck) {
+          if (!isVisible) morphFly(r, navRect(), false);
+          else morphFly(navRect(), r, true);
+        }
+        firstCheck = false;
+      };
+      check(); // establish the correct initial state without animating
+      const onScroll = () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(check);
+        }
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
     } else if (navBtn) {
       navBtn.classList.add("show");
     }
