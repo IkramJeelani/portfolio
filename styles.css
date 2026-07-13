@@ -247,35 +247,48 @@ h1, h2, h3,
 /* When particles are off, the sparkle button looks dimmed */
 .fx-toggle.off { color: var(--muted); opacity: 0.6; }
 
-/* Compact nav résumé button — gradient-filled so it reads as the site's one
-   "real" CTA rather than a utility switch. Collapsed to width:0 (not just
-   invisible) while hidden, so it takes up NO space between the two toggles;
-   scrolling past the hero button EXPANDS it open from that zero-width point,
-   pushing the toggles apart as it grows — the button is "born" in the gap
-   rather than popping/fading in on top of existing layout. */
+/* Compact nav résumé button — same icon+label content as the hero pill, just
+   smaller, so it's unmistakably "that same button" once it appears. Collapsed
+   to max-width:0 (not just invisible) while hidden, so it takes up NO space
+   between the two toggles; scrolling past the hero button EXPANDS it open
+   from that zero point, pushing the toggles apart as it grows — the button
+   is "born" in the gap rather than popping/fading in on top of existing
+   layout. max-width (not width) because the label makes its content size
+   variable, and width can't transition to/from auto. */
 .nav-resume-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 0;
+  gap: 0.5rem;
+  max-width: 0;
   height: 40px;
-  border-radius: 50%;
+  padding: 0;
+  border-radius: 999px;
   background: var(--grad);
   color: #fff;
+  font-weight: 700;
+  font-size: 0.92rem;
+  white-space: nowrap;
+  overflow: hidden;
   box-shadow: 0 4px 16px rgba(168, 85, 247, 0.45);
   opacity: 0;
   margin-right: 0;
-  overflow: hidden;
   pointer-events: none;
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+  transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     margin-right 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, box-shadow 0.2s ease;
 }
-.nav-resume-btn.show { width: 40px; opacity: 1; margin-right: 0.6rem; pointer-events: auto; }
+.nav-resume-btn.show {
+  max-width: 220px;
+  padding: 0 1.1rem;
+  opacity: 1;
+  margin-right: 0.6rem;
+  pointer-events: auto;
+}
 .nav-resume-btn:hover { box-shadow: 0 6px 22px rgba(168, 85, 247, 0.65); }
 .nav-resume-btn svg { width: 17px; height: 17px; flex-shrink: 0; display: block; }
 @media (prefers-reduced-motion: reduce) {
   .nav-resume-btn { transition: opacity 0.15s ease; }
-  .nav-resume-btn.show { width: 40px; margin-right: 0.6rem; }
+  .nav-resume-btn.show { max-width: 220px; padding: 0 1.1rem; margin-right: 0.6rem; }
 }
 
 /* Hamburger menu button (hidden until the links would crowd) */
@@ -457,10 +470,7 @@ h1, h2, h3,
   box-shadow: 0 14px 34px rgba(168, 85, 247, 0.5);
   background-position: 100% center;
 }
-/* Hidden the instant the flying icon badge (below) lands in the nav slot —
-   set via JS with its transition suspended, so this is a snap not a fade;
-   the flight itself already carried the motion. Only used as a fallback
-   crossfade (with its transition active) under prefers-reduced-motion. */
+/* Faded out once the nav button takes over on scroll. */
 .resume-btn-faded { opacity: 0; pointer-events: none; }
 .resume-btn svg { width: 19px; height: 19px; flex-shrink: 0; }
 .resume-btn::before {
@@ -489,30 +499,6 @@ h1, h2, h3,
 @media (max-width: 1000px) {
   .resume-btn { margin-top: 0; }
 }
-
-/* Flying icon badge: the visible link between the hero button and the nav
-   button on scroll — a small circular clone of just the icon (not the whole
-   pill) travels from one to the other. Deliberately icon-only: the hero
-   pill and nav circle are wildly different aspect ratios, so morphing the
-   whole button between them stretched it into an ellipse; the icon alone is
-   ~square at both ends, so one uniform scale factor never has to distort
-   it. The real buttons snap into place the instant the badge lands (see
-   main.js setInstant) rather than also re-animating on top of the flight. */
-.resume-fly-badge {
-  position: fixed;
-  z-index: 260;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--grad);
-  color: #fff;
-  box-shadow: 0 8px 26px rgba(168, 85, 247, 0.45);
-  pointer-events: none;
-  transform-origin: center center;
-  will-change: transform;
-}
-.resume-fly-badge svg { width: 18px; height: 18px; flex-shrink: 0; display: block; }
 
 /* ===== Buttons ===== */
 .btn {
@@ -1696,6 +1682,19 @@ html.theme-vt * { view-transition-name: none !important; }
   .section-title { font-size: 1.6rem; }
   .theme-toggle, .fx-toggle { width: 36px; height: 36px; }
   .theme-toggle { margin-right: 0.45rem; }
-  .nav-resume-btn { height: 36px; }
-  .nav-resume-btn.show { width: 36px; margin-right: 0.45rem; }
+  .nav-resume-btn { height: 36px; font-size: 0.82rem; gap: 0.4rem; }
+  .nav-resume-btn svg { width: 15px; height: 15px; }
+  /* 200px comfortably covers the label's real rendered width (~168px at
+     this font-size/padding) — measured directly, not guessed, since a
+     tighter cap here previously clipped the text mid-letter. */
+  .nav-resume-btn.show { max-width: 200px; padding: 0 0.85rem; margin-right: 0.45rem; }
+}
+/* Below ~380px, the full-label pill plus both toggles and the hamburger no
+   longer fit the header (measured: overflows by ~40px at 320px viewport).
+   Fall back to the original icon-only compact button there instead of
+   letting the header overflow. */
+@media (max-width: 380px) {
+  .nav-resume-btn { justify-content: center; gap: 0; }
+  .nav-resume-btn span { display: none; }
+  .nav-resume-btn.show { max-width: 36px; width: 36px; padding: 0; }
 }

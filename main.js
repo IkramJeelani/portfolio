@@ -1101,97 +1101,10 @@
       navBtn.rel = "noopener";
       navBtn.setAttribute("data-pdf-title", title);
       navBtn.setAttribute("aria-label", label);
-      navBtn.innerHTML = icon;
+      navBtn.innerHTML = icon + "<span>" + label + "</span>";
       if (embed) navBtn.setAttribute("data-pdf", embed);
       themeToggle.insertAdjacentElement("afterend", navBtn); // between the two toggles
     }
-
-    const reducedMotion =
-      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    // Nav button's shown geometry, computed from the theme toggle (already
-    // on-screen and stable) rather than the nav button's own rect, which
-    // isn't meaningful before its reveal transition has actually run.
-    const navRect = () => {
-      const r = themeToggle.getBoundingClientRect();
-      const small = window.innerWidth <= 480;
-      const gap = (small ? 0.45 : 0.6) * 16;
-      const size = small ? 36 : 40;
-      return { left: r.right + gap, top: r.top + (r.height - size) / 2, width: size, height: size };
-    };
-    // The hero button's own icon rect (small, ~square) — same shape family
-    // as the nav circle, so flying between the two never has to stretch a
-    // wide pill into a small circle (the earlier version's bug: scaleX and
-    // scaleY differed wildly between those two shapes and visibly warped it
-    // into an ellipse). Only the icon travels; the pill/circle chrome around
-    // it appears instantly at each end instead of also being stretched.
-    const heroIconRect = () => heroBtn.querySelector("svg").getBoundingClientRect();
-    const iconSvgHTML = heroBtn.querySelector("svg").outerHTML;
-
-    const FLY_EASING = "cubic-bezier(0.16, 1, 0.3, 1)";
-    const DURATION = 480;
-    let active = null; // { clone, anim }
-
-    // Applies a state change to `el` with its CSS transition suspended for
-    // one frame, so the change lands instantly instead of visibly re-fading
-    // the whole button on top of the flying icon's own motion.
-    const setInstant = (el, apply) => {
-      const prev = el.style.transition;
-      el.style.transition = "none";
-      apply();
-      void el.offsetWidth; // force the change to take effect before restoring
-      el.style.transition = prev;
-    };
-
-    const morphFly = (fromRectIn, toRect, growing) => {
-      let fromRect = fromRectIn;
-      if (active) {
-        fromRect = active.clone.getBoundingClientRect();
-        active.anim.cancel();
-        active.clone.remove();
-        active = null;
-      }
-
-      const clone = document.createElement("div");
-      clone.className = "resume-fly-badge";
-      clone.innerHTML = iconSvgHTML;
-      clone.style.left = fromRect.left + "px";
-      clone.style.top = fromRect.top + "px";
-      clone.style.width = fromRect.width + "px";
-      clone.style.height = fromRect.height + "px";
-      document.body.appendChild(clone);
-
-      const dx = toRect.left + toRect.width / 2 - (fromRect.left + fromRect.width / 2);
-      const dy = toRect.top + toRect.height / 2 - (fromRect.top + fromRect.height / 2);
-      const scale = toRect.width / fromRect.width; // both ends are ~square: one scale factor, no warp
-
-      const flight = clone.animate(
-        [
-          { transform: "translate(0px,0px) scale(1)" },
-          { transform: `translate(${dx}px,${dy}px) scale(${scale})` },
-        ],
-        { duration: DURATION, easing: FLY_EASING, fill: "forwards" }
-      );
-      active = { clone, anim: flight };
-
-      flight.onfinish = () => {
-        if (active && active.clone === clone) active = null;
-        clone.remove();
-        const landed = growing ? heroBtn : navBtn;
-        setInstant(landed, () => {
-          if (growing) heroBtn.classList.remove("resume-btn-faded");
-          else navBtn.classList.add("show");
-        });
-        // A quick "arrival" pulse — isotropic scale on the real button, so
-        // unlike the old scaleX/scaleY flight this can't distort its shape.
-        if (landed && landed.animate) {
-          landed.animate(
-            [{ transform: "scale(1)" }, { transform: "scale(1.1)" }, { transform: "scale(1)" }],
-            { duration: 220, easing: "ease-out" }
-          );
-        }
-      };
-    };
 
     // The nav button only appears once the hero button is no longer visible
     // (scrolled under the sticky header) — never both at once. Driven by a
@@ -1199,7 +1112,8 @@
     // callback can lag behind the actual scroll, so by the time it fires the
     // button may already be far off-screen. A small hysteresis gap between
     // the hide/show thresholds stops scroll jitter at the boundary from
-    // re-triggering the swap repeatedly.
+    // re-triggering the swap repeatedly. Plain crossfade — hero fades out,
+    // nav pill expands in — no flying/morphing clone.
     if (heroBtn && navBtn) {
       const HIDE_AT = 73;
       const SHOW_AT = 93;
@@ -1213,17 +1127,8 @@
         const isVisible = r.bottom > threshold && r.top < window.innerHeight;
         if (isVisible === heroVisible && !firstCheck) return;
         heroVisible = isVisible;
-
-        if (firstCheck || reducedMotion) {
-          navBtn.classList.toggle("show", !isVisible);
-          heroBtn.classList.toggle("resume-btn-faded", !isVisible);
-        } else if (!isVisible) {
-          setInstant(heroBtn, () => heroBtn.classList.add("resume-btn-faded"));
-          morphFly(heroIconRect(), navRect(), false);
-        } else {
-          setInstant(navBtn, () => navBtn.classList.remove("show"));
-          morphFly(navRect(), heroIconRect(), true);
-        }
+        navBtn.classList.toggle("show", !isVisible);
+        heroBtn.classList.toggle("resume-btn-faded", !isVisible);
         firstCheck = false;
       };
       check(); // establish the correct initial state without animating
