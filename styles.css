@@ -694,6 +694,13 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   grid-column: 2;
   position: relative;
   max-width: 460px;
+  min-width: 0; /* grid items default to min-width:auto (their content's
+    min-content), which on very narrow screens is wider than the 1fr track
+    actually has — that let the card push past the viewport edge instead of
+    wrapping its text down to fit. */
+  overflow-wrap: break-word; /* long unbroken words (a school/major name) can
+    still be wider than the card at extreme widths — let them break instead
+    of pushing the card past the viewport edge. */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -706,6 +713,16 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   transition: transform 0.25s ease, border-color 0.2s;
 }
 .edu-logo { width: 56px; height: 56px; object-fit: contain; }
+/* align-items:flex-start on .edu-card means these size to their own
+   content (fit-content) rather than stretching — but fit-content sizing
+   floors at min-content (the longest unbreakable word), which is IMMUNE to
+   overflow-wrap: that only affects line-breaking once a width is already
+   decided. width:100% forces them to actually take the card's available
+   width instead, so break-word can then wrap a too-long school/major name
+   at extreme widths instead of pushing the card past the viewport edge. */
+.edu-school, .edu-degree, .edu-major, .edu-details, .edu-points {
+  width: 100%;
+}
 .edu-school { font-weight: 700; font-size: 1.1rem; }
 .edu-degree { font-size: 1rem; color: var(--text); }
 .edu-major {
@@ -1595,4 +1612,13 @@ html.theme-vt * { view-transition-name: none !important; }
     margin-right: 0.45rem;
   }
   .nav-resume-btn svg { width: 15px; height: 15px; }
+}
+/* Below ~340px the header's own content (brand + theme toggle + résumé
+   button + particles toggle + hamburger) genuinely doesn't fit even at its
+   most compact — measured overflow of ~30px at 280px viewport. Drop the
+   résumé button's label there so it matches the toggles' compact icon-only
+   footprint instead of letting the header overflow. */
+@media (max-width: 340px) {
+  .nav-resume-btn { gap: 0; padding: 0; width: 36px; justify-content: center; }
+  .nav-resume-btn span { display: none; }
 }
