@@ -242,6 +242,34 @@ h1, h2, h3,
 /* When particles are off, the sparkle button looks dimmed */
 .fx-toggle.off { color: var(--muted); opacity: 0.6; }
 
+/* Compact nav résumé button — same 40px footprint as the toggles either side
+   of it, but gradient-filled so it reads as the site's one "real" CTA rather
+   than a utility switch. Hidden until the hero button scrolls out of view. */
+.nav-resume-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--grad);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.45);
+  opacity: 0;
+  transform: scale(0.55);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.2s ease;
+}
+.nav-resume-btn.show { opacity: 1; transform: scale(1); pointer-events: auto; }
+.nav-resume-btn:hover { box-shadow: 0 6px 22px rgba(168, 85, 247, 0.65); }
+.nav-resume-btn.show:hover { transform: scale(1.1); }
+.nav-resume-btn svg { width: 17px; height: 17px; display: block; }
+@media (prefers-reduced-motion: reduce) {
+  .nav-resume-btn { transition: opacity 0.15s ease; }
+  .nav-resume-btn.show:hover { transform: scale(1); }
+}
+
 /* Hamburger menu button (hidden until the links would crowd) */
 .nav-toggle {
   display: none;
@@ -361,6 +389,50 @@ h1, h2, h3,
   margin: 0 auto 2rem;
   color: var(--muted);
   font-size: 1.1rem;
+}
+
+/* ===== Résumé / CV button (hero) =====
+   The one "special" CTA on the page: gradient pill + soft breathing glow
+   halo behind it (same breathing-glow language as the corner blobs/skill
+   lines elsewhere on the site) so it reads as more than an ordinary button. */
+.resume-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+  padding: 0.85rem 1.7rem;
+  border-radius: 999px;
+  background: var(--grad);
+  background-size: 200% auto;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.98rem;
+  box-shadow: 0 8px 26px rgba(168, 85, 247, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.25s ease, background-position 0.4s ease;
+}
+.resume-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px rgba(168, 85, 247, 0.5);
+  background-position: 100% center;
+}
+.resume-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+.resume-btn::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--grad);
+  opacity: 0;
+  filter: blur(12px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .resume-btn::before { animation: resume-glow 2.8s ease-in-out infinite; }
+}
+@keyframes resume-glow {
+  0%, 100% { opacity: 0; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.1); }
 }
 
 /* ===== Buttons ===== */

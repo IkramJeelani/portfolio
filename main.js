@@ -214,6 +214,7 @@
   setupEqualize();
   setupTimelineWidth();
   setupPdfModal();
+  setupResumeButton();
   setupSharedTransition();
   setupHeroArm();
   setupSkillsMasonry();
@@ -1042,12 +1043,80 @@
       const link = e.target.closest("a[data-pdf]");
       if (!link) return;
       e.preventDefault();
+      // Explicit data-pdf-title (used by the résumé button) wins; certification
+      // cards fall back to their own .cert-name text.
       const name = link.querySelector(".cert-name");
-      open(link.getAttribute("data-pdf"), name ? name.textContent.trim() : "");
+      const title = link.getAttribute("data-pdf-title") || (name ? name.textContent.trim() : "");
+      open(link.getAttribute("data-pdf"), title);
     });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") close();
     });
+  }
+
+  /* ---------- Résumé / CV button ----------
+     One button under the name on the hero, a second compact one that fades
+     into the nav (between the theme and particles toggles) once the hero
+     button scrolls out of view. Both open the same in-page PDF viewer used
+     for certifications. Controlled entirely by RESUME in data.js. */
+  function setupResumeButton() {
+    const RESUME = window.RESUME;
+    if (!RESUME || !RESUME.show || !RESUME.url) return;
+
+    const embed = toEmbed(RESUME.url);
+    const pdfAttr = embed ? ` data-pdf="${embed}"` : "";
+    const title = ((window.PROFILE || {}).name || "") + " — Résumé";
+
+    const icon =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+      'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>';
+
+    const heroText = document.querySelector(".hero-text");
+    let heroBtn = null;
+    if (heroText) {
+      heroBtn = document.createElement("a");
+      heroBtn.className = "resume-btn";
+      heroBtn.href = RESUME.url;
+      heroBtn.target = "_blank";
+      heroBtn.rel = "noopener";
+      heroBtn.setAttribute("data-pdf-title", title);
+      heroBtn.setAttribute("aria-label", "Download résumé");
+      heroBtn.innerHTML = icon + "<span>Download CV</span>";
+      if (embed) heroBtn.setAttribute("data-pdf", embed);
+      heroText.appendChild(heroBtn);
+    }
+
+    const themeToggle = document.querySelector(".theme-toggle");
+    let navBtn = null;
+    if (themeToggle) {
+      navBtn = document.createElement("a");
+      navBtn.className = "nav-resume-btn";
+      navBtn.href = RESUME.url;
+      navBtn.target = "_blank";
+      navBtn.rel = "noopener";
+      navBtn.setAttribute("data-pdf-title", title);
+      navBtn.setAttribute("aria-label", "Download résumé");
+      navBtn.innerHTML = icon;
+      if (embed) navBtn.setAttribute("data-pdf", embed);
+      themeToggle.insertAdjacentElement("afterend", navBtn); // between the two toggles
+    }
+
+    // The nav button only appears once the hero button is no longer visible
+    // (scrolled under the sticky header) — never both at once.
+    if (heroBtn && navBtn) {
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          (entries) => navBtn.classList.toggle("show", !entries[0].isIntersecting),
+          { rootMargin: "-73px 0px 0px 0px", threshold: 0 }
+        );
+        io.observe(heroBtn);
+      } else {
+        navBtn.classList.add("show"); // no IO support: keep it simply visible
+      }
+    } else if (navBtn) {
+      navBtn.classList.add("show");
+    }
   }
 
   /* ---------- Equal-height cert cards so "View Credential" lines up everywhere ---------- */
