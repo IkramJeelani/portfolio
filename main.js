@@ -1064,8 +1064,8 @@
     if (!RESUME || !RESUME.show || !RESUME.url) return;
 
     const embed = toEmbed(RESUME.url);
-    const pdfAttr = embed ? ` data-pdf="${embed}"` : "";
     const title = ((window.PROFILE || {}).name || "") + " — Résumé";
+    const label = RESUME.label || "Download CV";
 
     const icon =
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
@@ -1081,8 +1081,8 @@
       heroBtn.target = "_blank";
       heroBtn.rel = "noopener";
       heroBtn.setAttribute("data-pdf-title", title);
-      heroBtn.setAttribute("aria-label", "Download résumé");
-      heroBtn.innerHTML = icon + "<span>Download CV</span>";
+      heroBtn.setAttribute("aria-label", label);
+      heroBtn.innerHTML = icon + "<span>" + label + "</span>";
       if (embed) heroBtn.setAttribute("data-pdf", embed);
       heroText.appendChild(heroBtn);
     }
@@ -1096,7 +1096,7 @@
       navBtn.target = "_blank";
       navBtn.rel = "noopener";
       navBtn.setAttribute("data-pdf-title", title);
-      navBtn.setAttribute("aria-label", "Download résumé");
+      navBtn.setAttribute("aria-label", label);
       navBtn.innerHTML = icon;
       if (embed) navBtn.setAttribute("data-pdf", embed);
       themeToggle.insertAdjacentElement("afterend", navBtn); // between the two toggles

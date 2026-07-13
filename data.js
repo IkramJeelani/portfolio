@@ -26,12 +26,14 @@ const PROFILE = {
    A "Download CV" button on the landing page (and in the nav once you scroll
    past it). Clicking it opens the SAME in-page PDF viewer used for
    certifications — visitors see it without leaving the site.
-   `show`: true -> button appears. false -> hidden everywhere, no button at all.
-   `url`:  path to your resume PDF. Put the file in assets/ (e.g.
-           "assets/Resume.pdf") and point url at it — same as a certification's
-           `url`, a GitHub "blob" link also works and is resolved automatically. */
+   `show`:  true -> button appears. false -> hidden everywhere, no button at all.
+   `label`: the text on the hero button (the nav version is icon-only).
+   `url`:   path to your resume PDF. Put the file in assets/ (e.g.
+            "assets/Resume.pdf") and point url at it — same as a certification's
+            `url`, a GitHub "blob" link also works and is resolved automatically. */
 const RESUME = {
   show: true,
+  label: "Download CV", // text shown on the hero button
   url: "assets/Resume.pdf",
 };
 

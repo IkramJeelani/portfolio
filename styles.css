@@ -212,8 +212,13 @@ h1, h2, h3,
   z-index: 3;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  /* No flex `gap` here on purpose: gap inserts space on BOTH sides of every
+     child, including the résumé button when it's collapsed to width:0 while
+     hidden — that phantom double-gap is what used to wedge the two toggles
+     apart on first load. Spacing instead lives on theme-toggle's own
+     margin-right, so it collapses to nothing right along with the button. */
 }
+.theme-toggle { margin-right: 0.6rem; }
 .theme-toggle,
 .fx-toggle {
   display: flex;
@@ -242,32 +247,35 @@ h1, h2, h3,
 /* When particles are off, the sparkle button looks dimmed */
 .fx-toggle.off { color: var(--muted); opacity: 0.6; }
 
-/* Compact nav résumé button — same 40px footprint as the toggles either side
-   of it, but gradient-filled so it reads as the site's one "real" CTA rather
-   than a utility switch. Hidden until the hero button scrolls out of view. */
+/* Compact nav résumé button — gradient-filled so it reads as the site's one
+   "real" CTA rather than a utility switch. Collapsed to width:0 (not just
+   invisible) while hidden, so it takes up NO space between the two toggles;
+   scrolling past the hero button EXPANDS it open from that zero-width point,
+   pushing the toggles apart as it grows — the button is "born" in the gap
+   rather than popping/fading in on top of existing layout. */
 .nav-resume-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
+  width: 0;
   height: 40px;
   border-radius: 50%;
   background: var(--grad);
   color: #fff;
   box-shadow: 0 4px 16px rgba(168, 85, 247, 0.45);
   opacity: 0;
-  transform: scale(0.55);
+  margin-right: 0;
+  overflow: hidden;
   pointer-events: none;
-  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.2s ease;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    margin-right 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, box-shadow 0.2s ease;
 }
-.nav-resume-btn.show { opacity: 1; transform: scale(1); pointer-events: auto; }
+.nav-resume-btn.show { width: 40px; opacity: 1; margin-right: 0.6rem; pointer-events: auto; }
 .nav-resume-btn:hover { box-shadow: 0 6px 22px rgba(168, 85, 247, 0.65); }
-.nav-resume-btn.show:hover { transform: scale(1.1); }
-.nav-resume-btn svg { width: 17px; height: 17px; display: block; }
+.nav-resume-btn svg { width: 17px; height: 17px; flex-shrink: 0; display: block; }
 @media (prefers-reduced-motion: reduce) {
   .nav-resume-btn { transition: opacity 0.15s ease; }
-  .nav-resume-btn.show:hover { transform: scale(1); }
+  .nav-resume-btn.show { width: 40px; margin-right: 0.6rem; }
 }
 
 /* Hamburger menu button (hidden until the links would crowd) */
@@ -390,6 +398,10 @@ h1, h2, h3,
   color: var(--muted);
   font-size: 1.1rem;
 }
+/* No bio text set (PROFILE.bio is empty): collapse the paragraph itself so
+   its own margins don't leave a dead gap between the name and the résumé
+   button below it — same auto-hide-when-empty convention used elsewhere. */
+.subtitle:empty { display: none; margin: 0; }
 
 /* ===== Résumé / CV button (hero) =====
    The one "special" CTA on the page: gradient pill + soft breathing glow
@@ -400,7 +412,12 @@ h1, h2, h3,
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  margin-top: 0.5rem;
+  /* h1's own margin-bottom (1rem) already adds space below the name; this
+     negative offset trims the total gap down to 0.5rem — matching the
+     eyebrow-to-name gap above it, as requested. (resume-btn is inline-flex,
+     so its margin doesn't collapse with h1's — the two add together, hence
+     the compensation.) */
+  margin-top: -0.5rem;
   padding: 0.85rem 1.7rem;
   border-radius: 999px;
   background: var(--grad);
@@ -1611,10 +1628,12 @@ html.theme-vt * { view-transition-name: none !important; }
 }
 @media (max-width: 480px) {
   .site-header { padding: 0.85rem 1rem; }
-  .header-controls { gap: 0.45rem; }
   .hero { padding: 4rem 1.1rem; }
   .hero h1 { font-size: 2.15rem; }
   .subtitle { font-size: 0.98rem; }
   .section-title { font-size: 1.6rem; }
   .theme-toggle, .fx-toggle { width: 36px; height: 36px; }
+  .theme-toggle { margin-right: 0.45rem; }
+  .nav-resume-btn { height: 36px; }
+  .nav-resume-btn.show { width: 36px; margin-right: 0.45rem; }
 }
