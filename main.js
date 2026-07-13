@@ -1125,18 +1125,48 @@
     // transform: translate+scale — cheap, GPU-only, no layout thrash) rather
     // than a fade in one spot and an unrelated icon fading in elsewhere.
     //
-    // Two wrinkles this accounts for:
+    // Only TWO keyframes (start, end) for every transform animation here —
+    // on purpose. WAAPI re-applies its easing independently to EACH segment
+    // between keyframes, so a multi-keyframe animation sharing one easing
+    // curve visibly hitches (decelerates, then re-accelerates) at every
+    // internal keyframe boundary. A single start->end pair is one continuous
+    // curve with no seam anywhere. Deliberately no overshoot/bounce curve
+    // here either — with the icon's independent counter-scale animation
+    // layered on top (see below), an overshoot briefly desyncs the two by a
+    // hair, which reads as a tiny wobble on the icon. A clean monotonic
+    // ease-out has no such risk; the "arrival pulse" after landing (on the
+    // real, stationary button, not the flying clone) supplies the flourish
+    // instead, with none of that risk.
+    const FLY_EASING = "cubic-bezier(0.16, 1, 0.3, 1)";
+    const DURATION = 560;
+
+    // Wrinkles this accounts for:
     //  - The box goes from a wide pill to a small square, so scaleX and
     //    scaleY differ. Scaling the WHOLE clone by those factors would also
     //    scale the icon down to near-nothing at the compact end (unlike the
     //    real nav button, whose icon is a fixed size). The icon gets its own
-    //    counter-scale animation so it stays a legible, roughly constant
-    //    size throughout instead of shrinking with the box.
+    //    counter-scale animation, same easing/duration so it stays locked to
+    //    the parent's motion, so it stays legible instead of shrinking with
+    //    the box.
     //  - The label is positioned absolutely (not laid out in flex flow), so
     //    it can never distort the icon's centering at any box size — it
     //    just overlays/fades, unaffected by how cramped the box briefly is.
-    const morphFly = (fromRect, toRect, growing) => {
+    //  - If a flight gets interrupted mid-way (user scrolls back before it
+    //    lands), the NEXT flight starts from the clone's actual current
+    //    on-screen position rather than stacking a second clone on top —
+    //    otherwise reversing direction quickly looks like total chaos.
+    let active = null; // { clone, anim }
+
+    const morphFly = (fromRectIn, toRect, growing) => {
       if (reducedMotion) return;
+      let fromRect = fromRectIn;
+      if (active) {
+        fromRect = active.clone.getBoundingClientRect();
+        active.anim.cancel();
+        active.clone.remove();
+        active = null;
+      }
+
       const clone = document.createElement("div");
       clone.className = "resume-fly-clone";
       clone.innerHTML = heroBtn.innerHTML; // same icon + label, always
@@ -1152,66 +1182,45 @@
       const dy = toRect.top + toRect.height / 2 - (fromRect.top + fromRect.height / 2);
       const scaleX = toRect.width / fromRect.width;
       const scaleY = toRect.height / fromRect.height;
-      // A faint overshoot on the last stretch — the flight settles into place
-      // instead of stopping dead, without becoming a cartoonish bounce.
-      const over = 1.045;
-      const sx = (t) => 1 + (scaleX - 1) * t;
-      const sy = (t) => 1 + (scaleY - 1) * t;
-      const DURATION = 620;
-      const EASE = "cubic-bezier(0.5, 0, 0.15, 1)";
 
       const flight = clone.animate(
         [
-          { transform: "translate(0px,0px) scale(1,1)", offset: 0 },
-          {
-            transform: `translate(${dx * 0.82}px,${dy * 0.82}px) scale(${sx(0.82)},${sy(0.82)})`,
-            offset: 0.78,
-          },
-          {
-            transform: `translate(${dx * over}px,${dy * over}px) scale(${scaleX * (2 - over)},${scaleY * (2 - over)})`,
-            offset: 0.92,
-          },
-          { transform: `translate(${dx}px,${dy}px) scale(${scaleX},${scaleY})`, offset: 1 },
+          { transform: "translate(0px,0px) scale(1,1)" },
+          { transform: `translate(${dx}px,${dy}px) scale(${scaleX},${scaleY})` },
         ],
-        { duration: DURATION, easing: EASE, fill: "forwards" }
+        { duration: DURATION, easing: FLY_EASING, fill: "forwards" }
       );
-      // Inverse of the box's own scale keeps the icon at its natural rendered
-      // size instead of shrinking to a sliver as the box narrows from a wide
-      // pill down to a small circle (a wide-to-narrow transition needs a much
-      // bigger counter-scale on X than Y — clamped generously, not tightly,
-      // so it actually reaches the cancellation it needs on both axes).
+      active = { clone, anim: flight };
+
+      // Inverse of the box's own scale — a wide-to-narrow transition needs a
+      // much bigger counter-scale on X than Y — clamped generously (not
+      // tightly) so it actually reaches the cancellation it needs on both.
       if (svg) {
         const inv = (s) => Math.max(0.3, Math.min(8, 1 / s));
         svg.style.transformOrigin = "center center";
         svg.animate(
-          [
-            { transform: "scale(1,1)", offset: 0 },
-            { transform: `scale(${inv(sx(0.82))},${inv(sy(0.82))})`, offset: 0.78 },
-            {
-              transform: `scale(${inv(scaleX * (2 - over))},${inv(scaleY * (2 - over))})`,
-              offset: 0.92,
-            },
-            { transform: `scale(${inv(scaleX)},${inv(scaleY)})`, offset: 1 },
-          ],
-          { duration: DURATION, easing: EASE, fill: "forwards" }
+          [{ transform: "scale(1,1)" }, { transform: `scale(${inv(scaleX)},${inv(scaleY)})` }],
+          { duration: DURATION, easing: FLY_EASING, fill: "forwards" }
         );
       }
       if (span) {
-        span.animate(
-          growing
-            ? [{ opacity: 0, offset: 0 }, { opacity: 0, offset: 0.6 }, { opacity: 1, offset: 1 }]
-            : [{ opacity: 1, offset: 0 }, { opacity: 0, offset: 0.32 }, { opacity: 0, offset: 1 }],
-          { duration: DURATION, easing: "ease", fill: "forwards" }
-        );
+        span.style.opacity = growing ? "0" : "1";
+        span.animate([{ opacity: growing ? 0 : 1 }, { opacity: growing ? 1 : 0 }], {
+          duration: growing ? 200 : 160,
+          delay: growing ? DURATION - 220 : 0,
+          easing: growing ? "ease-out" : "ease-in",
+          fill: "forwards",
+        });
       }
       flight.onfinish = () => {
+        if (active && active.clone === clone) active = null;
         clone.remove();
         // A quick "arrival" pulse on whichever real button just got delivered.
         const landed = growing ? heroBtn : navBtn;
         if (landed && landed.animate) {
           landed.animate(
             [{ transform: "scale(1)" }, { transform: "scale(1.12)" }, { transform: "scale(1)" }],
-            { duration: 260, easing: "ease-out" }
+            { duration: 220, easing: "ease-out" }
           );
         }
       };
@@ -1223,15 +1232,19 @@
     // callback can lag behind the actual scroll, so by the time it fires the
     // button may already be far off-screen, making the flight start from a
     // position the user never saw. Checking every frame keeps it accurate.
+    // A small hysteresis gap between the hide/show thresholds stops scroll
+    // jitter right at the boundary from re-triggering the flight repeatedly.
     if (heroBtn && navBtn) {
-      const HEADER_H = 73;
+      const HIDE_AT = 73;
+      const SHOW_AT = 93;
       let heroVisible = true;
       let firstCheck = true;
       let ticking = false;
       const check = () => {
         ticking = false;
         const r = heroBtn.getBoundingClientRect();
-        const isVisible = r.bottom > HEADER_H && r.top < window.innerHeight;
+        const threshold = heroVisible ? HIDE_AT : SHOW_AT;
+        const isVisible = r.bottom > threshold && r.top < window.innerHeight;
         if (isVisible === heroVisible && !firstCheck) return;
         heroVisible = isVisible;
         navBtn.classList.toggle("show", !isVisible);
