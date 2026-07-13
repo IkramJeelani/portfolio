@@ -1,0 +1,4 @@
+# The pre-commit hook is a POSIX shell script — force LF regardless of the
+# checking-out machine's core.autocrlf, so it can't be corrupted into CRLF
+# line endings that some shells choke on.
+.githooks/* text eol=lf
