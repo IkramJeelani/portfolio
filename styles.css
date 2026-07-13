@@ -345,6 +345,13 @@ h1, h2, h3,
 .hero-text { grid-area: text; max-width: 600px; }
 .hero-text .subtitle { margin-left: 0; }
 .resume-btn { grid-area: button; }
+/* Grid items stretch to fill their column by default — without this the
+   button stretched to the full width of the text column instead of sizing
+   to its own content. Scoped to the 2-column layout only: on the mobile
+   stacked layout the button should stay centred like everything else there. */
+@media (min-width: 1001px) {
+  .resume-btn { justify-self: start; }
+}
 /* Tablets: keep the two columns but let the arm shrink before the text wraps badly. */
 @media (max-width: 1180px) {
   .hero { grid-template-columns: minmax(0, min(44vw, 460px)) 1fr; }
