@@ -11,9 +11,10 @@
 
   <!-- Sharing cards (project.js refines title/description/url per project).
        og:image is static — crawlers don't run JS, so it can't switch itself
-       on SETTINGS.theme at request time. Points at -light.png because that's
-       the current default in data.js; swap to -dark.png (here and in
-       index.html) if you change SETTINGS.theme to "dark". -->
+       on SETTINGS.theme at request time. This file is kept in sync with
+       SETTINGS.theme automatically by scripts/sync-og-image.py, which runs
+       as a git pre-commit hook (see .githooks/pre-commit) — you shouldn't
+       need to touch og:image/twitter:image by hand. -->
   <link rel="canonical" href="https://ikramjeelani.github.io/portfolio/" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Ikram Jeelani" />

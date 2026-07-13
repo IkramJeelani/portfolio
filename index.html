@@ -15,10 +15,11 @@
        og:image is a STATIC file reference — link-preview crawlers fetch raw
        HTML and never run JS, so it can't switch itself based on SETTINGS.theme
        in data.js at request time. assets/og-image-light.png and
-       assets/og-image-light.png are both screenshots of this same hero, one
-       per theme. IMPORTANT: this points at -light.png because SETTINGS.theme
-       is currently "light" — if you change that default, swap both og:image
-       and twitter:image below (and in project.html) to the matching file. -->
+       assets/og-image-dark.png are both real screenshots of this same hero,
+       one per theme. This file is kept in sync with SETTINGS.theme
+       automatically by scripts/sync-og-image.py, which runs as a git
+       pre-commit hook (see .githooks/pre-commit) — you shouldn't need to
+       touch og:image/twitter:image by hand. -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Ikram Jeelani" />
   <meta property="og:title" content="Ikram Jeelani - Portfolio" />

@@ -1,0 +1,13 @@
+#!/bin/sh
+# Keeps og:image/twitter:image in sync with SETTINGS.theme (data.js) before
+# every commit — see scripts/sync-og-image.py for why this can't just be
+# done at runtime (link-preview crawlers don't run JS).
+#
+# Activated once via: git config core.hooksPath .githooks
+
+python "$(git rev-parse --show-toplevel)/scripts/sync-og-image.py" || exit 1
+
+# Re-stage the HTML files in case the script changed them, so the fix lands
+# in the commit that's about to happen instead of showing up as an
+# unstaged change right after.
+git add index.html project.html
