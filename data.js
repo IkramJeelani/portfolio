@@ -27,13 +27,14 @@ const PROFILE = {
    past it). Clicking it opens the SAME in-page PDF viewer used for
    certifications — visitors see it without leaving the site.
    `show`:  true -> button appears. false -> hidden everywhere, no button at all.
-   `label`: the text on the hero button (the nav version is icon-only).
+   `label`: the text shown next to the icon on both the hero button and the
+            nav button (identical content in both places).
    `url`:   path to your resume PDF. Put the file in assets/ (e.g.
             "assets/Resume.pdf") and point url at it — same as a certification's
             `url`, a GitHub "blob" link also works and is resolved automatically. */
 const RESUME = {
   show: true,
-  label: "Download Résumé", // text shown on the hero button
+  label: "Résumé", // text shown next to the icon on both buttons
   url: "assets/Resume.pdf",
 };
 
