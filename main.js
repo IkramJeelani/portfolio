@@ -1065,84 +1065,28 @@
 
     const embed = toEmbed(RESUME.url);
     const title = ((window.PROFILE || {}).name || "") + " — Résumé";
-    const label = RESUME.label || "Download CV";
+    const label = RESUME.label || "Résumé";
 
     const icon =
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
       'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
       '<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>';
 
-    // Appended into .hero-right (a sibling of .hero-text, both inside the
-    // wrapper) so desktop treats [text + button] as ONE grid item beside the
-    // arm, while mobile's display:contents on the wrapper promotes it back
-    // to an independent grid item so it can sit after the arm there.
-    const heroSection = document.querySelector(".hero-right") || document.querySelector(".hero");
-    let heroBtn = null;
-    if (heroSection) {
-      heroBtn = document.createElement("a");
-      heroBtn.className = "resume-btn";
-      heroBtn.href = RESUME.url;
-      heroBtn.target = "_blank";
-      heroBtn.rel = "noopener";
-      heroBtn.setAttribute("data-pdf-title", title);
-      heroBtn.setAttribute("aria-label", label);
-      heroBtn.innerHTML = icon + "<span>" + label + "</span>";
-      if (embed) heroBtn.setAttribute("data-pdf", embed);
-      heroSection.appendChild(heroBtn);
-    }
-
+    // Nav-only — no hero button, no scroll-triggered show/hide transition.
+    // Just a normal, always-present button between the theme and particles
+    // toggles from the moment the page loads.
     const themeToggle = document.querySelector(".theme-toggle");
-    let navBtn = null;
-    if (themeToggle) {
-      navBtn = document.createElement("a");
-      navBtn.className = "nav-resume-btn";
-      navBtn.href = RESUME.url;
-      navBtn.target = "_blank";
-      navBtn.rel = "noopener";
-      navBtn.setAttribute("data-pdf-title", title);
-      navBtn.setAttribute("aria-label", label);
-      navBtn.innerHTML = icon + "<span>" + label + "</span>";
-      if (embed) navBtn.setAttribute("data-pdf", embed);
-      themeToggle.insertAdjacentElement("afterend", navBtn); // between the two toggles
-    }
-
-    // The nav button only appears once the hero button is no longer visible
-    // (scrolled under the sticky header) — never both at once. Driven by a
-    // rAF-throttled scroll check rather than IntersectionObserver: IO's
-    // callback can lag behind the actual scroll, so by the time it fires the
-    // button may already be far off-screen. A small hysteresis gap between
-    // the hide/show thresholds stops scroll jitter at the boundary from
-    // re-triggering the swap repeatedly. Plain crossfade — hero fades out,
-    // nav pill expands in — no flying/morphing clone.
-    if (heroBtn && navBtn) {
-      const HIDE_AT = 73;
-      const SHOW_AT = 93;
-      let heroVisible = true;
-      let firstCheck = true;
-      let ticking = false;
-      const check = () => {
-        ticking = false;
-        const r = heroBtn.getBoundingClientRect();
-        const threshold = heroVisible ? HIDE_AT : SHOW_AT;
-        const isVisible = r.bottom > threshold && r.top < window.innerHeight;
-        if (isVisible === heroVisible && !firstCheck) return;
-        heroVisible = isVisible;
-        navBtn.classList.toggle("show", !isVisible);
-        heroBtn.classList.toggle("resume-btn-faded", !isVisible);
-        firstCheck = false;
-      };
-      check(); // establish the correct initial state without animating
-      const onScroll = () => {
-        if (!ticking) {
-          ticking = true;
-          requestAnimationFrame(check);
-        }
-      };
-      window.addEventListener("scroll", onScroll, { passive: true });
-      window.addEventListener("resize", onScroll);
-    } else if (navBtn) {
-      navBtn.classList.add("show");
-    }
+    if (!themeToggle) return;
+    const navBtn = document.createElement("a");
+    navBtn.className = "nav-resume-btn";
+    navBtn.href = RESUME.url;
+    navBtn.target = "_blank";
+    navBtn.rel = "noopener";
+    navBtn.setAttribute("data-pdf-title", title);
+    navBtn.setAttribute("aria-label", label);
+    navBtn.innerHTML = icon + "<span>" + label + "</span>";
+    if (embed) navBtn.setAttribute("data-pdf", embed);
+    themeToggle.insertAdjacentElement("afterend", navBtn); // between the two toggles
   }
 
   /* ---------- Equal-height cert cards so "View Credential" lines up everywhere ---------- */

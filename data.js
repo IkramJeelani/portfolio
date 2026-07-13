@@ -23,18 +23,17 @@ const PROFILE = {
 };
 
 /* ---------- 1b. RESUME / CV ----------
-   A "Download CV" button on the landing page (and in the nav once you scroll
-   past it). Clicking it opens the SAME in-page PDF viewer used for
-   certifications — visitors see it without leaving the site.
-   `show`:  true -> button appears. false -> hidden everywhere, no button at all.
-   `label`: the text shown next to the icon on both the hero button and the
-            nav button (identical content in both places).
+   A button in the nav bar (between the theme and particles toggles), always
+   present from the first load. Clicking it opens the SAME in-page PDF viewer
+   used for certifications — visitors see it without leaving the site.
+   `show`:  true -> button appears. false -> hidden, no button at all.
+   `label`: the text shown next to the icon.
    `url`:   path to your resume PDF. Put the file in assets/ (e.g.
             "assets/Resume.pdf") and point url at it — same as a certification's
             `url`, a GitHub "blob" link also works and is resolved automatically. */
 const RESUME = {
   show: true,
-  label: "Résumé", // text shown next to the icon on both buttons
+  label: "Résumé", // text shown next to the icon
   url: "assets/Resume.pdf",
 };
 

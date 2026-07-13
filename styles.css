@@ -247,49 +247,27 @@ h1, h2, h3,
 /* When particles are off, the sparkle button looks dimmed */
 .fx-toggle.off { color: var(--muted); opacity: 0.6; }
 
-/* Compact nav résumé button — same icon+label content as the hero pill, just
-   smaller, so it's unmistakably "that same button" once it appears. Collapsed
-   to max-width:0 (not just invisible) while hidden, so it takes up NO space
-   between the two toggles; scrolling past the hero button EXPANDS it open
-   from that zero point, pushing the toggles apart as it grows — the button
-   is "born" in the gap rather than popping/fading in on top of existing
-   layout. max-width (not width) because the label makes its content size
-   variable, and width can't transition to/from auto. */
+/* Nav résumé button — icon + label, always present between the theme and
+   particles toggles from first paint. No hero counterpart, no scroll-driven
+   show/hide, no transition: just a normal static button. */
 .nav-resume-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  max-width: 0;
   height: 40px;
-  padding: 0;
+  padding: 0 1.1rem;
   border-radius: 999px;
   background: var(--grad);
   color: #fff;
   font-weight: 700;
   font-size: 0.92rem;
   white-space: nowrap;
-  overflow: hidden;
   box-shadow: 0 4px 16px rgba(168, 85, 247, 0.45);
-  opacity: 0;
-  margin-right: 0;
-  pointer-events: none;
-  transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    margin-right 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, box-shadow 0.2s ease;
-}
-.nav-resume-btn.show {
-  max-width: 220px;
-  padding: 0 1.1rem;
-  opacity: 1;
   margin-right: 0.6rem;
-  pointer-events: auto;
+  transition: box-shadow 0.2s ease;
 }
 .nav-resume-btn:hover { box-shadow: 0 6px 22px rgba(168, 85, 247, 0.65); }
 .nav-resume-btn svg { width: 17px; height: 17px; flex-shrink: 0; display: block; }
-@media (prefers-reduced-motion: reduce) {
-  .nav-resume-btn { transition: opacity 0.15s ease; }
-  .nav-resume-btn.show { max-width: 220px; padding: 0 1.1rem; margin-right: 0.6rem; }
-}
 
 /* Hamburger menu button (hidden until the links would crowd) */
 .nav-toggle {
@@ -319,9 +297,7 @@ h1, h2, h3,
 /* ===== Hero ===== */
 /* Fills the first viewport (minus the 72px sticky header) so the landing
    screen shows only the name — the About section starts below the fold.
-   Desktop: 2 columns, arm | (text+button as ONE grid item — see .hero-right).
-   Mobile: .hero-right unwraps via display:contents so the arm can sit
-   between the text block and the résumé button in a single stacked column. */
+   Desktop: 2 columns, arm | text. Mobile: stacks name then arm. */
 .hero {
   max-width: var(--max);
   margin: 0 auto;
@@ -350,14 +326,6 @@ h1, h2, h3,
   height: auto;
   display: block;
 }
-/* IMPORTANT: hero-visual must NOT span multiple rows shared with hero-text/
-   resume-btn. It's much taller than they are (arm graphic vs. a few lines of
-   text), and CSS Grid inflates auto-sized rows to fit whatever spans them —
-   that's what caused a ~150px phantom gap between the name and the button
-   when this used to be "visual text" / "visual button" as two rows. Grouping
-   text+button into one .hero-right item sidesteps the whole problem: now
-   there's only ONE row, sized by the taller of the two columns, and
-   align-items:center centers each column within it independently. */
 .hero-right {
   grid-area: right;
   display: flex;
@@ -370,22 +338,16 @@ h1, h2, h3,
 @media (max-width: 1180px) {
   .hero { grid-template-columns: minmax(0, min(44vw, 460px)) 1fr; }
 }
-/* Below ~1000px the columns get cramped — stack: name, then arm, then button.
-   Unwrap .hero-right (display:contents) so hero-text and resume-btn become
-   independent grid items again and the arm can sit between them; a single
-   row-gap then gives equal spacing across all three. */
+/* Below ~1000px the columns get cramped — stack: name, then arm. */
 @media (max-width: 1000px) {
   .hero {
     grid-template-columns: 1fr;
-    grid-template-areas: "text" "visual" "button";
+    grid-template-areas: "text" "visual";
     justify-items: center;
     row-gap: 2rem;
     text-align: center;
   }
-  .hero-right { display: contents; }
-  .hero-text { grid-area: text; }
-  .resume-btn { grid-area: button; }
-  .hero:not(:has(.resume-btn)) { grid-template-areas: "text" "visual"; }
+  .hero-right { grid-area: text; }
   .hero-visual { width: min(72vw, 340px); }
   .hero-text .subtitle { margin-left: auto; margin-bottom: 0; }
 }
@@ -439,66 +401,9 @@ h1, h2, h3,
   font-size: 1.1rem;
 }
 /* No bio text set: an empty paragraph still carries its 2rem margin, which
-   read as a mysterious, oversized, unexplained gap between the name and the
-   résumé button below it. Collapse it when there's nothing in it. */
+   read as a mysterious, oversized, unexplained gap under the name. Collapse
+   it when there's nothing in it. */
 .subtitle:empty { display: none; }
-
-/* ===== Résumé / CV button (hero) =====
-   The one "special" CTA on the page: gradient pill, a size bump so it holds
-   its own visually under the large name, and a soft breathing glow halo
-   (same breathing-glow language as the corner blobs/skill lines elsewhere
-   on the site) so it reads as more than an ordinary button. */
-.resume-btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  margin-top: 1.75rem;
-  padding: 1rem 2.1rem;
-  border-radius: 999px;
-  background: var(--grad);
-  background-size: 200% auto;
-  color: #fff;
-  font-weight: 700;
-  font-size: 1.05rem;
-  box-shadow: 0 8px 26px rgba(168, 85, 247, 0.35);
-  transition: transform 0.2s ease, box-shadow 0.25s ease, background-position 0.4s ease,
-    opacity 0.3s ease;
-}
-.resume-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 34px rgba(168, 85, 247, 0.5);
-  background-position: 100% center;
-}
-/* Faded out once the nav button takes over on scroll. */
-.resume-btn-faded { opacity: 0; pointer-events: none; }
-.resume-btn svg { width: 19px; height: 19px; flex-shrink: 0; }
-.resume-btn::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  z-index: -1;
-  border-radius: inherit;
-  background: var(--grad);
-  opacity: 0;
-  filter: blur(8px);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .resume-btn::before { animation: resume-glow 2.8s ease-in-out infinite; }
-}
-/* Toned down from scale(1.1)/opacity 0.6 — at full strength the halo visibly
-   crept into the gap above the button on mobile, making it look closer to
-   the arm above it than the arm was to the name above that. */
-@keyframes resume-glow {
-  0%, 100% { opacity: 0; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.04); }
-}
-/* Stacked mobile hero: row-gap alone provides the spacing between the three
-   pieces — zero out the button's own top margin (meant for sitting snug
-   under the name on desktop) so name→arm and arm→button come out equal. */
-@media (max-width: 1000px) {
-  .resume-btn { margin-top: 0; }
-}
 
 /* ===== Buttons ===== */
 .btn {
@@ -1682,19 +1587,12 @@ html.theme-vt * { view-transition-name: none !important; }
   .section-title { font-size: 1.6rem; }
   .theme-toggle, .fx-toggle { width: 36px; height: 36px; }
   .theme-toggle { margin-right: 0.45rem; }
-  .nav-resume-btn { height: 36px; font-size: 0.82rem; gap: 0.4rem; }
+  .nav-resume-btn {
+    height: 36px;
+    font-size: 0.82rem;
+    gap: 0.4rem;
+    padding: 0 0.85rem;
+    margin-right: 0.45rem;
+  }
   .nav-resume-btn svg { width: 15px; height: 15px; }
-  /* 200px comfortably covers the label's real rendered width (~168px at
-     this font-size/padding) — measured directly, not guessed, since a
-     tighter cap here previously clipped the text mid-letter. */
-  .nav-resume-btn.show { max-width: 200px; padding: 0 0.85rem; margin-right: 0.45rem; }
-}
-/* Below ~380px, the full-label pill plus both toggles and the hamburger no
-   longer fit the header (measured: overflows by ~40px at 320px viewport).
-   Fall back to the original icon-only compact button there instead of
-   letting the header overflow. */
-@media (max-width: 380px) {
-  .nav-resume-btn { justify-content: center; gap: 0; }
-  .nav-resume-btn span { display: none; }
-  .nav-resume-btn.show { max-width: 36px; width: 36px; padding: 0; }
 }
