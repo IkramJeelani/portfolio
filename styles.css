@@ -457,8 +457,10 @@ h1, h2, h3,
   box-shadow: 0 14px 34px rgba(168, 85, 247, 0.5);
   background-position: 100% center;
 }
-/* Faded out once the nav button takes over on scroll — a plain crossfade,
-   not a morphing flight (see main.js setupResumeButton for why). */
+/* Hidden the instant the flying icon badge (below) lands in the nav slot —
+   set via JS with its transition suspended, so this is a snap not a fade;
+   the flight itself already carried the motion. Only used as a fallback
+   crossfade (with its transition active) under prefers-reduced-motion. */
 .resume-btn-faded { opacity: 0; pointer-events: none; }
 .resume-btn svg { width: 19px; height: 19px; flex-shrink: 0; }
 .resume-btn::before {
@@ -487,6 +489,30 @@ h1, h2, h3,
 @media (max-width: 1000px) {
   .resume-btn { margin-top: 0; }
 }
+
+/* Flying icon badge: the visible link between the hero button and the nav
+   button on scroll — a small circular clone of just the icon (not the whole
+   pill) travels from one to the other. Deliberately icon-only: the hero
+   pill and nav circle are wildly different aspect ratios, so morphing the
+   whole button between them stretched it into an ellipse; the icon alone is
+   ~square at both ends, so one uniform scale factor never has to distort
+   it. The real buttons snap into place the instant the badge lands (see
+   main.js setInstant) rather than also re-animating on top of the flight. */
+.resume-fly-badge {
+  position: fixed;
+  z-index: 260;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--grad);
+  color: #fff;
+  box-shadow: 0 8px 26px rgba(168, 85, 247, 0.45);
+  pointer-events: none;
+  transform-origin: center center;
+  will-change: transform;
+}
+.resume-fly-badge svg { width: 18px; height: 18px; flex-shrink: 0; display: block; }
 
 /* ===== Buttons ===== */
 .btn {
