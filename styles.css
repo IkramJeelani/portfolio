@@ -306,7 +306,10 @@ h1, h2, h3,
 /* ===== Hero ===== */
 /* Fills the first viewport (minus the 72px sticky header) so the landing
    screen shows only the name — the About section starts below the fold.
-   Two columns: interactive robotic arm on the left, name on the right. */
+   A CSS grid (not flex) so the résumé button — a sibling of hero-visual and
+   hero-text, not nested inside either — can be placed independently per
+   breakpoint via grid-template-areas: under the name on desktop, but after
+   the arm once the layout stacks on mobile. */
 .hero {
   max-width: var(--max);
   margin: 0 auto;
@@ -317,40 +320,48 @@ h1, h2, h3,
   min-height: 100vh;
   min-height: 100svh;
   margin-top: calc(-1 * var(--header-h, 72px));
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: minmax(0, 500px) 1fr;
+  grid-template-areas:
+    "visual text"
+    "visual button";
   align-items: center;
+  /* Grid's equivalent of the old flex-column's justify-content:center: packs
+     the row tracks tightly (row-gap only between them) and centers that
+     whole group vertically within the tall min-height box. Without this the
+     rows default to stretching across the leftover space instead. */
+  align-content: center;
   justify-content: center;
-  gap: clamp(1rem, 4vw, 3.5rem);
+  column-gap: clamp(1rem, 4vw, 3.5rem);
 }
-.hero-visual {
-  flex: 0 1 500px;
-  min-width: 0;
-}
+/* No résumé button: drop the empty second row so it can't leave a gap. */
+.hero:not(:has(.resume-btn)) { grid-template-areas: "visual text"; }
+.hero-visual { grid-area: visual; min-width: 0; }
 .hero-arm {
   width: 100%;
   height: auto;
   display: block;
 }
-.hero-text { max-width: 600px; }
+.hero-text { grid-area: text; max-width: 600px; }
 .hero-text .subtitle { margin-left: 0; }
+.resume-btn { grid-area: button; }
 /* Tablets: keep the two columns but let the arm shrink before the text wraps badly. */
 @media (max-width: 1180px) {
-  .hero-visual { flex: 0 1 min(44vw, 460px); }
+  .hero { grid-template-columns: minmax(0, min(44vw, 460px)) 1fr; }
 }
-/* Below ~1000px the columns get cramped — stack: name on top, arm below. */
+/* Below ~1000px the columns get cramped — stack: name, then arm, then button.
+   A single row-gap gives equal spacing between every stacked piece. */
 @media (max-width: 1000px) {
   .hero {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    grid-template-areas: "text" "visual" "button";
+    justify-items: center;
+    row-gap: 2rem;
     text-align: center;
-    /* Comfortable breathing room between the text block (which now often
-       ends in the résumé button) and the arm below it — 0.5rem read as the
-       button being crushed right up against the arm. */
-    gap: 2rem;
   }
-  .hero-text { order: 1; }
-  .hero-visual { order: 2; width: min(72vw, 340px); flex: 0 0 auto; }
-  .hero-text .subtitle { margin-left: auto; }
+  .hero:not(:has(.resume-btn)) { grid-template-areas: "text" "visual"; }
+  .hero-visual { width: min(72vw, 340px); }
+  .hero-text .subtitle { margin-left: auto; margin-bottom: 0; }
 }
 /* Short viewports (landscape phones, small laptops with the window snapped):
    don't force a full-screen hero — let it size to its content. */
@@ -444,6 +455,12 @@ h1, h2, h3,
 @keyframes resume-glow {
   0%, 100% { opacity: 0; transform: scale(1); }
   50% { opacity: 0.6; transform: scale(1.1); }
+}
+/* Stacked mobile hero: row-gap alone provides the spacing between the three
+   pieces — zero out the button's own top margin (meant for sitting snug
+   under the name on desktop) so name→arm and arm→button come out equal. */
+@media (max-width: 1000px) {
+  .resume-btn { margin-top: 0; }
 }
 
 /* ===== Buttons ===== */

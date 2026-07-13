@@ -32,7 +32,7 @@ const PROFILE = {
             "assets/Resume.pdf") and point url at it — same as a certification's
             `url`, a GitHub "blob" link also works and is resolved automatically. */
 const RESUME = {
-  show: true,
+  show: false,
   label: "Download Résumé", // text shown on the hero button
   url: "assets/Resume.pdf",
 };

@@ -1072,9 +1072,13 @@
       'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
       '<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>';
 
-    const heroText = document.querySelector(".hero-text");
+    // Appended as a sibling of .hero-text / .hero-visual (not nested inside
+    // .hero-text) so the hero's CSS grid can place it independently —
+    // "under the name" on desktop, but "after the arm" once stacked on
+    // mobile, via grid-template-areas rather than DOM order.
+    const heroSection = document.querySelector(".hero");
     let heroBtn = null;
-    if (heroText) {
+    if (heroSection) {
       heroBtn = document.createElement("a");
       heroBtn.className = "resume-btn";
       heroBtn.href = RESUME.url;
@@ -1084,7 +1088,7 @@
       heroBtn.setAttribute("aria-label", label);
       heroBtn.innerHTML = icon + "<span>" + label + "</span>";
       if (embed) heroBtn.setAttribute("data-pdf", embed);
-      heroText.appendChild(heroBtn);
+      heroSection.appendChild(heroBtn);
     }
 
     const themeToggle = document.querySelector(".theme-toggle");
