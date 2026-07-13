@@ -34,7 +34,7 @@ const PROFILE = {
 const RESUME = {
   show: true,
   label: "Résumé", // text shown next to the icon
-  url: "assets/Resume.pdf",
+  url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/SMSCP-Assistant.pdf",
 };
 
 /* ============================================================================
