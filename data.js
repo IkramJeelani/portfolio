@@ -33,7 +33,7 @@ const PROFILE = {
             `url`, a GitHub "blob" link also works and is resolved automatically. */
 const RESUME = {
   show: true,
-  label: "Download CV", // text shown on the hero button
+  label: "Download Résumé", // text shown on the hero button
   url: "assets/Resume.pdf",
 };
 
