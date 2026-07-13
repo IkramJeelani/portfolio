@@ -62,7 +62,7 @@
       .map((p, i) => {
         const tech = (p.tech || []).map((t) => `<span class="tag">${t}</span>`).join("");
         return `
-          <a class="card reveal" style="--reveal-delay:${i * 70}ms" href="project.html?id=${encodeURIComponent(p.id)}">
+          <a class="card reveal" style="--reveal-delay:${i * 70}ms" href="project.html?id=${encodeURIComponent(p.id)}" aria-label="View details — ${p.title || ""}">
             <div class="card-img" style="background-image:url('${p.image}')"></div>
             <div class="card-body">
               <div class="card-main">
@@ -114,8 +114,12 @@
           </div>`;
         const embed = toEmbed(c.url);
         const pdfAttr = embed ? ` data-pdf="${embed}"` : "";
+        // aria-label gives screen readers one clean, purposeful name for the
+        // whole card ("View credential — X") instead of reading every piece
+        // of visible text (logo alt, name, issuer, date, "View Credential")
+        // concatenated together as the link's accessible name.
         return c.url
-          ? `<a class="cert-card reveal" style="${delay}" href="${c.url}"${pdfAttr} target="_blank" rel="noopener">${inner}</a>`
+          ? `<a class="cert-card reveal" style="${delay}" href="${c.url}"${pdfAttr} target="_blank" rel="noopener" aria-label="View credential — ${c.name || ""}">${inner}</a>`
           : `<div class="cert-card reveal" style="${delay}">${inner}</div>`;
       })
       .join("");

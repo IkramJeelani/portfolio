@@ -82,6 +82,29 @@ body {
 
 a { color: inherit; text-decoration: none; }
 
+/* ===== Keyboard focus ===== */
+/* :focus-visible (not plain :focus) so mouse/touch clicks stay clean and only
+   keyboard/assistive-tech navigation shows the ring — nothing on the site had
+   a custom focus style before, so tabbing through cards/buttons/links was
+   invisible even though they were technically reachable. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+/* Rounded cards: match the card's own radius so the ring hugs its shape
+   instead of a generic square corner. */
+.card:focus-visible,
+.cert-card:focus-visible,
+.dock-card:focus-visible,
+.pager-card:focus-visible {
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
 /* ===== Display font for headings ===== */
 h1, h2, h3,
 .brand,
