@@ -149,35 +149,35 @@ const CERTIFICATIONS = [
     issuer: "Siemens",
     date: "Sep 2024",
     logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/siemens.png"
-    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/SMSCP-Assistant.pdf",
+    url: "assets/Certifications/SMSCP-Assistant.pdf",
   },
   {
     name: "Altium Education - PCB Basic Design Course",
     issuer: "Altium",
     date: "Nov 2025",
     logo: "assets/Logos/altium_logo.jpg", 
-    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/Altium%20Education%20-%20PCB%20Basic%20Design%20Course.pdf",
+    url: "assets/Certifications/Altium Education - PCB Basic Design Course.pdf",
   },
   {
     name: "Certified SOLIDWORKS Design Associate (CSWA)",
     issuer: "Dassault Systèmes",
     date: "May 2026",
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg", 
-    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/CSWA.pdf",
+    url: "assets/Certifications/CSWA.pdf",
   },
   {
     name: "Certified SOLIDWORKS Design Professional (CSWP)",
     issuer: "Dassault Systèmes",
     date: "Jun 2026",
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg", 
-    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/CSWP.pdf",
+    url: "assets/Certifications/CSWP.pdf",
   },
   {
     name: "Certified SOLIDWORKS Additive Manufacturing Associate (CSWA-AM)",
     issuer: "Dassault Systèmes",
     date: "Jun 2026",
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg", 
-    url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Certifications/CSWA_AM.pdf",
+    url: "assets/Certifications/CSWA_AM.pdf",
   },
 ];
 
