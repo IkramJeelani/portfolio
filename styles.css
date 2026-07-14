@@ -1498,6 +1498,14 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 .pdf-pages {
   flex: 1;
   overflow: auto;
+  /* Without this, the vertical scrollbar (needed whenever a page is taller
+     than the modal) isn't accounted for until AFTER the canvas's own
+     margin-inline:auto centering is computed, so the scrollbar then steals
+     back space that centering had already claimed — the canvas ends up a
+     scrollbar's-width too wide for its own container, spawning a spurious
+     horizontal scrollbar even though nothing actually needs one. Reserving
+     the gutter up front makes the width math stable from the start. */
+  scrollbar-gutter: stable;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
