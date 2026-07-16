@@ -1341,9 +1341,16 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   .tl-left::after { right: -19px; }
 }
 
-/* When the inline links would crowd: collapse them into a dropdown menu.
-   Nav bar then shows three things: brand · theme toggle · hamburger. */
-@media (max-width: 1200px) {
+/* When the inline links would crowd the header's centered controls: collapse
+   them into a dropdown menu instead of letting them squeeze together. Nav
+   bar then shows three things: brand · theme toggle · hamburger. 1600px
+   (not 1200px) because SECTIONS now has 7 entries (Experience and Projects
+   added) instead of 5 — measured the nav's own content width against the
+   controls group directly: the gap between them shrinks to an uncomfortable
+   ~16-27px below ~1535px, and is comfortable (~50px+) from ~1585px up.
+   1600px gives a clean, verified margin so the switch happens right before
+   crowding would start, not after. */
+@media (max-width: 1600px) {
   .nav-toggle { display: flex; }
   .site-header nav {
     grid-column: auto;
