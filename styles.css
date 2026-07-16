@@ -1336,8 +1336,14 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 }
 
 /* When the inline links would crowd: collapse them into a dropdown menu.
-   Nav bar then shows three things: brand · theme toggle · hamburger. */
-@media (max-width: 1200px) {
+   Nav bar then shows three things: brand · theme toggle · hamburger.
+   1600px (not 1200px) because SECTIONS now has 7 entries (Experience and
+   Projects added) instead of 5 — measured the nav's own content width
+   against the header's centered controls group: below ~1535px the gap
+   between them shrank to ~27px or less, uncomfortably close, so the
+   threshold needs enough headroom that inline links never get near the
+   toggles even on common 1440-1536px laptop screens. */
+@media (max-width: 1600px) {
   .nav-toggle { display: flex; }
   .site-header nav {
     grid-column: auto;

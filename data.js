@@ -18,8 +18,7 @@ const PROFILE = {
   name: "Ikram Jeelani",
   initials: "IJ", // shown top-left AND as the browser-tab icon (kept in sync)
   role: "Engineering Portfolio",
-  bio:
-    "",
+  bio: "",
 };
 
 /* ---------- 1b. RESUME / CV ----------
@@ -70,12 +69,9 @@ const ABOUT =
   "complete systems from the ground up. " +
   "Today, I enjoy working across the full stack of a system: mechanical design, " +
   "electronics, control systems, and software. " +
-
   "My goal is to become a design engineer in the robotics and automation industry, developing " +
   "intelligent systems that bridge mechanical, electrical, and software engineering. Away from engineering, " +
   "you'll usually find me gaming, watching cricket, or searching for great food.";
-
-
 
 /* ---------- 3. EXPERIENCE ----------
    ADD/REMOVE a role by copying or deleting a { ... } block.
@@ -84,7 +80,6 @@ const ABOUT =
    `tech`   is optional — tags for the tech used in the job (shown under the details).
    `logo`   is optional — a company logo (put the file in assets/). "" = none. */
 const EXPERIENCE = [
-  /* 
   {
     role: "Engineering Intern",
     company: "Acme Robotics",
@@ -108,9 +103,7 @@ const EXPERIENCE = [
     ],
     tech: ["LoRa", "Python", "Embedded C"],
   },
-  */
 ];
-
 
 /* ---------- 4. SKILLS ----------
    Each group is a category with a list of items (shown as tags).
@@ -118,23 +111,30 @@ const EXPERIENCE = [
 const SKILLS = [
   {
     category: "Programming",
-    items: ["C", "C++", "Python", "MATLAB"]
+    items: ["C", "C++", "Python", "MATLAB"],
   },
   {
     category: "Mechanical Design, Analysis & Manufacturing",
-    items: ["SOLIDWORKS", "Fusion 360", "Cura","FDM 3D Printing"]
+    items: ["SOLIDWORKS", "Fusion 360", "Cura", "FDM 3D Printing"],
   },
   {
     category: "Electronics & Embedded Systems",
-    items: ["Arduino", "PCB design (KiCad/Altium)", "LTspice", "Soldering", "Multimeter", "Oscilloscopes"]
+    items: [
+      "Arduino",
+      "PCB design (KiCad/Altium)",
+      "LTspice",
+      "Soldering",
+      "Multimeter",
+      "Oscilloscopes",
+    ],
   },
   {
     category: "Controls & Automations",
-    items: ["PID Control", "Sensors & Actuators", "Simulink"]
+    items: ["PID Control", "Sensors & Actuators", "Simulink"],
   },
   {
     category: "Tools",
-    items: ["Git/Github", "MS Office"]
+    items: ["Git/Github", "MS Office"],
   },
 ];
 
@@ -155,28 +155,28 @@ const CERTIFICATIONS = [
     name: "Altium Education - PCB Basic Design Course",
     issuer: "Altium",
     date: "Nov 2025",
-    logo: "assets/Logos/altium_logo.jpg", 
+    logo: "assets/Logos/altium_logo.jpg",
     url: "assets/Certifications/Altium Education - PCB Basic Design Course.pdf",
   },
   {
     name: "Certified SOLIDWORKS Design Associate (CSWA)",
     issuer: "Dassault Systèmes",
     date: "May 2026",
-    logo: "assets/Logos/Dassault_Systèmes_logo.jpg", 
+    logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
     url: "assets/Certifications/CSWA.pdf",
   },
   {
     name: "Certified SOLIDWORKS Design Professional (CSWP)",
     issuer: "Dassault Systèmes",
     date: "Jun 2026",
-    logo: "assets/Logos/Dassault_Systèmes_logo.jpg", 
+    logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
     url: "assets/Certifications/CSWP.pdf",
   },
   {
     name: "Certified SOLIDWORKS Additive Manufacturing Associate (CSWA-AM)",
     issuer: "Dassault Systèmes",
     date: "Jun 2026",
-    logo: "assets/Logos/Dassault_Systèmes_logo.jpg", 
+    logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
     url: "assets/Certifications/CSWA_AM.pdf",
   },
 ];
@@ -195,9 +195,7 @@ const EDUCATION = [
     date: "2026 - 2027",
     degree: "Bachelor of Engineering (Honours) in",
     major: "Mechatronic Engineering",
-    details: [
-      "Transfer student from Simon Fraser University.",
-    ],
+    details: ["Transfer student from Simon Fraser University."],
     logo: "assets/Logos/university_of_wollongong_in_dubai_logo.jpg",
   },
   {
@@ -267,7 +265,6 @@ const EDUCATION = [
    Each project needs a unique `id` (used in the URL, no spaces).
    ============================================================================ */
 const PROJECTS = [
-/* 
   {
     id: "smart-thermostat",
     title: "Smart Thermostat Controller",
@@ -276,7 +273,10 @@ const PROJECTS = [
     tagline: "Embedded firmware for an energy-aware HVAC system",
     tech: ["C", "STM32", "FreeRTOS", "PID Control"],
     links: [
-      { label: "View Code", url: "https://github.com/IkramJeelani/smart-thermostat" },
+      {
+        label: "View Code",
+        url: "https://github.com/IkramJeelani/smart-thermostat",
+      },
     ],
     // ↓↓↓ This is your free-form "Notion-like" page. Edit it however you like. ↓↓↓
     body: `
@@ -332,7 +332,10 @@ const PROJECTS = [
     tagline: "Wireless strain monitoring for civil infrastructure",
     tech: ["Python", "LoRa", "Raspberry Pi", "InfluxDB", "Grafana"],
     links: [
-      { label: "View Code", url: "https://github.com/IkramJeelani/bridge-sensor-net" },
+      {
+        label: "View Code",
+        url: "https://github.com/IkramJeelani/bridge-sensor-net",
+      },
       { label: "Live Demo", url: "#" },
     ],
     body: `
@@ -361,7 +364,10 @@ const PROJECTS = [
     tagline: "Inverse kinematics and motion planning from scratch",
     tech: ["C++", "ROS", "OpenCV", "Arduino"],
     links: [
-      { label: "View Code", url: "https://github.com/IkramJeelani/robotic-arm" },
+      {
+        label: "View Code",
+        url: "https://github.com/IkramJeelani/robotic-arm",
+      },
     ],
     body: `
       <p>A six-degree-of-freedom robotic arm capable of picking and placing objects
@@ -388,7 +394,10 @@ const PROJECTS = [
     tagline: "Inverse kinematics and motion planning from scratch",
     tech: ["C++", "ROS", "OpenCV", "Arduino"],
     links: [
-      { label: "View Code", url: "https://github.com/IkramJeelani/robotic-arm" },
+      {
+        label: "View Code",
+        url: "https://github.com/IkramJeelani/robotic-arm",
+      },
     ],
     body: `
       <p>A six-degree-of-freedom robotic arm capable of picking and placing objects
@@ -407,7 +416,7 @@ const PROJECTS = [
       </div>
     `,
   },
-    {
+  {
     id: "robotic-armmm",
     title: "6-DOF Robotic Armmmm",
     image: "assets/project3.svg",
@@ -415,7 +424,10 @@ const PROJECTS = [
     tagline: "Inverse kinematics and motion planning from scratch",
     tech: ["C++", "ROS", "OpenCV", "Arduino"],
     links: [
-      { label: "View Code", url: "https://github.com/IkramJeelani/robotic-arm" },
+      {
+        label: "View Code",
+        url: "https://github.com/IkramJeelani/robotic-arm",
+      },
     ],
     body: `
       <p>A six-degree-of-freedom robotic arm capable of picking and placing objects
@@ -433,7 +445,7 @@ const PROJECTS = [
         <img src="assets/project1.svg" alt="">
       </div>
     `,
-  },*/
+  },
 ];
 
 /* ---------- 7. CONTACTS ----------
