@@ -1341,24 +1341,9 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   .tl-left::after { right: -19px; }
 }
 
-/* Compact nav typography: SECTIONS now has 7 entries (Experience and
-   Projects added) instead of 5, so the inline links' natural width grew
-   ~35% and started crowding the header's centered theme/résumé/particles
-   control group well above where the dropdown used to kick in. Rather than
-   handing common laptop widths (1200-1600px) over to the dropdown, shrink
-   the links' own footprint there instead — keeps them inline much further
-   down, and the dropdown fallback below only has to cover genuinely
-   narrow/tablet widths. */
-@media (max-width: 1600px) {
-  .site-header nav { gap: 0.3rem 0.55rem; }
-  .site-header nav a { font-size: 0.82rem; }
-}
-/* When the inline links would still crowd even at the compact size: collapse
-   them into a dropdown menu. Nav bar then shows three things: brand · theme
-   toggle · hamburger. 1260px measured directly against the header's centered
-   controls group with the compact typography above already applied — below
-   that the gap shrinks under ~30px even at the smaller font/gap size. */
-@media (max-width: 1260px) {
+/* When the inline links would crowd: collapse them into a dropdown menu.
+   Nav bar then shows three things: brand · theme toggle · hamburger. */
+@media (max-width: 1200px) {
   .nav-toggle { display: flex; }
   .site-header nav {
     grid-column: auto;
