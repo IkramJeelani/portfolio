@@ -187,6 +187,26 @@
     contact: buildContact,
   };
 
+  // One icon per possible section, used only by the radial nav (1001-1600px
+  // — see setupRadialNav) where there's no room for 7 full words inline but
+  // plenty for small icon buttons. Same stroke style as the résumé icon.
+  const NAV_ICONS = {
+    about:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>',
+    experience:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg>',
+    projects:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>',
+    skills:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9l-4 3 4 3"/><path d="M16 9l4 3-4 3"/><path d="M13 6l-2 12"/></svg>',
+    certifications:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M8.5 13 7 21l5-3 5 3-1.5-8"/></svg>',
+    education:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/></svg>',
+    contact:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',
+  };
+
   /* ---------- Render in the configured order, skipping empty sections ---------- */
   const order = window.SECTIONS || Object.keys(BUILDERS);
 
@@ -204,9 +224,17 @@
 
     const link = document.createElement("a");
     link.href = "#" + key;
-    link.textContent = sec.title;
+    link.setAttribute("data-label", sec.title);
+    link.innerHTML =
+      '<span class="nav-icon">' +
+      (NAV_ICONS[key] || "") +
+      '</span><span class="nav-text">' +
+      sec.title +
+      "</span>";
     navRoot.appendChild(link);
   });
+
+  setupRadialNav();
 
   setupReveal();
   setupTilt();
@@ -218,6 +246,38 @@
   setupSharedTransition();
   setupHeroArm();
   setupSkillsMasonry();
+
+  /* ---------- Nav: semicircular radial icon fan (1001-1600px) ----------
+     Below ~1600px there's no room for 7 full-word links inline (measured
+     against the header's centered controls group — see styles.css) but a
+     plain vertical dropdown wastes the extra horizontal room still
+     available down to ~1000px. In that band the opened nav fans its icons
+     out along a semicircle instead. Evenly spacing N items around an arc
+     isn't expressible in pure CSS, so each link's (--tx, --ty) offset from
+     the fan's origin is computed here. The origin is shifted left of the
+     toggle button — a true centered ±90° semicircle would swing its
+     rightmost icon straight out sideways, off the edge of the viewport,
+     since the toggle sits close to the header's right edge. */
+  function setupRadialNav() {
+    const links = Array.from(navRoot.querySelectorAll("a"));
+    if (!links.length) return;
+    const RADIUS = 96;
+    const ORIGIN_SHIFT_X = -110;
+    const apply = () => {
+      const n = links.length;
+      links.forEach((link, i) => {
+        const angle = n > 1 ? -90 + (180 * i) / (n - 1) : 0; // -90 (left) .. 0 (down) .. +90 (right)
+        const rad = (angle * Math.PI) / 180;
+        const tx = ORIGIN_SHIFT_X + RADIUS * Math.sin(rad);
+        const ty = RADIUS * Math.cos(rad);
+        link.style.setProperty("--tx", tx.toFixed(1) + "px");
+        link.style.setProperty("--ty", ty.toFixed(1) + "px");
+        link.style.setProperty("--fan-delay", i * 25 + "ms");
+      });
+    };
+    apply();
+    window.addEventListener("resize", apply);
+  }
 
   /* ---------- Experience + Education: one shared card width ----------
      Each timeline is its own grid, so their card columns size independently
