@@ -13,7 +13,8 @@
     return;
   }
 
-  document.title = `${project.title} — ${(window.PROFILE || {}).name || ""}`;
+  // Hyphen separator to match the home page's "Ikram Jeelani - Portfolio".
+  document.title = `${project.title} - ${(window.PROFILE || {}).name || ""}`;
 
   // Refine the sharing/SEO tags for this specific project so a shared project
   // link shows its own title, description and URL.

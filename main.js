@@ -214,7 +214,7 @@
   setupEqualize();
   setupTimelineWidth();
   setupPdfModal();
-  setupResumeButton();
+  setupScrollSpy();
   setupSharedTransition();
   setupHeroArm();
   setupSkillsMasonry();
@@ -230,13 +230,20 @@
     if (cards.length < 2) return;
     const apply = () => {
       cards.forEach((c) => (c.style.width = ""));
-      if (window.innerWidth <= 640) return; // fluid on phones
+      // 600 matches the CSS breakpoint where both timelines reflow to fluid
+      // 1fr columns — a different number here would leave a band of widths
+      // where the shared-width guarantee is silently off.
+      if (window.innerWidth <= 600) return;
       let max = 0;
       cards.forEach((c) => (max = Math.max(max, c.offsetWidth)));
       cards.forEach((c) => (c.style.width = max + "px"));
     };
     apply();
-    window.addEventListener("resize", apply);
+    let rt;
+    window.addEventListener("resize", () => {
+      clearTimeout(rt);
+      rt = setTimeout(apply, 150); // debounced: full measure/write cycle is not per-frame cheap
+    });
     window.addEventListener("load", apply);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(apply);
   }
@@ -642,8 +649,8 @@
       ctx.fillText("θ2 " + deg(ang[1] - ang[0]), 16, 42);
       ctx.fillText("θ3 " + deg(ang[2] - ang[1]), 16, 60);
       ctx.fillText("PLACED " + placed, 16, 82);
-      ctx.font = "500 10px Consolas, 'Courier New', monospace";
-      ctx.fillText("click to drop a part", W - 126, H - 12);
+      // (the "click to drop a part" hint is real HTML below the canvas now —
+      // canvas-drawn text is invisible to assistive tech and was only 10px)
     };
 
     if (reduced) {
@@ -917,9 +924,12 @@
   /* ---------- PDF popup (View Credential opens the certificate in a modal) ----------
      Renders the PDF with pdf.js into theme-styled canvases (custom toolbar with
      zoom / download / open-in-tab) instead of the browser's grey default viewer.
-     Falls back to a plain iframe if the pdf.js CDN can't be reached. */
+     Falls back to a plain iframe if pdf.js can't load. pdf.js is self-hosted
+     (assets/vendor/) rather than pulled from a CDN: a third-party script tag
+     without an integrity hash lets that CDN run arbitrary JS on the page, and
+     SRI can't cover the worker file (loaded by the library, not a <script>). */
   function setupPdfModal() {
-    const PDFJS_CDN = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174";
+    const PDFJS_CDN = "assets/vendor/pdfjs";
     let modal, pdfDoc, libPromise;
     let zoom = 1;
     let curSrc = "";
@@ -953,16 +963,16 @@
       modal.className = "pdf-modal";
       modal.innerHTML =
         '<div class="pdf-backdrop"></div>' +
-        '<div class="pdf-box">' +
+        '<div class="pdf-box" role="dialog" aria-modal="true" aria-label="Certificate viewer">' +
         '<div class="pdf-toolbar">' +
         '<span class="pdf-title"></span>' +
         '<div class="pdf-tools">' +
-        '<button class="pdf-tool-btn pdf-zoom-out" aria-label="Zoom out">&minus;</button>' +
+        '<button type="button" class="pdf-tool-btn pdf-zoom-out" aria-label="Zoom out">&minus;</button>' +
         '<span class="pdf-zoom-label">100%</span>' +
-        '<button class="pdf-tool-btn pdf-zoom-in" aria-label="Zoom in">+</button>' +
+        '<button type="button" class="pdf-tool-btn pdf-zoom-in" aria-label="Zoom in">+</button>' +
         '<a class="pdf-tool-btn pdf-download" aria-label="Download" download>' + icoDownload + "</a>" +
         '<a class="pdf-tool-btn pdf-newtab" aria-label="Open in new tab" target="_blank" rel="noopener">' + icoNewTab + "</a>" +
-        '<button class="pdf-tool-btn pdf-close" aria-label="Close">&times;</button>' +
+        '<button type="button" class="pdf-tool-btn pdf-close" aria-label="Close">&times;</button>' +
         "</div></div>" +
         '<div class="pdf-pages"></div></div>';
       document.body.appendChild(modal);
@@ -970,6 +980,24 @@
       modal.querySelector(".pdf-close").addEventListener("click", close);
       modal.querySelector(".pdf-zoom-in").addEventListener("click", () => setZoom(zoom + 0.25));
       modal.querySelector(".pdf-zoom-out").addEventListener("click", () => setZoom(zoom - 0.25));
+      // Keep Tab inside the dialog while it's open — without this, keyboard
+      // focus wanders into the page hidden behind the backdrop.
+      modal.addEventListener("keydown", (e) => {
+        if (e.key !== "Tab") return;
+        const items = Array.from(
+          modal.querySelectorAll("button, a[href], [tabindex]:not([tabindex='-1'])")
+        ).filter((el) => el.offsetParent !== null);
+        if (!items.length) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
     };
 
     const setZoom = (z) => {
@@ -1000,12 +1028,17 @@
       }
     }
 
+    let opener = null; // element to hand focus back to when the dialog closes
+
     async function open(src, title) {
       if (!modal) build();
+      opener = document.activeElement;
       modal.querySelector(".pdf-title").textContent = title || "Certificate";
+      modal.querySelector(".pdf-box").setAttribute("aria-label", title || "Certificate viewer");
       modal.querySelector(".pdf-download").href = src;
       modal.querySelector(".pdf-newtab").href = src;
       modal.classList.add("open");
+      modal.querySelector(".pdf-close").focus();
       document.body.style.overflow = "hidden";
       const box = modal.querySelector(".pdf-pages");
       box.classList.remove("fallback");
@@ -1028,9 +1061,11 @@
     }
 
     function close() {
-      if (!modal) return;
+      if (!modal || !modal.classList.contains("open")) return;
       modal.classList.remove("open");
       document.body.style.overflow = "";
+      if (opener && opener.focus) opener.focus(); // hand focus back to the triggering link
+      opener = null;
       setTimeout(() => {
         if (pdfDoc) pdfDoc.destroy();
         pdfDoc = null;
@@ -1054,39 +1089,36 @@
     });
   }
 
-  /* ---------- Résumé / CV button ----------
-     One button under the name on the hero, a second compact one that fades
-     into the nav (between the theme and particles toggles) once the hero
-     button scrolls out of view. Both open the same in-page PDF viewer used
-     for certifications. Controlled entirely by RESUME in data.js. */
-  function setupResumeButton() {
-    const RESUME = window.RESUME;
-    if (!RESUME || !RESUME.show || !RESUME.url) return;
-
-    const embed = toEmbed(RESUME.url);
-    const title = ((window.PROFILE || {}).name || "") + " — Résumé";
-    const label = RESUME.label || "Résumé";
-
-    const icon =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
-      'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>';
-
-    // Nav-only — no hero button, no scroll-triggered show/hide transition.
-    // Just a normal, always-present button between the theme and particles
-    // toggles from the moment the page loads.
-    const themeToggle = document.querySelector(".theme-toggle");
-    if (!themeToggle) return;
-    const navBtn = document.createElement("a");
-    navBtn.className = "nav-resume-btn";
-    navBtn.href = RESUME.url;
-    navBtn.target = "_blank";
-    navBtn.rel = "noopener";
-    navBtn.setAttribute("data-pdf-title", title);
-    navBtn.setAttribute("aria-label", label);
-    navBtn.innerHTML = icon + "<span>" + label + "</span>";
-    if (embed) navBtn.setAttribute("data-pdf", embed);
-    themeToggle.insertAdjacentElement("afterend", navBtn); // between the two toggles
+  /* ---------- Scroll spy: mark the section you're reading in the nav ----------
+     With 7 links on a long one-pager, the nav otherwise never tells you where
+     you are. aria-current carries the state for assistive tech; CSS styles it. */
+  function setupScrollSpy() {
+    const links = new Map(); // section id -> nav link
+    navRoot.querySelectorAll("a[href^='#']").forEach((a) => links.set(a.getAttribute("href").slice(1), a));
+    if (!links.size || !("IntersectionObserver" in window)) return;
+    const setCurrent = (id) => {
+      links.forEach((a, key) => {
+        if (key === id) a.setAttribute("aria-current", "true");
+        else a.removeAttribute("aria-current");
+      });
+    };
+    const io = new IntersectionObserver(
+      (entries) => {
+        // Of the sections currently in the "reading band", highlight the topmost.
+        const visible = entries.filter((en) => en.isIntersecting);
+        if (visible.length) {
+          visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          setCurrent(visible[0].target.id);
+        }
+      },
+      // A band across the middle of the viewport: a section is "current" while
+      // it crosses it. Top offset clears the sticky header.
+      { rootMargin: "-25% 0px -55% 0px" }
+    );
+    links.forEach((_, id) => {
+      const sec = document.getElementById(id);
+      if (sec) io.observe(sec);
+    });
   }
 
   /* ---------- Equal-height cert cards so "View Credential" lines up everywhere ---------- */
@@ -1119,7 +1151,11 @@
     if (!runners.length) return;
     const runAll = () => runners.forEach((r) => r());
     runAll();
-    window.addEventListener("resize", runAll);
+    let rt;
+    window.addEventListener("resize", () => {
+      clearTimeout(rt);
+      rt = setTimeout(runAll, 150); // debounced: avoids layout thrash during drag-resize
+    });
     window.addEventListener("load", runAll);
     // Re-measure once the web fonts have loaded (they change text height).
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(runAll);

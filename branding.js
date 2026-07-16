@@ -16,6 +16,21 @@
   // explode-away / fade-back transition instead of an instant switch.
   let onParticlesToggle = null;
 
+  // Keep the browser-chrome colour (Android address bar etc.) in sync with
+  // the active theme — a hardcoded dark value on a light page renders a
+  // mismatched dark bar around light content.
+  const syncThemeColor = () => {
+    const light = document.documentElement.getAttribute("data-theme") === "light";
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "theme-color";
+      document.head.appendChild(meta);
+    }
+    meta.content = light ? "#f4f3fb" : "#0b0a12";
+  };
+  syncThemeColor();
+
   // Build the tab icon from the SAME initials AND the same gradient as the
   // on-page logo (.brand), so the two actually match. Kept on a page
   // background-coloured backdrop (rather than transparent) so it stays
@@ -122,7 +137,13 @@
     const toggle = document.createElement("button");
     toggle.className = "theme-toggle";
     toggle.type = "button";
-    toggle.setAttribute("aria-label", "Toggle light and dark theme");
+    // The label names the ACTION (what pressing it does), so assistive tech
+    // hears the state implicitly — clearer than a static "toggle" label.
+    const syncThemeLabel = () => {
+      const isLight = document.documentElement.getAttribute("data-theme") === "light";
+      toggle.setAttribute("aria-label", isLight ? "Switch to dark theme" : "Switch to light theme");
+    };
+    syncThemeLabel();
     toggle.innerHTML =
       '<svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
       '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>' +
@@ -136,6 +157,8 @@
       const apply = () => {
         document.documentElement.setAttribute("data-theme", next);
         buildFavicon(); // keep the tab icon's gradient in sync with the theme
+        syncThemeColor();
+        syncThemeLabel();
         try {
           localStorage.setItem("theme", next);
         } catch (e) {}
@@ -183,6 +206,37 @@
       vt.finished.finally(() => document.documentElement.classList.remove("theme-vt"));
     });
 
+    // Résumé button, between the two toggles — created here (not main.js) so
+    // it exists on EVERY page's header, including project detail pages, where
+    // the site's one real CTA used to silently disappear. On the home page
+    // main.js's PDF modal intercepts the data-pdf click; on project pages
+    // (no main.js) the link simply opens the PDF in a new tab.
+    const RESUME = window.RESUME || {};
+    if (RESUME.show && RESUME.url) {
+      // Same GitHub-blob-to-local-path resolution main.js uses for certificates.
+      const toEmbed = (url) => {
+        const m = url.match(/github\.com\/[^/]+\/[^/]+\/blob\/[^/]+\/(.+\.pdf)$/i);
+        if (m) return m[1];
+        return /\.pdf($|\?)/i.test(url) ? url : "";
+      };
+      const label = RESUME.label || "Résumé";
+      const resumeBtn = document.createElement("a");
+      resumeBtn.className = "nav-resume-btn";
+      resumeBtn.href = RESUME.url;
+      resumeBtn.target = "_blank";
+      resumeBtn.rel = "noopener";
+      resumeBtn.setAttribute("data-pdf-title", (p.name || "") + " — Résumé");
+      resumeBtn.setAttribute("aria-label", label);
+      resumeBtn.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>' +
+        "<span>" + label + "</span>";
+      const embed = toEmbed(RESUME.url);
+      if (embed) resumeBtn.setAttribute("data-pdf", embed);
+      controls.appendChild(resumeBtn);
+    }
+
     // Start/stop the falling particles.
     const fxBtn = document.createElement("button");
     fxBtn.className = "fx-toggle";
@@ -193,7 +247,10 @@
       '<path d="M12 2l1.6 4.4L18 8l-4.4 1.6L12 14l-1.6-4.4L6 8l4.4-1.6z"/>' +
       '<path d="M18 13l.8 2.2L21 16l-2.2.8L18 19l-.8-2.2L15 16l2.2-.8z"/></svg>';
     controls.appendChild(fxBtn);
-    const syncFx = () => fxBtn.classList.toggle("off", !particlesEnabled);
+    const syncFx = () => {
+      fxBtn.classList.toggle("off", !particlesEnabled);
+      fxBtn.setAttribute("aria-pressed", particlesEnabled ? "true" : "false");
+    };
     syncFx();
     fxBtn.addEventListener("click", () => {
       particlesEnabled = !particlesEnabled;
@@ -215,6 +272,7 @@
       menuBtn.type = "button";
       menuBtn.setAttribute("aria-label", "Open menu");
       menuBtn.setAttribute("aria-expanded", "false");
+      if (navEl.id) menuBtn.setAttribute("aria-controls", navEl.id);
       menuBtn.innerHTML =
         '<svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>' +
         '<svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
@@ -231,6 +289,14 @@
       });
       document.addEventListener("click", (e) => {
         if (!header.contains(e.target)) setOpen(false);
+      });
+      // Escape dismisses the open menu and hands focus back to the button —
+      // standard disclosure-widget keyboard behaviour.
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && navEl.classList.contains("open")) {
+          setOpen(false);
+          menuBtn.focus();
+        }
       });
     }
     };

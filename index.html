@@ -6,9 +6,9 @@
   <title>Ikram Jeelani - Portfolio</title>
   <meta name="description" content="Projects, experience, skills, certifications and education — by Ikram Jeelani." />
   <meta name="author" content="Ikram Jeelani" />
-  <meta name="keywords" content="Ikram Jeelani, Mechatronics Engineer, embedded systems, robotics, firmware, control systems, PCB design, engineering portfolio" />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#0b0a12" />
+  <!-- Matches SETTINGS.theme's default; branding.js re-syncs it on toggle. -->
+  <meta name="theme-color" content="#f4f3fb" />
   <link rel="canonical" href="https://ikramjeelani.github.io/portfolio/" />
 
   <!-- Open Graph (Facebook, LinkedIn, Slack, iMessage, WhatsApp…)
@@ -66,28 +66,32 @@
   </script>
 </head>
 <body data-home>
+  <!-- Lets keyboard users bypass the header controls on every visit -->
+  <a class="skip-link" href="#sections">Skip to content</a>
+
   <!-- ===== Navigation ===== -->
   <header class="site-header">
     <a href="#home" class="brand" data-brand>IJ</a>
-    <nav id="navLinks"></nav>
+    <nav id="navLinks" aria-label="Sections"></nav>
   </header>
 
-  <!-- ===== Hero / Name ===== -->
-  <section id="home" class="hero">
-    <div class="hero-visual" aria-hidden="true">
-      <canvas class="hero-arm"></canvas>
-    </div>
-    <div class="hero-right">
-      <div class="hero-text">
-        <p class="eyebrow" data-role>Engineering Portfolio</p>
-        <h1 data-name>Ikram Jeelani</h1>
-        <p class="subtitle" data-bio></p>
+  <!-- ===== Main content: hero first (so the h1 lives inside the main
+       landmark), then the sections main.js injects in data.js order ===== -->
+  <main id="sections">
+    <section id="home" class="hero">
+      <div class="hero-visual">
+        <canvas class="hero-arm" aria-hidden="true"></canvas>
+        <p class="hero-arm-hint">click to drop a part</p>
       </div>
-    </div>
-  </section>
-
-  <!-- ===== Sections are injected here by main.js, in the order set in data.js ===== -->
-  <main id="sections"></main>
+      <div class="hero-right">
+        <div class="hero-text">
+          <p class="eyebrow" data-role>Engineering Portfolio</p>
+          <h1 data-name>Ikram Jeelani</h1>
+          <p class="subtitle" data-bio></p>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <footer class="site-footer">
     <p>&copy; <span data-year></span> <span data-name></span>. Built with HTML, CSS &amp; JavaScript.</p>
