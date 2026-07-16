@@ -178,7 +178,12 @@ h1, h2, h3,
   display: flex;
   flex-wrap: nowrap;
   justify-content: flex-end;
-  gap: 0.35rem 1.15rem;
+  /* Tight column-gap (not a smaller font) on purpose: shrinking the text
+     was tried and felt too small to read, so the word-spacing between
+     links is what's tightened instead — buys back the room needed to stay
+     inline through common laptop widths (1366px etc.) without touching
+     legibility. */
+  gap: 0.35rem 0.75rem;
 }
 .site-header nav a {
   position: relative;
@@ -1352,14 +1357,14 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 
 /* When the inline links would crowd the header's centered controls: collapse
    them into a dropdown menu instead of letting them squeeze together. Nav
-   bar then shows three things: brand · theme toggle · hamburger. 1600px
-   (not 1200px) because SECTIONS now has 7 entries (Experience and Projects
-   added) instead of 5 — measured the nav's own content width against the
-   controls group directly: the gap between them shrinks to an uncomfortable
-   ~16-27px below ~1535px, and is comfortable (~50px+) from ~1585px up.
-   1600px gives a clean, verified margin so the switch happens right before
-   crowding would start, not after. */
-@media (max-width: 1600px) {
+   bar then shows three things: brand · theme toggle · hamburger. Wanted
+   this to stay inline through real laptop widths (1366/1440/1536, all
+   measured comfortable — 51px+ gap), not just ultra-wide monitors, so the
+   nav's own item gap (below) was tightened rather than raising this
+   threshold sky-high: at the original wider gap even 1366px was only
+   ~16-18px from the controls. 1300px is the verified floor at the tightened
+   spacing — below that even the tighter nav can't fit without crowding. */
+@media (max-width: 1300px) {
   .nav-toggle { display: flex; }
   .site-header nav {
     grid-column: auto;
