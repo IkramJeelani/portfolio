@@ -1091,34 +1091,62 @@
 
   /* ---------- Scroll spy: mark the section you're reading in the nav ----------
      With 7 links on a long one-pager, the nav otherwise never tells you where
-     you are. aria-current carries the state for assistive tech; CSS styles it. */
+     you are. aria-current carries the state for assistive tech; CSS styles it.
+
+     An earlier version used IntersectionObserver with a thin "band" and
+     picked the entry with the smallest boundingClientRect.top among those
+     currently intersecting. That's backwards when two sections' enter/exit
+     events land in the same callback batch (common — one section's bottom
+     and the next one's top can cross the band together): the section
+     scrolled MOSTLY OFF-SCREEN above has the most negative (smallest) top,
+     so it kept winning over the section actually on screen, and stayed
+     stuck highlighted indefinitely. Simpler and correct: walk the sections
+     in document order and take the LAST one whose top has crossed a single
+     fixed line just below the header — i.e. "the last section we scrolled
+     into" — with no batching/ordering ambiguity possible. */
   function setupScrollSpy() {
-    const links = new Map(); // section id -> nav link
+    const links = new Map(); // section id -> nav link, in document order
     navRoot.querySelectorAll("a[href^='#']").forEach((a) => links.set(a.getAttribute("href").slice(1), a));
-    if (!links.size || !("IntersectionObserver" in window)) return;
+    if (!links.size) return;
+    const sections = [];
+    links.forEach((_, id) => {
+      const sec = document.getElementById(id);
+      if (sec) sections.push(sec);
+    });
+    if (!sections.length) return;
+
     const setCurrent = (id) => {
       links.forEach((a, key) => {
         if (key === id) a.setAttribute("aria-current", "true");
         else a.removeAttribute("aria-current");
       });
     };
-    const io = new IntersectionObserver(
-      (entries) => {
-        // Of the sections currently in the "reading band", highlight the topmost.
-        const visible = entries.filter((en) => en.isIntersecting);
-        if (visible.length) {
-          visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-          setCurrent(visible[0].target.id);
-        }
-      },
-      // A band across the middle of the viewport: a section is "current" while
-      // it crosses it. Top offset clears the sticky header.
-      { rootMargin: "-25% 0px -55% 0px" }
-    );
-    links.forEach((_, id) => {
-      const sec = document.getElementById(id);
-      if (sec) io.observe(sec);
-    });
+
+    const LINE = 120; // px from the viewport top — just clears the sticky header
+    let ticking = false;
+    const check = () => {
+      ticking = false;
+      let current = sections[0];
+      for (const sec of sections) {
+        if (sec.getBoundingClientRect().top - LINE <= 0) current = sec;
+      }
+      // Near the bottom of the page the last section may never reach the
+      // line (its own height can be shorter than the remaining scroll room),
+      // so force it active once there's nowhere further to scroll.
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (atBottom) current = sections[sections.length - 1];
+      setCurrent(current.id);
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(check);
+      }
+    };
+    check();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
   }
 
   /* ---------- Equal-height cert cards so "View Credential" lines up everywhere ---------- */
