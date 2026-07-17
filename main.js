@@ -1126,7 +1126,9 @@
     let ticking = false;
     const check = () => {
       ticking = false;
-      let current = sections[0];
+      // No default: while still above the first section (e.g. in the hero,
+      // which has no nav link of its own), nothing should be highlighted.
+      let current = null;
       for (const sec of sections) {
         if (sec.getBoundingClientRect().top - LINE <= 0) current = sec;
       }
@@ -1136,7 +1138,8 @@
       const atBottom =
         window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
       if (atBottom) current = sections[sections.length - 1];
-      setCurrent(current.id);
+      if (current) setCurrent(current.id);
+      else links.forEach((a) => a.removeAttribute("aria-current"));
     };
     const onScroll = () => {
       if (!ticking) {
