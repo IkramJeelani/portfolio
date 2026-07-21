@@ -688,9 +688,10 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   flex-direction: column;
 }
 .cert-name { font-weight: 700; font-size: 1.05rem; }
-/* Issuer·date sits directly under the title, so a short one-line name (e.g.
-   "MATLAB Onramp") doesn't leave a gap between the two. */
-.cert-meta { color: var(--muted); font-size: 0.9rem; margin-top: 0.35rem; }
+/* Issuer·date is pinned to the bottom of the card (margin-top:auto). Because
+   every card is equalized to the same height, this lands the date at the same
+   position on every card regardless of how many lines the title takes. */
+.cert-meta { color: var(--muted); font-size: 0.9rem; margin-top: auto; }
 .cert-logo { flex: 0 0 auto; width: 56px; height: 56px; object-fit: contain; }
 /* Open-in affordance, top-right of a card that has a viewable credential PDF.
    pointer-events:none — the whole card is the link; the icon is just a cue. */
