@@ -179,6 +179,13 @@ const CERTIFICATIONS = [
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
     url: "assets/Certifications/CSWA_AM.pdf",
   },
+  {
+    name: "MATLAB Onramp",
+    issuer: "MathWorks",
+    date: "Jul 2026",
+    logo: "assets/Logos/MathWorks_logo.jpg",
+    url: "assets/Certifications/MATLAB Onramp.pdf",
+  },
 ];
 
 /* ---------- 5b. EDUCATION ----------
