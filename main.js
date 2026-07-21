@@ -100,25 +100,34 @@
       .map((c, i) => {
         const delay = `--reveal-delay:${i * 70}ms`;
         const meta = [c.issuer, c.date].filter(Boolean).join(" · ");
+        // hasPdf is the single gate: a real credential PDF is available, so the
+        // card becomes a clickable link, shows the open-in icon, and tilts on
+        // hover. Without it (cert earned but no PDF yet) the card is a static tile.
+        const hasCred = c.hasPdf === true && !!c.url;
         const logo = c.logo
           ? `<img class="cert-logo" src="${c.logo}" alt="${c.issuer || c.name || "logo"}">`
           : `<div class="cert-logo" aria-hidden="true"></div>`;
+        // Top-right "open credential" affordance (external-link icon), only when
+        // there's a PDF to open. aria-hidden: the card's own aria-label names it.
+        const openIcon = hasCred
+          ? `<span class="cert-open" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span>`
+          : "";
         const inner = `
           ${logo}
+          ${openIcon}
           <div class="cert-text">
             <span class="cert-name">${c.name || ""}</span>
             ${meta ? `<span class="cert-meta">${meta}</span>` : ""}
-            ${c.url ? `<span class="cert-cta">View Credential &rarr;</span>` : ""}
           </div>`;
         const embed = toEmbed(c.url);
         const pdfAttr = embed ? ` data-pdf="${embed}"` : "";
         // aria-label gives screen readers one clean, purposeful name for the
         // whole card ("View credential — X") instead of reading every piece
-        // of visible text (logo alt, name, issuer, date, "View Credential")
-        // concatenated together as the link's accessible name.
-        return c.url
+        // of visible text (logo alt, name, issuer, date) concatenated together
+        // as the link's accessible name.
+        return hasCred
           ? `<a class="cert-card reveal" style="${delay}" href="${c.url}"${pdfAttr} target="_blank" rel="noopener" aria-label="View credential — ${c.name || ""}">${inner}</a>`
-          : `<div class="cert-card reveal" style="${delay}">${inner}</div>`;
+          : `<div class="cert-card reveal cert-static" style="${delay}">${inner}</div>`;
       })
       .join("");
     return { title: "Certifications", cls: "certifications", html: `<div class="card-grid">${cards}</div>` };
@@ -1222,7 +1231,7 @@
     if (reduced || !canHover) return;
 
     const MAX = 8; // degrees
-    document.querySelectorAll(".card, .cert-card").forEach((card) => {
+    document.querySelectorAll(".card, .cert-card:not(.cert-static)").forEach((card) => {
       card.addEventListener("pointerenter", () => {
         card.classList.add("tilting");
         card.style.transition = "transform 0.08s linear, box-shadow 0.25s ease";

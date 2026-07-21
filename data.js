@@ -142,7 +142,12 @@ const SKILLS = [
    Shown as a responsive card grid.
    `logo` (optional): an issuer/company logo shown on the card (no certificate scan
        is displayed). Put the file in assets/, e.g. "assets/siemens.png". "" = none.
-   `url`  (optional): link to the credential ("View Credential"). "" = none. */
+   `url`  (optional): link to the credential PDF. "" = none.
+   `hasPdf` (boolean): set true if you have the credential PDF (in `url`). When true,
+       a small open-in icon shows in the card's top-right corner, the card is
+       clickable (opens the PDF), and it gets the hover/tilt effect. Set false for a
+       cert you earned but don't have a PDF for yet — the icon and interactivity are
+       hidden and the card is just a static tile. */
 const CERTIFICATIONS = [
   {
     name: "Siemens Mechatronic Systems Certification Program (SMSCP) Assistant",
@@ -150,6 +155,7 @@ const CERTIFICATIONS = [
     date: "Sep 2024",
     logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/siemens.png"
     url: "assets/Certifications/SMSCP-Assistant.pdf",
+    hasPdf: true,
   },
   {
     name: "Altium Education - PCB Basic Design Course",
@@ -157,6 +163,7 @@ const CERTIFICATIONS = [
     date: "Nov 2025",
     logo: "assets/Logos/altium_logo.jpg",
     url: "assets/Certifications/Altium Education - PCB Basic Design Course.pdf",
+    hasPdf: true,
   },
   {
     name: "Certified SOLIDWORKS Design Associate (CSWA)",
@@ -164,6 +171,7 @@ const CERTIFICATIONS = [
     date: "May 2026",
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
     url: "assets/Certifications/CSWA.pdf",
+    hasPdf: true,
   },
   {
     name: "Certified SOLIDWORKS Design Professional (CSWP)",
@@ -171,6 +179,7 @@ const CERTIFICATIONS = [
     date: "Jun 2026",
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
     url: "assets/Certifications/CSWP.pdf",
+    hasPdf: true,
   },
   {
     name: "Certified SOLIDWORKS Additive Manufacturing Associate (CSWA-AM)",
@@ -178,6 +187,7 @@ const CERTIFICATIONS = [
     date: "Jun 2026",
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
     url: "assets/Certifications/CSWA_AM.pdf",
+    hasPdf: true,
   },
   {
     name: "MATLAB Onramp",
@@ -185,6 +195,7 @@ const CERTIFICATIONS = [
     date: "Jul 2026",
     logo: "assets/Logos/MathWorks_logo.jpg",
     url: "assets/Certifications/MATLAB Onramp.pdf",
+    hasPdf: true,
   },
 ];
 
