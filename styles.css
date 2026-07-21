@@ -686,14 +686,21 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   flex: 1 1 auto; /* fills the card height so the CTA can sit at the bottom */
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
 }
 .cert-name { font-weight: 700; font-size: 1.05rem; }
-.cert-meta { color: var(--muted); font-size: 0.9rem; }
-.cert-cta { color: var(--accent); font-weight: 600; font-size: 0.9rem; }
-/* issuer·date + View Credential sit together, with a generous gap after the name
-   (bigger than the gap between them, so the issuer reads as closer to View Credential) */
-.cert-foot { margin-top: 1.75rem; display: flex; flex-direction: column; gap: 0.45rem; }
+/* Issuer·date sits directly under the title, so a short one-line name (e.g.
+   "MATLAB Onramp") doesn't leave a gap between the two. "View Credential" is
+   pushed to the card bottom (margin-top:auto) instead, so it still lines up
+   across every card whatever the title length; the padding-top keeps a minimum
+   gap above it even on the tallest card. */
+.cert-meta { color: var(--muted); font-size: 0.9rem; margin-top: 0.35rem; }
+.cert-cta {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: auto;
+  padding-top: 1.75rem;
+}
 .cert-logo { flex: 0 0 auto; width: 56px; height: 56px; object-fit: contain; }
 
 /* Certifications grid: centred so partial rows are symmetric about the centre.

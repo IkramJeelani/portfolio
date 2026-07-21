@@ -107,10 +107,8 @@
           ${logo}
           <div class="cert-text">
             <span class="cert-name">${c.name || ""}</span>
-            <div class="cert-foot">
-              ${meta ? `<span class="cert-meta">${meta}</span>` : ""}
-              ${c.url ? `<span class="cert-cta">View Credential &rarr;</span>` : ""}
-            </div>
+            ${meta ? `<span class="cert-meta">${meta}</span>` : ""}
+            ${c.url ? `<span class="cert-cta">View Credential &rarr;</span>` : ""}
           </div>`;
         const embed = toEmbed(c.url);
         const pdfAttr = embed ? ` data-pdf="${embed}"` : "";
@@ -1161,7 +1159,11 @@
     // description, the tags and "View details" all line up at the same
     // position across every project card, whatever the title/description length.
     const groups = [
-      { id: "certifications", sel: ".cert-name" },
+      // Equalize the whole cert card height (not just the title) so every card
+      // is the same size; the CTA is pinned to the bottom in CSS, so it lines
+      // up across cards without stretching the title and leaving a gap under
+      // short one-line names.
+      { id: "certifications", sel: ".cert-card" },
       { id: "projects", sel: ".card-title" },
       { id: "projects", sel: ".card-tagline" },
       { id: "projects", sel: ".card-foot .tags" },
