@@ -51,8 +51,8 @@ const RESUME = {
    ============================================================================ */
 const SECTIONS = [
   "about",
-  "experience",
-  "projects",
+  //"experience",
+  //"projects",
   "skills",
   "certifications",
   "education",
