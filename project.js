@@ -91,27 +91,17 @@
     <div class="project-links">${linksHtml}</div>
     ${pagerHtml}`;
 
-  // Any project→project hop records the dock's reel position first, so the
-  // next page can pick the list up exactly where it was (assigned below,
-  // once the dock exists).
-  let saveDock = () => {};
-
   // ←/→ step through projects (ignored while typing or with modifiers held).
   document.addEventListener("keydown", (e) => {
     if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
     const t = e.target;
     if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
     if (e.key === "ArrowLeft" && prevP) {
-      saveDock();
       location.href = "project.html?id=" + encodeURIComponent(prevP.id);
     } else if (e.key === "ArrowRight" && nextP) {
-      saveDock();
       location.href = "project.html?id=" + encodeURIComponent(nextP.id);
     }
   });
-  page.querySelectorAll(".pager-card").forEach((a) =>
-    a.addEventListener("click", () => saveDock())
-  );
 
   // "Back to projects" — flag a return so the home page restores scroll + morphs the hero.
   const backLink = page.querySelector(".back-link");
@@ -169,18 +159,6 @@
 
   const viewport = dock.querySelector(".dock-viewport");
   const reel = dock.querySelector(".dock-reel");
-  const reducedMotion =
-    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  saveDock = () => {
-    try {
-      sessionStorage.setItem("dockScroll", String(Math.round(viewport.scrollTop)));
-      sessionStorage.setItem("dockNav", "1");
-    } catch (e) {}
-  };
-  reel.addEventListener("click", (e) => {
-    if (e.target.closest(".dock-card")) saveDock();
-  });
 
   // Vertical location line beside the dock (custom scroll-position indicator).
   const rail = document.createElement("div");
@@ -258,25 +236,12 @@
     centerActive(false);
     updateRail();
   };
-  // Arriving from another project (dock / pager / arrow keys): start the reel
-  // exactly where it was on the previous page, then GLIDE the new selection
-  // into the centre — you see the list move to the new spot instead of an
-  // instant, disorienting reshuffle.
-  let cameFromProject = false;
-  let savedReel = null;
-  try {
-    cameFromProject = sessionStorage.getItem("dockNav") === "1";
-    savedReel = sessionStorage.getItem("dockScroll");
-    sessionStorage.removeItem("dockNav");
-  } catch (e) {}
-  if (cameFromProject && savedReel !== null) {
-    viewport.scrollTop = +savedReel;
-    updateRail();
-    setTimeout(() => centerActive(!reducedMotion), 450); // after the page transition settles
-  } else {
-    centerActive(false);
-    updateRail();
-  }
+  // The reel is always centred on the active card immediately (pre-paint), so
+  // the dock looks identical however you arrive — the view transition simply
+  // crossfades it in place. (Previously it restored the old reel position and
+  // then smooth-scrolled to centre 450ms later; the glide's length varied per
+  // hop, which is exactly what felt erratic.)
+  layoutDock();
   window.addEventListener("resize", layoutDock);
   if (document.fonts && document.fonts.ready)
     document.fonts.ready.then(() => {

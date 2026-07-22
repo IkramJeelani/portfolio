@@ -863,15 +863,14 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   gap: 1.5rem;
   perspective: 1100px; /* enables the 3D tilt of cards */
 }
-/* Projects grid: centred so partial rows are symmetric (like certifications) */
+/* Projects: one landscape card per row (text left · image right) */
 .projects .card-grid {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  max-width: 960px;
+  flex-direction: column;
+  max-width: 840px;
   margin: 0 auto;
 }
-.projects .card { flex: 0 1 300px; }
+.projects .card { width: 100%; }
 
 /* ===== Card ===== */
 .card {
@@ -884,7 +883,9 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   transition: transform 0.25s ease, border-color 0.2s, box-shadow 0.25s ease;
   transform-style: preserve-3d;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: stretch;
+  min-height: 220px; /* landscape: always wider than tall */
 }
 .card:hover { transform: translateY(-6px); border-color: var(--accent); }
 
@@ -909,27 +910,36 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .card.tilting::after,
 .cert-card.tilting::after { opacity: 1; }
 .card-img {
-  height: 200px;
+  flex: 0 0 300px; /* fixed image column on the right — same on every card */
   background-size: cover;
   background-position: center;
   background-color: var(--bg-soft);
-  border-radius: var(--radius) var(--radius) 0 0; /* matches the morph target's rounding */
+  border-radius: 0 var(--radius) var(--radius) 0; /* matches the morph target's rounding */
 }
-.card-body { padding: 1.25rem; display: flex; flex-direction: column; }
+.card-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
 .card-title { margin: 0 0 0.35rem; font-size: 1.25rem; }
 .card-date {
-  margin: 0 0 0.6rem;
+  margin: 0;
   color: var(--accent);
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
-.card-tagline { margin: 0; color: var(--muted); font-size: 0.95rem; }
-/* tags + View details grouped at the bottom; the gap sits above the tags (after the description) */
-.card-foot { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
-.card-foot .tags { margin: 0; align-content: flex-start; }
-.card-cta { color: var(--accent); font-weight: 600; font-size: 0.95rem; }
+/* tags pinned to the card bottom — same position on every card */
+.card-body .tags { margin: auto 0 0; padding-top: 1rem; align-content: flex-start; }
+
+/* Narrow screens: stack — image on top, text under it */
+@media (max-width: 640px) {
+  .card { flex-direction: column-reverse; min-height: 0; }
+  .card-img { flex: 0 0 auto; height: 190px; border-radius: var(--radius) var(--radius) 0 0; }
+}
 
 /* ===== Contact ===== */
 .contact {
@@ -1643,18 +1653,24 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   .pdf-box { width: 96vw; height: 92vh; }
 }
 
-/* ===== Smooth cross-page morph when opening / leaving a project ===== */
+/* ===== Cross-page transitions =====
+   ONE uniform, quick crossfade for every navigation — no zoom, no per-route
+   variation. The previous scale(0.98→1.02) zoom ran on top of the hero morph
+   and read differently depending on where the clicked card sat on screen,
+   which is why each click felt like a slightly different animation. */
 @view-transition { navigation: auto; }
-::view-transition-old(root) { animation: vt-out 0.4s ease both; }
-::view-transition-new(root) { animation: vt-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-@keyframes vt-out { to { opacity: 0; transform: scale(0.98); } }
-@keyframes vt-in { from { opacity: 0; transform: scale(1.02); } }
+::view-transition-old(root) { animation: vt-out 0.22s ease both; }
+::view-transition-new(root) { animation: vt-in 0.26s ease both; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; } }
 
-/* Shared-element morph: the clicked project image grows into the detail hero (and back).
-   main.js tags the clicked card image with this same name before navigating. */
+/* Shared-element morph: the clicked project image grows into the detail hero
+   (and back). main.js tags the clicked card image with this same name before
+   navigating — and on return, ONLY on the explicit "Back to projects" path,
+   so the morph always plays between two on-screen elements. */
 .project-hero { view-transition-name: project-hero; }
 ::view-transition-group(project-hero) {
-  animation-duration: 0.5s;
+  animation-duration: 0.45s;
   animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
   border-radius: var(--radius);
 }
@@ -1662,17 +1678,19 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 ::view-transition-image-pair(project-hero) { border-radius: var(--radius); overflow: hidden; }
 
 /* Project→project navigation: the dock (and its reveal tab) get their own
-   snapshots so they stay ANCHORED while the page content swaps around them,
-   and the "active card" highlight visibly slides from the old selection to
-   the new one — you always know where you are in the list. */
+   snapshots so they stay ANCHORED while the page content swaps around them.
+   The reel is pre-centred on the active card on both sides of the swap, so
+   the dock simply crossfades in place — no sliding highlight, no post-hop
+   glide (both removed: their distance varied per hop, which felt erratic). */
 .project-dock { view-transition-name: project-dock; }
 .dock-reveal.show { view-transition-name: dock-tab; }
-.dock-card.active { view-transition-name: dock-active; }
-::view-transition-group(dock-active) {
-  animation-duration: 0.45s;
-  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+/* Reduced motion: swap pages instantly — no fades, no morphs */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-group(*) { animation: none !important; }
 }
-::view-transition-image-pair(dock-active) { border-radius: 12px; overflow: hidden; }
 
 /* ===== Theme toggle: new theme expands as a circle from the toggle button =====
    .theme-vt is set by branding.js only for the toggle's own view transition. */

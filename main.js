@@ -61,20 +61,17 @@
     const cards = list
       .map((p, i) => {
         const tech = (p.tech || []).map((t) => `<span class="tag">${t}</span>`).join("");
+        // Wide, landscape card: text column (title / date / tags) on the left,
+        // image on the right. No tagline, no CTA text — the whole card is the
+        // link and the tilt/hover is the affordance (same treatment as certs).
         return `
           <a class="card reveal" style="--reveal-delay:${i * 70}ms" href="project.html?id=${encodeURIComponent(p.id)}" aria-label="View details — ${p.title || ""}">
-            <div class="card-img" style="background-image:url('${p.image}')"></div>
             <div class="card-body">
-              <div class="card-main">
-                <h3 class="card-title">${p.title}</h3>
-                ${p.date ? `<p class="card-date">${p.date}</p>` : ""}
-                <p class="card-tagline">${p.tagline || ""}</p>
-              </div>
-              <div class="card-foot">
-                ${tech ? `<div class="tags">${tech}</div>` : ""}
-                <span class="card-cta">View details &rarr;</span>
-              </div>
+              <h3 class="card-title">${p.title}</h3>
+              ${p.date ? `<p class="card-date">${p.date}</p>` : ""}
+              ${tech ? `<div class="tags">${tech}</div>` : ""}
             </div>
+            <div class="card-img" style="background-image:url('${p.image}')"></div>
           </a>`;
       })
       .join("");
@@ -892,14 +889,13 @@
     if (!projSec) return;
     const cardFor = (id) => projSec.querySelector(`a.card[href$="id=${id}"]`);
 
-    // Returning from a project (from any depth): tag the card so the hero morphs back
-    // into it, and restore the exact scroll position instead of jumping to the top.
+    // Returning via "Back to projects" ONLY: restore the exact scroll position
+    // and tag the card so the hero morphs back into it. Every other way of
+    // arriving (brand link, fresh visit, browser back) gets the plain
+    // crossfade — previously the card was tagged on EVERY index load, so e.g.
+    // clicking the brand logo sent the hero flying to an off-screen card:
+    // a different animation depending on how you left. One path, one animation.
     try {
-      const last = sessionStorage.getItem("lastProject");
-      if (last) {
-        const img = cardFor(last) && cardFor(last).querySelector(".card-img");
-        if (img) img.style.viewTransitionName = "project-hero";
-      }
       if (sessionStorage.getItem("returnToProjects")) {
         sessionStorage.removeItem("returnToProjects");
         const y = parseInt(sessionStorage.getItem("indexScroll") || "", 10);
@@ -910,6 +906,17 @@
           window.scrollTo(0, y);
           root.style.scrollBehavior = prev;
         }
+        const last = sessionStorage.getItem("lastProject");
+        const card = last && cardFor(last);
+        const img = card && card.querySelector(".card-img");
+        if (img) img.style.viewTransitionName = "project-hero";
+        // The morph target must be VISIBLE at first paint. .reveal elements
+        // start at opacity:0 until IntersectionObserver fires — but IO is
+        // async and lands AFTER the view-transition snapshot, so the hero
+        // would morph into an empty slot and the grid would then replay its
+        // entrance stagger. The visitor has already seen this page: mark
+        // everything revealed up front (pre-paint, so nothing animates).
+        document.querySelectorAll(".reveal").forEach((el) => el.classList.add("in"));
       }
     } catch (e) {}
 
@@ -1173,9 +1180,11 @@
       // up across cards without stretching the title and leaving a gap under
       // short one-line names.
       { id: "certifications", sel: ".cert-card" },
+      // Title block equalized first so the date sits at the same spot on every
+      // card, then the whole card so all cards are the same size (tags are
+      // bottom-pinned in CSS).
       { id: "projects", sel: ".card-title" },
-      { id: "projects", sel: ".card-tagline" },
-      { id: "projects", sel: ".card-foot .tags" },
+      { id: "projects", sel: ".card" },
     ];
     const runners = [];
     groups.forEach(({ id, sel }) => {
