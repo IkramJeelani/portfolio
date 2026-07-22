@@ -9,6 +9,28 @@
   const reduced =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* Run `cb` whenever the display's pixel density changes — e.g. the window is
+     dragged to a second monitor with a different scale factor. HTML/CSS/SVG
+     re-rasterize themselves; <canvas> does not, so anything canvas-backed has
+     to rebuild its buffer. The query is pinned to the DPR it was built with,
+     so it has to be re-armed after each change. */
+  function onDprChange(cb) {
+    if (!window.matchMedia) return;
+    const arm = () => {
+      const mq = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
+      if (!mq.addEventListener) return; // very old browser: skip, no re-render
+      mq.addEventListener(
+        "change",
+        () => {
+          cb();
+          arm();
+        },
+        { once: true }
+      );
+    };
+    arm();
+  }
+
   // Turn a GitHub "blob" PDF link into a same-origin path we can embed in a popup.
   function toEmbed(url) {
     if (!url) return "";
@@ -318,10 +340,22 @@
     const ctx = canvas.getContext("2d");
     const W = 520;
     const H = 450;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = W * dpr;
-    canvas.height = H * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // Size the backing store for the CURRENT display density, and redo it
+    // whenever that density changes. Dragging the window to a monitor with a
+    // different scale factor changes devicePixelRatio, but a canvas keeps the
+    // buffer it was given — so it stays at the old resolution and looks soft
+    // on the denser screen. (drawFrame re-sets every style each frame, so only
+    // the transform needs restoring after the resize wipes the context state.)
+    const applyDpr = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // round: fractional ratios (Windows 125% => 1.25) otherwise truncate,
+      // clipping a sliver off the bottom/right edge of the drawing
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    applyDpr();
+    onDprChange(applyDpr);
 
     const base = { x: W * 0.54, y: H * 0.87 };
     const L = [148, 116, 82];
@@ -1047,6 +1081,13 @@
         await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
       }
     }
+
+    // Same reason as the hero canvas: the rendered pages are bitmaps sized for
+    // one display density. Re-render them if the window moves to a monitor with
+    // a different one, otherwise an open certificate stays soft until reopened.
+    onDprChange(() => {
+      if (pdfDoc) renderPages();
+    });
 
     let opener = null; // element to hand focus back to when the dialog closes
 
