@@ -17,7 +17,7 @@ const SETTINGS = {
 const PROFILE = {
   name: "Ikram Jeelani",
   initials: "IJ", // shown top-left AND as the browser-tab icon (kept in sync)
-  role: "Engineering Portfolio",
+  role: "Mechatronic Engineering Student",
   bio: "",
 };
 
