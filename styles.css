@@ -925,10 +925,32 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
-/* tags + View details grouped at the bottom; the gap sits above the tags */
+/* tags grouped at the bottom; the gap sits above the tags */
 .card-foot { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
 .card-foot .tags { margin: 0; align-content: flex-start; }
-.card-cta { color: var(--accent); font-weight: 600; font-size: 0.95rem; }
+/* Open-in affordance, top-right of the card (over the image). Circular chip so
+   it stays legible on any image; z-index clears the tilt glare (::after, z 5).
+   pointer-events:none — the whole card is the link; the icon is just a cue. */
+.card-open {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  z-index: 6;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--accent);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  opacity: 0.9;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.card-open svg { width: 17px; height: 17px; display: block; }
+.card:hover .card-open,
+.card:focus-visible .card-open { opacity: 1; transform: translate(1px, -1px); }
 
 /* ===== Contact ===== */
 .contact {

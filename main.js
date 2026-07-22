@@ -61,9 +61,14 @@
     const cards = list
       .map((p, i) => {
         const tech = (p.tech || []).map((t) => `<span class="tag">${t}</span>`).join("");
+        // Top-right open-in icon (external-link), same affordance as the cert
+        // cards — the whole card is the link, so it's aria-hidden. A circular
+        // chip keeps it legible over any project image behind it.
+        const openIcon = `<span class="card-open" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span>`;
         return `
           <a class="card reveal" style="--reveal-delay:${i * 70}ms" href="project.html?id=${encodeURIComponent(p.id)}" aria-label="View details — ${p.title || ""}">
             <div class="card-img" style="background-image:url('${p.image}')"></div>
+            ${openIcon}
             <div class="card-body">
               <div class="card-main">
                 <h3 class="card-title">${p.title}</h3>
@@ -71,7 +76,6 @@
               </div>
               <div class="card-foot">
                 ${tech ? `<div class="tags">${tech}</div>` : ""}
-                <span class="card-cta">View details &rarr;</span>
               </div>
             </div>
           </a>`;
