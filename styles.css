@@ -863,16 +863,15 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   gap: 1.5rem;
   perspective: 1100px; /* enables the 3D tilt of cards */
 }
-/* Projects: two landscape cards per row (text left · image right) */
+/* Projects grid: centred so partial rows are symmetric (like certifications) */
 .projects .card-grid {
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   max-width: 960px;
   margin: 0 auto;
 }
-/* single column once two landscape cards can't both fit comfortably */
-@media (max-width: 860px) {
-  .projects .card-grid { grid-template-columns: 1fr; max-width: 640px; }
-}
+.projects .card { flex: 0 1 300px; }
 
 /* ===== Card ===== */
 .card {
@@ -885,9 +884,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   transition: transform 0.25s ease, border-color 0.2s, box-shadow 0.25s ease;
   transform-style: preserve-3d;
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  min-height: 220px; /* landscape: always wider than tall */
+  flex-direction: column;
 }
 .card:hover { transform: translateY(-6px); border-color: var(--accent); }
 
@@ -912,36 +909,26 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .card.tilting::after,
 .cert-card.tilting::after { opacity: 1; }
 .card-img {
-  flex: 0 0 40%; /* image column on the right — same proportion on every card */
+  height: 200px;
   background-size: cover;
   background-position: center;
   background-color: var(--bg-soft);
-  border-radius: 0 var(--radius) var(--radius) 0; /* matches the morph target's rounding */
+  border-radius: var(--radius) var(--radius) 0 0; /* matches the morph target's rounding */
 }
-.card-body {
-  flex: 1 1 auto;
-  min-width: 0;
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-}
+.card-body { padding: 1.25rem; display: flex; flex-direction: column; }
 .card-title { margin: 0 0 0.35rem; font-size: 1.25rem; }
 .card-date {
-  margin: 0;
+  margin: 0 0 0.6rem;
   color: var(--accent);
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
-/* tags pinned to the card bottom — same position on every card */
-.card-body .tags { margin: auto 0 0; padding-top: 1rem; align-content: flex-start; }
-
-/* Narrow screens: stack — image on top, text under it */
-@media (max-width: 640px) {
-  .card { flex-direction: column-reverse; min-height: 0; }
-  .card-img { flex: 0 0 auto; height: 190px; border-radius: var(--radius) var(--radius) 0 0; }
-}
+/* tags + View details grouped at the bottom; the gap sits above the tags */
+.card-foot { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
+.card-foot .tags { margin: 0; align-content: flex-start; }
+.card-cta { color: var(--accent); font-weight: 600; font-size: 0.95rem; }
 
 /* ===== Contact ===== */
 .contact {

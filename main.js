@@ -61,17 +61,19 @@
     const cards = list
       .map((p, i) => {
         const tech = (p.tech || []).map((t) => `<span class="tag">${t}</span>`).join("");
-        // Wide, landscape card: text column (title / date / tags) on the left,
-        // image on the right. No tagline, no CTA text — the whole card is the
-        // link and the tilt/hover is the affordance (same treatment as certs).
         return `
           <a class="card reveal" style="--reveal-delay:${i * 70}ms" href="project.html?id=${encodeURIComponent(p.id)}" aria-label="View details — ${p.title || ""}">
-            <div class="card-body">
-              <h3 class="card-title">${p.title}</h3>
-              ${p.date ? `<p class="card-date">${p.date}</p>` : ""}
-              ${tech ? `<div class="tags">${tech}</div>` : ""}
-            </div>
             <div class="card-img" style="background-image:url('${p.image}')"></div>
+            <div class="card-body">
+              <div class="card-main">
+                <h3 class="card-title">${p.title}</h3>
+                ${p.date ? `<p class="card-date">${p.date}</p>` : ""}
+              </div>
+              <div class="card-foot">
+                ${tech ? `<div class="tags">${tech}</div>` : ""}
+                <span class="card-cta">View details &rarr;</span>
+              </div>
+            </div>
           </a>`;
       })
       .join("");
@@ -1180,11 +1182,8 @@
       // up across cards without stretching the title and leaving a gap under
       // short one-line names.
       { id: "certifications", sel: ".cert-card" },
-      // Title block equalized first so the date sits at the same spot on every
-      // card, then the whole card so all cards are the same size (tags are
-      // bottom-pinned in CSS).
       { id: "projects", sel: ".card-title" },
-      { id: "projects", sel: ".card" },
+      { id: "projects", sel: ".card-foot .tags" },
     ];
     const runners = [];
     groups.forEach(({ id, sel }) => {
