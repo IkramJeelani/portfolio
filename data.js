@@ -197,6 +197,14 @@ const CERTIFICATIONS = [
     url: "assets/Certifications/MATLAB Onramp.pdf",
     hasPdf: true,
   },
+  {
+    name: "Simulink Onramp",
+    issuer: "MathWorks",
+    date: "Jul 2026",
+    logo: "assets/Logos/MathWorks_logo.jpg",
+    url: "assets/Certifications/Simulink Onramp.pdf",
+    hasPdf: true,
+  },
 ];
 
 /* ---------- 5b. EDUCATION ----------
