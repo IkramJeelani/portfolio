@@ -147,7 +147,28 @@ const SKILLS = [
        a small open-in icon shows in the card's top-right corner, the card is
        clickable (opens the PDF), and it gets the hover/tilt effect. Set false for a
        cert you earned but don't have a PDF for yet — the icon and interactivity are
-       hidden and the card is just a static tile. */
+       hidden and the card is just a static tile.
+   `tags` (optional): topics this cert belongs to, used by the filter buttons above
+       the cards. Must match names in CERT_FILTERS below. A cert with no tags only
+       shows when no filter is active. */
+
+/* Filter buttons shown above the certification cards, in this order.
+   Add/remove/rename freely — just keep the names in sync with the `tags` on each
+   cert below. A filter whose name no cert uses is hidden automatically, so it's
+   safe to list topics you're planning to add later. Selecting several filters
+   shows any cert matching AT LEAST ONE of them.
+   Delete this array (or leave it empty) to auto-build the buttons from whatever
+   tags the certs actually use, alphabetically. */
+const CERT_FILTERS = [
+  "Mechanical",
+  "Electrical",
+  "Mechatronics",
+  "Robotics",
+  "Control Systems",
+  "CAD",
+  "Manufacturing",
+  "Programming",
+];
 const CERTIFICATIONS = [
   {
     name: "Siemens Mechatronic Systems Certification Program (SMSCP) Assistant",
@@ -156,6 +177,7 @@ const CERTIFICATIONS = [
     logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/siemens.png"
     url: "assets/Certifications/SMSCP-Assistant.pdf",
     hasPdf: true,
+    tags: ["Mechatronics", "Mechanical", "Electrical"],
   },
   {
     name: "Altium Education - PCB Basic Design Course",
@@ -164,6 +186,7 @@ const CERTIFICATIONS = [
     logo: "assets/Logos/altium_logo.jpg",
     url: "assets/Certifications/Altium Education - PCB Basic Design Course.pdf",
     hasPdf: true,
+    tags: ["Electrical", "CAD"],
   },
   {
     name: "Certified SOLIDWORKS Design Associate (CSWA)",
@@ -172,6 +195,7 @@ const CERTIFICATIONS = [
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
     url: "assets/Certifications/CSWA.pdf",
     hasPdf: true,
+    tags: ["Mechanical", "CAD"],
   },
   {
     name: "Certified SOLIDWORKS Design Professional (CSWP)",
@@ -180,6 +204,7 @@ const CERTIFICATIONS = [
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
     url: "assets/Certifications/CSWP.pdf",
     hasPdf: true,
+    tags: ["Mechanical", "CAD"],
   },
   {
     name: "Certified SOLIDWORKS Additive Manufacturing Associate (CSWA-AM)",
@@ -188,6 +213,7 @@ const CERTIFICATIONS = [
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
     url: "assets/Certifications/CSWA_AM.pdf",
     hasPdf: true,
+    tags: ["Mechanical", "CAD", "Manufacturing"],
   },
   {
     name: "MATLAB Onramp",
@@ -196,6 +222,7 @@ const CERTIFICATIONS = [
     logo: "assets/Logos/MathWorks_logo.jpg",
     url: "assets/Certifications/MATLAB Onramp.pdf",
     hasPdf: true,
+    tags: ["Programming", "Control Systems"],
   },
   {
     name: "Simulink Onramp",
@@ -204,6 +231,7 @@ const CERTIFICATIONS = [
     logo: "assets/Logos/MathWorks_logo.jpg",
     url: "assets/Certifications/Simulink Onramp.pdf",
     hasPdf: true,
+    tags: ["Programming", "Control Systems"],
   },
   {
     name: "Control Design Onramp with Simulink",
@@ -212,6 +240,7 @@ const CERTIFICATIONS = [
     logo: "assets/Logos/MathWorks_logo.jpg",
     url: "assets/Certifications/Control Design Onramp with Simulink.pdf",
     hasPdf: true,
+    tags: ["Control Systems", "Programming"],
   },
 ];
 
@@ -501,6 +530,7 @@ window.ABOUT = ABOUT;
 window.EXPERIENCE = EXPERIENCE;
 window.SKILLS = SKILLS;
 window.CERTIFICATIONS = CERTIFICATIONS;
+window.CERT_FILTERS = CERT_FILTERS;
 window.EDUCATION = EDUCATION;
 window.PROJECTS = PROJECTS;
 window.CONTACTS = CONTACTS;
