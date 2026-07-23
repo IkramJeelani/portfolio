@@ -205,6 +205,14 @@ const CERTIFICATIONS = [
     url: "assets/Certifications/Simulink Onramp.pdf",
     hasPdf: true,
   },
+  {
+    name: "Control Design Onramp with Simulink",
+    issuer: "MathWorks",
+    date: "Jul 2026",
+    logo: "assets/Logos/MathWorks_logo.jpg",
+    url: "assets/Certifications/Control Design Onramp with Simulink.pdf",
+    hasPdf: true,
+  },
 ];
 
 /* ---------- 5b. EDUCATION ----------
