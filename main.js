@@ -244,6 +244,7 @@
   setupReveal();
   setupTilt();
   setupSectionFlash();
+  setupCertTint();
   setupEqualize();
   setupTimelineWidth();
   setupPdfModal();
@@ -1212,6 +1213,63 @@
     check();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
+  }
+
+  /* ---------- Tint each cert card with its logo's brand colour ----------
+     Samples the logo's most saturated colour and applies it as a faint wash
+     over the card + a hinted border. Same-origin logos, so the canvas isn't
+     tainted. Grayscale logos (black text on white) yield no colour and are
+     left untinted rather than smeared with a muddy grey. */
+  function dominantLogoColor(img) {
+    try {
+      const S = 32;
+      const cv = document.createElement("canvas");
+      cv.width = S;
+      cv.height = S;
+      const ctx = cv.getContext("2d", { willReadFrequently: true });
+      ctx.drawImage(img, 0, 0, S, S);
+      const data = ctx.getImageData(0, 0, S, S).data;
+      const buckets = new Map(); // coarse colour bucket -> saturation-weighted sum
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
+        if (a < 128) continue;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        if (min > 225) continue; // near-white (logo backdrop)
+        if (max < 28) continue; //  near-black (text/outlines)
+        const sat = max - min;
+        if (sat < 22) continue; //  greyscale — carries no brand hue
+        const key = ((r >> 4) << 8) | ((g >> 4) << 4) | (b >> 4);
+        let e = buckets.get(key);
+        if (!e) buckets.set(key, (e = { w: 0, r: 0, g: 0, b: 0 }));
+        e.w += sat;
+        e.r += r * sat;
+        e.g += g * sat;
+        e.b += b * sat;
+      }
+      if (!buckets.size) return null;
+      let best = null;
+      buckets.forEach((e) => {
+        if (!best || e.w > best.w) best = e;
+      });
+      return [Math.round(best.r / best.w), Math.round(best.g / best.w), Math.round(best.b / best.w)];
+    } catch (e) {
+      return null; // e.g. a tainted canvas — just skip the tint
+    }
+  }
+  function setupCertTint() {
+    const cards = document.querySelectorAll("#certifications .cert-card");
+    cards.forEach((card) => {
+      const img = card.querySelector("img.cert-logo");
+      if (!img) return;
+      const apply = () => {
+        const rgb = dominantLogoColor(img);
+        if (!rgb) return;
+        card.style.setProperty("--cert-tint", rgb.join(", "));
+        card.classList.add("cert-tinted");
+      };
+      if (img.complete && img.naturalWidth) apply();
+      else img.addEventListener("load", apply, { once: true });
+    });
   }
 
   /* ---------- Equal-height cert cards so every card is the same size ---------- */

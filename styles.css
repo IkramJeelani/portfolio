@@ -680,6 +680,21 @@ h1, h2, h3,
   transform-style: preserve-3d;
 }
 a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
+/* Faint wash of the logo's brand colour (--cert-tint set by main.js). Layered
+   over the card's own background-color, so only the gradient carries the hue. */
+.cert-tinted {
+  background-image: linear-gradient(
+    150deg,
+    rgba(var(--cert-tint), 0.16),
+    rgba(var(--cert-tint), 0.03) 62%
+  );
+  border-color: rgba(var(--cert-tint), 0.4);
+}
+@media (prefers-color-scheme: dark) {
+  .cert-tinted { background-image: linear-gradient(150deg, rgba(var(--cert-tint), 0.24), rgba(var(--cert-tint), 0.05) 62%); }
+}
+:root[data-theme="dark"] .cert-tinted { background-image: linear-gradient(150deg, rgba(var(--cert-tint), 0.24), rgba(var(--cert-tint), 0.05) 62%); }
+:root[data-theme="light"] .cert-tinted { background-image: linear-gradient(150deg, rgba(var(--cert-tint), 0.16), rgba(var(--cert-tint), 0.03) 62%); }
 .cert-text {
   width: 100%;
   min-width: 0;
