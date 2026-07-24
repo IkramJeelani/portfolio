@@ -9,12 +9,6 @@
   const reduced =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* Re-runs the equal-height pass; assigned by setupEqualize, called by the
-     certification filter after it changes which cards are visible. Declared up
-     here, not next to setupCertFilters: setupEqualize() is CALLED far above
-     that point, so a `let` declared down there is still in its temporal dead
-     zone when the assignment runs, and it throws. */
-  let equalizeAll = () => {};
 
   /* Run `cb` whenever the display's pixel density changes — e.g. the window is
      dragged to a second monitor with a different scale factor. HTML/CSS/SVG
@@ -128,16 +122,6 @@
   function buildCertifications() {
     const list = window.CERTIFICATIONS || [];
     if (!list.length) return null;
-    // Filter buttons: CERT_FILTERS sets which appear and in what order, minus
-    // any nobody uses (so you can list topics you haven't earned certs in yet).
-    // With no list configured, fall back to whatever tags the certs do use.
-    const used = new Set();
-    list.forEach((c) => (Array.isArray(c.tags) ? c.tags : []).forEach((t) => used.add(t)));
-    const declared = window.CERT_FILTERS;
-    const filters =
-      Array.isArray(declared) && declared.length
-        ? declared.filter((t) => used.has(t))
-        : Array.from(used).sort();
     const cards = list
       .map((c, i) => {
         const delay = `--reveal-delay:${i * 70}ms`;
@@ -146,8 +130,6 @@
         // card becomes a clickable link, shows the open-in icon, and tilts on
         // hover. Without it (cert earned but no PDF yet) the card is a static tile.
         const hasCred = c.hasPdf === true && !!c.url;
-        // "|"-joined so the filter can read them straight off the element
-        const tagAttr = ` data-tags="${(Array.isArray(c.tags) ? c.tags : []).join("|").replace(/"/g, "&quot;")}"`;
         const logo = c.logo
           ? `<img class="cert-logo" src="${c.logo}" alt="${c.issuer || c.name || "logo"}">`
           : `<div class="cert-logo" aria-hidden="true"></div>`;
@@ -170,27 +152,11 @@
         // of visible text (logo alt, name, issuer, date) concatenated together
         // as the link's accessible name.
         return hasCred
-          ? `<a class="cert-card reveal" style="${delay}"${tagAttr} href="${c.url}"${pdfAttr} target="_blank" rel="noopener" aria-label="View credential — ${c.name || ""}">${inner}</a>`
-          : `<div class="cert-card reveal cert-static" style="${delay}"${tagAttr}>${inner}</div>`;
+          ? `<a class="cert-card reveal" style="${delay}" href="${c.url}"${pdfAttr} target="_blank" rel="noopener" aria-label="View credential — ${c.name || ""}">${inner}</a>`
+          : `<div class="cert-card reveal cert-static" style="${delay}">${inner}</div>`;
       })
       .join("");
-    const bar = filters.length
-      ? `<div class="cert-filters reveal" role="group" aria-label="Filter certifications by topic">
-           ${filters
-             .map(
-               (t) =>
-                 `<button type="button" class="cert-filter" data-tag="${t.replace(/"/g, "&quot;")}" aria-pressed="false">${t}</button>`
-             )
-             .join("")}
-           <button type="button" class="cert-filter-clear" hidden>Clear</button>
-         </div>
-         <p class="cert-filter-status" role="status" aria-live="polite"></p>`
-      : "";
-    return {
-      title: "Certifications",
-      cls: "certifications",
-      html: `${bar}<div class="card-grid">${cards}</div>`,
-    };
+    return { title: "Certifications", cls: "certifications", html: `<div class="card-grid">${cards}</div>` };
   }
 
   function buildEducation() {
@@ -279,7 +245,6 @@
   setupTilt();
   setupSectionFlash();
   setupEqualize();
-  setupCertFilters(); // after setupEqualize — it needs equalizeAll assigned
   setupTimelineWidth();
   setupPdfModal();
   setupScrollSpy();
@@ -1249,57 +1214,6 @@
     window.addEventListener("resize", onScroll);
   }
 
-  /* ---------- Certification filters (multi-select topic chips) ----------
-     Single-select: one topic at a time. Picking another chip replaces the
-     selection; picking the active chip again clears the filter. */
-  function setupCertFilters() {
-    const sec = document.getElementById("certifications");
-    if (!sec) return;
-    const bar = sec.querySelector(".cert-filters");
-    if (!bar) return;
-    const status = sec.querySelector(".cert-filter-status");
-    const clearBtn = bar.querySelector(".cert-filter-clear");
-    const chips = Array.from(bar.querySelectorAll(".cert-filter"));
-    const cards = Array.from(sec.querySelectorAll(".cert-card"));
-    if (!chips.length || !cards.length) return;
-
-    // Single-select: one active tag at a time (null = no filter, show all).
-    let active = null;
-    const apply = () => {
-      let shown = 0;
-      cards.forEach((card) => {
-        const tags = (card.dataset.tags || "").split("|").filter(Boolean);
-        const match = !active || tags.includes(active);
-        card.hidden = !match;
-        if (match) shown++;
-      });
-      chips.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tag === active)));
-      clearBtn.hidden = !active;
-      status.textContent = active
-        ? `Showing ${shown} of ${cards.length} certifications`
-        : "";
-      // Cards were display:none while hidden, so they measured 0 — re-measure
-      // now that the visible set has changed, or the equal-height cards would
-      // keep whatever height the previous selection produced.
-      equalizeAll();
-    };
-
-    bar.addEventListener("click", (e) => {
-      const chip = e.target.closest(".cert-filter");
-      if (chip) {
-        // Picking a chip replaces the current selection; picking the active
-        // one again turns the filter off.
-        active = active === chip.dataset.tag ? null : chip.dataset.tag;
-        apply();
-        return;
-      }
-      if (e.target.closest(".cert-filter-clear")) {
-        active = null;
-        apply();
-      }
-    });
-  }
-
   /* ---------- Equal-height cert cards so every card is the same size ---------- */
   function setupEqualize() {
     // For each group, stretch the measured block to the tallest one so the content
@@ -1332,7 +1246,6 @@
     });
     if (!runners.length) return;
     const runAll = () => runners.forEach((r) => r());
-    equalizeAll = runAll; // so filtering can re-measure after showing/hiding cards
     runAll();
     let rt;
     window.addEventListener("resize", () => {
