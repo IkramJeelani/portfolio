@@ -155,8 +155,8 @@ const SKILLS = [
 /* Filter buttons shown above the certification cards, in this order.
    Add/remove/rename freely — just keep the names in sync with the `tags` on each
    cert below. A filter whose name no cert uses is hidden automatically, so it's
-   safe to list topics you're planning to add later. Selecting several filters
-   shows any cert matching AT LEAST ONE of them.
+   safe to list topics you're planning to add later. One filter is active at a
+   time — picking another replaces it; picking the active one again clears it.
    Delete this array (or leave it empty) to auto-build the buttons from whatever
    tags the certs actually use, alphabetically. */
 const CERT_FILTERS = [

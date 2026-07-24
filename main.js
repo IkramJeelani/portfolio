@@ -1250,9 +1250,8 @@
   }
 
   /* ---------- Certification filters (multi-select topic chips) ----------
-     Selecting several chips is a UNION: a cert shows if it carries ANY of the
-     chosen tags (narrowing to certs matching ALL of them would bottom out at
-     zero results almost immediately with this few certs). */
+     Single-select: one topic at a time. Picking another chip replaces the
+     selection; picking the active chip again clears the filter. */
   function setupCertFilters() {
     const sec = document.getElementById("certifications");
     if (!sec) return;
@@ -1264,18 +1263,19 @@
     const cards = Array.from(sec.querySelectorAll(".cert-card"));
     if (!chips.length || !cards.length) return;
 
-    const active = new Set();
+    // Single-select: one active tag at a time (null = no filter, show all).
+    let active = null;
     const apply = () => {
       let shown = 0;
       cards.forEach((card) => {
         const tags = (card.dataset.tags || "").split("|").filter(Boolean);
-        const match = !active.size || tags.some((t) => active.has(t));
+        const match = !active || tags.includes(active);
         card.hidden = !match;
         if (match) shown++;
       });
-      chips.forEach((b) => b.setAttribute("aria-pressed", String(active.has(b.dataset.tag))));
-      clearBtn.hidden = !active.size;
-      status.textContent = active.size
+      chips.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tag === active)));
+      clearBtn.hidden = !active;
+      status.textContent = active
         ? `Showing ${shown} of ${cards.length} certifications`
         : "";
       // Cards were display:none while hidden, so they measured 0 — re-measure
@@ -1287,14 +1287,14 @@
     bar.addEventListener("click", (e) => {
       const chip = e.target.closest(".cert-filter");
       if (chip) {
-        const tag = chip.dataset.tag;
-        if (active.has(tag)) active.delete(tag);
-        else active.add(tag);
+        // Picking a chip replaces the current selection; picking the active
+        // one again turns the filter off.
+        active = active === chip.dataset.tag ? null : chip.dataset.tag;
         apply();
         return;
       }
       if (e.target.closest(".cert-filter-clear")) {
-        active.clear();
+        active = null;
         apply();
       }
     });
