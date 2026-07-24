@@ -680,21 +680,26 @@ h1, h2, h3,
   transform-style: preserve-3d;
 }
 a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
-/* Faint wash of the logo's brand colour (--cert-tint set by main.js). Layered
-   over the card's own background-color, so only the gradient carries the hue. */
+/* Faint wash of the logo's brand colour(s) (--tint1/2/3 set by main.js).
+   Three stops so a multicolour logo shows every colour; single-hue logos set
+   all three to the same value, giving a smooth uniform wash. Layered over the
+   card's own background-color, so only the gradient carries the hue.
+   --tint-a is the per-theme alpha, bumped in dark mode so the hues still read. */
 .cert-tinted {
+  --tint-a: 0.18;
   background-image: linear-gradient(
-    150deg,
-    rgba(var(--cert-tint), 0.16),
-    rgba(var(--cert-tint), 0.03) 62%
+    145deg,
+    rgba(var(--tint1), var(--tint-a)) 0%,
+    rgba(var(--tint2), var(--tint-a)) 50%,
+    rgba(var(--tint3), var(--tint-a)) 100%
   );
-  border-color: rgba(var(--cert-tint), 0.4);
+  border-color: rgba(var(--tint1), 0.4);
 }
 @media (prefers-color-scheme: dark) {
-  .cert-tinted { background-image: linear-gradient(150deg, rgba(var(--cert-tint), 0.24), rgba(var(--cert-tint), 0.05) 62%); }
+  .cert-tinted { --tint-a: 0.26; }
 }
-:root[data-theme="dark"] .cert-tinted { background-image: linear-gradient(150deg, rgba(var(--cert-tint), 0.24), rgba(var(--cert-tint), 0.05) 62%); }
-:root[data-theme="light"] .cert-tinted { background-image: linear-gradient(150deg, rgba(var(--cert-tint), 0.16), rgba(var(--cert-tint), 0.03) 62%); }
+:root[data-theme="dark"] .cert-tinted { --tint-a: 0.26; }
+:root[data-theme="light"] .cert-tinted { --tint-a: 0.18; }
 .cert-text {
   width: 100%;
   min-width: 0;
