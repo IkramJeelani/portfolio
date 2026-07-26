@@ -1660,15 +1660,19 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   max-height: min(90vh, 1000px);
   overflow-y: auto;
   overscroll-behavior: contain; /* don't chain scroll to the page behind */
-  scrollbar-gutter: stable;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.7rem;
-  padding-right: 0.2rem;
 }
 /* .cert-dock sets display:flex, which would otherwise beat plain [hidden] */
 .cert-dock[hidden] { display: none; }
+/* Scrollbar hidden for now — still fully scrollable (wheel/trackpad/touch/
+   drag), just no visible track. scrollbar-gutter was dropped too: it only
+   existed to keep the card width stable against a visible scrollbar's width,
+   which no longer applies. */
+.cert-dock { scrollbar-width: none; }
+.cert-dock::-webkit-scrollbar { display: none; }
 /* fallback width; main.js overrides it inline with the grid's real rendered width */
 .cert-dock .cert-card { width: 275px; flex: 0 0 auto; }
 /* which certificate is on screen right now */

@@ -1109,7 +1109,8 @@
         dock.hidden = true; // nothing to move between
         return;
       }
-      if (!dock.childElementCount) {
+      const firstBuild = !dock.childElementCount;
+      if (firstBuild) {
         originals.forEach((card) => {
           const clone = card.cloneNode(true);
           // .reveal leaves an element at opacity:0 until its observer fires,
@@ -1118,6 +1119,17 @@
           // the scroll-reveal state entirely.
           clone.classList.remove("reveal", "in", "tilting");
           clone.style.removeProperty("--reveal-delay");
+          // cloneNode(true) also copies the inline style ATTRIBUTE — so if the
+          // cursor happened to be hovering (tilting) the original the instant
+          // you clicked it, the clone inherits a frozen rotateX/rotateY/scale
+          // transform. Nothing ever clears it (the clone has no pointer
+          // events of its own to trigger setupTilt's pointerleave reset), so
+          // it sits permanently skewed — which is what was clipping an edge
+          // of the highlighted card's border. Strip everything setupTilt writes.
+          clone.style.removeProperty("transform");
+          clone.style.removeProperty("transition");
+          clone.style.removeProperty("--mx");
+          clone.style.removeProperty("--my");
           dock.appendChild(clone);
         });
       }
@@ -1136,12 +1148,18 @@
         else clone.removeAttribute("aria-current");
       });
       dock.hidden = false;
-      // centre the open certificate, clamped (scrollIntoView would fight the
-      // locked page scroll)
+      // Centre the open certificate, clamped (scrollIntoView would fight the
+      // locked page scroll). Smooth on every re-centre AFTER the first build,
+      // so clicking a different card — whether from the grid or from inside
+      // the dock — visibly glides the list to its new centre instead of a
+      // silent jump; the very first open snaps instantly, since animating a
+      // list into position the moment it appears just looks like a glitch.
       const cur = dock.querySelector(".cert-dock-current");
       if (cur) {
         const target = cur.offsetTop - dock.clientHeight / 2 + cur.offsetHeight / 2;
-        dock.scrollTop = Math.max(0, Math.min(target, dock.scrollHeight - dock.clientHeight));
+        const top = Math.max(0, Math.min(target, dock.scrollHeight - dock.clientHeight));
+        if (firstBuild) dock.scrollTop = top;
+        else dock.scrollTo({ top, behavior: reduced ? "auto" : "smooth" });
       }
     };
 
