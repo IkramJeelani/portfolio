@@ -1028,15 +1028,19 @@
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
       modal.innerHTML =
         '<div class="pdf-backdrop"></div>' +
-        // The up/down chevrons are SIBLINGS of the scrolling <nav>, not children
-        // of it — the nav has a mask-image fade at its own edges (see
+        // The chevrons are SIBLINGS of the scrolling <nav>, not children of
+        // it — the nav has a mask-image fade at its own edges (see
         // updateDockFade), and a mask fades EVERYTHING it paints, including
         // its descendants. A chevron placed exactly at the edge it needs to
-        // mark would be faded to near-invisible by that same mask. Sitting
-        // outside it in a wrapper, the chevrons render at full opacity.
+        // mark would be faded to near-invisible by that same mask. As normal
+        // flex-column siblings (DOM order: up, nav, down) they get their OWN
+        // reserved strip of space above/below the list instead of floating
+        // on top of the end cards — no overlap, and the dock's own scrollable
+        // area shrinks by exactly the room the chevrons take, which is also
+        // why the dock now shows a bit less at once than before.
         '<div class="cert-dock-wrap" hidden>' +
-        '<nav class="cert-dock" aria-label="All certifications"></nav>' +
         '<div class="cert-dock-nav cert-dock-nav-up" aria-hidden="true">' + chevronUp + "</div>" +
+        '<nav class="cert-dock" aria-label="All certifications"></nav>' +
         '<div class="cert-dock-nav cert-dock-nav-down" aria-hidden="true">' + chevronDown + "</div>" +
         "</div>" +
         '<div class="pdf-box" role="dialog" aria-modal="true" aria-label="Certificate viewer">' +

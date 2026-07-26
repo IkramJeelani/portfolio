@@ -1651,11 +1651,17 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 /* ===== Certificate dock: the grid's own cards, stacked beside the viewer =====
    main.js clones the real .cert-card elements in, so every card rule already
    applies — only layout is set here.
-   Wrapper holds the scrolling list PLUS the two chevrons as siblings (not
-   children) of it — the list has a mask-image fade at its own edges (below),
-   and a mask fades everything it paints, chevrons included; sitting outside
-   it, the chevrons stay at full opacity where the fade would otherwise
-   wash them out right where they're needed most. */
+   Wrapper is a flex COLUMN: up-chevron, then the scrolling list, then
+   down-chevron (DOM order matches — see main.js). Each chevron gets its OWN
+   reserved strip of space instead of floating on top of the end cards, so
+   there's never any overlap; the list's scrollable area is exactly the
+   wrapper's height minus whatever the chevrons take, which is also why the
+   dock now shows a bit less at once than a version where they floated on top.
+   The chevrons are still siblings of the scrolling <nav>, not children of
+   it, for an unrelated reason: the nav has a mask-image fade at its own
+   edges (below), and a mask fades everything it paints, chevrons included —
+   sitting outside it, they stay at full opacity where the fade would
+   otherwise wash them out right where they're needed most. */
 .cert-dock-wrap {
   position: relative;
   z-index: 1;
@@ -1664,19 +1670,16 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
      under the 3-line threshold, so clones would render taller than the
      originals. Extra width here + a fixed card width below keeps them identical. */
   flex: 0 0 300px;
-  /* Height comes from .cert-dock below (auto, shrink-to-fit) — the wrap
-     itself sets no height at all. The chevrons are position:absolute, so
-     they're out of flow and don't affect that shrink-to-fit measurement. */
+  height: min(90vh, 1000px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .cert-dock-wrap[hidden] { display: none; }
 .cert-dock {
   width: 100%;
-  /* NOT height:100% of the wrap: with no explicit height on the wrap, that
-     would be a percentage against an "auto" parent — undefined by spec, and
-     in practice the browser fell back to the dock's own unclamped content
-     height (974px), silently defeating the intended 630px-ish cap entirely.
-     max-height + overflow on the SAME element sidesteps the whole question. */
-  max-height: min(90vh, 1000px);
+  flex: 1 1 auto; /* takes whatever height the two chevron strips don't */
+  min-height: 0; /* lets it actually shrink inside the flex column instead of overflowing it */
   overflow-y: auto;
   overscroll-behavior: contain; /* don't chain scroll to the page behind */
   display: flex;
@@ -1700,14 +1703,14 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 /* Scrollability cue #2: a chevron at whichever edge has hidden content,
    toggled by main.js alongside the edge fade. Decorative (aria-hidden,
    pointer-events:none) — scrolling stays native wheel/trackpad/touch/drag,
-   this is a cue, not a control. */
+   this is a cue, not a control. Reserves its own strip (flex:0 0 auto) rather
+   than being display:none when hidden, so the list doesn't reflow/resize
+   every time a chevron's visibility toggles. */
 .cert-dock-nav {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
+  flex: 0 0 auto;
   width: 32px;
   height: 32px;
+  margin-block: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1727,9 +1730,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   transition: opacity 0.2s ease;
 }
 .cert-dock-nav.show { opacity: 1; }
-.cert-dock-nav svg { width: 17px; height: 17px; }
-.cert-dock-nav-up { top: -5px; }
-.cert-dock-nav-down { bottom: -5px; }
+.cert-dock-nav svg { width: 17px; height: 17px; display: block; }
 /* Which certificate is on screen right now. A 1px ring the same colour as
    the card's own border read as almost no different from the unselected
    cards, especially in light mode (deep purple ring on white, easy to miss
