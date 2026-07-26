@@ -699,17 +699,49 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   font-weight: 700;
   font-size: 0.9rem;
   line-height: 1.38;
+  letter-spacing: -0.01em; /* bold text at this size reads tighter */
   text-wrap: balance;
 }
 /* Issuer·date is pinned to the bottom of the card (margin-top:auto). Because
    every card is equalized to the same height, this lands the date at the same
-   position on every card regardless of how many lines the title takes. */
+   position on every card regardless of how many lines the title takes — so the
+   dates form one straight line across a row, which is what makes the grid
+   scannable rather than something you have to read card by card. */
 .cert-meta {
-  color: var(--muted);
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 0.4rem;
   font-size: 0.8rem;
   margin-top: auto;
   padding-top: 0.3rem;
 }
+/* Quiet: the logo already identifies the issuer, so this is confirmation,
+   not headline. */
+.cert-issuer { color: var(--muted); min-width: 0; }
+/* The scan anchor — same accent/uppercase treatment the project cards use,
+   so dates read the same way everywhere on the site. */
+.cert-date {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap; /* never split "Sep 2024" across lines */
+}
+.cert-date::before {
+  content: "·";
+  margin-right: 0.4rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+/* no leading dot when there's no issuer to separate it from */
+.cert-date:first-child::before { content: none; }
+/* Dark theme: --accent (#a855f7) on the dark card measures only 4.52:1 at this
+   size — technically AA, but no margin. --accent-hover is lighter, so on a dark
+   background it lifts clear. (:not([data-theme=light]) also covers the default,
+   attribute-less state, which uses the dark tokens.) */
+:root:not([data-theme="light"]) .cert-date { color: var(--accent-hover); }
 /* Rounded + outlined so each mark reads as a deliberate brand tile: these are
    square JPEGs with baked-in white backgrounds, which otherwise bleed into a
    white card in light mode and float as hard white squares in dark mode. */

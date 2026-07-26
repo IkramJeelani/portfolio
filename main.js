@@ -125,7 +125,13 @@
     const cards = list
       .map((c, i) => {
         const delay = `--reveal-delay:${i * 70}ms`;
-        const meta = [c.issuer, c.date].filter(Boolean).join(" · ");
+        // Issuer and date as separate elements rather than one joined string,
+        // so CSS can rank them: the date becomes the scan anchor (accent,
+        // uppercase — same treatment as the project cards) while the issuer
+        // stays quiet. The separator dot is drawn in CSS.
+        const meta =
+          (c.issuer ? `<span class="cert-issuer">${c.issuer}</span>` : "") +
+          (c.date ? `<span class="cert-date">${c.date}</span>` : "");
         // hasPdf is the single gate: a real credential PDF is available, so the
         // card becomes a clickable link, shows the open-in icon, and tilts on
         // hover. Without it (cert earned but no PDF yet) the card is a static tile.
