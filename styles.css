@@ -1731,6 +1731,16 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 }
 .cert-dock-nav.show { opacity: 1; }
 .cert-dock-nav svg { width: 17px; height: 17px; display: block; }
+/* Optical, not mathematical, correction: measured pixel-exact, the chevron's
+   bounding box IS centred in the circle (verified via getBoundingClientRect
+   on the rendered path, not just the SVG box). But a chevron's visual weight
+   sits at its point (two lines converge there) rather than its open end (two
+   lines spread apart) — a well-known icon-design effect where a mathematically
+   centred chevron reads as sitting slightly toward its open end. Nudging 1px
+   toward the point compensates. If this overshoots (looks off the OTHER way),
+   flip the sign — translateY(-1px) up / translateY(1px) down. */
+.cert-dock-nav-up svg { transform: translateY(-1px); }
+.cert-dock-nav-down svg { transform: translateY(1px); }
 /* Which certificate is on screen right now. A 1px ring the same colour as
    the card's own border read as almost no different from the unselected
    cards, especially in light mode (deep purple ring on white, easy to miss
