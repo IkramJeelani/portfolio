@@ -532,11 +532,32 @@ h1, h2, h3,
 
 /* ===== About ===== */
 .about-text {
+  position: relative;
   max-width: 720px;
   margin: 0 auto;
-  text-align: center;
+  padding-left: 1.25rem; /* room for the line */
+  text-align: left;
   color: var(--muted);
   font-size: 1.15rem;
+}
+/* Same animated gradient "energy" line as the skills category markers, for
+   one consistent visual language across the two sections. */
+.about-text::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #a855f7, #ec4899, #6366f1, #a855f7);
+  background-size: 100% 300%;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.55);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .about-text::before {
+    animation: skill-line-flow 4s linear infinite, skill-line-glow 2.6s ease-in-out infinite;
+  }
 }
 
 /* ===== Experience: timeline laid out exactly like Education ===== */
