@@ -1617,6 +1617,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1.1rem; /* separates the cert dock from the viewer */
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.25s ease, visibility 0.25s ease;
@@ -1644,6 +1645,42 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   transition: transform 0.25s ease;
 }
 .pdf-modal.open .pdf-box { transform: scale(1); }
+
+/* ===== Certificate dock: the grid's own cards, stacked beside the viewer =====
+   main.js clones the real .cert-card elements in, so every card rule already
+   applies — only layout is set here. */
+.cert-dock {
+  position: relative;
+  z-index: 1;
+  /* Wider than the 275px card on purpose: the scrollbar gutter and padding eat
+     into the content box, and a card even ~15px narrower drops its text column
+     under the 3-line threshold, so clones would render taller than the
+     originals. Extra width here + a fixed card width below keeps them identical. */
+  flex: 0 0 300px;
+  max-height: min(90vh, 1000px);
+  overflow-y: auto;
+  overscroll-behavior: contain; /* don't chain scroll to the page behind */
+  scrollbar-gutter: stable;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  padding-right: 0.2rem;
+}
+/* .cert-dock sets display:flex, which would otherwise beat plain [hidden] */
+.cert-dock[hidden] { display: none; }
+/* fallback width; main.js overrides it inline with the grid's real rendered width */
+.cert-dock .cert-card { width: 275px; flex: 0 0 auto; }
+/* which certificate is on screen right now */
+.cert-dock .cert-dock-current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+/* 300 dock + 1.1rem gap + 900 viewer needs ~1218px; below that the dock would
+   squeeze the viewer, so the modal goes back to the plain centred layout. */
+@media (max-width: 1279px) {
+  .cert-dock { display: none; }
+}
 /* Custom viewer chrome: title + zoom / download / new-tab / close */
 .pdf-toolbar {
   display: flex;

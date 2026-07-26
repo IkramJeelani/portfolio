@@ -1024,6 +1024,7 @@
       modal.className = "pdf-modal";
       modal.innerHTML =
         '<div class="pdf-backdrop"></div>' +
+        '<nav class="cert-dock" aria-label="All certifications" hidden></nav>' +
         '<div class="pdf-box" role="dialog" aria-modal="true" aria-label="Certificate viewer">' +
         '<div class="pdf-toolbar">' +
         '<span class="pdf-title"></span>' +
@@ -1096,11 +1097,64 @@
       if (pdfDoc) renderPages();
     });
 
+    /* Side dock listing every certification, so you can move between them
+       without closing the viewer. The cards are CLONES of the real ones in the
+       grid rather than re-built markup — that way the design can never drift
+       apart from the main page. Clones keep their data-pdf, so the delegated
+       handler below already makes them work; nothing extra to wire up. */
+    const fillDock = (activeSrc) => {
+      const dock = modal.querySelector(".cert-dock");
+      const originals = Array.from(document.querySelectorAll("#certifications .cert-card"));
+      if (originals.length < 2) {
+        dock.hidden = true; // nothing to move between
+        return;
+      }
+      if (!dock.childElementCount) {
+        originals.forEach((card) => {
+          const clone = card.cloneNode(true);
+          // .reveal leaves an element at opacity:0 until its observer fires,
+          // and that observer only ever watches the original — a cloned card
+          // would sit invisible forever. It's on screen immediately, so drop
+          // the scroll-reveal state entirely.
+          clone.classList.remove("reveal", "in", "tilting");
+          clone.style.removeProperty("--reveal-delay");
+          dock.appendChild(clone);
+        });
+      }
+      Array.from(dock.children).forEach((clone, i) => {
+        // Copy the original's ACTUAL rendered width, not the CSS basis: the
+        // grid flexes its cards a few px narrower than 275, and at this size a
+        // few px is the difference between a 3- and 4-line title. Height is
+        // re-synced too because the equalizer re-runs on resize.
+        if (originals[i]) {
+          clone.style.minHeight = originals[i].style.minHeight;
+          clone.style.width = originals[i].getBoundingClientRect().width + "px";
+        }
+        const isCurrent = clone.getAttribute("data-pdf") === activeSrc;
+        clone.classList.toggle("cert-dock-current", isCurrent);
+        if (isCurrent) clone.setAttribute("aria-current", "true");
+        else clone.removeAttribute("aria-current");
+      });
+      dock.hidden = false;
+      // centre the open certificate, clamped (scrollIntoView would fight the
+      // locked page scroll)
+      const cur = dock.querySelector(".cert-dock-current");
+      if (cur) {
+        const target = cur.offsetTop - dock.clientHeight / 2 + cur.offsetHeight / 2;
+        dock.scrollTop = Math.max(0, Math.min(target, dock.scrollHeight - dock.clientHeight));
+      }
+    };
+
     let opener = null; // element to hand focus back to when the dialog closes
 
-    async function open(src, title) {
+    async function open(src, title, isCert) {
       if (!modal) build();
-      opener = document.activeElement;
+      // Only capture the opener on the FIRST open. Hopping between certs via
+      // the dock would otherwise point focus-restore at a dock card, and on
+      // close the dock is hidden — focus would land nowhere.
+      if (!modal.classList.contains("open")) opener = document.activeElement;
+      if (isCert) fillDock(src);
+      else modal.querySelector(".cert-dock").hidden = true; // résumé: no dock
       modal.querySelector(".pdf-title").textContent = title || "Certificate";
       modal.querySelector(".pdf-box").setAttribute("aria-label", title || "Certificate viewer");
       modal.querySelector(".pdf-download").href = src;
@@ -1150,7 +1204,9 @@
       // cards fall back to their own .cert-name text.
       const name = link.querySelector(".cert-name");
       const title = link.getAttribute("data-pdf-title") || (name ? name.textContent.trim() : "");
-      open(link.getAttribute("data-pdf"), title);
+      // .cert-card covers both the grid and the dock's clones; the résumé
+      // button is the only other data-pdf link and isn't a certification.
+      open(link.getAttribute("data-pdf"), title, link.classList.contains("cert-card"));
     });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") close();
