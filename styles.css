@@ -670,8 +670,8 @@ h1, h2, h3,
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.4rem;
-  padding: 0.85rem 0.9rem;
+  gap: 0.3rem;
+  padding: 0.8rem 0.9rem;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -686,14 +686,41 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   flex: 1 1 auto; /* fills the card height so the CTA can sit at the bottom */
   display: flex;
   flex-direction: column;
-  transform-style: preserve-3d; /* lets the title/date lift off the card face */
 }
-.cert-name { font-weight: 700; font-size: 0.9rem; line-height: 1.28; }
+/* Looser leading than the old 1.28 — these titles run to three bold lines at
+   0.9rem, where tight leading is what made them hard to scan. The height that
+   costs is taken back from the card's own padding/gap above. text-wrap:balance
+   evens the line lengths out so a title never ends on a single orphan word. */
+.cert-name {
+  color: var(--text);
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.38;
+  text-wrap: balance;
+}
 /* Issuer·date is pinned to the bottom of the card (margin-top:auto). Because
    every card is equalized to the same height, this lands the date at the same
-   position on every card regardless of how many lines the title takes. */
-.cert-meta { color: var(--muted); font-size: 0.8rem; margin-top: auto; padding-top: 0.4rem; }
-.cert-logo { flex: 0 0 auto; width: 36px; height: 36px; object-fit: contain; }
+   position on every card regardless of how many lines the title takes — the
+   hairline turns that shared baseline into a visible footer across the grid. */
+.cert-meta {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-top: auto;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--border);
+  width: 100%;
+}
+/* Rounded + outlined so each mark reads as a deliberate brand tile: these are
+   square JPEGs with baked-in white backgrounds, which otherwise bleed into a
+   white card in light mode and float as hard white squares in dark mode. */
+.cert-logo {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
 /* Open-in affordance, top-right of a card that has a viewable credential PDF.
    pointer-events:none — the whole card is the link; the icon is just a cue. */
 .cert-open {
@@ -909,64 +936,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .cert-card.tilting { box-shadow: 0 24px 60px rgba(168, 85, 247, 0.28); }
 .card.tilting::after,
 .cert-card.tilting::after { opacity: 1; }
-
-/* ===== Certification cards: cursor-reactive depth =====
-   Everything here is gated behind .tilting, which setupTilt only adds on
-   hover-capable pointers and never under prefers-reduced-motion — so touch
-   and reduced-motion visitors get the plain card with no extra rules needed.
-   It's all transforms + pseudo-elements, so nothing touches layout: the
-   equalized card heights and bottom-aligned dates are unaffected. */
-
-/* Depth parallax — each layer rides at its own height, so tilting the card
-   separates the logo, title and date in real 3D space instead of moving
-   them as one flat picture. */
-.cert-card .cert-logo,
-.cert-card .cert-name,
-.cert-card .cert-meta,
-.cert-card .cert-open {
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.cert-card.tilting .cert-logo { transform: translateZ(42px) scale(1.08); }
-.cert-card.tilting .cert-name { transform: translateZ(26px); }
-.cert-card.tilting .cert-meta { transform: translateZ(14px); }
-/* beats a.cert-card:hover .cert-open, so keep that rule's nudge here too */
-a.cert-card.tilting .cert-open { transform: translateZ(34px) translate(1px, -1px); }
-
-/* Spotlight ring: an accent glow that chases the cursor around the border.
-   The two masks punch the middle out so only the 1.5px ring paints. */
-.cert-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 6;
-  border-radius: inherit;
-  padding: 1.5px;
-  background: radial-gradient(
-    170px circle at var(--mx, 50%) var(--my, 50%),
-    var(--accent),
-    rgba(236, 72, 153, 0.55) 38%,
-    transparent 72%
-  );
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-.cert-card.tilting::before { opacity: 1; }
-
-/* The shared glare is white — invisible on a white card in light mode. Give
-   the cert cards an iridescent bloom that reads on both themes instead. */
-.cert-card::after {
-  background: radial-gradient(
-    circle at var(--mx, 50%) var(--my, 50%),
-    rgba(168, 85, 247, 0.2),
-    rgba(236, 72, 153, 0.1) 32%,
-    transparent 58%
-  );
-}
 .card-img {
   height: 200px;
   background-size: cover;
