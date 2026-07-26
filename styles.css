@@ -674,8 +674,8 @@ h1, h2, h3,
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  gap: 0.6rem;
-  padding: 0.65rem 0.75rem;
+  gap: 0.5rem;
+  padding: 0.65rem;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -717,8 +717,8 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   flex: 0 0 auto;
   order: 2; /* DOM keeps logo first; visually it sits right of the text */
   align-self: flex-start;
-  width: 30px;
-  height: 30px;
+  width: 42px;
+  height: 42px;
   object-fit: contain;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -752,11 +752,12 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   max-width: 960px;
   margin: 0 auto;
 }
-/* Wider than the old stacked card (240px): the logo now sits beside the text
-   rather than above it, so the text column needs the width back — otherwise
-   titles gain a line and the issuer·date wraps, which costs more height than
-   moving the logo saved. 3 per row still fits inside the 960px grid. */
-.certifications .cert-card { flex: 0 1 285px; }
+/* 275px is a measured cliff, not a taste call: the longest title (Siemens, 66
+   chars) fits 3 lines down to a ~199px text column and breaks to 4 below it,
+   which adds ~20px to EVERY card since the equalizer matches the tallest. With
+   the 42px logo + 0.5rem gap + 0.65rem padding this leaves ~204px — a small
+   buffer over the cliff. Narrowing further means shrinking the title text. */
+.certifications .cert-card { flex: 0 1 275px; }
 
 /* ===== Education: one-sided timeline (dates left · line · logo-on-top cards) ===== */
 .edu-timeline {
