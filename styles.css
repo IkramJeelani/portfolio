@@ -10,6 +10,7 @@
   --muted: #a39db5;
   --accent: #a855f7;
   --accent-hover: #c084fc;
+  --accent-rgb: 168, 85, 247; /* #a855f7 as r,g,b — for rgba() glows/washes */
   --grad: linear-gradient(120deg, #a855f7, #ec4899);
   /* Deeper stops for gradients that carry white TEXT (buttons): white on
      #a855f7/#ec4899 is only 3.5-4.0:1, below the 4.5:1 AA floor for the
@@ -33,6 +34,7 @@
   --muted: #5c586f;
   --accent: #6d28d9; /* deeper than dark mode's purple so small text clears AA on white */
   --accent-hover: #5b21b6;
+  --accent-rgb: 109, 40, 217; /* #6d28d9 as r,g,b — for rgba() glows/washes */
   --grad: linear-gradient(120deg, #7c3aed, #be185d);
   --grad-btn: var(--grad); /* light stops are already deep enough for AA text */
   --shadow: 0 14px 40px rgba(91, 33, 182, 0.12);
@@ -1675,10 +1677,32 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .cert-dock::-webkit-scrollbar { display: none; }
 /* fallback width; main.js overrides it inline with the grid's real rendered width */
 .cert-dock .cert-card { width: 275px; flex: 0 0 auto; }
-/* which certificate is on screen right now */
+/* Which certificate is on screen right now. A 1px ring the same colour as
+   the card's own border read as almost no different from the unselected
+   cards, especially in light mode (deep purple ring on white, easy to miss
+   at a glance) — now a thicker glowing ring, a background wash, and a solid
+   corner dot as a shape-based cue that doesn't rely on noticing colour or
+   border-width alone. --accent-rgb (set per theme) drives the rgba() glow
+   and wash, so both themes get the same treatment at colours that suit them. */
 .cert-dock .cert-dock-current {
   border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent);
+  background-image: linear-gradient(155deg, rgba(var(--accent-rgb), 0.16), rgba(var(--accent-rgb), 0.04) 65%);
+  box-shadow: 0 0 0 2px var(--accent), 0 10px 26px rgba(var(--accent-rgb), 0.38);
+}
+.cert-dock .cert-dock-current::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: -7px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  /* var(--card), not var(--bg): the modal backdrop is a fixed dark colour in
+     BOTH themes (see .pdf-backdrop), so --bg (white in light mode) would ring
+     the dot in a colour that doesn't match what's actually behind it here. */
+  border: 2px solid var(--card);
+  z-index: 7; /* clears the tilt-glare ::after (z 5) and the logo/icon layers */
 }
 /* 300 dock + 1.1rem gap + 900 viewer needs ~1218px; below that the dock would
    squeeze the viewer, so the modal goes back to the plain centred layout. */

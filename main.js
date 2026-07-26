@@ -1038,6 +1038,8 @@
         "</div></div>" +
         '<div class="pdf-pages"></div></div>';
       document.body.appendChild(modal);
+      modal.querySelector(".cert-dock").addEventListener("scroll", scheduleDockFade, { passive: true });
+      window.addEventListener("resize", scheduleDockFade);
       modal.querySelector(".pdf-backdrop").addEventListener("click", close);
       modal.querySelector(".pdf-close").addEventListener("click", close);
       modal.querySelector(".pdf-zoom-in").addEventListener("click", () => setZoom(zoom + 0.25));
@@ -1097,6 +1099,34 @@
       if (pdfDoc) renderPages();
     });
 
+    /* The dock has no visible scrollbar (by request), so the only way to know
+       there's more to see is an edge fade — a soft gradient at whichever
+       edge(s) currently have hidden content, applied as a mask so it reveals
+       the blurred backdrop underneath rather than painting a colour patch
+       that would need to match it. Toggled on scroll/resize, not just once,
+       since which edges are active changes as you scroll. */
+    let dockFadeRaf = null;
+    const updateDockFade = () => {
+      const dock = modal.querySelector(".cert-dock");
+      if (!dock || dock.hidden) return;
+      const F = "28px";
+      const canUp = dock.scrollTop > 2;
+      const canDown = dock.scrollTop < dock.scrollHeight - dock.clientHeight - 2;
+      let mask = "none";
+      if (canUp && canDown) mask = `linear-gradient(to bottom, transparent, black ${F}, black calc(100% - ${F}), transparent)`;
+      else if (canUp) mask = `linear-gradient(to bottom, transparent, black ${F})`;
+      else if (canDown) mask = `linear-gradient(to bottom, black calc(100% - ${F}), transparent)`;
+      dock.style.maskImage = mask;
+      dock.style.webkitMaskImage = mask;
+    };
+    const scheduleDockFade = () => {
+      if (dockFadeRaf) return;
+      dockFadeRaf = requestAnimationFrame(() => {
+        dockFadeRaf = null;
+        updateDockFade();
+      });
+    };
+
     /* Side dock listing every certification, so you can move between them
        without closing the viewer. The cards are CLONES of the real ones in the
        grid rather than re-built markup — that way the design can never drift
@@ -1148,19 +1178,18 @@
         else clone.removeAttribute("aria-current");
       });
       dock.hidden = false;
-      // Centre the open certificate, clamped (scrollIntoView would fight the
-      // locked page scroll). Smooth on every re-centre AFTER the first build,
-      // so clicking a different card — whether from the grid or from inside
-      // the dock — visibly glides the list to its new centre instead of a
-      // silent jump; the very first open snaps instantly, since animating a
-      // list into position the moment it appears just looks like a glitch.
-      const cur = dock.querySelector(".cert-dock-current");
-      if (cur) {
-        const target = cur.offsetTop - dock.clientHeight / 2 + cur.offsetHeight / 2;
-        const top = Math.max(0, Math.min(target, dock.scrollHeight - dock.clientHeight));
-        if (firstBuild) dock.scrollTop = top;
-        else dock.scrollTo({ top, behavior: reduced ? "auto" : "smooth" });
+      // Clicking a card should not move the list — the card you just clicked
+      // is already visible, and re-centring it displaces every OTHER card
+      // you were just looking at. The one exception is the very first time
+      // the dock appears: nothing has been scrolled yet, so if the opened
+      // certificate starts off-screen (near the end of a long list), bring
+      // it into view with the smallest possible scroll (a no-op if it's
+      // already visible) rather than leaving the dock stuck at the top.
+      if (firstBuild) {
+        const cur = dock.querySelector(".cert-dock-current");
+        if (cur) cur.scrollIntoView({ block: "nearest" });
       }
+      updateDockFade();
     };
 
     let opener = null; // element to hand focus back to when the dialog closes
