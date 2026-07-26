@@ -665,12 +665,16 @@ h1, h2, h3,
 }
 
 /* ===== Certifications: same card as projects, in the grid ===== */
+/* Two columns: text left, logo right. Putting the logo beside the text
+   instead of above it drops its whole row out of the card's height.
+   align-items:stretch (not flex-start) so .cert-text fills the card height
+   and its margin-top:auto can still pin the date to the bottom. */
 .cert-card {
   position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.25rem;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.6rem;
   padding: 0.65rem 0.75rem;
   background: var(--card);
   border: 1px solid var(--border);
@@ -681,9 +685,8 @@ h1, h2, h3,
 }
 a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 .cert-text {
-  width: 100%;
-  min-width: 0;
-  flex: 1 1 auto; /* fills the card height so the CTA can sit at the bottom */
+  min-width: 0; /* lets the text column shrink beside the logo instead of overflowing */
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
 }
@@ -712,6 +715,8 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
    white card in light mode and float as hard white squares in dark mode. */
 .cert-logo {
   flex: 0 0 auto;
+  order: 2; /* DOM keeps logo first; visually it sits right of the text */
+  align-self: flex-start;
   width: 30px;
   height: 30px;
   object-fit: contain;
@@ -722,8 +727,10 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
    pointer-events:none — the whole card is the link; the icon is just a cue. */
 .cert-open {
   position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
+  /* bottom-right: the logo now owns the top-right corner. Sits under the logo,
+     clear of the date, which ends where the text column does. */
+  bottom: 0.6rem;
+  right: 0.75rem;
   width: 15px;
   height: 15px;
   color: var(--accent);
@@ -745,7 +752,11 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   max-width: 960px;
   margin: 0 auto;
 }
-.certifications .cert-card { flex: 0 1 240px; }
+/* Wider than the old stacked card (240px): the logo now sits beside the text
+   rather than above it, so the text column needs the width back — otherwise
+   titles gain a line and the issuer·date wraps, which costs more height than
+   moving the logo saved. 3 per row still fits inside the 960px grid. */
+.certifications .cert-card { flex: 0 1 285px; }
 
 /* ===== Education: one-sided timeline (dates left · line · logo-on-top cards) ===== */
 .edu-timeline {
