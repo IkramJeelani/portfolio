@@ -1022,9 +1022,23 @@
     const build = () => {
       modal = document.createElement("div");
       modal.className = "pdf-modal";
+      const chevronUp =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>';
+      const chevronDown =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
       modal.innerHTML =
         '<div class="pdf-backdrop"></div>' +
-        '<nav class="cert-dock" aria-label="All certifications" hidden></nav>' +
+        // The up/down chevrons are SIBLINGS of the scrolling <nav>, not children
+        // of it — the nav has a mask-image fade at its own edges (see
+        // updateDockFade), and a mask fades EVERYTHING it paints, including
+        // its descendants. A chevron placed exactly at the edge it needs to
+        // mark would be faded to near-invisible by that same mask. Sitting
+        // outside it in a wrapper, the chevrons render at full opacity.
+        '<div class="cert-dock-wrap" hidden>' +
+        '<nav class="cert-dock" aria-label="All certifications"></nav>' +
+        '<div class="cert-dock-nav cert-dock-nav-up" aria-hidden="true">' + chevronUp + "</div>" +
+        '<div class="cert-dock-nav cert-dock-nav-down" aria-hidden="true">' + chevronDown + "</div>" +
+        "</div>" +
         '<div class="pdf-box" role="dialog" aria-modal="true" aria-label="Certificate viewer">' +
         '<div class="pdf-toolbar">' +
         '<span class="pdf-title"></span>' +
@@ -1099,16 +1113,17 @@
       if (pdfDoc) renderPages();
     });
 
-    /* The dock has no visible scrollbar (by request), so the only way to know
-       there's more to see is an edge fade — a soft gradient at whichever
-       edge(s) currently have hidden content, applied as a mask so it reveals
-       the blurred backdrop underneath rather than painting a colour patch
-       that would need to match it. Toggled on scroll/resize, not just once,
-       since which edges are active changes as you scroll. */
+    /* The dock has no visible scrollbar (by request), so two cues stand in
+       for it: a soft edge fade (mask, so it reveals the blurred backdrop
+       instead of painting a colour patch that would need to match it) AND a
+       chevron at whichever edge(s) currently have hidden content — the fade
+       alone read as too subtle to notice at a glance. Both recomputed on
+       scroll/resize, since which edges are active changes as you scroll. */
     let dockFadeRaf = null;
     const updateDockFade = () => {
+      const wrap = modal.querySelector(".cert-dock-wrap");
       const dock = modal.querySelector(".cert-dock");
-      if (!dock || dock.hidden) return;
+      if (!dock || wrap.hidden) return;
       const F = "28px";
       const canUp = dock.scrollTop > 2;
       const canDown = dock.scrollTop < dock.scrollHeight - dock.clientHeight - 2;
@@ -1118,6 +1133,8 @@
       else if (canDown) mask = `linear-gradient(to bottom, black calc(100% - ${F}), transparent)`;
       dock.style.maskImage = mask;
       dock.style.webkitMaskImage = mask;
+      modal.querySelector(".cert-dock-nav-up").classList.toggle("show", canUp);
+      modal.querySelector(".cert-dock-nav-down").classList.toggle("show", canDown);
     };
     const scheduleDockFade = () => {
       if (dockFadeRaf) return;
@@ -1133,10 +1150,11 @@
        apart from the main page. Clones keep their data-pdf, so the delegated
        handler below already makes them work; nothing extra to wire up. */
     const fillDock = (activeSrc) => {
+      const wrap = modal.querySelector(".cert-dock-wrap");
       const dock = modal.querySelector(".cert-dock");
       const originals = Array.from(document.querySelectorAll("#certifications .cert-card"));
       if (originals.length < 2) {
-        dock.hidden = true; // nothing to move between
+        wrap.hidden = true; // nothing to move between
         return;
       }
       const firstBuild = !dock.childElementCount;
@@ -1177,7 +1195,7 @@
         if (isCurrent) clone.setAttribute("aria-current", "true");
         else clone.removeAttribute("aria-current");
       });
-      dock.hidden = false;
+      wrap.hidden = false;
       // Clicking a card should not move the list — the card you just clicked
       // is already visible, and re-centring it displaces every OTHER card
       // you were just looking at. The one exception is the very first time
@@ -1201,7 +1219,7 @@
       // close the dock is hidden — focus would land nowhere.
       if (!modal.classList.contains("open")) opener = document.activeElement;
       if (isCert) fillDock(src);
-      else modal.querySelector(".cert-dock").hidden = true; // résumé: no dock
+      else modal.querySelector(".cert-dock-wrap").hidden = true; // résumé: no dock
       modal.querySelector(".pdf-title").textContent = title || "Certificate";
       modal.querySelector(".pdf-box").setAttribute("aria-label", title || "Certificate viewer");
       modal.querySelector(".pdf-download").href = src;

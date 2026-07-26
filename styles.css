@@ -1650,8 +1650,13 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 
 /* ===== Certificate dock: the grid's own cards, stacked beside the viewer =====
    main.js clones the real .cert-card elements in, so every card rule already
-   applies — only layout is set here. */
-.cert-dock {
+   applies — only layout is set here.
+   Wrapper holds the scrolling list PLUS the two chevrons as siblings (not
+   children) of it — the list has a mask-image fade at its own edges (below),
+   and a mask fades everything it paints, chevrons included; sitting outside
+   it, the chevrons stay at full opacity where the fade would otherwise
+   wash them out right where they're needed most. */
+.cert-dock-wrap {
   position: relative;
   z-index: 1;
   /* Wider than the 275px card on purpose: the scrollbar gutter and padding eat
@@ -1659,6 +1664,18 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
      under the 3-line threshold, so clones would render taller than the
      originals. Extra width here + a fixed card width below keeps them identical. */
   flex: 0 0 300px;
+  /* Height comes from .cert-dock below (auto, shrink-to-fit) — the wrap
+     itself sets no height at all. The chevrons are position:absolute, so
+     they're out of flow and don't affect that shrink-to-fit measurement. */
+}
+.cert-dock-wrap[hidden] { display: none; }
+.cert-dock {
+  width: 100%;
+  /* NOT height:100% of the wrap: with no explicit height on the wrap, that
+     would be a percentage against an "auto" parent — undefined by spec, and
+     in practice the browser fell back to the dock's own unclamped content
+     height (974px), silently defeating the intended 630px-ish cap entirely.
+     max-height + overflow on the SAME element sidesteps the whole question. */
   max-height: min(90vh, 1000px);
   overflow-y: auto;
   overscroll-behavior: contain; /* don't chain scroll to the page behind */
@@ -1666,9 +1683,12 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   flex-direction: column;
   align-items: center;
   gap: 0.7rem;
+  /* Room for the current-card ring/glow/dot on the FIRST and LAST cards: they
+     sit flush against the scroll container's edge, so their box-shadow (which
+     extends past the card's own box) and the dot (offset -7px above the card)
+     were being clipped by overflow-y:auto with no padding to spare. */
+  padding-block: 16px;
 }
-/* .cert-dock sets display:flex, which would otherwise beat plain [hidden] */
-.cert-dock[hidden] { display: none; }
 /* Scrollbar hidden for now — still fully scrollable (wheel/trackpad/touch/
    drag), just no visible track. scrollbar-gutter was dropped too: it only
    existed to keep the card width stable against a visible scrollbar's width,
@@ -1677,6 +1697,32 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .cert-dock::-webkit-scrollbar { display: none; }
 /* fallback width; main.js overrides it inline with the grid's real rendered width */
 .cert-dock .cert-card { width: 275px; flex: 0 0 auto; }
+/* Scrollability cue #2: a chevron at whichever edge has hidden content,
+   toggled by main.js alongside the edge fade. Decorative (aria-hidden,
+   pointer-events:none) — scrolling stays native wheel/trackpad/touch/drag,
+   this is a cue, not a control. */
+.cert-dock-nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--accent);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.cert-dock-nav.show { opacity: 0.95; }
+.cert-dock-nav svg { width: 16px; height: 16px; }
+.cert-dock-nav-up { top: -4px; }
+.cert-dock-nav-down { bottom: -4px; }
 /* Which certificate is on screen right now. A 1px ring the same colour as
    the card's own border read as almost no different from the unselected
    cards, especially in light mode (deep purple ring on white, easy to miss
@@ -1707,7 +1753,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 /* 300 dock + 1.1rem gap + 900 viewer needs ~1218px; below that the dock would
    squeeze the viewer, so the modal goes back to the plain centred layout. */
 @media (max-width: 1279px) {
-  .cert-dock { display: none; }
+  .cert-dock-wrap { display: none; }
 }
 /* Custom viewer chrome: title + zoom / download / new-tab / close */
 .pdf-toolbar {
