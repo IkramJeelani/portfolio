@@ -617,7 +617,11 @@ h1, h2, h3,
 
 /* ===== Skills ===== */
 .skills-list {
-  max-width: 640px;
+  /* 640px landed the column-count formula in main.js (setupSkillsMasonry:
+     floor((w+36)/(190+36))) right at 2 columns. 760px lands it at exactly 3
+     with margin on both sides of the threshold (needs 642-867px), so it
+     doesn't flip back to 2 or jump to 4 from a few px of layout rounding. */
+  max-width: 760px;
   margin: 0 auto;
   /* True masonry: main.js measures each category and deals them into these
      flex columns shortest-first, so the columns always end nearly level. */
