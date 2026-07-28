@@ -645,7 +645,10 @@ h1, h2, h3,
   position: absolute;
   left: 0;
   top: 0;
-  bottom: 0;
+  /* --trunk-cut (set by setupSkillTree in main.js) ends the trunk exactly at
+     the last item's branch, like the └ of a folder tree — instead of running
+     on past it to the group's bottom edge. */
+  bottom: var(--trunk-cut, 0px);
   width: 3px;
   border-radius: 3px;
   background: linear-gradient(180deg, #a855f7, #ec4899, #6366f1, #a855f7);
@@ -707,27 +710,27 @@ h1, h2, h3,
   border-radius: 2px;
   background: var(--accent);
 }
-/* The branches cycle through the same three colours as the category line's
-   flowing gradient (#a855f7 -> #ec4899 -> #6366f1), on the same 4s clock,
-   with a small per-row stagger so the colour appears to travel down the
-   list the way the gradient travels along the line. Gated exactly like
-   the line's animation: reduced-motion gets a static accent branch. */
+/* Each branch's colour tracks the trunk's colour AT ITS OWN JUNCTION, so
+   branch and trunk always read as one connected piece.
+   Why 2s and reverse, when the trunk's animation says 4s: the trunk slides a
+   300%-tall gradient by -300% per 4s loop — that's TWO full pattern periods
+   per loop, so the colour at any fixed point on the trunk cycles every 2s,
+   and (because the pattern travels downward) in reverse stop-order. The
+   original 4s forward branch animation could never match it.
+   The per-branch phase (--branch-delay = 2y/(3H), set by setupSkillTree in
+   main.js from each branch's measured position y on a trunk of height H)
+   makes the match exact at every junction, not just approximate.
+   Gated like the trunk's own animation: reduced-motion gets static accent. */
 @media (prefers-reduced-motion: no-preference) {
   .skill-group .tag::before {
-    animation: skill-dot-hue 4s linear infinite;
+    animation: skill-dot-hue 2s linear infinite reverse;
+    animation-delay: var(--branch-delay, 0s);
   }
-  .skill-group .tag:nth-child(2)::before { animation-delay: -0.5s; }
-  .skill-group .tag:nth-child(3)::before { animation-delay: -1s; }
-  .skill-group .tag:nth-child(4)::before { animation-delay: -1.5s; }
-  .skill-group .tag:nth-child(5)::before { animation-delay: -2s; }
-  .skill-group .tag:nth-child(6)::before { animation-delay: -2.5s; }
-  .skill-group .tag:nth-child(7)::before { animation-delay: -3s; }
-  .skill-group .tag:nth-child(8)::before { animation-delay: -3.5s; }
 }
 @keyframes skill-dot-hue {
   0%, 100% { background-color: #a855f7; }
-  33% { background-color: #ec4899; }
-  66% { background-color: #6366f1; }
+  33.33% { background-color: #ec4899; }
+  66.67% { background-color: #6366f1; }
 }
 
 /* ===== Certifications: same card as projects, in the grid ===== */
