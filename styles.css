@@ -691,11 +691,37 @@ h1, h2, h3,
   content: "";
   position: absolute;
   left: 0;
-  top: 0.55em; /* vertically centred on the first line, not the whole (possibly wrapped) block */
+  /* Centred on the FIRST line (not the whole possibly-wrapped block):
+     base .tag top padding (0.3rem) + half the 1.6 line-height (0.8em)
+     - half the 5px dot. The earlier 0.55em forgot the padding and sat
+     the dot ~5px above the text. */
+  top: calc(0.3rem + 0.8em - 2.5px);
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: var(--accent);
+}
+/* The dots cycle through the same three colours as the category line's
+   flowing gradient (#a855f7 -> #ec4899 -> #6366f1), on the same 4s clock,
+   with a small per-row stagger so the colour appears to travel down the
+   list the way the gradient travels along the line. Gated exactly like
+   the line's animation: reduced-motion gets a static accent dot. */
+@media (prefers-reduced-motion: no-preference) {
+  .skill-group .tag::before {
+    animation: skill-dot-hue 4s linear infinite;
+  }
+  .skill-group .tag:nth-child(2)::before { animation-delay: -0.5s; }
+  .skill-group .tag:nth-child(3)::before { animation-delay: -1s; }
+  .skill-group .tag:nth-child(4)::before { animation-delay: -1.5s; }
+  .skill-group .tag:nth-child(5)::before { animation-delay: -2s; }
+  .skill-group .tag:nth-child(6)::before { animation-delay: -2.5s; }
+  .skill-group .tag:nth-child(7)::before { animation-delay: -3s; }
+  .skill-group .tag:nth-child(8)::before { animation-delay: -3.5s; }
+}
+@keyframes skill-dot-hue {
+  0%, 100% { background-color: #a855f7; }
+  33% { background-color: #ec4899; }
+  66% { background-color: #6366f1; }
 }
 
 /* ===== Certifications: same card as projects, in the grid ===== */
