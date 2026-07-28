@@ -671,22 +671,13 @@ h1, h2, h3,
 }
 /* Scoped to skills only — the base .tag is shared with project/experience
    tech tags, which weren't part of this request. Bigger, bolder text (0.82
-   -> 0.88rem, weight 600) and a faint accent-tinted background + accent
-   border (via --accent-rgb, same token used for the cert-dock highlight)
-   instead of the flat --bg-soft fill/--border outline, so each skill reads
-   as a distinct, deliberate chip rather than blending into the page. */
+   -> 0.88rem, weight 600) and more padding for easier reading; colour stays
+   the same flat --bg-soft/--border treatment as the base .tag (the earlier
+   accent-tinted version didn't land well). */
 .skill-group .tag {
   font-size: 0.88rem;
   font-weight: 600;
   padding: 0.42rem 1rem;
-  background: rgba(var(--accent-rgb), 0.1);
-  border-color: rgba(var(--accent-rgb), 0.4);
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
-}
-.skill-group .tag:hover {
-  background: rgba(var(--accent-rgb), 0.18);
-  border-color: var(--accent);
-  transform: translateX(3px);
 }
 
 /* ===== Certifications: same card as projects, in the grid ===== */
