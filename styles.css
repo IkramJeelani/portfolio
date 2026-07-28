@@ -687,25 +687,31 @@ h1, h2, h3,
   color: var(--text-body);
   text-align: left;
 }
+/* Folder-tree branch: a thin horizontal line from the category's vertical
+   gradient line out to each item, like the ├── connectors in a directory
+   tree. left:-1rem reaches back across .skill-group's 1rem padding to the
+   vertical line at the group's edge (overlapping its 3px width slightly, so
+   there's never a gap between trunk and branch); the width then extends
+   0.65rem into the tag's own 1.1rem text indent, leaving a small gap before
+   the text starts. */
 .skill-group .tag::before {
   content: "";
   position: absolute;
-  left: 0;
+  left: -1rem;
   /* Centred on the FIRST line (not the whole possibly-wrapped block):
      base .tag top padding (0.3rem) + half the 1.6 line-height (0.8em)
-     - half the 5px dot. The earlier 0.55em forgot the padding and sat
-     the dot ~5px above the text. */
-  top: calc(0.3rem + 0.8em - 2.5px);
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
+     - half the 2px bar. */
+  top: calc(0.3rem + 0.8em - 1px);
+  width: 1.65rem;
+  height: 2px;
+  border-radius: 2px;
   background: var(--accent);
 }
-/* The dots cycle through the same three colours as the category line's
+/* The branches cycle through the same three colours as the category line's
    flowing gradient (#a855f7 -> #ec4899 -> #6366f1), on the same 4s clock,
    with a small per-row stagger so the colour appears to travel down the
    list the way the gradient travels along the line. Gated exactly like
-   the line's animation: reduced-motion gets a static accent dot. */
+   the line's animation: reduced-motion gets a static accent branch. */
 @media (prefers-reduced-motion: no-preference) {
   .skill-group .tag::before {
     animation: skill-dot-hue 4s linear infinite;
