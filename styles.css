@@ -663,49 +663,39 @@ h1, h2, h3,
   50%      { box-shadow: 0 0 16px rgba(236, 72, 153, 0.8); }
 }
 .skill-category { margin: 0 0 0.6rem; font-size: 1rem; }
+/* Plain list instead of pill/chip tags — every earlier fix here (radius,
+   contrast, wrap width) was chasing problems that only existed BECAUSE it
+   was a pill; a normal list sidesteps all of them at once: no shape to
+   balloon when text wraps, no background/border to clash with the text
+   colour, no width to cap since a wrapped line just continues under the
+   marker like ordinary body text. Scoped to skills only — the base .tag
+   (project/experience tech tags) is untouched. */
 .skill-group .tags {
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 0.5rem;
   margin-bottom: 0;
 }
-/* Scoped to skills only — the base .tag is shared with project/experience
-   tech tags, which weren't part of this request. Bigger, bolder text (0.82
-   -> 0.88rem, weight 600) and more padding for easier reading.
-   Two real problems fixed here, not just a colour swap:
-   1. The base .tag's border-radius:999px is a true pill — fine for one line,
-      but a wrapped two-line tag ("PCB design (KiCad/Altium)") got just as
-      extreme a radius applied to its much taller box, ballooning into an
-      oversized rounded blob next to the short single-line pills beside it.
-      A fixed, moderate radius reads as a clean rounded rectangle at ANY
-      height, so one- and two-line tags now look like the same family of
-      shape instead of two different ones.
-   2. Text used var(--accent) (purple) on var(--bg-soft), which in dark theme
-      is ALSO purple-tinted (#16131f) — passes a contrast-ratio calculation,
-      but two closely-related hues next to each other reads as low-contrast
-      to the eye regardless of the math. Swapped to var(--text) (near-white
-      in dark, near-black in light) — a neutral colour with no hue to clash
-      against a tinted background, in either theme. */
 .skill-group .tag {
-  font-size: 0.88rem;
-  font-weight: 600;
-  padding: 0.42rem 1rem;
-  border-radius: 10px;
-  color: var(--text);
-  /* A tag long enough to wrap (currently just "PCB design (KiCad/Altium)")
-     otherwise stretches to fill the ENTIRE available column width before
-     breaking — it ends up touching the column's edge and looks like an
-     outlier next to short single-line pills. Capping the width forces an
-     earlier, more contained wrap, and text-wrap:balance (same technique
-     already used for cert titles) splits it into two evener lines instead
-     of one long line and one short leftover word.
-     190px, not a rounder number: measured every current skill's natural
-     single-line width and there's a clean gap between the longest tag that
-     SHOULD stay one line (173px, "Sensors & Actuators") and the one that
-     needs to wrap (216px, the PCB tag) — 190px sits in that gap with margin
-     on both sides, so it won't force any other current tag to wrap. */
-  max-width: 190px;
-  text-wrap: balance;
+  position: relative;
+  padding-left: 1.1rem;
+  background: none;
+  border: none;
+  border-radius: 0;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text-body);
+  text-align: left;
+}
+.skill-group .tag::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em; /* vertically centred on the first line, not the whole (possibly wrapped) block */
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
 }
 
 /* ===== Certifications: same card as projects, in the grid ===== */
