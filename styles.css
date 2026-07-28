@@ -703,11 +703,11 @@ h1, h2, h3,
   left: -1rem;
   /* Centred on the FIRST line (not the whole possibly-wrapped block):
      base .tag top padding (0.3rem) + half the 1.6 line-height (0.8em)
-     - half the 2px bar. */
-  top: calc(0.3rem + 0.8em - 1px);
+     - half the 3px bar (same thickness as the trunk). */
+  top: calc(0.3rem + 0.8em - 1.5px);
   width: 1.65rem;
-  height: 2px;
-  border-radius: 2px;
+  height: 3px;
+  border-radius: 3px;
   background: var(--accent);
 }
 /* Each branch's colour tracks the trunk's colour AT ITS OWN JUNCTION, so
