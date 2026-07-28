@@ -671,13 +671,27 @@ h1, h2, h3,
 }
 /* Scoped to skills only — the base .tag is shared with project/experience
    tech tags, which weren't part of this request. Bigger, bolder text (0.82
-   -> 0.88rem, weight 600) and more padding for easier reading; colour stays
-   the same flat --bg-soft/--border treatment as the base .tag (the earlier
-   accent-tinted version didn't land well). */
+   -> 0.88rem, weight 600) and more padding for easier reading.
+   Two real problems fixed here, not just a colour swap:
+   1. The base .tag's border-radius:999px is a true pill — fine for one line,
+      but a wrapped two-line tag ("PCB design (KiCad/Altium)") got just as
+      extreme a radius applied to its much taller box, ballooning into an
+      oversized rounded blob next to the short single-line pills beside it.
+      A fixed, moderate radius reads as a clean rounded rectangle at ANY
+      height, so one- and two-line tags now look like the same family of
+      shape instead of two different ones.
+   2. Text used var(--accent) (purple) on var(--bg-soft), which in dark theme
+      is ALSO purple-tinted (#16131f) — passes a contrast-ratio calculation,
+      but two closely-related hues next to each other reads as low-contrast
+      to the eye regardless of the math. Swapped to var(--text) (near-white
+      in dark, near-black in light) — a neutral colour with no hue to clash
+      against a tinted background, in either theme. */
 .skill-group .tag {
   font-size: 0.88rem;
   font-weight: 600;
   padding: 0.42rem 1rem;
+  border-radius: 10px;
+  color: var(--text);
 }
 
 /* ===== Certifications: same card as projects, in the grid ===== */
