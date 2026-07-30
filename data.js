@@ -221,6 +221,14 @@ const CERTIFICATIONS = [
     url: "assets/Certifications/Simscape Onramp.pdf",
     hasPdf: true,
   },
+  {
+    name: "Multibody Simulation Onramp",
+    issuer: "MathWorks",
+    date: "Jul 2026",
+    logo: "assets/Logos/MathWorks_logo.jpg",
+    url: "assets/Certifications/Multibody Simulation Onramp.pdf",
+    hasPdf: true,
+  },
 ];
 
 /* ---------- 5b. EDUCATION ----------
