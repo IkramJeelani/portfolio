@@ -111,11 +111,11 @@ const EXPERIENCE = [
 const SKILLS = [
   {
     category: "Programming",
-    items: ["C", "C++", "Python", "MATLAB"],
+    items: ["Python", "MATLAB"],
   },
   {
     category: "Mechanical Design, Analysis & Manufacturing",
-    items: ["SOLIDWORKS", "Fusion 360", "Cura", "FDM 3D Printing"],
+    items: ["SOLIDWORKS", "Fusion 360", "FDM 3D Printing"],
   },
   {
     category: "Electronics & Embedded Systems",
