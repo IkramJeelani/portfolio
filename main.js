@@ -515,17 +515,17 @@
     const colors = () => {
       const light = document.documentElement.getAttribute("data-theme") === "light";
       return {
-        grid: light ? "rgba(109, 40, 217, 0.10)" : "rgba(168, 85, 247, 0.09)",
-        arc: light ? "rgba(109, 40, 217, 0.18)" : "rgba(168, 85, 247, 0.16)",
-        link: light ? "#6d28d9" : "#a855f7",
-        link2: light ? "#be185d" : "#ec4899",
-        slot: light ? "rgba(27, 24, 48, 0.20)" : "rgba(8, 6, 16, 0.38)",
-        jointHi: light ? "#ffffff" : "#3d3560",
-        jointLo: light ? "#d9d4ea" : "#141020",
-        bolt: light ? "#8b84a8" : "#0d0a18",
-        tip: light ? "#be185d" : "#f472b6",
-        hud: light ? "rgba(92, 88, 111, 0.75)" : "rgba(163, 157, 181, 0.7)",
-        trail: light ? "190, 24, 93" : "244, 114, 182",
+        grid: light ? "rgba(208, 69, 58, 0.10)" : "rgba(226, 105, 92, 0.09)",
+        arc: light ? "rgba(208, 69, 58, 0.18)" : "rgba(226, 105, 92, 0.16)",
+        link: light ? "#d0453a" : "#e2695c",
+        link2: light ? "#b93c30" : "#eda6b4",
+        slot: light ? "rgba(29, 26, 23, 0.20)" : "rgba(20, 22, 28, 0.38)",
+        jointHi: light ? "#ffffff" : "#2c313e",
+        jointLo: light ? "#e2dbcd" : "#14161c",
+        bolt: light ? "#a89a8a" : "#0a0b0e",
+        tip: light ? "#b93c30" : "#eda6b4",
+        hud: light ? "rgba(125, 117, 102, 0.75)" : "rgba(139, 143, 160, 0.7)",
+        trail: light ? "185, 60, 48" : "237, 166, 180",
         glow: light ? 9 : 14,
         light,
       };
