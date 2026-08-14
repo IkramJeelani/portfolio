@@ -626,6 +626,7 @@ h1, h2, h3,
   margin: 0 0 1.75rem; /* vertical gap between stacked categories */
 }
 .skill-category { margin: 0 0 0.6rem; font-size: 1.1rem; font-weight: 700; color: var(--accent); letter-spacing: -0.01em; }
+.skill-category .amp { font-family: var(--font-body); letter-spacing: normal; }
 /* Plain list instead of pill/chip tags — every earlier fix here (radius,
    contrast, wrap width) was chasing problems that only existed BECAUSE it
    was a pill; a normal list sidesteps all of them at once: no shape to

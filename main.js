@@ -113,7 +113,11 @@
     const groups = list
       .map((g) => {
         const tags = (g.items || []).map((i) => `<span class="tag">${i}</span>`).join("");
-        return `<div class="skill-group reveal"><h3 class="skill-category">${g.category}</h3><div class="tags">${tags}</div></div>`;
+        // Sora's "&" glyph is a stylized swash that clashes with the rest of
+        // the bold geometric letters — render just that character in the
+        // body font instead, where it looks like an ordinary ampersand.
+        const category = g.category.replace(/&/g, `<span class="amp">&</span>`);
+        return `<div class="skill-group reveal"><h3 class="skill-category">${category}</h3><div class="tags">${tags}</div></div>`;
       })
       .join("");
     return { title: "Skills", cls: "skills", html: `<div class="skills-list">${groups}</div>` };
