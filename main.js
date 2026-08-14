@@ -66,7 +66,7 @@
             <span class="tl-date">${e.date || ""}</span>
             ${e.location ? `<span class="tl-loc">${e.location}</span>` : ""}
           </div>
-          <div class="tl-card reveal" style="--reveal-delay:${i * 70}ms">
+          <div class="tl-card reveal" style="--reveal-delay:${Math.min(i * 60, 240)}ms">
             ${logo}
             <div class="tl-role">${e.role || ""}</div>
             ${e.company ? `<div class="tl-company">${e.company}</div>` : ""}
@@ -89,7 +89,7 @@
         // chip keeps it legible over any project image behind it.
         const openIcon = `<span class="card-open" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span>`;
         return `
-          <a class="card reveal" style="--reveal-delay:${i * 70}ms" href="project.html?id=${encodeURIComponent(p.id)}" aria-label="View details — ${p.title || ""}">
+          <a class="card reveal" style="--reveal-delay:${Math.min(i * 60, 240)}ms" href="project.html?id=${encodeURIComponent(p.id)}" aria-label="View details — ${p.title || ""}">
             <div class="card-img" style="background-image:url('${p.image}')"></div>
             ${openIcon}
             <div class="card-body">
@@ -124,7 +124,7 @@
     if (!list.length) return null;
     const cards = list
       .map((c, i) => {
-        const delay = `--reveal-delay:${i * 70}ms`;
+        const delay = `--reveal-delay:${Math.min(i * 60, 240)}ms`;
         // Issuer and date as separate elements rather than one joined string,
         // so CSS can rank them: the date becomes the scan anchor (accent,
         // uppercase — same treatment as the project cards) while the issuer
@@ -187,7 +187,7 @@
             <span class="edu-date">${e.date || ""}</span>
             ${e.location ? `<span class="edu-loc">${e.location}</span>` : ""}
           </div>
-          <div class="edu-card reveal" style="--reveal-delay:${i * 70}ms">
+          <div class="edu-card reveal" style="--reveal-delay:${Math.min(i * 60, 240)}ms">
             ${logo}
             <div class="edu-school">${e.school || ""}</div>
             ${degreeLine}
@@ -973,7 +973,12 @@
           }
         });
       },
-      { threshold: 0.12 }
+      // A small negative bottom margin triggers the reveal a little before
+      // an element is fully in view, so fast scrolling doesn't visibly catch
+      // items mid-transition — the previous 0.12 threshold with no margin
+      // meant items in the same grid crossed the trigger point at noticeably
+      // different scroll offsets depending on row/column position.
+      { threshold: 0.05, rootMargin: "0px 0px -8% 0px" }
     );
     els.forEach((e) => io.observe(e));
   }
