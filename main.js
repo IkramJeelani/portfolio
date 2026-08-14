@@ -961,9 +961,11 @@
   /* ---------- First-load hero intro (name shows alone, then everything
      else fades in in stages) ---------- */
   function setupHeroIntro() {
+    const heroName = document.querySelector(".hero-name");
     const items = document.querySelectorAll(".intro-item");
-    if (!items.length) return;
+    if (!heroName && !items.length) return;
     if (reduced) {
+      if (heroName) heroName.classList.add("in");
       items.forEach((e) => e.classList.add("in"));
       return;
     }
@@ -973,6 +975,7 @@
     // getting skipped.
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
+        if (heroName) heroName.classList.add("in");
         items.forEach((e) => e.classList.add("in"));
       });
     });

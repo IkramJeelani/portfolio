@@ -927,10 +927,22 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 }
 
 /* ===== First-load hero intro ===== */
-/* The h1 name has no intro-item class, so it's the only thing visible at
-   first paint. Everything else fades in in stages, triggered once by
-   setupHeroIntro() in main.js (not scroll-based — these are all already
-   above the fold). */
+/* The name is the one thing on the page that should feel deliberate, not
+   just present — everything else (header, eyebrow, canvas) does a plain
+   fade/slide via .intro-item, but the name gets its own slower scale+fade
+   "arrival" so it reads as the one thing you're meant to remember, not
+   just another item in the same staggered list. Both are triggered
+   together (no delay on either) by setupHeroIntro() in main.js — it's the
+   ONLY thing visible at first paint since everything else has a delay. */
+.hero-name {
+  opacity: 0;
+  transform: scale(0.94) translateY(6px);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.hero-name.in {
+  opacity: 1;
+  transform: none;
+}
 .intro-item {
   opacity: 0;
   transform: translateY(10px);
@@ -942,7 +954,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   transform: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .intro-item { opacity: 1; transform: none; transition: none; }
+  .intro-item, .hero-name { opacity: 1; transform: none; transition: none; }
 }
 
 /* ===== Projects + Certifications: responsive card grid (2–3 columns) ===== */
