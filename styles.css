@@ -1,95 +1,166 @@
 /* ===== Theme tokens ===== */
+/* Palette borrows from traditional Japanese colours (matched to the Life
+   dashboard): kinari (unbleached paper), sumi (ink), shu-iro (vermilion),
+   sakura, matsuba (pine). Names are just references — no Japanese text
+   appears on the page. */
 :root {
-  --bg: #0b0a12;
-  --bg-soft: #16131f;
-  --card: #181526;
-  --border: #2a2540;
-  --text: #ece9f3;
-  /* long-form copy: a notch dimmer than headings to avoid halation on dark */
-  --text-body: #d8d4e6;
-  --muted: #a39db5;
-  --accent: #a855f7;
-  --accent-hover: #c084fc;
-  --accent-rgb: 168, 85, 247; /* #a855f7 as r,g,b — for rgba() glows/washes */
-  --grad: linear-gradient(120deg, #a855f7, #ec4899);
-  /* Deeper stops for gradients that carry white TEXT (buttons): white on
-     #a855f7/#ec4899 is only 3.5-4.0:1, below the 4.5:1 AA floor for the
-     small bold labels these buttons use. Decorative gradients keep --grad. */
-  --grad-btn: linear-gradient(120deg, #8b2fd6, #d61f74);
+  --bg: #f6f3ec;            /* kinari — unbleached paper */
+  --bg-soft: #efeae0;
+  --surface: #fffdf9;
+  --card: var(--surface);
+  --surface-2: #efeae0;
+  --border: #e2dbcd;
+  --text: #1d1a17;          /* sumi ink */
+  --text-body: #1d1a17;
+  --muted: #7d7566;
+  --accent: #d0453a;        /* shu-iro — torii vermilion */
+  --accent-hover: #b93c30;
+  --accent-rgb: 208, 69, 58;
+  --accent-soft: #fbe9e5;
+  --accent-3: #e79aa8;       /* sakura, used by animation cycles */
+  --good: #5b8c6e;
+  --bad: #b23b3b;
+  --warn: #c8963c;
+  --sakura: #e79aa8;
+  --grad: linear-gradient(120deg, #d0453a, #b93c30);
+  --grad-btn: var(--grad);
   --font-display: "Space Grotesk", "Segoe UI", sans-serif;
-  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --radius: 14px;
+  --font-body: ui-sans-serif, -apple-system, "Segoe UI", Inter, Roboto, sans-serif;
+  --radius: 12px;
   --max: 1100px;
-  --shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+  --shadow: 0 1px 2px rgba(60,50,35,.05), 0 8px 26px rgba(60,50,35,.06);
+  --t: 160ms cubic-bezier(.2,.7,.3,1);
+  --pattern: rgba(29,26,23,.05);
 }
 
-/* ===== Light theme ===== */
-:root[data-theme="light"] {
-  --bg: #f4f3fb;
-  --bg-soft: #ffffff;
-  --card: #ffffff;
-  --border: #e4e1f0;
-  --text: #1b1830;
-  --text-body: #1b1830; /* no halation on light — full contrast is fine */
-  --muted: #5c586f;
-  --accent: #6d28d9; /* deeper than dark mode's purple so small text clears AA on white */
-  --accent-hover: #5b21b6;
-  --accent-rgb: 109, 40, 217; /* #6d28d9 as r,g,b — for rgba() glows/washes */
-  --grad: linear-gradient(120deg, #7c3aed, #be185d);
-  --grad-btn: var(--grad); /* light stops are already deep enough for AA text */
-  --shadow: 0 14px 40px rgba(91, 33, 182, 0.12);
+/* ===== Dark theme (aizumi ink base) ===== */
+:root[data-theme="dark"] {
+  --bg: #14161c;            /* aizumi — ink with a hint of indigo */
+  --bg-soft: #232733;
+  --surface: #1b1e26;
+  --card: var(--surface);
+  --surface-2: #232733;
+  --border: #2c313e;
+  --text: #ece7de;          /* washi white */
+  --text-body: #c9d1d9;
+  --muted: #8b8fa0;
+  --accent: #e2695c;
+  --accent-hover: #ea8177;
+  --accent-rgb: 226, 105, 92;
+  --accent-soft: #2c2029;
+  --accent-3: #eda6b4;
+  --good: #7bab8c;
+  --bad: #d9635f;
+  --warn: #d6a75a;
+  --sakura: #eda6b4;
+  --grad: linear-gradient(120deg, #e2695c, #eda6b4);
+  --grad-btn: linear-gradient(120deg, #b93c30, #a03227);
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.3);
+  --pattern: rgba(236,231,222,.045);
 }
-:root[data-theme="light"] .hero h1 {
-  background: linear-gradient(120deg, #1b1830 10%, #7c3aed 55%, #be185d);
+:root[data-theme="dark"] .hero h1 {
+  background: linear-gradient(120deg, #ece7de 10%, #e2695c 55%, #eda6b4);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
-:root[data-theme="light"] .project-content strong { color: #1b1830; }
-/* Stronger, more saturated glows so they read on a white background */
-:root[data-theme="light"] .bg-fx { opacity: 1; }
-:root[data-theme="light"] .g1 { background: radial-gradient(circle, rgba(124, 58, 237, 0.72), transparent 70%); }
-:root[data-theme="light"] .g2 { background: radial-gradient(circle, rgba(219, 39, 119, 0.62), transparent 70%); }
-:root[data-theme="light"] .g3 { background: radial-gradient(circle, rgba(79, 70, 229, 0.62), transparent 70%); }
-:root[data-theme="light"] .g4 { background: radial-gradient(circle, rgba(139, 92, 246, 0.64), transparent 70%); }
-
 * { box-sizing: border-box; }
-
-/* Animated anchor scrolling is still motion — gate it like every other
-   animation on the site instead of forcing it on reduced-motion users. */
-@media (prefers-reduced-motion: no-preference) {
-  html { scroll-behavior: smooth; }
-}
+html, body { height: 100%; }
+/* Scroll anchoring (the browser's automatic "keep visible content stable
+   during a layout shift" compensation) fights main.js's own scroll
+   handling: switching sections deliberately resets to the top, but a
+   layout-shifting rebuild that lands a frame later (the Skills masonry
+   columns, or anything that resizes once images/logos finish loading)
+   would otherwise nudge the page away from that reset on its own. Since
+   scroll position here is entirely under this site's own control, that
+   automatic compensation is never wanted. */
+html { overflow-anchor: none; }
 
 body {
   margin: 0;
   font-family: var(--font-body);
-  color: var(--text-body);
+  font-size: 15px;
+  color: var(--text);
   line-height: 1.6;
-  background-color: var(--bg);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  font-synthesis-weight: none;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Purple/pink corner glows — each blob breathes independently (injected by branding.js) */
-.bg-fx {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  overflow: hidden;
+/* Seigaiha (青海波) — traditional Japanese overlapping-wave pattern.
+   Two staggered rows of concentric semicircle arcs create the classic
+   fish-scale motif. Radial mask fades it over the content centre. */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='30' viewBox='0 0 60 30'%3E%3Cg fill='none' stroke='%231d1a17' stroke-width='0.7'%3E%3Cpath d='M0 15a15 15 0 0 1 30 0M30 15a15 15 0 0 1 30 0M-15 30a15 15 0 0 1 30 0M15 30a15 15 0 0 1 30 0M45 30a15 15 0 0 1 30 0'/%3E%3Cpath d='M5 15a10 10 0 0 1 20 0M35 15a10 10 0 0 1 20 0M-10 30a10 10 0 0 1 20 0M20 30a10 10 0 0 1 20 0M50 30a10 10 0 0 1 20 0'/%3E%3Cpath d='M10 15a5 5 0 0 1 10 0M40 15a5 5 0 0 1 10 0M-5 30a5 5 0 0 1 10 0M25 30a5 5 0 0 1 10 0M55 30a5 5 0 0 1 10 0'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 80px 40px;
+  opacity: 0.045;
 }
-.glow {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.55;
+:root[data-theme="dark"] body::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='30' viewBox='0 0 60 30'%3E%3Cg fill='none' stroke='%23ece7de' stroke-width='0.7'%3E%3Cpath d='M0 15a15 15 0 0 1 30 0M30 15a15 15 0 0 1 30 0M-15 30a15 15 0 0 1 30 0M15 30a15 15 0 0 1 30 0M45 30a15 15 0 0 1 30 0'/%3E%3Cpath d='M5 15a10 10 0 0 1 20 0M35 15a10 10 0 0 1 20 0M-10 30a10 10 0 0 1 20 0M20 30a10 10 0 0 1 20 0M50 30a10 10 0 0 1 20 0'/%3E%3Cpath d='M10 15a5 5 0 0 1 10 0M40 15a5 5 0 0 1 10 0M-5 30a5 5 0 0 1 10 0M25 30a5 5 0 0 1 10 0M55 30a5 5 0 0 1 10 0'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.04;
 }
-/* transform-origin is each blob's INNER corner, so breathing expands toward the
-   screen corner (outward) instead of pushing into the middle. */
-.g1 { width: 46vw; height: 46vw; left: -22vw;  top: -22vw;     transform-origin: bottom right; background: radial-gradient(circle, rgba(168, 85, 247, 0.6), transparent 70%); }
-.g2 { width: 42vw; height: 42vw; right: -22vw; top: -10vh;     transform-origin: bottom left;  background: radial-gradient(circle, rgba(236, 72, 153, 0.5), transparent 70%); }
-.g3 { width: 40vw; height: 40vw; right: -20vw; bottom: -22vw;  transform-origin: top left;     background: radial-gradient(circle, rgba(99, 102, 241, 0.5), transparent 70%); }
-.g4 { width: 38vw; height: 38vw; left: -20vw;  bottom: -20vw;  transform-origin: top right;    background: radial-gradient(circle, rgba(139, 92, 246, 0.5), transparent 70%); }
+
+/* Sakura petals drifting behind the UI. Purely decorative. */
+.petals { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.petals i {
+  position: absolute; top: -6vh;
+  width: 10px; height: 10px;
+  background: var(--sakura);
+  /* Asymmetric radii → petal silhouette, not a circle */
+  border-radius: 100% 0 100% 100%;
+  opacity: 0;
+  animation: petal-fall linear infinite;
+}
+@keyframes petal-fall {
+  0%   { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.55; }
+  90%  { opacity: 0.35; }
+  100% { transform: translate(14vw, 108vh) rotate(420deg); opacity: 0; }
+}
+.petals i:nth-child(1)  { left:  4%; animation-duration: 15s; animation-delay:   0s; transform: scale(.8);  }
+.petals i:nth-child(2)  { left: 14%; animation-duration: 19s; animation-delay:  -4s; }
+.petals i:nth-child(3)  { left: 26%; animation-duration: 13s; animation-delay:  -9s; transform: scale(.6);  }
+.petals i:nth-child(4)  { left: 38%; animation-duration: 21s; animation-delay:  -2s; }
+.petals i:nth-child(5)  { left: 49%; animation-duration: 16s; animation-delay: -12s; transform: scale(.7);  }
+.petals i:nth-child(6)  { left: 61%; animation-duration: 23s; animation-delay:  -6s; }
+.petals i:nth-child(7)  { left: 72%; animation-duration: 14s; animation-delay: -16s; transform: scale(.55); }
+.petals i:nth-child(8)  { left: 83%; animation-duration: 18s; animation-delay:  -3s; }
+.petals i:nth-child(9)  { left: 92%; animation-duration: 20s; animation-delay: -11s; transform: scale(.75); }
+.petals i:nth-child(10) { left: 68%; animation-duration: 26s; animation-delay: -19s; transform: scale(.5);  }
+
+.petals.hidden { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .petals { display: none; }
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+/* Keep app content above the wave texture + petals layer */
+.app { position: relative; z-index: 1; min-height: 100%; }
+/* The sidebar is a fixed overlay (not a grid column) so the CONTENT COLUMN
+   can be scrolled by the real page/viewport instead of a bounded inner
+   <div> with overflow:auto — that inner-scroller + JS wheel-forwarding
+   setup never felt as smooth as native scroll physics (momentum,
+   acceleration, trackpad gestures) that the browser gives scrolling the
+   actual document for free, and it broke down entirely when the cursor
+   sat over the sidebar (no scrollable element under it). .main just needs
+   to leave room for the fixed sidebar's width. */
+.main {
+  min-width: 0;
+  margin-left: 232px;
+  /* No top padding — .topbar (the notch) carries its own padding-top, so
+     adding more here would just double up the gap above it. */
+  padding: 0 30px 40px;
+  display: flex;
+  flex-direction: column;
+}
+/* Home's section-view is deliberately exactly one viewport tall
+   (min-height:100vh) — .main's own bottom padding on top of that pushed
+   the page a few px past 100vh, just enough to allow a slight, pointless
+   scroll on a section that's supposed to be a fixed, un-scrollable hero. */
+.main:has(.section-view[data-view="home"].is-active) { padding-bottom: 0; }
 
 a { color: inherit; text-decoration: none; }
 
@@ -135,7 +206,6 @@ input:focus-visible,
 /* ===== Display font for headings ===== */
 h1, h2, h3,
 .brand,
-.section-title,
 .card-title,
 .tl-role,
 .edu-school {
@@ -144,233 +214,399 @@ h1, h2, h3,
   color: var(--text); /* headings keep full brightness; body copy is a notch dimmer */
 }
 
-/* ===== Header ===== */
+/* ===== Sidebar (was .site-header; kept for JS compatibility). Fixed
+   overlay rail on desktop (out of the page's normal flow — .main just
+   reserves its width via margin-left), collapses to an in-flow sticky
+   top bar on mobile via the max-width:900px block later in this file. */
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 232px;
+  height: 100vh;
+  height: 100svh;
   z-index: 50;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr; /* brand | toggle | nav */
-  align-items: center;
-  gap: 0.5rem 1rem;
-  padding: 0.8rem 1.35rem;
-  background: transparent; /* seamless with the body at the top */
-  transition: background 0.3s ease, backdrop-filter 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 14px;
+  gap: 18px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow: hidden;
 }
-/* Frosted background once the page is scrolled (transparent only at the very top) */
-.site-header.scrolled {
-  background: rgba(11, 10, 18, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-:root[data-theme="light"] .site-header.scrolled { background: rgba(244, 243, 251, 0.6); }
-/* Cursor spotlight that follows the mouse across the nav */
+/* Subtle cursor spotlight — kept from the previous build */
 .site-header::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(200px circle at var(--x, -300px) var(--y, 50%), rgba(168, 85, 247, 0.30), transparent 60%);
+  background: radial-gradient(180px circle at var(--x, -300px) var(--y, 50%), rgba(var(--accent-rgb), 0.12), transparent 65%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 .site-header:hover::before { opacity: 1; }
-@media (prefers-reduced-motion: no-preference) {
-  .brand { animation: brand-flow 5s linear infinite; }
-}
-@keyframes brand-flow { to { background-position: 200% center; } }
 
+/* justify-content: flex-start, and no horizontal padding of its own — the
+   nav links below (.site-header nav a) start flush at .site-header's own
+   14px padding with none of their own extra inset, so centering .brand or
+   giving its wrap extra side padding put "IJ" a few px out of alignment
+   with "About"/"Experience"/etc. right underneath it. Flush-left here lines
+   the brand chip's edge up with the nav list's, so it reads as sitting
+   right above it instead of independently centered. */
+.brand-wrap { display: flex; align-items: center; justify-content: flex-start; gap: 10px; padding: 2px 0 4px; position: relative; z-index: 2; }
 .brand {
-  grid-column: 1;
-  grid-row: 1;
-  justify-self: start;
-  position: relative;
-  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 20px;
   letter-spacing: 0.5px;
-  background: var(--grad);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--accent);
+  line-height: 1;
+  white-space: nowrap;
+  transition: opacity 0.15s ease, transform 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
+.brand:hover { border-color: var(--accent); color: var(--accent-hover); transform: translateY(-1px); }
+.brand:active { transform: translateY(0); }
+/* Briefly toggled by branding.js around the "IJ" <-> full-name swap (Home
+   vs every other view) so it fades through instead of jump-cutting. */
+.brand.swap { opacity: 0; }
 .site-header nav {
-  grid-column: 3;
-  grid-row: 1;
-  justify-self: end;
   position: relative;
   z-index: 2;
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-end;
-  /* Tight column-gap (not a smaller font) on purpose: shrinking the text
-     was tried and felt too small to read, so the word-spacing between
-     links is what's tightened instead — buys back the room needed to stay
-     inline through common laptop widths (1366px etc.) without touching
-     legibility. */
-  gap: 0.35rem 0.75rem;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
 }
+.site-header nav::-webkit-scrollbar { display: none; }
+/* Nav row: icon + label. Active row gets accent-soft fill + a vermilion
+   brush stroke on the left margin. Matches the tracker's .nav button. */
 .site-header nav a {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 10px;
   color: var(--muted);
   font-weight: 500;
-  font-size: 0.92rem;
-  transition: color 0.2s;
+  font-size: 14px;
+  transition: background var(--t), color var(--t);
 }
-.site-header nav a::after {
+.site-header nav a svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transition: color var(--t);
+}
+.site-header nav a::before {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -4px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--grad);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.25s ease;
+  left: -14px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity var(--t);
 }
-.site-header nav a:hover { color: var(--text); }
-.site-header nav a:hover::after { transform: scaleX(1); }
-/* Scroll spy: the section currently being read (aria-current set by main.js) */
-.site-header nav a[aria-current] { color: var(--text); }
-.site-header nav a[aria-current]::after { transform: scaleX(1); }
+.site-header nav a::after { display: none; }
+.site-header nav a:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+.site-header nav a[aria-current] {
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+.site-header nav a[aria-current] svg { color: var(--accent); }
+.site-header nav a[aria-current]::before { opacity: 1; }
 
-/* Light/dark toggle — centred in the nav bar */
-/* Centred control group in the nav bar (theme toggle + particles toggle) */
+/* Sidebar foot: résumé button (primary CTA) + a compact toggle row.
+   Class name kept as .header-controls because branding.js creates it. */
 .header-controls {
-  grid-column: 2;
-  grid-row: 1;
-  justify-self: center;
   position: relative;
   z-index: 3;
   display: flex;
-  align-items: center;
-  /* No flex `gap` here on purpose: gap inserts space on BOTH sides of every
-     child, including the résumé button when it's collapsed to width:0 while
-     hidden — that phantom double-gap is what used to wedge the two toggles
-     apart on first load. Spacing instead lives on theme-toggle's own
-     margin-right, so it collapses to nothing right along with the button. */
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
 }
-.theme-toggle { margin-right: 0.6rem; }
+.header-controls .toggle-row {
+  display: flex;
+  gap: 6px;
+}
 .theme-toggle,
 .fx-toggle {
-  position: relative; /* anchors the invisible touch-target extension below */
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
+  flex: 1 1 0;
   height: 34px;
-  border-radius: 50%;
+  border-radius: 10px;
   border: 1px solid var(--border);
-  background: var(--bg-soft);
-  color: var(--accent);
+  background: transparent;
+  color: var(--muted);
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, transform 0.15s, opacity 0.2s;
+  transition: border-color var(--t), color var(--t), background var(--t);
 }
 .theme-toggle:hover,
 .fx-toggle:hover {
   border-color: var(--accent);
-  transform: scale(1.1);
+  color: var(--accent);
 }
 .theme-toggle svg,
-.fx-toggle svg { width: 17px; height: 17px; display: block; }
+.fx-toggle svg { width: 15px; height: 15px; display: block; }
 .theme-toggle .icon-sun { display: none; }
 .theme-toggle .icon-moon { display: block; }
-:root[data-theme="light"] .theme-toggle .icon-sun { display: block; }
-:root[data-theme="light"] .theme-toggle .icon-moon { display: none; }
-/* When particles are off, the sparkle button looks dimmed */
-.fx-toggle.off { color: var(--muted); opacity: 0.6; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+.fx-toggle.off { opacity: 0.6; }
 
-/* Invisible touch-target extension: the header controls are drawn at
-   32-34px but a fingertip needs ~44px — pad the hit area without changing
-   the visual size. (-5px per side ≈ 44px effective.) */
 .theme-toggle::after,
 .fx-toggle::after,
-.nav-toggle::after,
 .nav-resume-btn::after {
   content: "";
   position: absolute;
   inset: -5px;
 }
 
-/* Nav résumé button — icon + label, always present between the theme and
-   particles toggles from first paint. No hero counterpart, no scroll-driven
-   show/hide, no transition: just a normal static button. */
+/* Sync-chip-style résumé button: flat, hairline border, accent hover.
+   Matches the tracker's .sync-chip pattern (bottom-of-sidebar utility row). */
 .nav-resume-btn {
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  height: 34px;
-  padding: 0 0.95rem;
-  border-radius: 999px;
-  background: var(--grad-btn); /* white label needs the AA-passing stops */
-  color: #fff;
-  font-weight: 700;
-  font-size: 0.82rem;
-  white-space: nowrap;
-  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.45);
-  margin-right: 0.5rem;
-  transition: box-shadow 0.2s ease;
-}
-.nav-resume-btn:hover { box-shadow: 0 6px 22px rgba(168, 85, 247, 0.65); }
-.nav-resume-btn svg { width: 17px; height: 17px; flex-shrink: 0; display: block; }
-
-/* Hamburger menu button (hidden until the links would crowd) */
-.nav-toggle {
-  display: none;
-  grid-column: 3;
-  grid-row: 1;
-  justify-self: end;
-  position: relative;
-  z-index: 3;
+  width: 100%;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+  gap: 8px;
+  padding: 8px 10px;
   border: 1px solid var(--border);
-  background: var(--bg-soft);
-  color: var(--text);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 13px;
+  white-space: nowrap;
   cursor: pointer;
-  transition: border-color 0.2s, transform 0.15s;
+  transition: border-color var(--t), color var(--t);
 }
-.nav-toggle:hover { border-color: var(--accent); }
-.nav-toggle svg { width: 17px; height: 17px; display: block; } /* one icon size across the header */
-.nav-toggle .icon-close { display: none; }
-.nav-toggle[aria-expanded="true"] .icon-bars { display: none; }
-.nav-toggle[aria-expanded="true"] .icon-close { display: block; }
+.nav-resume-btn:hover { border-color: var(--accent); color: var(--text); }
+.nav-resume-btn svg { width: 15px; height: 15px; flex-shrink: 0; display: block; color: var(--accent); }
+
+/* ===== Topbar (view title) =====
+   MacBook-notch shaped: a narrow, centered block flush with the very top
+   edge, rounded only at the bottom corners, no top border/radius — it
+   reads as cut into the top edge rather than a card floating below it.
+   Theme-aware (var(--surface)/var(--text)), not a fixed dark tone — light
+   theme's notch should read as a lighter, paper-toned cutout to match its
+   page, same as every other card on the site; a border does the job of
+   defining its edges that raw dark-on-light contrast would otherwise need.
+   NOT sticky — it scrolls away with the rest of the page like any other
+   in-flow element, instead of staying pinned at the top. */
+.topbar {
+  width: fit-content;
+  min-width: 220px;
+  max-width: calc(100% - 40px); /* never touch the viewport edges on a narrow screen */
+  margin: 0 auto;
+  padding: 20px 46px 17px;
+  border-radius: 0 0 22px 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  flex-shrink: 0;
+}
+/* Home has no title to show — an empty notch there was just a floating
+   blank shape with nothing in it. Hidden outright instead of kept around
+   at its min-width floor. */
+.topbar:has(.view-title:empty) { display: none; }
+.topbar-title { text-align: center; }
+.view-title {
+  font-size: 25px; letter-spacing: 0.01em; margin: 0; font-weight: 600;
+  display: inline-block;
+  position: relative;
+  padding-bottom: 0.45rem;
+  color: var(--text);
+}
+.view-title:empty::after { display: none; }
+.view-title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 42px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+/* One rule, not two — a second .back-link block used to live down in the
+   "Project detail page" section (same selector, different properties,
+   declared later) and silently won the color/hover fight against this one
+   every time, since it's the only .back-link on the page (inside the
+   notch's .topbar-title). Merged its useful tap-target sizing in here. */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  /* padding (offset by negative margins) gives a comfortable tap target
+     without shifting the link's visual position */
+  padding: 0.5rem 0.4rem;
+  margin: -0.5rem -0.4rem;
+  transition: color var(--t);
+}
+.back-link:hover { color: var(--accent); }
+
+/* ===== View container: tab-style — exactly ONE section is in the layout
+   at a time (.is-active, toggled by main.js), everything else is
+   display:none. Moving between sections only ever happens via a nav click
+   or hash change; scrolling still works completely normally WITHIN
+   whichever section is active, it just has nothing on either side of it to
+   scroll into. (Two earlier designs tried to make scrolling itself double
+   as navigation — a full-page scroll-snap, then plain flow + a scrollspy —
+   and both made "which section is this" tracking fragile enough that the
+   topbar title/nav/URL hash could drift out of sync with what was actually
+   on screen. Only one section ever being rendered removes the ambiguity:
+   there's nothing to track.) */
+.view {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+/* Home keeps a deliberate full-screen hero treatment (below); every other
+   section is only as tall as its own content. 3rem top/bottom, not the
+   earlier 4.5rem — content that's naturally close to one viewport tall
+   (Experience, Education) was landing just a few px past it purely because
+   of this padding, forcing a pointless sliver of scroll on an otherwise
+   single-screen section. */
+.section-view {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+.section-view.is-active { display: flex; }
+.section-view > * { width: 100%; }
+.section-view[data-view="home"] {
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 0 1.5rem;
+}
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar { display: none; }
+
+/* ===== Mobile: sidebar becomes a horizontal top bar ===== */
+@media (max-width: 900px) {
+  /* On mobile the sidebar goes back to being an in-flow sticky top bar
+     (not a fixed overlay), so .main no longer reserves space for it via
+     margin-left — the two just stack normally, one after the other. */
+  .main { margin-left: 0; }
+  .site-header {
+    position: sticky;
+    top: 0;
+    left: auto;
+    width: 100%;
+    height: auto;
+    z-index: 40;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 8px;
+    padding: 10px 12px;
+    gap: 10px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    overflow: visible;
+  }
+  .brand-wrap { padding: 0; flex-shrink: 0; }
+  .site-header nav {
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex: 1;
+    min-width: 0;
+  }
+  .site-header nav a { padding: 8px 11px; flex-shrink: 0; }
+  .site-header nav a .nav-label { display: none; }
+  .site-header nav a::before {
+    left: 0; right: 0; top: auto; bottom: -1px;
+    width: 100%; height: 2px;
+    border-radius: 2px 2px 0 0;
+  }
+  /* Résumé + toggles + contact links no longer compete with the nav for
+     horizontal space (that squeezed the nav to 0 width) — they drop to
+     their own full-width row instead. */
+  .header-controls {
+    flex-basis: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 0;
+    margin-left: 0;
+    flex-shrink: 0;
+  }
+  .header-controls .toggle-row { gap: 6px; }
+  .nav-resume-btn { width: auto; padding: 6px 10px; }
+  .nav-resume-btn span { display: none; }
+  .sidebar-contact a {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+  }
+  .sidebar-contact a span { display: none; }
+  /* No top padding here either — same reasoning as the desktop rule:
+     .topbar's own padding-top now provides it consistently. */
+  .main { padding: 0 14px 40px; }
+  .section-view[data-view="home"] {
+    min-height: calc(100vh - var(--header-h, 106px));
+    min-height: calc(100svh - var(--header-h, 106px));
+  }
+}
 
 /* ===== Hero ===== */
-/* Fills the first viewport (minus the 72px sticky header) so the landing
-   screen shows only the name — the About section starts below the fold.
-   Desktop: 2 columns, arm | text. Mobile: stacks name then arm. */
+/* Name above the robot arm, centered, at every width — the .section-view
+   it sits in (min-height: 100vh + justify-content: center) fills and
+   centers it within exactly one screen. */
 .hero {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 2rem 1.5rem;
-  text-align: left;
-  /* Full viewport height, pulled up under the transparent sticky header, so
-     the content centres in the whole screen rather than the area below it. */
-  min-height: 100vh;
-  min-height: 100svh;
-  margin-top: calc(-1 * var(--header-h, 72px));
+  padding: 1rem 0.5rem;
+  text-align: center;
+  /* Vertical centering within the first screen now comes from the .section-view
+     it sits in (min-height: 100% + justify-content: center) — the Home
+     section snap-scrolls to exactly one screen either way. */
   display: grid;
-  grid-template-columns: minmax(0, 500px) 1fr;
-  grid-template-areas: "visual right";
-  align-items: center;
-  /* Packs row tracks tightly (spacing comes only from row-gap/margins) and
-     centers that group vertically within the tall min-height box — without
-     this, auto-sized rows stretch across the leftover space instead. Mostly
-     matters once mobile stacks into 3 rows; harmless as a single row too. */
+  grid-template-columns: 1fr;
+  grid-template-areas: "text" "visual";
+  justify-items: center;
   align-content: center;
   justify-content: center;
-  column-gap: clamp(1rem, 4vw, 3.5rem);
+  row-gap: 2rem;
 }
-.hero-visual { grid-area: visual; min-width: 0; }
+.hero-visual { grid-area: visual; min-width: 0; width: min(60vw, 400px); }
 .hero-arm {
   width: 100%;
   height: auto;
@@ -390,57 +626,20 @@ h1, h2, h3,
   .hero-arm-hint { display: none; }
 }
 .hero-right {
-  grid-area: right;
+  grid-area: text;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 }
 .hero-text { max-width: 600px; }
-.hero-text .subtitle { margin-left: 0; }
-/* Tablets: keep the two columns but let the arm shrink before the text wraps badly. */
-@media (max-width: 1180px) {
-  .hero { grid-template-columns: minmax(0, min(44vw, 460px)) 1fr; }
-}
-/* Below ~1000px the columns get cramped — stack: name, then arm. */
+.hero-text .subtitle { margin-left: auto; margin-right: auto; }
 @media (max-width: 1000px) {
-  .hero {
-    grid-template-columns: 1fr;
-    grid-template-areas: "text" "visual";
-    justify-items: center;
-    row-gap: 2rem;
-    text-align: center;
-  }
-  .hero-right { grid-area: text; }
   .hero-visual { width: min(72vw, 340px); }
-  .hero-text .subtitle { margin-left: auto; margin-bottom: 0; }
 }
-/* Short viewports (landscape phones, small laptops with the window snapped):
-   don't force a full-screen hero — let it size to its content. */
 @media (max-height: 620px) {
-  .hero { min-height: 0; margin-top: 0; padding: 4.5rem 1.5rem 3.5rem; }
-  .hero::after { display: none; }
-}
-/* Subtle cue that there's more below */
-.hero::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 2.2rem;
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid var(--muted);
-  border-bottom: 2px solid var(--muted);
-  transform: translateX(-50%) rotate(45deg);
-  opacity: 0.7;
+  .hero { padding: 4.5rem 1.5rem 3.5rem; }
 }
 .hero { position: relative; }
-@media (prefers-reduced-motion: no-preference) {
-  .hero::after { animation: hero-cue 2.2s ease-in-out infinite; }
-}
-@keyframes hero-cue {
-  0%, 100% { transform: translateX(-50%) translateY(0) rotate(45deg); opacity: 0.7; }
-  50%      { transform: translateX(-50%) translateY(7px) rotate(45deg); opacity: 0.3; }
-}
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 3px;
@@ -452,7 +651,7 @@ h1, h2, h3,
   font-size: clamp(2.5rem, 7vw, 4.5rem);
   margin: 0 0 1rem;
   line-height: 1.05;
-  background: linear-gradient(120deg, #ffffff 10%, #c084fc 55%, #ec4899);
+  background: linear-gradient(120deg, #1d1a17 10%, #d0453a 55%, #e79aa8);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -488,47 +687,17 @@ h1, h2, h3,
 }
 .btn-primary:hover { filter: brightness(1.12); }
 
-/* ===== Section headings ===== */
-.section-title {
-  text-align: center;
-  font-size: 2rem;
-  margin: 0 0 2rem;
-}
-.section-title::after {
-  content: "";
-  display: block;
-  width: 54px;
-  height: 3px;
-  margin: 0.7rem auto 0;
-  border-radius: 3px;
-  background: var(--grad);
-}
-
-/* "Arrival" flash when you navigate to a section from the nav */
-.section.flash .section-title { animation: title-pop 0.9s ease; }
-.section.flash .section-title::after { animation: underline-sweep 0.9s ease; }
-@keyframes title-pop {
-  0%   { transform: scale(1); }
-  30%  { transform: scale(1.1); text-shadow: 0 0 26px rgba(168, 85, 247, 0.75); }
-  100% { transform: scale(1); text-shadow: none; }
-}
-@keyframes underline-sweep {
-  0%   { width: 54px; }
-  45%  { width: 210px; }
-  100% { width: 54px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .section.flash .section-title,
-  .section.flash .section-title::after { animation: none; }
-}
-
 /* ===== Generic section wrapper ===== */
-.section {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 3.5rem 1.5rem;
-  scroll-margin-top: 72px; /* header is ~60px tall; +12px breathing room on anchor jumps */
-}
+/* .section (still applied by main.js alongside .section-view, to every
+   built section except Home) used to carry its own max-width: var(--max)
+   (1100px) and padding: 0.5rem 0.5rem 2rem here. The max-width won the
+   cascade over .section-view's 960px, widening every section except Home;
+   the padding, being asymmetric (8px top, 32px bottom) on the same
+   element .section-view centers content within, shifted that centered
+   content up by (32-8)/2 = 12px versus Home, which carries no such
+   padding. Width/centering/spacing all come from .section-view now, so
+   neither is needed here anymore. No inline .section-title either — the
+   topbar's view-title carries the current section's label instead. */
 
 /* ===== About ===== */
 .about-text {
@@ -583,7 +752,7 @@ h1, h2, h3,
   border-radius: 50%;
   background: var(--accent);
   border: 3px solid var(--bg);
-  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.25);
 }
 .tl-date { color: var(--accent); font-weight: 600; white-space: nowrap; }
 .tl-loc { color: var(--muted); white-space: nowrap; line-height: 1.2; }
@@ -601,6 +770,7 @@ h1, h2, h3,
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1rem 1.25rem;
+  box-shadow: var(--shadow);
 }
 .tl-logo {
   display: block;
@@ -617,11 +787,7 @@ h1, h2, h3,
 
 /* ===== Skills ===== */
 .skills-list {
-  /* 640px landed the column-count formula in main.js (setupSkillsMasonry:
-     floor((w+36)/(190+36))) right at 2 columns. 760px lands it at exactly 3
-     with margin on both sides of the threshold (needs 642-867px), so it
-     doesn't flip back to 2 or jump to 4 from a few px of layout rounding. */
-  max-width: 760px;
+  max-width: 960px;
   margin: 0 auto;
   /* True masonry: main.js measures each category and deals them into these
      flex columns shortest-first, so the columns always end nearly level. */
@@ -651,9 +817,9 @@ h1, h2, h3,
   bottom: var(--trunk-cut, 0px);
   width: 3px;
   border-radius: 3px;
-  background: linear-gradient(180deg, #a855f7, #ec4899, #6366f1, #a855f7);
+  background: linear-gradient(180deg, var(--accent), var(--accent-3), var(--accent-hover), var(--accent));
   background-size: 100% 300%;
-  box-shadow: 0 0 10px rgba(168, 85, 247, 0.55);
+  box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.55);
 }
 @media (prefers-reduced-motion: no-preference) {
   .skill-group::before {
@@ -662,10 +828,12 @@ h1, h2, h3,
 }
 @keyframes skill-line-flow { to { background-position: 0 -300%; } }
 @keyframes skill-line-glow {
-  0%, 100% { box-shadow: 0 0 6px rgba(168, 85, 247, 0.4); }
-  50%      { box-shadow: 0 0 16px rgba(236, 72, 153, 0.8); }
+  0%, 100% { box-shadow: 0 0 6px rgba(var(--accent-rgb), 0.4); }
+  50%      { box-shadow: 0 0 16px rgba(231, 154, 168, 0.8); }
 }
-.skill-category { margin: 0 0 0.6rem; font-size: 1.1rem; font-weight: 700; color: #a855f7; letter-spacing: -0.01em; }
+/* Skill category headings use the theme accent so they follow the vermilion
+   in either theme — same treatment as active nav rows and tag.accent. */
+.skill-category { margin: 0 0 0.6rem; font-size: 1.05rem; font-weight: 600; color: var(--accent); letter-spacing: -0.01em; }
 /* Plain list instead of pill/chip tags — every earlier fix here (radius,
    contrast, wrap width) was chasing problems that only existed BECAUSE it
    was a pill; a normal list sidesteps all of them at once: no shape to
@@ -728,9 +896,9 @@ h1, h2, h3,
   }
 }
 @keyframes skill-dot-hue {
-  0%, 100% { background-color: #a855f7; }
-  33.33% { background-color: #ec4899; }
-  66.67% { background-color: #6366f1; }
+  0%, 100% { background-color: var(--accent); }
+  33.33% { background-color: var(--accent-3); }
+  66.67% { background-color: var(--accent-hover); }
 }
 
 /* ===== Certifications: same card as projects, in the grid ===== */
@@ -749,10 +917,10 @@ h1, h2, h3,
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  transition: transform 0.25s ease, border-color 0.2s, box-shadow 0.25s ease;
+  transition: transform 160ms cubic-bezier(.2,.7,.3,1), border-color 160ms cubic-bezier(.2,.7,.3,1), box-shadow 160ms cubic-bezier(.2,.7,.3,1);
   transform-style: preserve-3d;
 }
-a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
+a.cert-card:hover { transform: translateY(-4px); border-color: var(--accent); }
 .cert-text {
   min-width: 0; /* lets the text column shrink beside the logo instead of overflowing */
   flex: 1 1 auto;
@@ -806,11 +974,9 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 }
 /* no leading dot when there's no issuer to separate it from */
 .cert-date:first-child::before { content: none; }
-/* Dark theme: --accent (#a855f7) on the dark card measures only 4.52:1 at this
-   size — technically AA, but no margin. --accent-hover is lighter, so on a dark
-   background it lifts clear. (:not([data-theme=light]) also covers the default,
-   attribute-less state, which uses the dark tokens.) */
-:root:not([data-theme="light"]) .cert-date { color: var(--accent-hover); }
+/* Dark theme: --accent on the dark card leaves little margin at this size.
+   --accent-hover is lighter, so on a dark background it lifts clear. */
+:root[data-theme="dark"] .cert-date { color: var(--accent-hover); }
 /* Rounded + outlined so each mark reads as a deliberate brand tile: these are
    square JPEGs with baked-in white backgrounds, which otherwise bleed into a
    white card in light mode and float as hard white squares in dark mode. */
@@ -906,7 +1072,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border-radius: 50%;
   background: var(--accent);
   border: 3px solid var(--bg);
-  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.25);
 }
 .edu-date { color: var(--accent); font-weight: 600; white-space: nowrap; }
 .edu-left .edu-loc { color: var(--muted); white-space: nowrap; line-height: 1.2; }
@@ -930,7 +1096,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  transition: transform 0.25s ease, border-color 0.2s;
+  transition: transform 160ms cubic-bezier(.2,.7,.3,1), border-color 160ms cubic-bezier(.2,.7,.3,1), box-shadow 160ms cubic-bezier(.2,.7,.3,1);
 }
 .edu-logo { width: 56px; height: 56px; object-fit: contain; }
 /* align-items:flex-start on .edu-card means these size to their own
@@ -953,14 +1119,14 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.45));
+  filter: drop-shadow(0 0 6px rgba(var(--accent-rgb), 0.45));
 }
 @media (prefers-reduced-motion: no-preference) {
   .edu-major { animation: brand-flow 5s linear infinite, edu-major-glow 3s ease-in-out infinite; }
 }
 @keyframes edu-major-glow {
-  0%, 100% { filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.35)); }
-  50%      { filter: drop-shadow(0 0 13px rgba(168, 85, 247, 0.7)); }
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(var(--accent-rgb), 0.35)); }
+  50%      { filter: drop-shadow(0 0 13px rgba(var(--accent-rgb), 0.7)); }
 }
 .edu-details { color: var(--muted); margin: 0.5rem 0 0; }
 .edu-points { margin: 0.1rem 0 0; padding-left: 1.1rem; color: var(--muted); }
@@ -981,18 +1147,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   .tl-left::after { right: -19px; }
 }
 
-/* ===== Scroll-reveal animation ===== */
-.reveal {
-  opacity: 0;
-  transform: translateY(26px) scale(0.985);
-  transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-}
-.reveal.in {
-  opacity: 1;
-  transform: none;
-}
-
 /* ===== Projects + Certifications: responsive card grid (2–3 columns) ===== */
 .card-grid {
   display: grid;
@@ -1006,12 +1160,18 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  gap: 1.1rem;
   max-width: 960px;
   margin: 0 auto;
 }
-.projects .card { flex: 0 1 300px; }
+/* Bigger than the old 260px, but the surrounding padding/gaps are kept
+   tight (see .card-body, .card-foot below) — the goal is a card that
+   reads as a proper showcase piece without feeling padded-out/bulky. */
+.projects .card { flex: 0 1 280px; }
 
-/* ===== Card ===== */
+/* ===== Card =====
+   Two-layer shadow: a tight contact shadow that anchors the card, plus a
+   soft 26px drop for depth. Motion runs on the site-wide 160ms token. */
 .card {
   position: relative;
   background: var(--card);
@@ -1019,12 +1179,12 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition: transform 0.25s ease, border-color 0.2s, box-shadow 0.25s ease;
+  transition: transform 160ms cubic-bezier(.2,.7,.3,1), border-color 160ms cubic-bezier(.2,.7,.3,1), box-shadow 160ms cubic-bezier(.2,.7,.3,1);
   transform-style: preserve-3d;
   display: flex;
   flex-direction: column;
 }
-.card:hover { transform: translateY(-6px); border-color: var(--accent); }
+.card:hover { transform: translateY(-4px); border-color: var(--accent); }
 
 /* Cursor-following glare for the 3D tilt (projects + certs) */
 .card::after,
@@ -1043,29 +1203,63 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   transition: opacity 0.25s ease;
 }
 .card.tilting,
-.cert-card.tilting { box-shadow: 0 24px 60px rgba(168, 85, 247, 0.28); }
+.cert-card.tilting { box-shadow: 0 24px 60px rgba(var(--accent-rgb), 0.28); }
 .card.tilting::after,
 .cert-card.tilting::after { opacity: 1; }
+/* Taller than the old 130px, with a slow hover zoom — a project's image is
+   the headline showcase element, not a small thumbnail. Kept well short of
+   the earlier 178px though: that made the card feel top-heavy once the
+   surrounding padding is this tight. */
 .card-img {
-  height: 200px;
+  height: 148px;
   background-size: cover;
   background-position: center;
   background-color: var(--bg-soft);
   border-radius: var(--radius) var(--radius) 0 0; /* matches the morph target's rounding */
+  transition: transform 0.5s cubic-bezier(.2,.7,.3,1);
 }
-.card-body { padding: 1.25rem; display: flex; flex-direction: column; }
-.card-title { margin: 0 0 0.35rem; font-size: 1.25rem; }
+.card:hover .card-img { transform: scale(1.06); }
+.card-body { padding: 0.85rem 1rem 0.95rem; display: flex; flex-direction: column; }
+/* Card title bumped up from the old 0.88rem — legible against the taller
+   image above it — but the spacing around it stays tight (compact card,
+   not a spacious one). Brush stroke underneath grows to match. */
+.card-title {
+  position: relative;
+  margin: 0 0 0.35rem;
+  padding-bottom: 0.35rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.card-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 30px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+}
 .card-date {
-  margin: 0 0 0.6rem;
+  margin: 0 0 0.3rem;
   color: var(--accent);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 /* tags grouped at the bottom; the gap sits above the tags */
-.card-foot { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
-.card-foot .tags { margin: 0; align-content: flex-start; }
+.card-foot { margin-top: 0.55rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.card-foot .tags { margin: 0; align-content: flex-start; gap: 0.4rem; }
+/* Smaller than the base .tag (used elsewhere for a single row under a
+   project's full write-up) — a card can carry 4-5 tech tags in a much
+   narrower column, which at full size wrapped across 2-3 lines and made
+   the tag row feel like it was taking over the card's footer. */
+.card-foot .tag {
+  font-size: 0.72rem;
+  padding: 0.2rem 0.55rem;
+}
 /* Open-in affordance, top-right of the card (over the image). Circular chip so
    it stays legible on any image; z-index clears the tilt glare (::after, z 5).
    pointer-events:none — the whole card is the link; the icon is just a cue. */
@@ -1090,21 +1284,30 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .card:hover .card-open,
 .card:focus-visible .card-open { opacity: 1; transform: translate(1px, -1px); }
 
-/* ===== Contact ===== */
-.contact {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 4rem 1.5rem 5rem;
-  text-align: center;
-}
-.contact p { color: var(--muted); }
-.contact-links {
+/* ===== Contact (now inline in sidebar foot) ===== */
+.sidebar-contact {
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: 6px;
+  justify-content: center;
 }
+.sidebar-contact a {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: border-color var(--t), color var(--t);
+}
+.sidebar-contact a:hover { border-color: var(--accent); color: var(--text); }
+.sidebar-contact a svg { width: 14px; height: 14px; flex-shrink: 0; }
 
 /* ===== Footer ===== */
 .site-footer {
@@ -1120,202 +1323,163 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   margin: 0 auto;
   padding: 3rem 1.5rem 4rem;
 }
-.back-link {
-  color: var(--muted);
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  /* padding (offset by negative margins) gives a comfortable tap target
-     without shifting the link's visual position */
-  padding: 0.5rem 0.4rem;
-  margin: -0.5rem -0.4rem 1.1rem;
-}
-.back-link:hover { color: var(--accent); }
 
-/* ===== Floating quick-access project dock (detail page, wide screens) ===== */
-.project-dock {
-  position: fixed;
-  /* Tracks the content column on ultra-wide screens instead of hugging the
-     viewport edge with a huge dead gap: 50% - (410px half-column + 270px
-     dock+gap). Floors at 1rem on normal desktop widths. */
-  left: max(1rem, calc(50% - 680px));
-  top: 84px;
-  width: 230px;
-  max-height: calc(100vh - 104px);
+/* ===== Certificate detail page ===== */
+.cert-page {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 4rem;
+}
+.cert-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.cert-hero-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 8px;
+  flex-shrink: 0;
+}
+.cert-hero-text h1 { font-size: 1.9rem; margin: 0 0 0.35rem; }
+.cert-hero-meta { color: var(--muted); font-size: 1rem; margin: 0; }
+/* The PDF viewer embedded directly in the page (not a modal) — reuses the
+   old modal's toolbar classes (.pdf-toolbar/.pdf-tool-btn/.pdf-zoom-label/
+   .pdf-spinner), just not .pdf-pages itself: that one assumes a fixed-
+   height flex parent it can scroll independently within, which doesn't
+   apply here — this content is meant to flow with and scroll as part of
+   the normal page. */
+.cert-embed {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.cert-embed-toolbar { border-radius: var(--radius) var(--radius) 0 0; }
+.cert-embed-pages {
   display: flex;
   flex-direction: column;
-  z-index: 40;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-.project-dock.collapsed {
-  transform: translateX(calc(-100% - 1.5rem));
-  opacity: 0;
-  pointer-events: none;
-}
-.dock-no-anim { transition: none !important; }
-.dock-head {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin: 0.2rem 0 0.45rem;
-  padding-left: 0.35rem;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--bg-soft);
 }
-.dock-title {
+.cert-embed-pages canvas {
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.25);
+  max-width: 100%;
+}
+.cert-embed-pages .pdf-spinner { margin: 2rem auto; }
+/* iframe fallback when pdf.js can't load */
+.cert-embed-pages.fallback { padding: 0; }
+.cert-embed-pages.fallback iframe { width: 100%; height: 80vh; border: 0; background: #fff; display: block; }
+/* ===== Project list, inside the sidebar (detail page) =====
+   Used to be a separate floating panel of its own (collapsible, with a
+   custom drag-scrollbar) tracking the content column — two side panels
+   competing for the same edge of the screen. Living inside .site-header
+   itself instead: one panel, no collapse/reveal mechanism needed since the
+   sidebar is already always visible, and scrolling is native (hidden
+   scrollbar, same treatment as the home page's own .site-header nav). */
+/* flex: 0 1 auto (shrink-only, no grow) on purpose — NOT flex:1. flex-grow
+   would force this to expand and fill 100% of whatever's left above
+   .header-controls regardless of how many projects there are, leaving a
+   large dead gap below the last row on a short list (the actual bug: with
+   only 3 projects the reel's own box stretched ~340px past the last card).
+   .header-controls' own margin-top:auto already does the "push to the
+   bottom of the sidebar" job on its own, with no help needed here — same
+   as how the home page's nav list works. flex-shrink stays on (with
+   min-height:0 + overflow-y:auto on the reel) so a genuinely long project
+   list still scrolls instead of blowing out the sidebar's fixed height. */
+.sidebar-dock {
+  flex: 0 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.sidebar-dock-title {
   font-family: var(--font-display);
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: var(--muted);
+  padding: 0 2px 0.5rem;
+  flex-shrink: 0;
 }
-.dock-collapse {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--accent);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--accent) 14%, var(--bg-soft));
-  color: var(--accent);
-  cursor: pointer;
-  font-size: 1.2rem;
-  line-height: 1;
-  transition: background 0.2s, transform 0.15s;
-}
-.dock-collapse svg { width: 15px; height: 15px; display: block; }
-.dock-collapse:hover {
-  background: var(--accent);
-  color: #fff;
-  transform: scale(1.1);
-}
-/* Bold gradient edge tab to bring the panel back when hidden */
-.dock-reveal {
-  position: fixed;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  display: none;
-  writing-mode: vertical-rl;
-  padding: 0.95rem 0.5rem;
-  border: none;
-  border-radius: 0 12px 12px 0;
-  background: var(--grad-btn); /* white label needs the AA-passing stops */
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  z-index: 41;
-  box-shadow: 0 4px 18px rgba(168, 85, 247, 0.55);
-  transition: padding 0.18s ease, box-shadow 0.18s ease;
-}
-.dock-reveal.show { display: block; }
-.dock-reveal:hover { padding-right: 0.7rem; box-shadow: 0 6px 26px rgba(168, 85, 247, 0.8); }
-/* One-time attention nudge so visitors notice the hidden panel exists */
-@media (prefers-reduced-motion: no-preference) {
-  .dock-reveal.pulse { animation: dock-tab-pulse 1.5s ease 1s 2; }
-}
-@keyframes dock-tab-pulse {
-  0%, 100% { box-shadow: 0 0 0 rgba(168, 85, 247, 0); }
-  50% { box-shadow: 0 0 22px rgba(168, 85, 247, 0.9); padding-right: 0.7rem; }
-}
-/* Manually scrollable viewport; scrollbar hidden; scroll stays inside the dock */
-.dock-viewport {
-  flex: 1 1 auto;
+.dock-reel {
+  flex: 0 1 auto;
+  min-height: 0;
   overflow-y: auto;
   scrollbar-width: none;
   overscroll-behavior: contain; /* don't chain scroll to the page */
-  padding: 2px;
-  /* Native momentum + gentle snap: the reel coasts with the browser's own
-     inertia and settles with a card neatly framed (proximity = only snaps
-     when already near one, so free scrolling never fights back). */
-  scroll-snap-type: y proximity;
-  scroll-padding-block: 6px;
-  /* soft fade at the ends so cards ease in/out instead of clipping hard */
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
-  mask-image: linear-gradient(180deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
-.dock-viewport::-webkit-scrollbar { display: none; }
-.dock-reel { display: flex; flex-direction: column; gap: 0.6rem; }
-/* Vertical scroll line beside the dock */
-.dock-rail {
-  position: absolute;
-  right: -18px; /* sits clear of the dock */
-  width: 4px;
-  border-radius: 6px;
-  background: var(--border);
-  overflow: hidden;
-  cursor: pointer;
-  transition: width 0.18s ease, right 0.18s ease, background 0.18s ease;
+.dock-reel::-webkit-scrollbar { display: none; }
+/* Not shown on mobile — the sidebar becomes a horizontal top bar there
+   (see the max-width:900px block), which a vertical scrolling list of
+   projects doesn't fit into. */
+@media (max-width: 900px) {
+  .sidebar-dock { display: none; }
 }
-/* grows on both sides on hover (right shifts so the centre stays put) */
-.dock-rail:hover,
-.dock-rail.dragging { width: 10px; right: -21px; background: var(--bg-soft); }
-.dock-rail-thumb {
-  width: 100%;
-  border-radius: 6px;
-  background: var(--grad);
-  cursor: grab;
-  transition: transform 0.08s linear, box-shadow 0.18s ease;
-  will-change: transform;
-}
-.dock-rail-thumb:active { cursor: grabbing; }
-.dock-rail:hover .dock-rail-thumb,
-.dock-rail.dragging .dock-rail-thumb { box-shadow: 0 0 10px rgba(168, 85, 247, 0.65); }
-/* Each dock row: project thumbnail + number on the left, title/date on the
-   right — the image makes every project instantly distinguishable. */
+/* Each dock row: a small number badge + title/date. Used to lead with a
+   46px thumbnail of the project image/logo, but at that size it was too
+   small to actually read as anything — just visual noise taking up space
+   without helping identify the row any better than the title text already
+   does. Dropped it; the badge + text alone reads cleaner at this width.
+   Still a fixed min-height, re-tuned for text-only content (no longer
+   sized to fit a 46px thumbnail) — sized to fit the TALLEST row (the
+   active one, with its extra "Now viewing" flag line) so every row shares
+   the same height whether or not it's the active one, not just whether or
+   not its title wraps to 2 lines. */
 .dock-card {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   scroll-snap-align: center;
-  /* Fixed height: fits thumbnail + 2-line title + date + the active flag, so
-     every row is identical and the dock never resizes between projects. */
-  min-height: 84px;
-  padding: 0.45rem 0.55rem;
+  min-height: 88px;
+  padding: 0.55rem 0.6rem;
   border: 1px solid var(--border);
-  border-left: 3px solid transparent;
   border-radius: 10px;
   background: var(--card);
   opacity: 0.72;
   transition: opacity 0.2s, border-color 0.2s, background 0.2s, transform 0.15s;
 }
+/* Muted, not var(--accent) — that's reserved for "this is the project
+   you're currently viewing" (.dock-card.active below, with its glow and
+   tinted background). Hovering some OTHER row used to get the identical
+   accent border, so at a glance it looked like two rows were both
+   "selected" at once with nothing telling them apart.
+   No translateX nudge here anymore either — that came from when this was
+   a separate floating panel with breathing room around it. Now the card
+   already fills the sidebar's full available width right up against
+   .site-header's own overflow:hidden, so shifting it right pushed its own
+   right border past that clipping edge, cutting it off. */
 .dock-card:hover {
   opacity: 1;
-  border-color: var(--accent);
-  border-left-color: var(--accent);
-  transform: translateX(2px);
+  border-color: var(--muted);
 }
-.dock-thumb {
-  position: relative;
-  flex: 0 0 46px;
-  width: 46px;
-  height: 46px;
-  border-radius: 8px;
-  background-size: cover;
-  background-position: center;
-  background-color: var(--bg-soft);
-  border: 1px solid var(--border);
-}
-/* Position number badge in the thumbnail corner */
 .dock-num {
-  position: absolute;
-  left: -6px;
-  top: -6px;
-  min-width: 17px;
-  height: 17px;
-  padding: 0 3px;
+  flex: 0 0 auto;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 5px;
+  border-radius: 7px;
   background: var(--bg-soft);
   border: 1px solid var(--border);
   color: var(--muted);
   font-family: var(--font-display);
-  font-size: 0.62rem; /* sub-10px text was below any legibility floor */
+  font-size: 0.68rem;
   font-weight: 700;
   line-height: 1;
 }
@@ -1341,16 +1505,11 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .dock-card.active {
   opacity: 1;
   border-color: var(--accent);
-  border-left-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 14%, var(--card));
-  box-shadow: 0 0 18px rgba(168, 85, 247, 0.4);
   cursor: default;
 }
-.dock-card.active:hover { transform: none; }
-.dock-card.active .dock-thumb {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent);
-}
+/* Fixed deep coral rather than --accent: white on dark mode's lighter
+   --accent is only ~2.9:1, while this stop clears 5.3:1 in both themes. */
 .dock-card.active .dock-num { background: var(--accent); border-color: var(--accent); color: #fff; }
 .dock-card.active .dock-name { color: var(--accent); }
 .dock-flag {
@@ -1387,10 +1546,8 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   transition: opacity 0.18s ease, transform 0.34s cubic-bezier(0.2, 0.95, 0.25, 1),
     top 0.24s cubic-bezier(0.3, 0.8, 0.3, 1);
 }
-@media (max-width: 1300px) {
-  .project-dock,
-  .dock-preview,
-  .dock-reveal { display: none !important; }
+@media (max-width: 900px) {
+  .dock-preview { display: none !important; }
 }
 
 .project-hero {
@@ -1447,7 +1604,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .pager-card:hover {
   transform: translateY(-3px);
   border-color: var(--accent);
-  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.18);
+  box-shadow: 0 10px 30px rgba(var(--accent-rgb), 0.18);
 }
 .pager-next { flex-direction: row-reverse; text-align: right; justify-self: end; width: 100%; }
 .pager-thumb {
@@ -1482,7 +1639,10 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .project-content h2 { font-size: 1.6rem; margin: 2.5rem 0 1rem; }
 .project-content h3 { font-size: 1.25rem; margin: 1.8rem 0 0.75rem; }
 .project-content a { color: var(--accent); text-decoration: underline; }
-.project-content strong { color: #fff; }
+/* var(--text), not a hardcoded white — this used to be #fff unconditionally,
+   which made bold text in a project write-up nearly invisible against light
+   mode's cream background (only dark mode had a correcting override). */
+.project-content strong { color: var(--text); }
 .project-content ul,
 .project-content ol { margin: 0 0 1.2rem; padding-left: 1.4rem; }
 .project-content li { margin-bottom: 0.5rem; }
@@ -1589,57 +1749,12 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   .tl-left::after { right: -19px; }
 }
 
-/* When the inline links would crowd the header's centered controls: collapse
-   them into a dropdown menu instead of letting them squeeze together. Nav
-   bar then shows three things: brand · theme toggle · hamburger. Wanted
-   this to stay inline through real laptop widths (1366/1440/1536, all
-   measured comfortable — 51px+ gap), not just ultra-wide monitors, so the
-   nav's own item gap (below) was tightened rather than raising this
-   threshold sky-high: at the original wider gap even 1366px was only
-   ~16-18px from the controls. 1300px is the verified floor at the tightened
-   spacing — below that even the tighter nav can't fit without crowding. */
-@media (max-width: 1300px) {
-  .nav-toggle { display: flex; }
-  .site-header nav {
-    grid-column: auto;
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 1rem;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    gap: 0.15rem;
-    min-width: 190px;
-    padding: 0.5rem;
-    background: var(--bg-soft);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    opacity: 0;
-    transform: translateY(-8px);
-    pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-  .site-header nav.open {
-    opacity: 1;
-    transform: none;
-    pointer-events: auto;
-  }
-  .site-header nav a { padding: 0.55rem 0.75rem; border-radius: 8px; }
-  .site-header nav a::after { display: none; } /* no sliding underline in the dropdown */
-  .site-header nav a:hover { background: var(--card); color: var(--text); }
-  /* Scroll spy in the dropdown: the underline is hidden here, so mark the
-     current section with the accent instead */
-  .site-header nav a[aria-current] { color: var(--accent); background: var(--card); }
-}
-
 /* Tablet & phone spacing */
 @media (max-width: 820px) {
   .section { padding: 2.75rem 1.25rem; }
   /* Equal top/bottom padding — the hero centers its content vertically via
      flexbox, so asymmetric padding here visibly pushes it off-center. */
   .hero { padding: 4.5rem 1.25rem; }
-  .section-title { font-size: 1.75rem; }
 }
 
 @media (max-width: 600px) {
@@ -1653,29 +1768,14 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   /* Full-width, easy-to-tap action buttons on phones */
   .project-links { flex-direction: column; align-items: stretch; }
   .project-links .btn { width: 100%; text-align: center; padding: 0.85rem 1.4rem; }
+  .cert-page { padding: 2rem 1.25rem 3rem; }
+  .cert-hero { gap: 0.9rem; }
+  .cert-hero-logo { width: 56px; height: 56px; }
+  .cert-hero-text h1 { font-size: 1.5rem; }
 }
 
-/* ===== Scroll progress bar (gradient, top of page) ===== */
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  width: 100%;
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  background: var(--grad);
-  z-index: 100;
-  pointer-events: none;
-}
-
-/* Shining particles drifting down the sides (drawn on a fixed canvas behind content) */
-.particles {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}
+/* Scroll progress + particles removed — petals replace particles,
+   and view routing means no scroll progress bar. */
 
 
 /* ===== PDF popup (certificate viewer) ===== */
@@ -1686,7 +1786,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.1rem; /* separates the cert dock from the viewer */
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.25s ease, visibility 0.25s ease;
@@ -1695,7 +1794,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .pdf-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(5, 4, 10, 0.72);
+  background: rgba(5, 4, 8, 0.72);
   backdrop-filter: blur(4px);
 }
 .pdf-box {
@@ -1715,131 +1814,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 }
 .pdf-modal.open .pdf-box { transform: scale(1); }
 
-/* ===== Certificate dock: the grid's own cards, stacked beside the viewer =====
-   main.js clones the real .cert-card elements in, so every card rule already
-   applies — only layout is set here.
-   Wrapper is a flex COLUMN: up-chevron, then the scrolling list, then
-   down-chevron (DOM order matches — see main.js). Each chevron gets its OWN
-   reserved strip of space instead of floating on top of the end cards, so
-   there's never any overlap; the list's scrollable area is exactly the
-   wrapper's height minus whatever the chevrons take, which is also why the
-   dock now shows a bit less at once than a version where they floated on top.
-   The chevrons are still siblings of the scrolling <nav>, not children of
-   it, for an unrelated reason: the nav has a mask-image fade at its own
-   edges (below), and a mask fades everything it paints, chevrons included —
-   sitting outside it, they stay at full opacity where the fade would
-   otherwise wash them out right where they're needed most. */
-.cert-dock-wrap {
-  position: relative;
-  z-index: 1;
-  /* Wider than the 275px card on purpose: the scrollbar gutter and padding eat
-     into the content box, and a card even ~15px narrower drops its text column
-     under the 3-line threshold, so clones would render taller than the
-     originals. Extra width here + a fixed card width below keeps them identical. */
-  flex: 0 0 300px;
-  height: min(90vh, 1000px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.cert-dock-wrap[hidden] { display: none; }
-.cert-dock {
-  width: 100%;
-  flex: 1 1 auto; /* takes whatever height the two chevron strips don't */
-  min-height: 0; /* lets it actually shrink inside the flex column instead of overflowing it */
-  overflow-y: auto;
-  overscroll-behavior: contain; /* don't chain scroll to the page behind */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.7rem;
-  /* Room for the current-card ring/glow/dot on the FIRST and LAST cards: they
-     sit flush against the scroll container's edge, so their box-shadow (which
-     extends past the card's own box) and the dot (offset -7px above the card)
-     were being clipped by overflow-y:auto with no padding to spare. */
-  padding-block: 16px;
-}
-/* Scrollbar hidden for now — still fully scrollable (wheel/trackpad/touch/
-   drag), just no visible track. scrollbar-gutter was dropped too: it only
-   existed to keep the card width stable against a visible scrollbar's width,
-   which no longer applies. */
-.cert-dock { scrollbar-width: none; }
-.cert-dock::-webkit-scrollbar { display: none; }
-/* fallback width; main.js overrides it inline with the grid's real rendered width */
-.cert-dock .cert-card { width: 275px; flex: 0 0 auto; }
-/* Scrollability cue #2: a chevron at whichever edge has hidden content,
-   toggled by main.js alongside the edge fade. Decorative (aria-hidden,
-   pointer-events:none) — scrolling stays native wheel/trackpad/touch/drag,
-   this is a cue, not a control. Reserves its own strip (flex:0 0 auto) rather
-   than being display:none when hidden, so the list doesn't reflow/resize
-   every time a chevron's visibility toggles. */
-.cert-dock-nav {
-  flex: 0 0 auto;
-  width: 32px;
-  height: 32px;
-  margin-block: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--card);
-  /* A border, not just a fill/shadow contrast against the backdrop: the
-     modal backdrop is a near-black rgba(5,4,10,.72), and dark theme's --card
-     (#181526) is close enough in luminance to it that the circle nearly
-     vanished into the backdrop in dark mode — only a faint floating icon was
-     left. An accent-coloured ring is high-contrast against a near-black
-     backdrop in EITHER theme, independent of how --card compares to it. */
-  border: 1.5px solid var(--accent);
-  color: var(--accent);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35), 0 0 0 3px rgba(var(--accent-rgb), 0.18);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-.cert-dock-nav.show { opacity: 1; }
-.cert-dock-nav svg { width: 17px; height: 17px; display: block; }
-/* Optical, not mathematical, correction: measured pixel-exact, the chevron's
-   bounding box IS centred in the circle (verified via getBoundingClientRect
-   on the rendered path, not just the SVG box). But a chevron's visual weight
-   sits at its point (two lines converge there) rather than its open end (two
-   lines spread apart) — a well-known icon-design effect where a mathematically
-   centred chevron reads as sitting slightly toward its open end. Nudging 1px
-   toward the point compensates. If this overshoots (looks off the OTHER way),
-   flip the sign — translateY(-1px) up / translateY(1px) down. */
-.cert-dock-nav-up svg { transform: translateY(-1px); }
-.cert-dock-nav-down svg { transform: translateY(1px); }
-/* Which certificate is on screen right now. A 1px ring the same colour as
-   the card's own border read as almost no different from the unselected
-   cards, especially in light mode (deep purple ring on white, easy to miss
-   at a glance) — now a thicker glowing ring, a background wash, and a solid
-   corner dot as a shape-based cue that doesn't rely on noticing colour or
-   border-width alone. --accent-rgb (set per theme) drives the rgba() glow
-   and wash, so both themes get the same treatment at colours that suit them. */
-.cert-dock .cert-dock-current {
-  border-color: var(--accent);
-  background-image: linear-gradient(155deg, rgba(var(--accent-rgb), 0.16), rgba(var(--accent-rgb), 0.04) 65%);
-  box-shadow: 0 0 0 2px var(--accent), 0 10px 26px rgba(var(--accent-rgb), 0.38);
-}
-.cert-dock .cert-dock-current::before {
-  content: "";
-  position: absolute;
-  top: -7px;
-  left: -7px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--accent);
-  /* var(--card), not var(--bg): the modal backdrop is a fixed dark colour in
-     BOTH themes (see .pdf-backdrop), so --bg (white in light mode) would ring
-     the dot in a colour that doesn't match what's actually behind it here. */
-  border: 2px solid var(--card);
-  z-index: 7; /* clears the tilt-glare ::after (z 5) and the logo/icon layers */
-}
-/* 300 dock + 1.1rem gap + 900 viewer needs ~1218px; below that the dock would
-   squeeze the viewer, so the modal goes back to the plain centred layout. */
-@media (max-width: 1279px) {
-  .cert-dock-wrap { display: none; }
-}
 /* Custom viewer chrome: title + zoom / download / new-tab / close */
 .pdf-toolbar {
   display: flex;
@@ -1956,13 +1930,26 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 /* clip both snapshots to the same rounded shape so corners stay smooth through the morph */
 ::view-transition-image-pair(project-hero) { border-radius: var(--radius); overflow: hidden; }
 
-/* Project→project navigation: the dock (and its reveal tab) get their own
-   snapshots so they stay ANCHORED while the page content swaps around them.
-   The reel is pre-centred on the active card on both sides of the swap, so
-   the dock simply crossfades in place — no sliding highlight, no post-hop
+/* Project→project navigation: the sidebar (brand, controls, and now the
+   project list living inside it) gets its own snapshot so it stays
+   ANCHORED while the page content swaps around it, instead of crossfading
+   as part of the default root transition — nothing in it actually changes
+   between two project pages except which dock row is "active". The reel is
+   pre-centred on the active card on both sides of the swap, so that part
+   simply crossfades in place too — no sliding highlight, no post-hop
    glide (both removed: their distance varied per hop, which felt erratic). */
-.project-dock { view-transition-name: project-dock; }
-.dock-reveal.show { view-transition-name: dock-tab; }
+.site-header { view-transition-name: sidebar; }
+/* Its own named group (above) already excludes it from crossfading as part
+   of the root transition — but the browser's DEFAULT animation for any
+   named group is still its own little crossfade, which is exactly the
+   motion that should be here: none. The page content keeps its transition
+   (root's vt-out/vt-in fade, and project-hero's morph); the sidebar simply
+   shows the new state immediately, no animation of its own at all. */
+::view-transition-group(sidebar),
+::view-transition-old(sidebar),
+::view-transition-new(sidebar) {
+  animation: none !important;
+}
 
 /* Reduced motion: swap pages instantly — no fades, no morphs */
 @media (prefers-reduced-motion: reduce) {
@@ -1984,24 +1971,6 @@ html.theme-vt::view-transition-new(root) { z-index: 1; }
 /* no separate snapshots during the theme switch — everything stays inside the circle */
 html.theme-vt * { view-transition-name: none !important; }
 
-/* ===== Corner glows breathe (scale + brightness), each on its own clock ===== */
-@media (prefers-reduced-motion: no-preference) {
-  .g1 { animation: breathe 9s  ease-in-out infinite; }
-  .g2 { animation: breathe 12s ease-in-out infinite 1s; }
-  .g3 { animation: breathe 11s ease-in-out infinite 0.5s; }
-  .g4 { animation: breathe 14s ease-in-out infinite 1.5s; }
-}
-@keyframes breathe {
-  0%, 100% { transform: scale(0.9);  opacity: 0.35; }
-  50%      { transform: scale(1.22); opacity: 0.82; }
-}
-
-/* Respect users who prefer reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; transition: none; }
-  .scroll-progress { display: none; }
-}
-
 /* ===== Small-screen polish ===== */
 @media (max-width: 900px) {
   .section { padding: 3rem 1.25rem; }
@@ -2011,7 +1980,6 @@ html.theme-vt * { view-transition-name: none !important; }
   .hero { padding: 4rem 1.1rem; }
   .hero h1 { font-size: 2.15rem; }
   .subtitle { font-size: 0.98rem; }
-  .section-title { font-size: 1.6rem; }
   .theme-toggle, .fx-toggle { width: 32px; height: 32px; }
   .theme-toggle { margin-right: 0.45rem; }
   .nav-resume-btn {
@@ -2024,14 +1992,13 @@ html.theme-vt * { view-transition-name: none !important; }
   /* 32px visuals need a bigger extension to reach the ~44px touch floor */
   .theme-toggle::after,
   .fx-toggle::after,
-  .nav-toggle::after,
   .nav-resume-btn::after { inset: -6px; }
 }
 /* Below ~340px the header's own content (brand + theme toggle + résumé
-   button + particles toggle + hamburger) genuinely doesn't fit even at its
-   most compact — measured overflow of ~30px at 280px viewport. Drop the
-   résumé button's label there so it matches the toggles' compact icon-only
-   footprint instead of letting the header overflow. */
+   button + petals toggle) genuinely doesn't fit even at its most compact —
+   measured overflow of ~30px at 280px viewport. Drop the résumé button's
+   label there so it matches the toggles' compact icon-only footprint
+   instead of letting the header overflow. */
 @media (max-width: 340px) {
   .nav-resume-btn { gap: 0; padding: 0; width: 32px; justify-content: center; }
   .nav-resume-btn span { display: none; }

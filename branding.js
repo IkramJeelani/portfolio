@@ -6,28 +6,27 @@
 
   const settings = window.SETTINGS || {};
 
-  // Falling particles: default from data.js, overridden by the visitor's choice.
-  let particlesEnabled = settings.particles !== false;
+  // Petals: default from data.js, overridden by the visitor's choice.
+  let petalsEnabled = settings.particles !== false;
   try {
     const sp = localStorage.getItem("particles");
-    if (sp !== null) particlesEnabled = sp !== "off";
+    if (sp !== null) petalsEnabled = sp !== "off";
   } catch (e) {}
-  // Set by the particle system below; lets the toggle button play the
-  // explode-away / fade-back transition instead of an instant switch.
-  let onParticlesToggle = null;
+  const petalsEl = document.querySelector(".petals");
+  if (petalsEl && !petalsEnabled) petalsEl.classList.add("hidden");
 
   // Keep the browser-chrome colour (Android address bar etc.) in sync with
   // the active theme — a hardcoded dark value on a light page renders a
   // mismatched dark bar around light content.
   const syncThemeColor = () => {
-    const light = document.documentElement.getAttribute("data-theme") === "light";
+    const light = document.documentElement.getAttribute("data-theme") !== "dark";
     let meta = document.querySelector('meta[name="theme-color"]');
     if (!meta) {
       meta = document.createElement("meta");
       meta.name = "theme-color";
       document.head.appendChild(meta);
     }
-    meta.content = light ? "#f4f3fb" : "#0b0a12";
+    meta.content = light ? "#f6f3ec" : "#14161c";
   };
   syncThemeColor();
 
@@ -37,10 +36,10 @@
   // legible in both light- and dark-chrome browser tabs.
   const fontSize = initials.length > 2 ? 22 : 32;
   const buildFavicon = () => {
-    const light = document.documentElement.getAttribute("data-theme") === "light";
-    const bg = light ? "#f4f3fb" : "#0b0a12";
-    const g1 = light ? "#7c3aed" : "#a855f7";
-    const g2 = light ? "#be185d" : "#ec4899";
+    const light = document.documentElement.getAttribute("data-theme") !== "dark";
+    const bg = light ? "#f6f3ec" : "#14161c";
+    const g1 = light ? "#d0453a" : "#e2695c";
+    const g2 = light ? "#b93c30" : "#eda6b4";
     const svg =
       "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>" +
       "<defs><linearGradient id='g' x1='0%' y1='100%' x2='100%' y2='0%'>" +
@@ -72,11 +71,43 @@
   const fill = (attr, value) =>
     document.querySelectorAll("[" + attr + "]").forEach((el) => (el.textContent = value));
 
-  fill("data-brand", initials);
   fill("data-name", p.name || "");
   fill("data-role", p.role || "");
   fill("data-bio", p.bio || "");
   fill("data-year", new Date().getFullYear());
+
+  // Sidebar brand: compact "IJ" on the Home view specifically, the full
+  // name everywhere else (every other section, and every non-index page —
+  // project.html never has a "home" state, so it's always the full name
+  // there). The favicon above always stays `initials`, regardless — a 64px
+  // icon needs the compact form no matter which view is showing.
+  const reduced =
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const brandEls = document.querySelectorAll("[data-brand]");
+  let brandText = null; // last text actually applied, so a no-op switch doesn't fade for nothing
+  const setBrandText = (text, animate) => {
+    if (text === brandText) return; // e.g. About -> Skills: both "Ikram Jeelani", nothing to show
+    brandText = text;
+    if (!animate || reduced) {
+      brandEls.forEach((el) => (el.textContent = text));
+      return;
+    }
+    brandEls.forEach((el) => el.classList.add("swap"));
+    setTimeout(() => {
+      brandEls.forEach((el) => {
+        el.textContent = text;
+        el.classList.remove("swap");
+      });
+    }, 150);
+  };
+  const isHome = () =>
+    document.body.hasAttribute("data-home") &&
+    (location.hash || "#home").slice(1) === "home";
+  setBrandText(isHome() ? initials : p.name || "", false);
+  // main.js's section router dispatches this on every switch (see its
+  // applyCurrent) — only index.html ever fires it, so this is a no-op on
+  // project.html, which is exactly right: nothing there ever toggles.
+  window.addEventListener("viewchange", () => setBrandText(isHome() ? initials : p.name || "", true));
 
   if (document.body.hasAttribute("data-home")) {
     // Fixed "Portfolio" suffix for the browser tab — independent of
@@ -84,34 +115,30 @@
     document.title = (p.name || "") + " - Portfolio";
   }
 
-  // Background glow layer — corners "breathe" via CSS.
-  const bg = document.createElement("div");
-  bg.className = "bg-fx";
-  bg.setAttribute("aria-hidden", "true");
-  bg.innerHTML =
-    '<span class="glow g1"></span><span class="glow g2"></span>' +
-    '<span class="glow g3"></span><span class="glow g4"></span>';
-  document.body.prepend(bg);
-
   // Cursor spotlight that follows the mouse across the nav bar.
   const header = document.querySelector(".site-header");
   if (header) {
-    // Publish the header's real height as --header-h. The header is transparent
-    // over the hero, so the hero uses this to centre its content in the FULL
-    // viewport (pulling up under the header) instead of the space below it.
+    // Publish the header's real height as --header-h. On mobile the sidebar
+    // collapses into an in-flow sticky top bar, and styles.css's
+    // max-width:900px block uses this to offset the topbar below it and
+    // size the Home hero to the space actually visible beneath both.
     const setHeaderH = () =>
       document.documentElement.style.setProperty(
         "--header-h",
         header.getBoundingClientRect().height + "px"
       );
     setHeaderH();
-    window.addEventListener("resize", setHeaderH);
+    // rAF-coalesced: a window drag-resize can fire many "resize" events per
+    // frame, and each call forces a synchronous layout read (getBoundingClientRect).
+    let headerResizeRaf = null;
+    window.addEventListener("resize", () => {
+      if (headerResizeRaf) return;
+      headerResizeRaf = requestAnimationFrame(() => {
+        headerResizeRaf = null;
+        setHeaderH();
+      });
+    });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(setHeaderH);
-
-    // Transparent at the very top; frosted background once scrolled.
-    const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 8);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
 
     header.addEventListener("pointermove", (e) => {
       const r = header.getBoundingClientRect();
@@ -119,19 +146,31 @@
       header.style.setProperty("--y", e.clientY - r.top + "px");
     });
 
-    // Clicking the IJ logo scrolls all the way to the top (nav goes transparent).
+    // On index.html the brand's href is "#home" (an in-page hash), so this
+    // intercepts the click to go through main.js's router instead of a raw
+    // hash jump. On project.html/certificate.html the brand's href is a
+    // real "index.html" page link — intercepting THAT with the same
+    // #home-only logic just rewrote the current page's hash to #home
+    // (project.html#home / certificate.html#home, neither of which mean
+    // anything) instead of letting the actual navigation to index.html
+    // happen, so the logo silently did nothing on those pages.
     const brand = header.querySelector(".brand");
-    if (brand && document.body.hasAttribute("data-home")) {
+    if (brand && brand.getAttribute("href") === "#home") {
       brand.addEventListener("click", (e) => {
         e.preventDefault();
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        location.hash = "#home";
       });
     }
 
-    // Centred control group: theme toggle + particles toggle.
+    // Sidebar bottom cluster: résumé button (primary CTA), then a compact
+    // row containing the theme + particles toggles. The résumé button is
+    // appended later (needs RESUME) — inserted before the toggle row so it
+    // sits at the top of the cluster.
     const controls = document.createElement("div");
     controls.className = "header-controls";
     header.appendChild(controls);
+    const toggleRow = document.createElement("div");
+    toggleRow.className = "toggle-row";
 
     // Light/dark toggle (dark is the default).
     const toggle = document.createElement("button");
@@ -140,7 +179,7 @@
     // The label names the ACTION (what pressing it does), so assistive tech
     // hears the state implicitly — clearer than a static "toggle" label.
     const syncThemeLabel = () => {
-      const isLight = document.documentElement.getAttribute("data-theme") === "light";
+      const isLight = document.documentElement.getAttribute("data-theme") !== "dark";
       toggle.setAttribute("aria-label", isLight ? "Switch to dark theme" : "Switch to light theme");
     };
     syncThemeLabel();
@@ -150,12 +189,14 @@
       '<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">' +
       '<circle cx="12" cy="12" r="4"/>' +
       '<path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/></svg>';
-    controls.appendChild(toggle);
+    toggleRow.appendChild(toggle);
     toggle.addEventListener("click", () => {
-      const isLight = document.documentElement.getAttribute("data-theme") === "light";
-      const next = isLight ? "dark" : "light";
+      // Light is the default (no attribute). Dark is opt-in via data-theme="dark".
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      const next = isDark ? "light" : "dark";
       const apply = () => {
-        document.documentElement.setAttribute("data-theme", next);
+        if (next === "dark") document.documentElement.setAttribute("data-theme", "dark");
+        else document.documentElement.removeAttribute("data-theme");
         buildFavicon(); // keep the tab icon's gradient in sync with the theme
         syncThemeColor();
         syncThemeLabel();
@@ -206,11 +247,12 @@
       vt.finished.finally(() => document.documentElement.classList.remove("theme-vt"));
     });
 
-    // Résumé button, between the two toggles — created here (not main.js) so
-    // it exists on EVERY page's header, including project detail pages, where
-    // the site's one real CTA used to silently disappear. On the home page
-    // main.js's PDF modal intercepts the data-pdf click; on project pages
-    // (no main.js) the link simply opens the PDF in a new tab.
+    // Résumé button — top of the sidebar's bottom cluster (primary CTA).
+    // Created here (not main.js) so it exists on EVERY page's sidebar,
+    // including project detail pages, where the site's one real CTA used to
+    // silently disappear. On the home page main.js's PDF modal intercepts
+    // the data-pdf click; on project pages (no main.js) the link simply
+    // opens the PDF in a new tab.
     const RESUME = window.RESUME || {};
     if (RESUME.show && RESUME.url) {
       // Same GitHub-blob-to-local-path resolution main.js uses for certificates.
@@ -237,381 +279,68 @@
       controls.appendChild(resumeBtn);
     }
 
-    // Start/stop the falling particles.
+    // Start/stop the falling petals.
     const fxBtn = document.createElement("button");
     fxBtn.className = "fx-toggle";
     fxBtn.type = "button";
-    fxBtn.setAttribute("aria-label", "Start or stop the falling particles");
+    fxBtn.setAttribute("aria-label", "Toggle sakura petals");
+    // Five-petal sakura blossom (petals as overlapping circles around a
+    // centre) — reads clearly as a flower at icon size, unlike the previous
+    // mirrored-leaf shape which looked more like a feather.
     fxBtn.innerHTML =
       '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
-      '<path d="M12 2l1.6 4.4L18 8l-4.4 1.6L12 14l-1.6-4.4L6 8l4.4-1.6z"/>' +
-      '<path d="M18 13l.8 2.2L21 16l-2.2.8L18 19l-.8-2.2L15 16l2.2-.8z"/></svg>';
-    controls.appendChild(fxBtn);
+      '<circle cx="12" cy="6.8" r="4"/>' +
+      '<circle cx="16.8" cy="10.3" r="4"/>' +
+      '<circle cx="15" cy="15.9" r="4"/>' +
+      '<circle cx="9" cy="15.9" r="4"/>' +
+      '<circle cx="7.2" cy="10.3" r="4"/>' +
+      '<circle cx="12" cy="12" r="2.1" opacity=".55"/></svg>';
+    toggleRow.appendChild(fxBtn);
+    controls.appendChild(toggleRow);
+
+    // Contact links in sidebar
+    const contacts = window.CONTACTS || [];
+    if (contacts.length) {
+      const CONTACT_ICONS = {
+        email: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6 12 13 2 6"/>',
+        linkedin: '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>',
+        github: '<path d="M12 2C6.5 2 2 6.5 2 12c0 4.4 2.9 8.2 6.8 9.5.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.8.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 22 12c0-5.5-4.5-10-10-10z"/>',
+      };
+      const contactWrap = document.createElement("div");
+      contactWrap.className = "sidebar-contact";
+      contacts.forEach((c) => {
+        const a = document.createElement("a");
+        a.href = c.url;
+        if (/^https?:/i.test(c.url)) { a.target = "_blank"; a.rel = "noopener"; }
+        let iconKey = "";
+        if (/mailto:/i.test(c.url)) iconKey = "email";
+        else if (/linkedin/i.test(c.url)) iconKey = "linkedin";
+        else if (/github/i.test(c.url)) iconKey = "github";
+        const iconPath = CONTACT_ICONS[iconKey];
+        a.innerHTML = (iconPath
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + iconPath + '</svg>'
+          : '') + '<span>' + c.label + '</span>';
+        contactWrap.appendChild(a);
+      });
+      controls.appendChild(contactWrap);
+    }
+
     const syncFx = () => {
-      fxBtn.classList.toggle("off", !particlesEnabled);
-      fxBtn.setAttribute("aria-pressed", particlesEnabled ? "true" : "false");
+      fxBtn.classList.toggle("off", !petalsEnabled);
+      fxBtn.setAttribute("aria-pressed", petalsEnabled ? "true" : "false");
     };
     syncFx();
     fxBtn.addEventListener("click", () => {
-      particlesEnabled = !particlesEnabled;
+      petalsEnabled = !petalsEnabled;
       try {
-        localStorage.setItem("particles", particlesEnabled ? "on" : "off");
+        localStorage.setItem("particles", petalsEnabled ? "on" : "off");
       } catch (e) {}
       syncFx();
-      if (onParticlesToggle) onParticlesToggle(particlesEnabled);
+      if (petalsEl) petalsEl.classList.toggle("hidden", !petalsEnabled);
     });
 
-    // Hamburger menu — collapses the nav links into a dropdown on narrow screens.
-    // Deferred to DOMContentLoaded because main.js fills in the nav links AFTER
-    // this script runs — checking children now would always find an empty nav.
-    const setupMenu = () => {
-    const navEl = header.querySelector("nav");
-    if (navEl && navEl.children.length) {
-      const menuBtn = document.createElement("button");
-      menuBtn.className = "nav-toggle";
-      menuBtn.type = "button";
-      menuBtn.setAttribute("aria-label", "Open menu");
-      menuBtn.setAttribute("aria-expanded", "false");
-      if (navEl.id) menuBtn.setAttribute("aria-controls", navEl.id);
-      menuBtn.innerHTML =
-        '<svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>' +
-        '<svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-      header.appendChild(menuBtn);
-
-      const setOpen = (open) => {
-        navEl.classList.toggle("open", open);
-        menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
-      };
-      menuBtn.addEventListener("click", () => setOpen(!navEl.classList.contains("open")));
-      // Close after picking a link, or when clicking outside the header.
-      navEl.addEventListener("click", (e) => {
-        if (e.target.closest("a")) setOpen(false);
-      });
-      document.addEventListener("click", (e) => {
-        if (!header.contains(e.target)) setOpen(false);
-      });
-      // Escape dismisses the open menu and hands focus back to the button —
-      // standard disclosure-widget keyboard behaviour.
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && navEl.classList.contains("open")) {
-          setOpen(false);
-          menuBtn.focus();
-        }
-      });
-    }
-    };
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", setupMenu);
-    } else {
-      setupMenu();
-    }
   }
 
-  // Gradient scroll-progress bar at the top of every page.
-  const reduced =
-    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!reduced) {
-    const bar = document.createElement("div");
-    bar.className = "scroll-progress";
-    document.body.appendChild(bar);
-    const update = () => {
-      const doc = document.documentElement;
-      const max = doc.scrollHeight - doc.clientHeight;
-      bar.style.transform = `scaleX(${max > 0 ? doc.scrollTop / max : 0})`;
-    };
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    update();
-
-    // Shining particles that drift down the sides now and then, and dodge the cursor.
-    const canvas = document.createElement("canvas");
-    canvas.className = "particles";
-    canvas.setAttribute("aria-hidden", "true");
-    document.body.appendChild(canvas);
-    const ctx = canvas.getContext("2d");
-    let W = 0;
-    let H = 0;
-    const resizeCanvas = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2); // cap for mobile GPU/perf
-      // Use the visible width (excludes the scrollbar) so both edges are symmetric.
-      W = document.documentElement.clientWidth || window.innerWidth;
-      H = document.documentElement.clientHeight || window.innerHeight;
-      canvas.width = W * dpr;
-      canvas.height = H * dpr;
-      canvas.style.width = W + "px";
-      canvas.style.height = H + "px";
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-
-    // Lighter glow colours on dark mode; deeper, saturated colours so they read on white.
-    const colorsDark = ["#c084fc", "#f472b6", "#a78bfa", "#e9d5ff"];
-    const colorsLight = ["#7c3aed", "#db2777", "#6d28d9", "#c026d3"];
-    const palette = () =>
-      document.documentElement.getAttribute("data-theme") === "light" ? colorsLight : colorsDark;
-    const particles = [];
-    const mouse = { x: -9999, y: -9999 };
-    window.addEventListener("mousemove", (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
-    window.addEventListener("mouseout", () => {
-      mouse.x = -9999;
-      mouse.y = -9999;
-    });
-
-    const small = () => W < 700; // phones / narrow: lighter + tighter to the edge
-
-    // Persist particles across navigation so they continue from where they were
-    // (smooth when opening a project's detail page) instead of restarting.
-    const SAVE_KEY = "ij_particles";
-    try {
-      const saved = JSON.parse(sessionStorage.getItem(SAVE_KEY) || "null");
-      if (saved && Array.isArray(saved.p) && Date.now() - saved.t < 4000) {
-        saved.p.forEach((o) => particles.push(o));
-      }
-    } catch (e) {}
-    window.addEventListener("pagehide", () => {
-      try {
-        sessionStorage.setItem(SAVE_KEY, JSON.stringify({ t: Date.now(), p: particles }));
-      } catch (e) {}
-    });
-
-    // The side band = the empty margin outside the ~1180px content column,
-    // so particles stay clear of the main body.
-    const bandFor = (side) => {
-      const margin = Math.max(small() ? 22 : 40, (W - 1180) / 2);
-      return side === 0 ? [0, margin] : [W - margin, W];
-    };
-
-    function spawn() {
-      [0, 1].forEach((side) => {
-        // both sides together, one particle each
-        const [minX, maxX] = bandFor(side);
-        particles.push({
-          side,
-          x: minX + Math.random() * (maxX - minX),
-          y: -10 - Math.random() * 40,
-          vx: (Math.random() - 0.5) * 0.15,
-          vy: 1.0 + Math.random() * 0.9,
-          r: 1.2 + Math.random() * 1.6,
-          tw: Math.random() * Math.PI * 2,
-          color: palette()[(Math.random() * 4) | 0],
-        });
-      });
-      const cap = small() ? 8 : 16;
-      if (particles.length > cap) particles.splice(0, particles.length - cap);
-    }
-
-    // Toggling off: spawning stops and each particle bursts into 3–5 tiny
-    // fragments that drift apart, slow under drag, shrink and dissolve —
-    // each with its own direction, speed, curl, lifetime and fade delay so
-    // the burst looks organic. Positions are remembered while off.
-    // Toggling on: fragments fly back in and the particles re-form at those
-    // same spots, then resume falling exactly as they were.
-    let fxMode = particlesEnabled ? "on" : "off";
-    let fxT0 = 0;
-    let frags = [];
-    const RETURN_MS = 520;
-    const rand = (a, b) => a + Math.random() * (b - a);
-
-    const burstFrom = (p) => {
-      const n = 3 + ((Math.random() * 3) | 0);
-      for (let j = 0; j < n; j++) {
-        const a = Math.random() * Math.PI * 2;
-        const s = rand(1.4, 4.5);
-        frags.push({
-          // outward burst (explode) starts here and moves by velocity…
-          x: p.x,
-          y: p.y,
-          vx: Math.cos(a) * s,
-          vy: Math.sin(a) * s - rand(0, 0.8),
-          // …while the reverse (return) eases from a scattered start back home
-          sx: p.x + Math.cos(a) * rand(26, 72),
-          sy: p.y + Math.sin(a) * rand(26, 72),
-          tx: p.x,
-          ty: p.y,
-          r: p.r * rand(0.35, 0.75),
-          life: rand(280, 520),
-          delay: rand(0, 80),
-          drag: rand(0.86, 0.94),
-          spin: rand(-0.22, 0.22),
-          color: p.color,
-        });
-      }
-    };
-
-    onParticlesToggle = (enabled) => {
-      fxT0 = performance.now();
-      frags = [];
-      if (!enabled) {
-        particles.forEach((p) => {
-          p.hx = p.x;
-          p.hy = p.y;
-          burstFrom(p);
-        });
-        fxMode = "exploding";
-      } else {
-        particles.forEach((p) => {
-          if (p.hx !== undefined) {
-            p.x = p.hx;
-            p.y = p.hy;
-          }
-          burstFrom(p);
-        });
-        fxMode = "returning";
-      }
-    };
-
-    const drawDot = (x, y, r, color, alpha, light) => {
-      ctx.globalAlpha = alpha;
-      ctx.beginPath();
-      ctx.arc(x, y, Math.max(0.2, r), 0, Math.PI * 2);
-      ctx.fillStyle = color;
-      ctx.shadowBlur = (small() ? 5 : 9) * (light ? 1.5 : 1);
-      ctx.shadowColor = color;
-      ctx.fill();
-    };
-
-    let nextSpawn = 0;
-    let last = performance.now();
-    function frame(now) {
-      const dt = Math.min(48, now - last);
-      last = now;
-      ctx.clearRect(0, 0, W, H);
-      const light = document.documentElement.getAttribute("data-theme") === "light";
-
-      if (fxMode === "off") {
-        // Keep the particles in memory (frozen at their saved spots) but draw nothing.
-        requestAnimationFrame(frame);
-        return;
-      }
-
-      if (fxMode === "exploding") {
-        let alive = false;
-        for (const f of frags) {
-          const t = (now - fxT0 - f.delay) / f.life;
-          if (t >= 1) continue; // this fragment has fully dissolved
-          alive = true;
-          const tc = Math.max(0, t); // holds still + opaque until its delay is up
-          if (t > 0) {
-            // curl the path a little, then bleed speed off with drag
-            const c = f.spin * (dt / 16);
-            const cos = Math.cos(c);
-            const sin = Math.sin(c);
-            const nvx = f.vx * cos - f.vy * sin;
-            f.vy = f.vx * sin + f.vy * cos;
-            f.vx = nvx;
-            const d = Math.pow(f.drag, dt / 16);
-            f.vx *= d;
-            f.vy *= d;
-            f.x += f.vx * (dt / 16);
-            f.y += f.vy * (dt / 16);
-          }
-          drawDot(f.x, f.y, f.r * (1 - 0.45 * tc), f.color, 1 - tc, light);
-        }
-        ctx.globalAlpha = 1;
-        ctx.shadowBlur = 0;
-        if (!alive) {
-          fxMode = "off";
-          particles.forEach((p) => {
-            if (p.hx !== undefined) {
-              p.x = p.hx;
-              p.y = p.hy;
-            }
-          });
-        }
-        requestAnimationFrame(frame);
-        return;
-      }
-
-      if (fxMode === "returning") {
-        // Particles fade up at their old spots while their fragments ease
-        // back in and hand their brightness over to the re-formed dot.
-        const T = Math.min(1, (now - fxT0) / RETURN_MS);
-        for (const p of particles) {
-          const tw = 0.45 + 0.55 * Math.sin(now * 0.005 + p.tw);
-          drawDot(
-            p.x,
-            p.y,
-            p.r * (light ? 1.15 : 1),
-            p.color,
-            (light ? Math.min(1, tw + 0.25) : tw) * T * T,
-            light
-          );
-        }
-        let alive = false;
-        for (const f of frags) {
-          const t = (now - fxT0 - f.delay) / f.life;
-          if (t >= 1) continue;
-          alive = true;
-          const tc = Math.max(0, t);
-          const e = 1 - Math.pow(1 - tc, 3); // decelerate into home
-          drawDot(
-            f.sx + (f.tx - f.sx) * e,
-            f.sy + (f.ty - f.sy) * e,
-            f.r * (0.55 + 0.45 * tc),
-            f.color,
-            1 - tc,
-            light
-          );
-        }
-        ctx.globalAlpha = 1;
-        ctx.shadowBlur = 0;
-        if (!alive && T >= 1) fxMode = "on";
-        requestAnimationFrame(frame);
-        return;
-      }
-
-      if (now >= nextSpawn) {
-        spawn();
-        nextSpawn = now + (small() ? 2400 + Math.random() * 2200 : 1500 + Math.random() * 1300); // steady, never stops
-      }
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
-        const d2 = dx * dx + dy * dy;
-        const R = 100;
-        if (d2 < R * R) {
-          const d = Math.sqrt(d2) || 1;
-          const f = ((R - d) / R) * 2.6; // push away from the cursor
-          p.vx += (dx / d) * f * (dt / 16);
-          p.vy += (dy / d) * f * (dt / 16);
-        }
-        p.vx *= 0.95;
-        p.vy *= 0.98;
-        p.vy += 0.03 * (dt / 16); // gentle gravity so they keep falling
-        p.x += p.vx * (dt / 16);
-        p.y += p.vy * (dt / 16);
-        // keep within the side band so they never drift onto the body
-        const [minX, maxX] = bandFor(p.side);
-        if (p.x < minX) {
-          p.x = minX;
-          p.vx = Math.abs(p.vx) * 0.4;
-        } else if (p.x > maxX) {
-          p.x = maxX;
-          p.vx = -Math.abs(p.vx) * 0.4;
-        }
-        if (p.y > H + 30) {
-          particles.splice(i, 1);
-          continue;
-        }
-        const tw = 0.45 + 0.55 * Math.sin(now * 0.005 + p.tw); // twinkle
-        // Boost alpha + glow in light mode so they're as visible as on dark.
-        ctx.globalAlpha = light ? Math.min(1, tw + 0.25) : tw;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * (light ? 1.15 : 1), 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.shadowBlur = (small() ? 6 : 12) * (light ? 1.5 : 1);
-        ctx.shadowColor = p.color;
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-      ctx.shadowBlur = 0;
-      requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
-  }
+  /* Particle canvas + scroll-progress bar removed — petals replace particles,
+     and view routing makes a scroll-progress bar irrelevant. */
 })();
