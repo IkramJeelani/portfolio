@@ -8,7 +8,7 @@
   <meta name="author" content="Ikram Jeelani" />
   <meta name="robots" content="index, follow" />
   <!-- Matches SETTINGS.theme's default; branding.js re-syncs it on toggle. -->
-  <meta name="theme-color" content="#f6f3ec" />
+  <meta name="theme-color" content="#f4f3fb" />
   <link rel="canonical" href="https://ikramjeelani.github.io/portfolio/" />
 
   <!-- Open Graph (Facebook, LinkedIn, Slack, iMessage, WhatsApp…)
@@ -37,19 +37,13 @@
   <meta name="twitter:description" content="Projects, experience, skills, certifications and education — by Ikram Jeelani." />
   <meta name="twitter:image" content="https://ikramjeelani.github.io/portfolio/assets/og-image-light.png" />
 
-  <!-- ?v= is a manual cache-buster — bump it (on EVERY ?v= tag below,
-       including styles.css) whenever data.js/branding.js/main.js/styles.css
-       change, since local dev servers (and some CDNs) can otherwise keep
-       serving a stale cached copy indefinitely — a browser can hold onto a
-       cached styles.css even across a hard reload of the page itself if the
-       stylesheet's own URL never changes. -->
-  <script src="data.js?v=42"></script>
-  <script>try{var t=localStorage.getItem('theme')||((window.SETTINGS||{}).theme==='dark'?'dark':null);if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(t==='light')document.documentElement.removeAttribute('data-theme');}catch(e){}</script>
+  <script src="data.js"></script>
+  <script>try{var t=localStorage.getItem('theme')||((window.SETTINGS||{}).theme==='light'?'light':null);if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=42" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
 
   <!-- Structured data for rich search results -->
   <script type="application/ld+json">
@@ -72,59 +66,38 @@
   </script>
 </head>
 <body data-home>
-  <!-- Lets keyboard users bypass the sidebar on every visit -->
-  <a class="skip-link" href="#view">Skip to content</a>
+  <!-- Lets keyboard users bypass the header controls on every visit -->
+  <a class="skip-link" href="#sections">Skip to content</a>
 
-  <!-- Decorative sakura drift. Hidden under prefers-reduced-motion (styles.css). -->
-  <div class="petals" aria-hidden="true">
-    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-  </div>
+  <!-- ===== Navigation ===== -->
+  <header class="site-header">
+    <a href="#home" class="brand" data-brand>IJ</a>
+    <nav id="navLinks" aria-label="Sections"></nav>
+  </header>
 
-  <div class="app">
-    <!-- Fixed left rail on desktop, collapses to a horizontal top bar on mobile.
-         Class name kept as .site-header because branding.js queries by it. -->
-    <aside class="site-header">
-      <div class="brand-wrap">
-        <a href="#home" class="brand" data-brand>IJ</a>
+  <!-- ===== Main content: hero first (so the h1 lives inside the main
+       landmark), then the sections main.js injects in data.js order ===== -->
+  <main id="sections">
+    <section id="home" class="hero">
+      <div class="hero-visual">
+        <canvas class="hero-arm" aria-hidden="true"></canvas>
+        <p class="hero-arm-hint">click to drop a part</p>
       </div>
-      <nav id="navLinks" class="nav" aria-label="Sections"></nav>
-      <!-- branding.js appends the sidebar foot here at runtime: résumé
-           button, theme/petals toggles, contact links. -->
-    </aside>
-
-    <main class="main">
-      <header class="topbar">
-        <div class="topbar-title">
-          <h1 class="view-title" id="viewTitle"></h1>
+      <div class="hero-right">
+        <div class="hero-text">
+          <p class="eyebrow" data-role>Engineering Portfolio</p>
+          <h1 data-name>Ikram Jeelani</h1>
+          <p class="subtitle" data-bio></p>
         </div>
-      </header>
+      </div>
+    </section>
+  </main>
 
-      <!-- main.js builds the rest of the .section-view panels inside #view
-           from data.js and appends them after this static Home one. All
-           live in the DOM at once, but only one is ever in the layout at a
-           time (see main.js's router) — nav clicks/hash changes switch
-           which one, never scrolling. -->
-      <section class="view" id="view">
-        <div class="section-view" data-view="home">
-          <div class="hero">
-            <div class="hero-visual">
-              <canvas class="hero-arm" aria-hidden="true"></canvas>
-              <p class="hero-arm-hint">click to drop a part</p>
-            </div>
-            <div class="hero-right">
-              <div class="hero-text">
-                <p class="eyebrow" data-role>Engineering Portfolio</p>
-                <h1 data-name>Ikram Jeelani</h1>
-                <p class="subtitle" data-bio></p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
+  <footer class="site-footer">
+    <p>&copy; <span data-year></span> <span data-name></span>. Built with HTML, CSS &amp; JavaScript.</p>
+  </footer>
 
-  <script src="branding.js?v=42"></script>
-  <script src="main.js?v=42"></script>
+  <script src="branding.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
