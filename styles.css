@@ -21,6 +21,7 @@
   --radius: 12px;
   --max: 1100px;
   --shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+  --pattern: rgba(236,231,222,.045);
 }
 
 /* ===== Light theme ===== */
@@ -38,6 +39,7 @@
   --grad: linear-gradient(120deg, #d0453a, #b93c30);
   --grad-btn: var(--grad); /* light stops are already deep enough for AA text */
   --shadow: 0 14px 40px rgba(176, 62, 48, 0.12);
+  --pattern: rgba(29,26,23,.05);
 }
 :root[data-theme="light"] .hero h1 {
   background: linear-gradient(120deg, #1d1a17 10%, #d0453a 55%, #b93c30);
@@ -46,12 +48,6 @@
   color: transparent;
 }
 :root[data-theme="light"] .project-content strong { color: #1d1a17; }
-/* Stronger, more saturated glows so they read on a white background */
-:root[data-theme="light"] .bg-fx { opacity: 1; }
-:root[data-theme="light"] .g1 { background: radial-gradient(circle, rgba(208, 69, 58, 0.72), transparent 70%); }
-:root[data-theme="light"] .g2 { background: radial-gradient(circle, rgba(231, 154, 168, 0.62), transparent 70%); }
-:root[data-theme="light"] .g3 { background: radial-gradient(circle, rgba(200, 150, 60, 0.62), transparent 70%); }
-:root[data-theme="light"] .g4 { background: radial-gradient(circle, rgba(185, 60, 48, 0.64), transparent 70%); }
 
 * { box-sizing: border-box; }
 
@@ -70,26 +66,20 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Purple/pink corner glows — each blob breathes independently (injected by branding.js) */
-.bg-fx {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  overflow: hidden;
+/* Seigaiha (青海波) — traditional Japanese overlapping-wave pattern.
+   Two staggered rows of concentric semicircle arcs create the classic
+   fish-scale motif. */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='30' viewBox='0 0 60 30'%3E%3Cg fill='none' stroke='%23ece7de' stroke-width='0.7'%3E%3Cpath d='M0 15a15 15 0 0 1 30 0M30 15a15 15 0 0 1 30 0M-15 30a15 15 0 0 1 30 0M15 30a15 15 0 0 1 30 0M45 30a15 15 0 0 1 30 0'/%3E%3Cpath d='M5 15a10 10 0 0 1 20 0M35 15a10 10 0 0 1 20 0M-10 30a10 10 0 0 1 20 0M20 30a10 10 0 0 1 20 0M50 30a10 10 0 0 1 20 0'/%3E%3Cpath d='M10 15a5 5 0 0 1 10 0M40 15a5 5 0 0 1 10 0M-5 30a5 5 0 0 1 10 0M25 30a5 5 0 0 1 10 0M55 30a5 5 0 0 1 10 0'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 80px 40px;
+  opacity: 0.04;
 }
-.glow {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.55;
+:root[data-theme="light"] body::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='30' viewBox='0 0 60 30'%3E%3Cg fill='none' stroke='%231d1a17' stroke-width='0.7'%3E%3Cpath d='M0 15a15 15 0 0 1 30 0M30 15a15 15 0 0 1 30 0M-15 30a15 15 0 0 1 30 0M15 30a15 15 0 0 1 30 0M45 30a15 15 0 0 1 30 0'/%3E%3Cpath d='M5 15a10 10 0 0 1 20 0M35 15a10 10 0 0 1 20 0M-10 30a10 10 0 0 1 20 0M20 30a10 10 0 0 1 20 0M50 30a10 10 0 0 1 20 0'/%3E%3Cpath d='M10 15a5 5 0 0 1 10 0M40 15a5 5 0 0 1 10 0M-5 30a5 5 0 0 1 10 0M25 30a5 5 0 0 1 10 0M55 30a5 5 0 0 1 10 0'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.045;
 }
-/* transform-origin is each blob's INNER corner, so breathing expands toward the
-   screen corner (outward) instead of pushing into the middle. */
-.g1 { width: 46vw; height: 46vw; left: -22vw;  top: -22vw;     transform-origin: bottom right; background: radial-gradient(circle, rgba(226, 105, 92, 0.6), transparent 70%); }
-.g2 { width: 42vw; height: 42vw; right: -22vw; top: -10vh;     transform-origin: bottom left;  background: radial-gradient(circle, rgba(237, 166, 180, 0.5), transparent 70%); }
-.g3 { width: 40vw; height: 40vw; right: -20vw; bottom: -22vw;  transform-origin: top left;     background: radial-gradient(circle, rgba(214, 167, 90, 0.5), transparent 70%); }
-.g4 { width: 38vw; height: 38vw; left: -20vw;  bottom: -20vw;  transform-origin: top right;    background: radial-gradient(circle, rgba(234, 129, 119, 0.5), transparent 70%); }
 
 a { color: inherit; text-decoration: none; }
 
@@ -1983,18 +1973,6 @@ html.theme-vt::view-transition-old(root) { z-index: 0; }
 html.theme-vt::view-transition-new(root) { z-index: 1; }
 /* no separate snapshots during the theme switch — everything stays inside the circle */
 html.theme-vt * { view-transition-name: none !important; }
-
-/* ===== Corner glows breathe (scale + brightness), each on its own clock ===== */
-@media (prefers-reduced-motion: no-preference) {
-  .g1 { animation: breathe 9s  ease-in-out infinite; }
-  .g2 { animation: breathe 12s ease-in-out infinite 1s; }
-  .g3 { animation: breathe 11s ease-in-out infinite 0.5s; }
-  .g4 { animation: breathe 14s ease-in-out infinite 1.5s; }
-}
-@keyframes breathe {
-  0%, 100% { transform: scale(0.9);  opacity: 0.35; }
-  50%      { transform: scale(1.22); opacity: 0.82; }
-}
 
 /* Respect users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {

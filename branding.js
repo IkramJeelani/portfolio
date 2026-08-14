@@ -84,15 +84,6 @@
     document.title = (p.name || "") + " - Portfolio";
   }
 
-  // Background glow layer — corners "breathe" via CSS.
-  const bg = document.createElement("div");
-  bg.className = "bg-fx";
-  bg.setAttribute("aria-hidden", "true");
-  bg.innerHTML =
-    '<span class="glow g1"></span><span class="glow g2"></span>' +
-    '<span class="glow g3"></span><span class="glow g4"></span>';
-  document.body.prepend(bg);
-
   // Cursor spotlight that follows the mouse across the nav bar.
   const header = document.querySelector(".site-header");
   if (header) {
