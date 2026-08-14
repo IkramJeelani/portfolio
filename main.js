@@ -247,6 +247,7 @@
     navRoot.appendChild(link);
   });
 
+  setupHeroIntro();
   setupReveal();
   setupTilt();
   setupSectionFlash();
@@ -955,6 +956,26 @@
       requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);
+  }
+
+  /* ---------- First-load hero intro (name shows alone, then everything
+     else fades in in stages) ---------- */
+  function setupHeroIntro() {
+    const items = document.querySelectorAll(".intro-item");
+    if (!items.length) return;
+    if (reduced) {
+      items.forEach((e) => e.classList.add("in"));
+      return;
+    }
+    // Double rAF: lets the browser commit the initial opacity:0 state to a
+    // paint before adding .in, so the CSS transition actually plays instead
+    // of the change landing in the same frame as the hidden state and
+    // getting skipped.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        items.forEach((e) => e.classList.add("in"));
+      });
+    });
   }
 
   /* ---------- Scroll-reveal (subtle fade/slide-up) ---------- */

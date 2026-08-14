@@ -926,6 +926,25 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   transform: none;
 }
 
+/* ===== First-load hero intro ===== */
+/* The h1 name has no intro-item class, so it's the only thing visible at
+   first paint. Everything else fades in in stages, triggered once by
+   setupHeroIntro() in main.js (not scroll-based — these are all already
+   above the fold). */
+.intro-item {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition-delay: var(--intro-delay, 0ms);
+}
+.intro-item.in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-item { opacity: 1; transform: none; transition: none; }
+}
+
 /* ===== Projects + Certifications: responsive card grid (2–3 columns) ===== */
 .card-grid {
   display: grid;

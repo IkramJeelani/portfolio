@@ -70,24 +70,27 @@
   <a class="skip-link" href="#sections">Skip to content</a>
 
   <!-- ===== Navigation ===== -->
-  <header class="site-header">
+  <header class="site-header intro-item" style="--intro-delay:500ms">
     <a href="#home" class="brand" data-brand>IJ</a>
     <nav id="navLinks" aria-label="Sections"></nav>
   </header>
 
   <!-- ===== Main content: hero first (so the h1 lives inside the main
-       landmark), then the sections main.js injects in data.js order ===== -->
+       landmark), then the sections main.js injects in data.js order =====
+       First-load intro: the name (h1) has no intro-item class, so it's the
+       only thing visible at first paint — everything else fades in after it
+       in stages via setupHeroIntro() in main.js. -->
   <main id="sections">
     <section id="home" class="hero">
-      <div class="hero-visual">
+      <div class="hero-visual intro-item" style="--intro-delay:700ms">
         <canvas class="hero-arm" aria-hidden="true"></canvas>
         <p class="hero-arm-hint">click to drop a part</p>
       </div>
       <div class="hero-right">
         <div class="hero-text">
-          <p class="eyebrow" data-role>Engineering Portfolio</p>
+          <p class="eyebrow intro-item" style="--intro-delay:200ms" data-role>Engineering Portfolio</p>
           <h1 data-name>Ikram Jeelani</h1>
-          <p class="subtitle" data-bio></p>
+          <p class="subtitle intro-item" style="--intro-delay:900ms" data-bio></p>
         </div>
       </div>
     </section>
