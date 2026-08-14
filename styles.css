@@ -1237,56 +1237,47 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .dock-rail.dragging .dock-rail-thumb { box-shadow: 0 0 10px rgba(168, 85, 247, 0.65); }
 /* Each dock row: project thumbnail + number on the left, title/date on the
    right — the image makes every project instantly distinguishable. */
+/* Each row: a small number badge + title/date — no image thumbnail. A 46px
+   thumbnail was tried and dropped; at that size it read as visual noise
+   rather than actually helping identify the row, which the title text
+   already does on its own. Fixed min-height (sized to the tallest possible
+   row — the active one, with its extra "Now viewing" flag line) so every
+   row is identical and the dock never resizes between projects. */
 .dock-card {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   scroll-snap-align: center;
-  /* Fixed height: fits thumbnail + 2-line title + date + the active flag, so
-     every row is identical and the dock never resizes between projects. */
-  min-height: 84px;
-  padding: 0.45rem 0.55rem;
+  min-height: 88px;
+  padding: 0.55rem 0.6rem;
   border: 1px solid var(--border);
-  border-left: 3px solid transparent;
   border-radius: 10px;
   background: var(--card);
   opacity: 0.72;
-  transition: opacity 0.2s, border-color 0.2s, background 0.2s, transform 0.15s;
+  transition: opacity 0.2s, border-color 0.2s, background 0.2s;
 }
+/* Muted, not var(--accent) — that's reserved for "this is the project
+   you're currently viewing" (.dock-card.active below). Hovering some OTHER
+   row getting the identical accent border made it look like two rows were
+   both "selected" at once. */
 .dock-card:hover {
   opacity: 1;
-  border-color: var(--accent);
-  border-left-color: var(--accent);
-  transform: translateX(2px);
+  border-color: var(--muted);
 }
-.dock-thumb {
-  position: relative;
-  flex: 0 0 46px;
-  width: 46px;
-  height: 46px;
-  border-radius: 8px;
-  background-size: cover;
-  background-position: center;
-  background-color: var(--bg-soft);
-  border: 1px solid var(--border);
-}
-/* Position number badge in the thumbnail corner */
 .dock-num {
-  position: absolute;
-  left: -6px;
-  top: -6px;
-  min-width: 17px;
-  height: 17px;
-  padding: 0 3px;
+  flex: 0 0 auto;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 5px;
+  border-radius: 7px;
   background: var(--bg-soft);
   border: 1px solid var(--border);
   color: var(--muted);
   font-family: var(--font-display);
-  font-size: 0.62rem; /* sub-10px text was below any legibility floor */
+  font-size: 0.68rem;
   font-weight: 700;
   line-height: 1;
 }
@@ -1312,14 +1303,8 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .dock-card.active {
   opacity: 1;
   border-color: var(--accent);
-  border-left-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 14%, var(--card));
   cursor: default;
-}
-.dock-card.active:hover { transform: none; }
-.dock-card.active .dock-thumb {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent);
 }
 .dock-card.active .dock-num { background: var(--accent); border-color: var(--accent); color: #fff; }
 .dock-card.active .dock-name { color: var(--accent); }

@@ -114,18 +114,17 @@
   }
 
   // Floating quick-access dock: a manually-scrollable list of projects.
-  // Each row leads with the project's own image as a thumbnail (the clearest
-  // at-a-glance identifier) and a position number, so it's obvious which
-  // project you're on and what else is in the list.
+  // Each row leads with a position number and the title/date — used to lead
+  // with a 46px image thumbnail too, but at that size it wasn't legible
+  // enough to help identify anything, just visual noise next to text that
+  // already does the job.
   const cardsHTML = projects
     .map((p, i) => {
       const active = p.id === project.id ? " active" : "";
       const num = String(i + 1).padStart(2, "0");
       return `
         <a class="dock-card${active}" data-id="${encodeURIComponent(p.id)}" href="project.html?id=${encodeURIComponent(p.id)}">
-          <span class="dock-thumb" style="background-image:url('${p.image}')">
-            <span class="dock-num">${num}</span>
-          </span>
+          <span class="dock-num">${num}</span>
           <span class="dock-body">
             ${active ? '<span class="dock-flag">Now viewing</span>' : ""}
             <span class="dock-name">${p.title}</span>
