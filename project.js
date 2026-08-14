@@ -1,5 +1,36 @@
 /* Detail page: look up the project by ?id= and render the in-depth view. */
 (function () {
+  // Auto-scroll a scrollable container when the pointer hovers near its top
+  // or bottom edge — lets you keep scrolling a long list just by parking the
+  // cursor there, instead of having to keep moving the wheel/trackpad.
+  // Speed ramps up linearly the closer the cursor is to the edge, and stops
+  // the instant the pointer leaves the zone (or the container).
+  function setupEdgeAutoScroll(el) {
+    const EDGE = 40; // px zone from top/bottom that triggers scrolling
+    const MAX_SPEED = 12; // px per frame at the very edge
+    let y = null;
+    let raf = null;
+    const tick = () => {
+      raf = null;
+      if (y == null) return;
+      const h = el.clientHeight;
+      let dy = 0;
+      if (y < EDGE) dy = -MAX_SPEED * (1 - y / EDGE);
+      else if (y > h - EDGE) dy = MAX_SPEED * (1 - (h - y) / EDGE);
+      if (dy) {
+        el.scrollTop += dy;
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    el.addEventListener("mousemove", (e) => {
+      y = e.clientY - el.getBoundingClientRect().top;
+      if (!raf) raf = requestAnimationFrame(tick);
+    });
+    el.addEventListener("mouseleave", () => {
+      y = null;
+    });
+  }
+
   const page = document.getElementById("projectPage");
   const projects = window.PROJECTS || [];
   const id = new URLSearchParams(window.location.search).get("id");
@@ -156,6 +187,7 @@
 
   const viewport = dock.querySelector(".dock-viewport");
   const reel = dock.querySelector(".dock-reel");
+  setupEdgeAutoScroll(viewport);
 
   // Vertical location line beside the dock (custom scroll-position indicator).
   const rail = document.createElement("div");
