@@ -3,36 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project — Ikram Jeelani</title>
-  <meta name="description" content="A project by Ikram Jeelani — in-depth write-up with details, tech and links." />
+  <title>Certificate — Ikram Jeelani</title>
+  <meta name="description" content="A credential earned by Ikram Jeelani." />
   <meta name="author" content="Ikram Jeelani" />
   <meta name="robots" content="index, follow" />
   <!-- Matches SETTINGS.theme's default; branding.js re-syncs it on toggle. -->
   <meta name="theme-color" content="#f6f3ec" />
 
-  <!-- Sharing cards (project.js refines title/description/url per project).
-       og:image is static — crawlers don't run JS, so it can't switch itself
-       on SETTINGS.theme at request time. This file is kept in sync with
-       SETTINGS.theme automatically by scripts/sync-og-image.py, which runs
-       as a git pre-commit hook (see .githooks/pre-commit) — you shouldn't
-       need to touch og:image/twitter:image by hand. -->
+  <!-- Sharing cards (certificate.js refines title/description/url per
+       certificate). og:image is static — crawlers don't run JS, so it
+       can't switch itself on SETTINGS.theme at request time. This file is
+       kept in sync with SETTINGS.theme automatically by
+       scripts/sync-og-image.py, which runs as a git pre-commit hook (see
+       .githooks/pre-commit) — you shouldn't need to touch og:image/
+       twitter:image by hand. -->
   <link rel="canonical" href="https://ikramjeelani.github.io/portfolio/" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Ikram Jeelani" />
-  <meta property="og:title" content="Project — Ikram Jeelani" />
-  <meta property="og:description" content="An in-depth project write-up by Ikram Jeelani." />
+  <meta property="og:title" content="Certificate — Ikram Jeelani" />
+  <meta property="og:description" content="A credential earned by Ikram Jeelani." />
   <meta property="og:url" content="https://ikramjeelani.github.io/portfolio/" />
   <meta property="og:image" content="https://ikramjeelani.github.io/portfolio/assets/og-image-light.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Ikram Jeelani - Portfolio" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Project — Ikram Jeelani" />
-  <meta name="twitter:description" content="An in-depth project write-up by Ikram Jeelani." />
+  <meta name="twitter:title" content="Certificate — Ikram Jeelani" />
+  <meta name="twitter:description" content="A credential earned by Ikram Jeelani." />
   <meta name="twitter:image" content="https://ikramjeelani.github.io/portfolio/assets/og-image-light.png" />
 
   <!-- ?v= is a manual cache-buster — bump it (on EVERY ?v= tag below,
-       including styles.css) whenever data.js/branding.js/project.js/
+       including styles.css) whenever data.js/branding.js/certificate.js/
        styles.css change, since local dev servers (and some CDNs) can
        otherwise keep serving a stale cached copy indefinitely — a browser
        can hold onto a cached styles.css even across a hard reload of the
@@ -46,7 +47,7 @@
   <link rel="stylesheet" href="styles.css?v=42" />
 </head>
 <body>
-  <a class="skip-link" href="#projectPage">Skip to content</a>
+  <a class="skip-link" href="#certPage">Skip to content</a>
 
   <div class="petals" aria-hidden="true">
     <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
@@ -59,19 +60,20 @@
       </div>
       <!-- No section nav on detail pages — the sidebar keeps just the brand
            and whatever branding.js appends to the sidebar foot (résumé
-           button, theme/petals toggles, contact links). -->
+           button, theme/petals toggles, contact links). certificate.js
+           inserts the certification list between the two, same as
+           project.js does on project.html. -->
     </aside>
 
     <main class="main">
       <header class="topbar">
         <div class="topbar-title">
-          <!-- The only back link — project.js wires the sessionStorage
-               scroll/morph-restore behavior onto this one. -->
-          <a class="back-link" id="topbarBack" href="index.html#projects">&larr; Back to projects</a>
+          <!-- The only back link. -->
+          <a class="back-link" id="topbarBack" href="index.html#certifications">&larr; Back to certifications</a>
         </div>
       </header>
-      <div class="project-page" id="projectPage">
-        <!-- Filled in by project.js based on the ?id= in the URL -->
+      <div class="cert-page" id="certPage">
+        <!-- Filled in by certificate.js based on the ?id= in the URL -->
       </div>
       <footer class="site-footer">
         <p>&copy; <span data-year></span> <span data-name></span>.</p>
@@ -80,6 +82,6 @@
   </div>
 
   <script src="branding.js?v=42"></script>
-  <script src="project.js?v=42"></script>
+  <script src="certificate.js?v=42"></script>
 </body>
 </html>

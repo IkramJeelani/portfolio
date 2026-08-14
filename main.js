@@ -1,10 +1,18 @@
-/* Home page: build the nav + sections dynamically from data.js.
-   - Order comes from window.SECTIONS.
-   - A section is skipped entirely if it has no content (auto-hide). */
+/* Home page: build the nav + view panels dynamically from data.js.
+   Tab-style section routing — every section lives in the DOM, but only the
+   current one is ever in the layout (see the router further down); moving
+   between sections is exclusively a nav click or hash change, never scroll. */
 (function () {
-  const sectionsRoot = document.getElementById("sections");
+  const viewRoot = document.getElementById("view");
   const navRoot = document.getElementById("navLinks");
-  if (!sectionsRoot) return;
+  const viewTitle = document.getElementById("viewTitle");
+  if (!viewRoot) return;
+
+  // This page owns scroll position itself (every section switch resets to
+  // the top) — without this, the browser's own automatic scroll-restoration
+  // can reapply a stale position to a revisited history entry (e.g. via
+  // back/forward) and fight that reset.
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 
   const reduced =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -32,15 +40,6 @@
     arm();
   }
 
-  // Turn a GitHub "blob" PDF link into a same-origin path we can embed in a popup.
-  function toEmbed(url) {
-    if (!url) return "";
-    const m = url.match(/github\.com\/[^/]+\/[^/]+\/blob\/[^/]+\/(.+\.pdf)$/i);
-    if (m) return m[1]; // e.g. "assets/Certifications/CSWA.pdf"
-    if (/\.pdf($|\?)/i.test(url)) return url;
-    return "";
-  }
-
   /* ---------- Section builders ----------
      Each returns null when empty (so the section is hidden), or an object:
      { title, html, cls?, mount? }. */
@@ -48,14 +47,14 @@
   function buildAbout() {
     const text = (window.ABOUT || "").trim();
     if (!text) return null;
-    return { title: "About", cls: "about", html: `<p class="about-text reveal">${window.ABOUT}</p>` };
+    return { title: "About", cls: "about", html: `<p class="about-text">${window.ABOUT}</p>` };
   }
 
   function buildExperience() {
     const list = window.EXPERIENCE || [];
     if (!list.length) return null;
     const items = list
-      .map((e, i) => {
+      .map((e) => {
         const points = (e.points || []).map((p) => `<li>${p}</li>`).join("");
         const logo = e.logo
           ? `<img class="tl-logo" src="${e.logo}" alt="${e.company || "company"} logo">`
@@ -66,7 +65,7 @@
             <span class="tl-date">${e.date || ""}</span>
             ${e.location ? `<span class="tl-loc">${e.location}</span>` : ""}
           </div>
-          <div class="tl-card reveal" style="--reveal-delay:${i * 70}ms">
+          <div class="tl-card">
             ${logo}
             <div class="tl-role">${e.role || ""}</div>
             ${e.company ? `<div class="tl-company">${e.company}</div>` : ""}
@@ -82,14 +81,14 @@
     const list = window.PROJECTS || [];
     if (!list.length) return null;
     const cards = list
-      .map((p, i) => {
+      .map((p) => {
         const tech = (p.tech || []).map((t) => `<span class="tag">${t}</span>`).join("");
         // Top-right open-in icon (external-link), same affordance as the cert
         // cards — the whole card is the link, so it's aria-hidden. A circular
         // chip keeps it legible over any project image behind it.
         const openIcon = `<span class="card-open" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span>`;
         return `
-          <a class="card reveal" style="--reveal-delay:${i * 70}ms" href="project.html?id=${encodeURIComponent(p.id)}" aria-label="View details — ${p.title || ""}">
+          <a class="card" href="project.html?id=${encodeURIComponent(p.id)}" aria-label="View details — ${p.title || ""}">
             <div class="card-img" style="background-image:url('${p.image}')"></div>
             ${openIcon}
             <div class="card-body">
@@ -113,7 +112,7 @@
     const groups = list
       .map((g) => {
         const tags = (g.items || []).map((i) => `<span class="tag">${i}</span>`).join("");
-        return `<div class="skill-group reveal"><h3 class="skill-category">${g.category}</h3><div class="tags">${tags}</div></div>`;
+        return `<div class="skill-group"><h3 class="skill-category">${g.category}</h3><div class="tags">${tags}</div></div>`;
       })
       .join("");
     return { title: "Skills", cls: "skills", html: `<div class="skills-list">${groups}</div>` };
@@ -123,8 +122,7 @@
     const list = window.CERTIFICATIONS || [];
     if (!list.length) return null;
     const cards = list
-      .map((c, i) => {
-        const delay = `--reveal-delay:${i * 70}ms`;
+      .map((c) => {
         // Issuer and date as separate elements rather than one joined string,
         // so CSS can rank them: the date becomes the scan anchor (accent,
         // uppercase — same treatment as the project cards) while the issuer
@@ -132,10 +130,12 @@
         const meta =
           (c.issuer ? `<span class="cert-issuer">${c.issuer}</span>` : "") +
           (c.date ? `<span class="cert-date">${c.date}</span>` : "");
-        // hasPdf is the single gate: a real credential PDF is available, so the
-        // card becomes a clickable link, shows the open-in icon, and tilts on
-        // hover. Without it (cert earned but no PDF yet) the card is a static tile.
-        const hasCred = c.hasPdf === true && !!c.url;
+        // hasPdf (+ an id to link to) is the gate: a real credential PDF is
+        // available, so the card becomes a clickable link to its own
+        // certificate.html page — same pattern as a project card leading to
+        // project.html — and gets the open-in icon and tilt on hover.
+        // Without it (cert earned but no PDF yet) the card is a static tile.
+        const hasCred = c.hasPdf === true && !!c.url && !!c.id;
         const logo = c.logo
           ? `<img class="cert-logo" src="${c.logo}" alt="${c.issuer || c.name || "logo"}">`
           : `<div class="cert-logo" aria-hidden="true"></div>`;
@@ -151,15 +151,13 @@
             <span class="cert-name">${c.name || ""}</span>
             ${meta ? `<span class="cert-meta">${meta}</span>` : ""}
           </div>`;
-        const embed = toEmbed(c.url);
-        const pdfAttr = embed ? ` data-pdf="${embed}"` : "";
         // aria-label gives screen readers one clean, purposeful name for the
         // whole card ("View credential — X") instead of reading every piece
         // of visible text (logo alt, name, issuer, date) concatenated together
         // as the link's accessible name.
         return hasCred
-          ? `<a class="cert-card reveal" style="${delay}" href="${c.url}"${pdfAttr} target="_blank" rel="noopener" aria-label="View credential — ${c.name || ""}">${inner}</a>`
-          : `<div class="cert-card reveal cert-static" style="${delay}">${inner}</div>`;
+          ? `<a class="cert-card" href="certificate.html?id=${encodeURIComponent(c.id)}" aria-label="View credential — ${c.name || ""}">${inner}</a>`
+          : `<div class="cert-card cert-static">${inner}</div>`;
       })
       .join("");
     return { title: "Certifications", cls: "certifications", html: `<div class="card-grid">${cards}</div>` };
@@ -169,7 +167,7 @@
     const list = window.EDUCATION || [];
     if (!list.length) return null;
     const items = list
-      .map((e, i) => {
+      .map((e) => {
         const logo = e.logo
           ? `<img class="edu-logo" src="${e.logo}" alt="${e.school || "university"} logo">`
           : `<div class="edu-logo" aria-hidden="true"></div>`;
@@ -187,7 +185,7 @@
             <span class="edu-date">${e.date || ""}</span>
             ${e.location ? `<span class="edu-loc">${e.location}</span>` : ""}
           </div>
-          <div class="edu-card reveal" style="--reveal-delay:${i * 70}ms">
+          <div class="edu-card">
             ${logo}
             <div class="edu-school">${e.school || ""}</div>
             ${degreeLine}
@@ -199,23 +197,6 @@
     return { title: "Education", cls: "education", html: `<div class="edu-timeline">${items}</div>` };
   }
 
-  function buildContact() {
-    const list = window.CONTACTS || [];
-    if (!list.length) return null;
-    const links = list
-      .map((c) => {
-        const ext = /^https?:/i.test(c.url) ? ` target="_blank" rel="noopener"` : "";
-        return `<a class="btn" href="${c.url}"${ext}>${c.label}</a>`;
-      })
-      .join("");
-    return {
-      title: "Contact",
-      cls: "contact",
-      html: `<p class="contact-intro reveal">Interested in working together or want to know more? Get in touch.</p>
-             <div class="contact-links reveal">${links}</div>`,
-    };
-  }
-
   const BUILDERS = {
     about: buildAbout,
     experience: buildExperience,
@@ -223,11 +204,35 @@
     skills: buildSkills,
     certifications: buildCertifications,
     education: buildEducation,
-    contact: buildContact,
   };
 
   /* ---------- Render in the configured order, skipping empty sections ---------- */
   const order = window.SECTIONS || Object.keys(BUILDERS);
+
+  // Line-icon glyphs shown to the left of each sidebar label. Keyed by
+  // section id, all built from the same 24-viewbox / 2px-stroke family as
+  // the rest of the site's icons (résumé button, cert-open arrow) so they
+  // read as one set.
+  const NAV_ICONS = {
+    about:          '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    experience:     '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
+    projects:       '<path d="M2 3h7v7H2zM13 3h9v5h-9zM13 12h9v9h-9zM2 14h7v7H2z"/>',
+    skills:         '<path d="M12 2l1.6 4.4L18 8l-4.4 1.6L12 14l-1.6-4.4L6 8l4.4-1.6z"/><path d="M18 13l.8 2.2L21 16l-2.2.8L18 19l-.8-2.2L15 16l2.2-.8z"/>',
+    certifications: '<circle cx="12" cy="8" r="6"/><path d="m8.21 13.89-1.21 7.11 5-3 5 3-1.21-7.12"/>',
+    education:      '<path d="M22 10 12 4 2 10l10 6 10-6z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>',
+  };
+  const iconMarkup = (key) => {
+    const path = NAV_ICONS[key];
+    if (!path) return "";
+    // Line style — no fill, 2px stroke matching the rest of the site's SVG family.
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+      + 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + path + '</svg>';
+  };
+
+  // The "Home" view (hero) is still in index.html as a data-view="home"
+  // section-view and remains the default/fallback view (reachable via the
+  // IJ logo), but no longer gets its own sidebar nav entry.
+  const viewTitles = { home: "Home" };
 
   order.forEach((key) => {
     const builder = BUILDERS[key];
@@ -235,58 +240,104 @@
     const sec = builder();
     if (!sec) return; // no content -> auto-hidden
 
+    // Each section becomes a .section-view panel inside #view. All of them
+    // live in the DOM at once; the router below toggles which ONE is
+    // actually in the layout (display:none for the rest via .is-active).
     const el = document.createElement("section");
     el.id = key;
-    el.className = "section" + (sec.cls ? " " + sec.cls : "");
-    el.innerHTML = `<h2 class="section-title reveal">${sec.title}</h2>${sec.html}`;
-    sectionsRoot.appendChild(el);
+    el.className = "section-view section" + (sec.cls ? " " + sec.cls : "");
+    el.dataset.view = key;
+    // No inline section-title — the topbar renders the view label instead.
+    el.innerHTML = sec.html;
+    viewRoot.appendChild(el);
+    viewTitles[key] = sec.title;
 
     const link = document.createElement("a");
     link.href = "#" + key;
-    link.textContent = sec.title;
+    link.dataset.view = key;
+    link.innerHTML = iconMarkup(key) + '<span class="nav-label">' + sec.title + '</span>';
     navRoot.appendChild(link);
   });
 
-  setupReveal();
+  /* ---------- Section router ----------
+     Tab-style: exactly ONE section is in the layout at a time (every other
+     one is display:none via the .is-active toggle below) — moving between
+     sections is only ever a deliberate nav click or hash change, never a
+     side effect of scrolling. Scrolling still works completely normally
+     WITHIN whichever section is active (a tall one, e.g. Certifications,
+     scrolls like any normal tall page), it just has nothing to scroll INTO
+     — the sections on either side of it aren't in the page's flow at all.
+     (Two earlier designs both tried to make scrolling itself double as the
+     navigation — a full-page scroll-snap, then a plain-flow + scrollspy
+     version — and both made "which section is this" tracking fragile
+     enough that the topbar title/nav/URL could drift out of sync with what
+     was actually on screen. Only one section ever being rendered removes
+     the ambiguity entirely: there's nothing to track.) */
+  const allLinks = navRoot.querySelectorAll("a[data-view]");
+  const allViews = Array.from(viewRoot.querySelectorAll(".section-view"));
+  let currentKey = null;
+
+  const applyCurrent = (key) => {
+    if (!viewTitles[key]) key = "home";
+    if (key === currentKey) return;
+    currentKey = key;
+    allLinks.forEach((a) => {
+      if (a.dataset.view === key) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
+    });
+    if (viewTitle) viewTitle.textContent = key === "home" ? "" : viewTitles[key] || "";
+    allViews.forEach((v) => v.classList.toggle("is-active", v.dataset.view === key));
+    history.replaceState(null, "", key === "home" ? "#home" : "#" + key);
+    window.dispatchEvent(new CustomEvent("viewchange", { detail: key }));
+  };
+
+  const showView = (key) => {
+    applyCurrent(key);
+    // A fresh switch always lands at the very top of the new section — not
+    // wherever the previous section happened to be scrolled to. Since only
+    // the active section is ever in the page's flow, (0,0) IS that
+    // section's top regardless of which key this is.
+    window.scrollTo(0, 0);
+  };
+
+  // Primary navigation path: sidebar nav clicks. preventDefault stops the
+  // browser's own native "jump to the element with this id" behavior from
+  // ever happening at all — letting it through raced our own reset above
+  // (each landing the page at a different, browser-decided offset instead
+  // of the top). applyCurrent's own history.replaceState keeps the URL in
+  // sync without it.
+  allLinks.forEach((a) => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      showView(a.dataset.view);
+    });
+  });
+
+  // Secondary path: browser back/forward change location.hash directly,
+  // which still triggers that native anchor-scroll before this listener
+  // runs — re-assert our own reset a frame later so it's the last word.
+  window.addEventListener("hashchange", () => {
+    showView((location.hash || "#home").slice(1));
+    requestAnimationFrame(() => window.scrollTo(0, 0));
+  });
+
   setupTilt();
-  setupSectionFlash();
   setupEqualize();
-  setupTimelineWidth();
   setupPdfModal();
-  setupScrollSpy();
-  setupSharedTransition();
   setupHeroArm();
   setupSkillsMasonry();
   setupSkillTree(); // after the masonry — it measures the laid-out positions
 
-  /* ---------- Experience + Education: one shared card width ----------
-     Each timeline is its own grid, so their card columns size independently
-     (Experience might be wider than Education, or vice-versa). Measure the
-     widest card across BOTH sections and pin every card to that width so the
-     two sections line up. Cleared below the mobile breakpoint, where cards
-     are meant to fill the row fluidly. */
-  function setupTimelineWidth() {
-    const cards = Array.from(document.querySelectorAll(".tl-card, .edu-card"));
-    if (cards.length < 2) return;
-    const apply = () => {
-      cards.forEach((c) => (c.style.width = ""));
-      // 600 matches the CSS breakpoint where both timelines reflow to fluid
-      // 1fr columns — a different number here would leave a band of widths
-      // where the shared-width guarantee is silently off.
-      if (window.innerWidth <= 600) return;
-      let max = 0;
-      cards.forEach((c) => (max = Math.max(max, c.offsetWidth)));
-      cards.forEach((c) => (c.style.width = max + "px"));
-    };
-    apply();
-    let rt;
-    window.addEventListener("resize", () => {
-      clearTimeout(rt);
-      rt = setTimeout(apply, 150); // debounced: full measure/write cycle is not per-frame cheap
-    });
-    window.addEventListener("load", apply);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(apply);
-  }
+  // Initial view: from URL hash, else Home.
+  showView((location.hash || "#home").slice(1));
+  // setupSharedTransition's own return-scroll restore (below) needs the
+  // "projects" section to already be the active/visible one when it runs —
+  // it does, since "Back to projects" always arrives via #projects — so it
+  // has to run AFTER the initial view is applied, not before.
+  setupSharedTransition();
+
+  /* setupTimelineWidth removed — with view routing, experience and education are
+     never visible together, so shared card widths are unnecessary. */
 
   /* ---------- Skills: balanced masonry ----------
      CSS columns can only split between categories in source order, which
@@ -299,12 +350,12 @@
     if (!wrap) return;
     const groups = Array.from(wrap.querySelectorAll(".skill-group"));
     if (!groups.length) return;
-    const GAP = 36; // keep in sync with the CSS column gap
+    const GAP = 36;
     const COLW = 190;
 
     const layout = () => {
       const w = wrap.clientWidth || 640;
-      const n = Math.max(1, Math.floor((w + GAP) / (COLW + GAP)));
+      const n = Math.min(3, Math.max(1, Math.floor((w + GAP) / (COLW + GAP))));
       wrap.innerHTML = "";
       const cols = [];
       for (let i = 0; i < n; i++) {
@@ -329,6 +380,7 @@
 
     layout();
     window.addEventListener("load", layout);
+    window.addEventListener("viewchange", () => requestAnimationFrame(layout));
     let rt;
     window.addEventListener("resize", () => {
       clearTimeout(rt);
@@ -373,10 +425,13 @@
     };
     sync();
     window.addEventListener("load", sync);
+    // Double-rAF (not a timeout) so this always lands in the frame right
+    // after the masonry's own rAF-scheduled column rebuild — any fixed delay
+    // either races the rebuild (wrong trunk length briefly) or lags behind
+    // it long enough to flash the old, uncut trunk before snapping short.
+    window.addEventListener("viewchange", () => requestAnimationFrame(() => requestAnimationFrame(sync)));
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
     let rt;
-    // 250ms: deliberately AFTER the masonry's 150ms relayout, which can move
-    // groups between columns and change every offset this depends on
     window.addEventListener("resize", () => {
       clearTimeout(rt);
       rt = setTimeout(sync, 250);
@@ -513,19 +568,19 @@
     let recoverUntil = 0; // while set, the solver pauses so the arm can unfold
 
     const colors = () => {
-      const light = document.documentElement.getAttribute("data-theme") === "light";
+      const light = document.documentElement.getAttribute("data-theme") !== "dark";
       return {
-        grid: light ? "rgba(109, 40, 217, 0.10)" : "rgba(168, 85, 247, 0.09)",
-        arc: light ? "rgba(109, 40, 217, 0.18)" : "rgba(168, 85, 247, 0.16)",
-        link: light ? "#6d28d9" : "#a855f7",
-        link2: light ? "#be185d" : "#ec4899",
-        slot: light ? "rgba(27, 24, 48, 0.20)" : "rgba(8, 6, 16, 0.38)",
-        jointHi: light ? "#ffffff" : "#3d3560",
-        jointLo: light ? "#d9d4ea" : "#141020",
-        bolt: light ? "#8b84a8" : "#0d0a18",
-        tip: light ? "#be185d" : "#f472b6",
-        hud: light ? "rgba(92, 88, 111, 0.75)" : "rgba(163, 157, 181, 0.7)",
-        trail: light ? "190, 24, 93" : "244, 114, 182",
+        grid: light ? "rgba(208, 69, 58, 0.10)" : "rgba(226, 105, 92, 0.09)",
+        arc: light ? "rgba(208, 69, 58, 0.18)" : "rgba(226, 105, 92, 0.16)",
+        link: light ? "#d0453a" : "#e2695c",
+        link2: light ? "#b93c30" : "#eda6b4",
+        slot: light ? "rgba(29, 26, 23, 0.20)" : "rgba(8, 6, 12, 0.38)",
+        jointHi: light ? "#fffdf9" : "#2c313e",
+        jointLo: light ? "#efeae0" : "#14161c",
+        bolt: light ? "#7d7566" : "#1b1e26",
+        tip: light ? "#b93c30" : "#eda6b4",
+        hud: light ? "rgba(125, 117, 102, 0.75)" : "rgba(139, 143, 160, 0.7)",
+        trail: light ? "208, 69, 58" : "237, 166, 180",
         glow: light ? 9 : 14,
         light,
       };
@@ -957,27 +1012,6 @@
     requestAnimationFrame(frame);
   }
 
-  /* ---------- Scroll-reveal (subtle fade/slide-up) ---------- */
-  function setupReveal() {
-    const els = document.querySelectorAll(".reveal");
-    if (reduced || !("IntersectionObserver" in window)) {
-      els.forEach((e) => e.classList.add("in"));
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((en) => {
-          if (en.isIntersecting) {
-            en.target.classList.add("in");
-            io.unobserve(en.target);
-          }
-        });
-      },
-      { threshold: 0.12 }
-    );
-    els.forEach((e) => io.observe(e));
-  }
-
   /* ---------- Shared-element page transition (card image <-> detail hero) ---------- */
   function setupSharedTransition() {
     const projSec = document.getElementById("projects");
@@ -994,13 +1028,10 @@
       if (sessionStorage.getItem("returnToProjects")) {
         sessionStorage.removeItem("returnToProjects");
         const y = parseInt(sessionStorage.getItem("indexScroll") || "", 10);
-        if (!isNaN(y)) {
-          const root = document.documentElement;
-          const prev = root.style.scrollBehavior;
-          root.style.scrollBehavior = "auto"; // instant, no slide
-          window.scrollTo(0, y);
-          root.style.scrollBehavior = prev;
-        }
+        // Projects is already the active section by this point (see the
+        // call-ordering note above showView), so this targets a position
+        // WITHIN it, same as when it was recorded on click below.
+        if (!isNaN(y)) window.scrollTo(0, y);
         const last = sessionStorage.getItem("lastProject");
         const card = last && cardFor(last);
         const img = card && card.querySelector(".card-img");
@@ -1070,27 +1101,8 @@
     const build = () => {
       modal = document.createElement("div");
       modal.className = "pdf-modal";
-      const chevronUp =
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>';
-      const chevronDown =
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
       modal.innerHTML =
         '<div class="pdf-backdrop"></div>' +
-        // The chevrons are SIBLINGS of the scrolling <nav>, not children of
-        // it — the nav has a mask-image fade at its own edges (see
-        // updateDockFade), and a mask fades EVERYTHING it paints, including
-        // its descendants. A chevron placed exactly at the edge it needs to
-        // mark would be faded to near-invisible by that same mask. As normal
-        // flex-column siblings (DOM order: up, nav, down) they get their OWN
-        // reserved strip of space above/below the list instead of floating
-        // on top of the end cards — no overlap, and the dock's own scrollable
-        // area shrinks by exactly the room the chevrons take, which is also
-        // why the dock now shows a bit less at once than before.
-        '<div class="cert-dock-wrap" hidden>' +
-        '<div class="cert-dock-nav cert-dock-nav-up" aria-hidden="true">' + chevronUp + "</div>" +
-        '<nav class="cert-dock" aria-label="All certifications"></nav>' +
-        '<div class="cert-dock-nav cert-dock-nav-down" aria-hidden="true">' + chevronDown + "</div>" +
-        "</div>" +
         '<div class="pdf-box" role="dialog" aria-modal="true" aria-label="Certificate viewer">' +
         '<div class="pdf-toolbar">' +
         '<span class="pdf-title"></span>' +
@@ -1104,8 +1116,6 @@
         "</div></div>" +
         '<div class="pdf-pages"></div></div>';
       document.body.appendChild(modal);
-      modal.querySelector(".cert-dock").addEventListener("scroll", scheduleDockFade, { passive: true });
-      window.addEventListener("resize", scheduleDockFade);
       modal.querySelector(".pdf-backdrop").addEventListener("click", close);
       modal.querySelector(".pdf-close").addEventListener("click", close);
       modal.querySelector(".pdf-zoom-in").addEventListener("click", () => setZoom(zoom + 0.25));
@@ -1165,113 +1175,14 @@
       if (pdfDoc) renderPages();
     });
 
-    /* The dock has no visible scrollbar (by request), so two cues stand in
-       for it: a soft edge fade (mask, so it reveals the blurred backdrop
-       instead of painting a colour patch that would need to match it) AND a
-       chevron at whichever edge(s) currently have hidden content — the fade
-       alone read as too subtle to notice at a glance. Both recomputed on
-       scroll/resize, since which edges are active changes as you scroll. */
-    let dockFadeRaf = null;
-    const updateDockFade = () => {
-      const wrap = modal.querySelector(".cert-dock-wrap");
-      const dock = modal.querySelector(".cert-dock");
-      if (!dock || wrap.hidden) return;
-      const F = "28px";
-      const canUp = dock.scrollTop > 2;
-      const canDown = dock.scrollTop < dock.scrollHeight - dock.clientHeight - 2;
-      let mask = "none";
-      if (canUp && canDown) mask = `linear-gradient(to bottom, transparent, black ${F}, black calc(100% - ${F}), transparent)`;
-      else if (canUp) mask = `linear-gradient(to bottom, transparent, black ${F})`;
-      else if (canDown) mask = `linear-gradient(to bottom, black calc(100% - ${F}), transparent)`;
-      dock.style.maskImage = mask;
-      dock.style.webkitMaskImage = mask;
-      modal.querySelector(".cert-dock-nav-up").classList.toggle("show", canUp);
-      modal.querySelector(".cert-dock-nav-down").classList.toggle("show", canDown);
-    };
-    const scheduleDockFade = () => {
-      if (dockFadeRaf) return;
-      dockFadeRaf = requestAnimationFrame(() => {
-        dockFadeRaf = null;
-        updateDockFade();
-      });
-    };
-
-    /* Side dock listing every certification, so you can move between them
-       without closing the viewer. The cards are CLONES of the real ones in the
-       grid rather than re-built markup — that way the design can never drift
-       apart from the main page. Clones keep their data-pdf, so the delegated
-       handler below already makes them work; nothing extra to wire up. */
-    const fillDock = (activeSrc) => {
-      const wrap = modal.querySelector(".cert-dock-wrap");
-      const dock = modal.querySelector(".cert-dock");
-      const originals = Array.from(document.querySelectorAll("#certifications .cert-card"));
-      if (originals.length < 2) {
-        wrap.hidden = true; // nothing to move between
-        return;
-      }
-      const firstBuild = !dock.childElementCount;
-      if (firstBuild) {
-        originals.forEach((card) => {
-          const clone = card.cloneNode(true);
-          // .reveal leaves an element at opacity:0 until its observer fires,
-          // and that observer only ever watches the original — a cloned card
-          // would sit invisible forever. It's on screen immediately, so drop
-          // the scroll-reveal state entirely.
-          clone.classList.remove("reveal", "in", "tilting");
-          clone.style.removeProperty("--reveal-delay");
-          // cloneNode(true) also copies the inline style ATTRIBUTE — so if the
-          // cursor happened to be hovering (tilting) the original the instant
-          // you clicked it, the clone inherits a frozen rotateX/rotateY/scale
-          // transform. Nothing ever clears it (the clone has no pointer
-          // events of its own to trigger setupTilt's pointerleave reset), so
-          // it sits permanently skewed — which is what was clipping an edge
-          // of the highlighted card's border. Strip everything setupTilt writes.
-          clone.style.removeProperty("transform");
-          clone.style.removeProperty("transition");
-          clone.style.removeProperty("--mx");
-          clone.style.removeProperty("--my");
-          dock.appendChild(clone);
-        });
-      }
-      Array.from(dock.children).forEach((clone, i) => {
-        // Copy the original's ACTUAL rendered width, not the CSS basis: the
-        // grid flexes its cards a few px narrower than 275, and at this size a
-        // few px is the difference between a 3- and 4-line title. Height is
-        // re-synced too because the equalizer re-runs on resize.
-        if (originals[i]) {
-          clone.style.minHeight = originals[i].style.minHeight;
-          clone.style.width = originals[i].getBoundingClientRect().width + "px";
-        }
-        const isCurrent = clone.getAttribute("data-pdf") === activeSrc;
-        clone.classList.toggle("cert-dock-current", isCurrent);
-        if (isCurrent) clone.setAttribute("aria-current", "true");
-        else clone.removeAttribute("aria-current");
-      });
-      wrap.hidden = false;
-      // Clicking a card should not move the list — the card you just clicked
-      // is already visible, and re-centring it displaces every OTHER card
-      // you were just looking at. The one exception is the very first time
-      // the dock appears: nothing has been scrolled yet, so if the opened
-      // certificate starts off-screen (near the end of a long list), bring
-      // it into view with the smallest possible scroll (a no-op if it's
-      // already visible) rather than leaving the dock stuck at the top.
-      if (firstBuild) {
-        const cur = dock.querySelector(".cert-dock-current");
-        if (cur) cur.scrollIntoView({ block: "nearest" });
-      }
-      updateDockFade();
-    };
-
     let opener = null; // element to hand focus back to when the dialog closes
 
-    async function open(src, title, isCert) {
+    // Only the résumé button opens this now — certifications navigate to
+    // their own certificate.html page instead (see buildCertifications),
+    // same pattern as a project card leading to project.html.
+    async function open(src, title) {
       if (!modal) build();
-      // Only capture the opener on the FIRST open. Hopping between certs via
-      // the dock would otherwise point focus-restore at a dock card, and on
-      // close the dock is hidden — focus would land nowhere.
       if (!modal.classList.contains("open")) opener = document.activeElement;
-      if (isCert) fillDock(src);
-      else modal.querySelector(".cert-dock-wrap").hidden = true; // résumé: no dock
       modal.querySelector(".pdf-title").textContent = title || "Certificate";
       modal.querySelector(".pdf-box").setAttribute("aria-label", title || "Certificate viewer");
       modal.querySelector(".pdf-download").href = src;
@@ -1313,84 +1224,17 @@
       }, 250);
     }
 
+    // The résumé button (branding.js) is the only data-pdf link left —
+    // certification cards link to their own certificate.html page instead.
     document.addEventListener("click", (e) => {
       const link = e.target.closest("a[data-pdf]");
       if (!link) return;
       e.preventDefault();
-      // Explicit data-pdf-title (used by the résumé button) wins; certification
-      // cards fall back to their own .cert-name text.
-      const name = link.querySelector(".cert-name");
-      const title = link.getAttribute("data-pdf-title") || (name ? name.textContent.trim() : "");
-      // .cert-card covers both the grid and the dock's clones; the résumé
-      // button is the only other data-pdf link and isn't a certification.
-      open(link.getAttribute("data-pdf"), title, link.classList.contains("cert-card"));
+      open(link.getAttribute("data-pdf"), link.getAttribute("data-pdf-title") || "");
     });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") close();
     });
-  }
-
-  /* ---------- Scroll spy: mark the section you're reading in the nav ----------
-     With 7 links on a long one-pager, the nav otherwise never tells you where
-     you are. aria-current carries the state for assistive tech; CSS styles it.
-
-     An earlier version used IntersectionObserver with a thin "band" and
-     picked the entry with the smallest boundingClientRect.top among those
-     currently intersecting. That's backwards when two sections' enter/exit
-     events land in the same callback batch (common — one section's bottom
-     and the next one's top can cross the band together): the section
-     scrolled MOSTLY OFF-SCREEN above has the most negative (smallest) top,
-     so it kept winning over the section actually on screen, and stayed
-     stuck highlighted indefinitely. Simpler and correct: walk the sections
-     in document order and take the LAST one whose top has crossed a single
-     fixed line just below the header — i.e. "the last section we scrolled
-     into" — with no batching/ordering ambiguity possible. */
-  function setupScrollSpy() {
-    const links = new Map(); // section id -> nav link, in document order
-    navRoot.querySelectorAll("a[href^='#']").forEach((a) => links.set(a.getAttribute("href").slice(1), a));
-    if (!links.size) return;
-    const sections = [];
-    links.forEach((_, id) => {
-      const sec = document.getElementById(id);
-      if (sec) sections.push(sec);
-    });
-    if (!sections.length) return;
-
-    const setCurrent = (id) => {
-      links.forEach((a, key) => {
-        if (key === id) a.setAttribute("aria-current", "true");
-        else a.removeAttribute("aria-current");
-      });
-    };
-
-    const LINE = 120; // px from the viewport top — just clears the sticky header
-    let ticking = false;
-    const check = () => {
-      ticking = false;
-      // No default: while still above the first section (e.g. in the hero,
-      // which has no nav link of its own), nothing should be highlighted.
-      let current = null;
-      for (const sec of sections) {
-        if (sec.getBoundingClientRect().top - LINE <= 0) current = sec;
-      }
-      // Near the bottom of the page the last section may never reach the
-      // line (its own height can be shorter than the remaining scroll room),
-      // so force it active once there's nowhere further to scroll.
-      const atBottom =
-        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
-      if (atBottom) current = sections[sections.length - 1];
-      if (current) setCurrent(current.id);
-      else links.forEach((a) => a.removeAttribute("aria-current"));
-    };
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(check);
-      }
-    };
-    check();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
   }
 
   /* ---------- Equal-height cert cards so every card is the same size ---------- */
@@ -1432,30 +1276,8 @@
       rt = setTimeout(runAll, 150); // debounced: avoids layout thrash during drag-resize
     });
     window.addEventListener("load", runAll);
-    // Re-measure once the web fonts have loaded (they change text height).
+    window.addEventListener("viewchange", () => requestAnimationFrame(runAll));
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(runAll);
-  }
-
-  /* ---------- "Arrival" flash on the heading when navigating to a section ---------- */
-  function setupSectionFlash() {
-    function flash(id) {
-      const el = document.getElementById(id);
-      if (!el || reduced) return;
-      el.classList.remove("flash");
-      void el.offsetWidth; // restart the animation if re-triggered
-      el.classList.add("flash");
-      setTimeout(() => el.classList.remove("flash"), 1000);
-    }
-    navRoot.addEventListener("click", (e) => {
-      const a = e.target.closest("a");
-      if (!a) return;
-      const href = a.getAttribute("href") || "";
-      if (href.startsWith("#")) setTimeout(() => flash(href.slice(1)), 360);
-    });
-    // Arriving from another page with a hash (e.g. project page -> #projects).
-    if (location.hash.length > 1) {
-      setTimeout(() => flash(location.hash.slice(1)), 450);
-    }
   }
 
   /* ---------- 3D tilt on cards (pointer-following, with glare) ---------- */
