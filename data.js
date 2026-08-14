@@ -47,15 +47,16 @@ const RESUME = {
        leave a line here and it simply won't appear until you fill that section.
 
    Valid keys: "about", "experience", "projects", "skills",
-               "certifications", "education"
+               "certifications", "education", "contact"
    ============================================================================ */
 const SECTIONS = [
   "about",
-  "experience",
-  "projects",
+  //"experience",
+  //"projects",
   "skills",
   "certifications",
   "education",
+  "contact",
 ];
 
 /* ---------- 2. ABOUT ----------
@@ -86,7 +87,7 @@ const EXPERIENCE = [
     date: "Summer 2024",
     logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/acme.png"
     points: [
-      "Built automated test fixtures that cut QA time by ~30%.",
+      "Built automated test fixtures that cut QA time by ~30%.Built automated test fixtures that cut QA time by ~30%.",
       "Wrote firmware for a sensor-calibration rig used across the team.",
     ],
     tech: ["C", "Python", "STM32"],
@@ -138,21 +139,17 @@ const SKILLS = [
 ];
 
 /* ---------- 5. CERTIFICATIONS ----------
-   Shown as a responsive card grid. Clicking a card with a PDF opens its own
-   page (certificate.html?id=...) — same pattern as clicking a project card.
-   `id`   required when `hasPdf` is true: a unique, URL-safe slug (used in
-       the page's URL, like a project's `id` — no spaces).
+   Shown as a responsive card grid.
    `logo` (optional): an issuer/company logo shown on the card (no certificate scan
        is displayed). Put the file in assets/, e.g. "assets/siemens.png". "" = none.
    `url`  (optional): link to the credential PDF. "" = none.
    `hasPdf` (boolean): set true if you have the credential PDF (in `url`). When true,
        a small open-in icon shows in the card's top-right corner, the card is
-       clickable (opens its certificate page), and it gets the hover/tilt effect.
-       Set false for a cert you earned but don't have a PDF for yet — the icon and
-       interactivity are hidden and the card is just a static tile. */
+       clickable (opens the PDF), and it gets the hover/tilt effect. Set false for a
+       cert you earned but don't have a PDF for yet — the icon and interactivity are
+       hidden and the card is just a static tile. */
 const CERTIFICATIONS = [
   {
-    id: "smscp-assistant",
     name: "Siemens Mechatronic Systems Certification Program (SMSCP) Assistant",
     issuer: "Siemens",
     date: "Sep 2024",
@@ -161,7 +158,6 @@ const CERTIFICATIONS = [
     hasPdf: true,
   },
   {
-    id: "altium-pcb-basic-design",
     name: "Altium Education - PCB Basic Design Course",
     issuer: "Altium",
     date: "Nov 2025",
@@ -170,7 +166,6 @@ const CERTIFICATIONS = [
     hasPdf: true,
   },
   {
-    id: "cswa",
     name: "Certified SOLIDWORKS Design Associate (CSWA)",
     issuer: "Dassault Systèmes",
     date: "May 2026",
@@ -179,7 +174,6 @@ const CERTIFICATIONS = [
     hasPdf: true,
   },
   {
-    id: "cswp",
     name: "Certified SOLIDWORKS Design Professional (CSWP)",
     issuer: "Dassault Systèmes",
     date: "Jun 2026",
@@ -188,7 +182,6 @@ const CERTIFICATIONS = [
     hasPdf: true,
   },
   {
-    id: "cswa-am",
     name: "Certified SOLIDWORKS Additive Manufacturing Associate (CSWA-AM)",
     issuer: "Dassault Systèmes",
     date: "Jun 2026",
@@ -197,7 +190,6 @@ const CERTIFICATIONS = [
     hasPdf: true,
   },
   {
-    id: "matlab-onramp",
     name: "MATLAB Onramp",
     issuer: "MathWorks",
     date: "Jul 2026",
@@ -206,7 +198,6 @@ const CERTIFICATIONS = [
     hasPdf: true,
   },
   {
-    id: "simulink-onramp",
     name: "Simulink Onramp",
     issuer: "MathWorks",
     date: "Jul 2026",
@@ -215,7 +206,6 @@ const CERTIFICATIONS = [
     hasPdf: true,
   },
   {
-    id: "control-design-onramp",
     name: "Control Design Onramp with Simulink",
     issuer: "MathWorks",
     date: "Jul 2026",
@@ -224,7 +214,6 @@ const CERTIFICATIONS = [
     hasPdf: true,
   },
   {
-    id: "simscape-onramp",
     name: "Simscape Onramp",
     issuer: "MathWorks",
     date: "Jul 2026",
@@ -233,7 +222,6 @@ const CERTIFICATIONS = [
     hasPdf: true,
   },
   {
-    id: "multibody-simulation-onramp",
     name: "Multibody Simulation Onramp",
     issuer: "MathWorks",
     date: "Jul 2026",
@@ -448,7 +436,66 @@ const PROJECTS = [
       </div>
     `,
   },
-  
+  {
+    id: "robotic-armm",
+    title: "6-DOF Robotic Armm",
+    image: "assets/project3.svg",
+    date: "Oct 24 - Dec 24",
+    tagline: "Inverse kinematics and motion planning from scratch",
+    tech: ["C++", "ROS", "OpenCV", "Arduino"],
+    links: [
+      {
+        label: "View Code",
+        url: "https://github.com/IkramJeelani/robotic-arm",
+      },
+    ],
+    body: `
+      <p>A six-degree-of-freedom robotic arm capable of picking and placing objects
+      identified by a camera.</p>
+
+      <h2>What I built</h2>
+      <ul>
+        <li>Inverse-kinematics solver written in C++</li>
+        <li>Computer vision with OpenCV to detect and locate objects</li>
+        <li>ROS coordinating perception, planning, and Arduino motor control</li>
+      </ul>
+
+      <div class="gallery">
+        <img src="assets/project3.svg" alt="">
+        <img src="assets/project1.svg" alt="">
+      </div>
+    `,
+  },
+  {
+    id: "robotic-armmm",
+    title: "6-DOF Robotic Armmmm",
+    image: "assets/project3.svg",
+    date: "Oct 24 - Dec 24",
+    tagline: "Inverse kinematics and motion planning from scratch",
+    tech: ["C++", "ROS", "OpenCV", "Arduino"],
+    links: [
+      {
+        label: "View Code",
+        url: "https://github.com/IkramJeelani/robotic-arm",
+      },
+    ],
+    body: `
+      <p>A six-degree-of-freedom robotic arm capable of picking and placing objects
+      identified by a camera.</p>
+
+      <h2>What I built</h2>
+      <ul>
+        <li>Inverse-kinematics solver written in C++</li>
+        <li>Computer vision with OpenCV to detect and locate objects</li>
+        <li>ROS coordinating perception, planning, and Arduino motor control</li>
+      </ul>
+
+      <div class="gallery">
+        <img src="assets/project3.svg" alt="">
+        <img src="assets/project1.svg" alt="">
+      </div>
+    `,
+  },
 ];
 
 /* ---------- 7. CONTACTS ----------

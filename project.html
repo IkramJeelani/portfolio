@@ -8,7 +8,7 @@
   <meta name="author" content="Ikram Jeelani" />
   <meta name="robots" content="index, follow" />
   <!-- Matches SETTINGS.theme's default; branding.js re-syncs it on toggle. -->
-  <meta name="theme-color" content="#f6f3ec" />
+  <meta name="theme-color" content="#f4f3fb" />
 
   <!-- Sharing cards (project.js refines title/description/url per project).
        og:image is static — crawlers don't run JS, so it can't switch itself
@@ -31,55 +31,33 @@
   <meta name="twitter:description" content="An in-depth project write-up by Ikram Jeelani." />
   <meta name="twitter:image" content="https://ikramjeelani.github.io/portfolio/assets/og-image-light.png" />
 
-  <!-- ?v= is a manual cache-buster — bump it (on EVERY ?v= tag below,
-       including styles.css) whenever data.js/branding.js/project.js/
-       styles.css change, since local dev servers (and some CDNs) can
-       otherwise keep serving a stale cached copy indefinitely — a browser
-       can hold onto a cached styles.css even across a hard reload of the
-       page itself if the stylesheet's own URL never changes. -->
-  <script src="data.js?v=42"></script>
-  <script>try{var t=localStorage.getItem('theme')||((window.SETTINGS||{}).theme==='dark'?'dark':null);if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(t==='light')document.documentElement.removeAttribute('data-theme');}catch(e){}</script>
+  <script src="data.js"></script>
+  <script>try{var t=localStorage.getItem('theme')||((window.SETTINGS||{}).theme==='light'?'light':null);if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=42" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- Lets keyboard users bypass the header controls on every visit -->
   <a class="skip-link" href="#projectPage">Skip to content</a>
 
-  <div class="petals" aria-hidden="true">
-    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-  </div>
+  <header class="site-header">
+    <a href="index.html" class="brand" data-brand>IJ</a>
+    <!-- No section nav on detail pages — an empty <nav> would just be a
+         meaningless landmark for screen readers, so there isn't one. -->
+  </header>
 
-  <div class="app">
-    <aside class="site-header">
-      <div class="brand-wrap">
-        <a href="index.html" class="brand" data-brand>IJ</a>
-      </div>
-      <!-- No section nav on detail pages — the sidebar keeps just the brand
-           and whatever branding.js appends to the sidebar foot (résumé
-           button, theme/petals toggles, contact links). -->
-    </aside>
+  <main class="project-page" id="projectPage">
+    <!-- Filled in by project.js based on the ?id= in the URL -->
+  </main>
 
-    <main class="main">
-      <header class="topbar">
-        <div class="topbar-title">
-          <!-- The only back link — project.js wires the sessionStorage
-               scroll/morph-restore behavior onto this one. -->
-          <a class="back-link" id="topbarBack" href="index.html#projects">&larr; Back to projects</a>
-        </div>
-      </header>
-      <div class="project-page" id="projectPage">
-        <!-- Filled in by project.js based on the ?id= in the URL -->
-      </div>
-      <footer class="site-footer">
-        <p>&copy; <span data-year></span> <span data-name></span>.</p>
-      </footer>
-    </main>
-  </div>
+  <footer class="site-footer">
+    <p>&copy; <span data-year></span> <span data-name></span>.</p>
+  </footer>
 
-  <script src="branding.js?v=42"></script>
-  <script src="project.js?v=42"></script>
+  <script src="branding.js"></script>
+  <script src="project.js"></script>
 </body>
 </html>
