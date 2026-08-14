@@ -522,6 +522,10 @@ h1, h2, h3,
 .about-text {
   max-width: 720px;
   margin: 0 auto;
+  padding: 1.5rem 1.75rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   text-align: left;
   color: var(--muted);
   font-size: 1.15rem;
@@ -1028,8 +1032,16 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   text-transform: uppercase;
 }
 /* tags grouped at the bottom; the gap sits above the tags */
-.card-foot { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
-.card-foot .tags { margin: 0; align-content: flex-start; }
+.card-foot { margin-top: 0.55rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.card-foot .tags { margin: 0; align-content: flex-start; gap: 0.4rem; }
+/* Smaller than the base .tag (used elsewhere for a single row under a
+   project's full write-up) — a card can carry 4-5 tech tags in a much
+   narrower column, which at full size wrapped across 2-3 lines and made
+   the tag row feel like it was taking over the card's footer. */
+.card-foot .tag {
+  font-size: 0.72rem;
+  padding: 0.2rem 0.55rem;
+}
 /* Open-in affordance, top-right of the card (over the image). Circular chip so
    it stays legible on any image; z-index clears the tilt glare (::after, z 5).
    pointer-events:none — the whole card is the link; the icon is just a cue. */
