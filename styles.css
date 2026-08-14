@@ -1025,26 +1025,26 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   background-color: var(--bg-soft);
   border-radius: var(--radius) var(--radius) 0 0; /* matches the morph target's rounding */
 }
-.card-body { padding: 0.9rem 1rem; display: flex; flex-direction: column; }
-.card-title { margin: 0 0 0.2rem; font-size: 1.05rem; }
+.card-body { padding: 0.65rem 0.85rem; display: flex; flex-direction: column; }
+.card-title { margin: 0 0 0.1rem; font-size: 1rem; }
 .card-date {
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.25rem;
   color: var(--accent);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 /* tags grouped at the bottom; the gap sits above the tags */
-.card-foot { margin-top: 0.4rem; display: flex; flex-direction: column; gap: 0.4rem; }
-.card-foot .tags { margin: 0; align-content: flex-start; gap: 0.4rem; }
+.card-foot { margin-top: 0.25rem; display: flex; flex-direction: column; gap: 0.3rem; }
+.card-foot .tags { margin: 0; align-content: flex-start; gap: 0.3rem; }
 /* Smaller than the base .tag (used elsewhere for a single row under a
    project's full write-up) — a card can carry 4-5 tech tags in a much
    narrower column, which at full size wrapped across 2-3 lines and made
    the tag row feel like it was taking over the card's footer. */
 .card-foot .tag {
-  font-size: 0.72rem;
-  padding: 0.2rem 0.55rem;
+  font-size: 0.68rem;
+  padding: 0.15rem 0.5rem;
 }
 /* Open-in affordance, top-right of the card (over the image). Circular chip so
    it stays legible on any image; z-index clears the tilt glare (::after, z 5).
