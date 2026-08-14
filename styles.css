@@ -1014,25 +1014,29 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .cert-card.tilting { box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22); }
 .card.tilting::after,
 .cert-card.tilting::after { opacity: 1; }
+/* Image is deliberately the dominant part of the card — taller than the
+   content beneath it, with that content trimmed down (tighter padding,
+   smaller title/date, less spacing) so the whole card reads as compact
+   rather than the image and text competing for equal weight. */
 .card-img {
-  height: 200px;
+  height: 240px;
   background-size: cover;
   background-position: center;
   background-color: var(--bg-soft);
   border-radius: var(--radius) var(--radius) 0 0; /* matches the morph target's rounding */
 }
-.card-body { padding: 1.25rem; display: flex; flex-direction: column; }
-.card-title { margin: 0 0 0.35rem; font-size: 1.25rem; }
+.card-body { padding: 0.9rem 1rem; display: flex; flex-direction: column; }
+.card-title { margin: 0 0 0.2rem; font-size: 1.05rem; }
 .card-date {
-  margin: 0 0 0.6rem;
+  margin: 0 0 0.4rem;
   color: var(--accent);
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 /* tags grouped at the bottom; the gap sits above the tags */
-.card-foot { margin-top: 0.55rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.card-foot { margin-top: 0.4rem; display: flex; flex-direction: column; gap: 0.4rem; }
 .card-foot .tags { margin: 0; align-content: flex-start; gap: 0.4rem; }
 /* Smaller than the base .tag (used elsewhere for a single row under a
    project's full write-up) — a card can carry 4-5 tech tags in a much
