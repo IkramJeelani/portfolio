@@ -1711,8 +1711,22 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
    which no longer applies. */
 .cert-dock { scrollbar-width: none; }
 .cert-dock::-webkit-scrollbar { display: none; }
-/* fallback width; main.js overrides it inline with the grid's real rendered width */
-.cert-dock .cert-card { width: 275px; flex: 0 0 auto; }
+/* fallback width; main.js overrides it inline with the grid's real rendered width.
+   Same dim/undim treatment as the project dock's .dock-card: every row starts
+   at 0.72 opacity with a plain border, full opacity + a muted border on
+   hover, and no lift/transform (the grid's own hover-lift is for cards
+   sitting loose on the page — these are packed into a list). */
+.cert-dock .cert-card {
+  width: 275px;
+  flex: 0 0 auto;
+  opacity: 0.72;
+  transition: opacity 0.2s, border-color 0.2s, background 0.2s;
+}
+.cert-dock a.cert-card:hover {
+  opacity: 1;
+  transform: none;
+  border-color: var(--muted);
+}
 /* Scrollability cue #2: a chevron at whichever edge has hidden content,
    toggled by main.js alongside the edge fade. Decorative (aria-hidden,
    pointer-events:none) — scrolling stays native wheel/trackpad/touch/drag,
@@ -1754,33 +1768,16 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
    flip the sign — translateY(-1px) up / translateY(1px) down. */
 .cert-dock-nav-up svg { transform: translateY(-1px); }
 .cert-dock-nav-down svg { transform: translateY(1px); }
-/* Which certificate is on screen right now. A 1px ring the same colour as
-   the card's own border read as almost no different from the unselected
-   cards, especially in light mode (deep purple ring on white, easy to miss
-   at a glance) — now a thicker glowing ring, a background wash, and a solid
-   corner dot as a shape-based cue that doesn't rely on noticing colour or
-   border-width alone. --accent-rgb (set per theme) drives the rgba() glow
-   and wash, so both themes get the same treatment at colours that suit them. */
+/* Which certificate is on screen right now — same flat treatment as the
+   project dock's .dock-card.active: full opacity, an accent border, and a
+   solid tinted background. No glow ring, no gradient wash, no corner dot. */
 .cert-dock .cert-dock-current {
+  opacity: 1;
   border-color: var(--accent);
-  background-image: linear-gradient(155deg, rgba(var(--accent-rgb), 0.16), rgba(var(--accent-rgb), 0.04) 65%);
-  box-shadow: 0 0 0 2px var(--accent), 0 10px 26px rgba(var(--accent-rgb), 0.38);
+  background: color-mix(in srgb, var(--accent) 14%, var(--card));
+  cursor: default;
 }
-.cert-dock .cert-dock-current::before {
-  content: "";
-  position: absolute;
-  top: -7px;
-  left: -7px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--accent);
-  /* var(--card), not var(--bg): the modal backdrop is a fixed dark colour in
-     BOTH themes (see .pdf-backdrop), so --bg (white in light mode) would ring
-     the dot in a colour that doesn't match what's actually behind it here. */
-  border: 2px solid var(--card);
-  z-index: 7; /* clears the tilt-glare ::after (z 5) and the logo/icon layers */
-}
+.cert-dock .cert-dock-current .cert-name { color: var(--accent); }
 /* 300 dock + 1.1rem gap + 900 viewer needs ~1218px; below that the dock would
    squeeze the viewer, so the modal goes back to the plain centred layout. */
 @media (max-width: 1279px) {
