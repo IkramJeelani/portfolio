@@ -449,7 +449,7 @@ h1, h2, h3,
 .subtitle {
   max-width: 600px;
   margin: 0 auto 2rem;
-  color: var(--muted);
+  color: var(--text);
   font-size: 1.1rem;
 }
 /* No bio text set: an empty paragraph still carries its 2rem margin, which
@@ -527,7 +527,7 @@ h1, h2, h3,
   border: 1px solid var(--border);
   border-radius: var(--radius);
   text-align: left;
-  color: var(--muted);
+  color: var(--text);
   font-size: 1.15rem;
 }
 
@@ -603,7 +603,7 @@ h1, h2, h3,
 }
 .tl-role { font-weight: 700; font-size: 1.05rem; }
 .tl-company { color: var(--accent); font-weight: 600; margin-top: 0.1rem; }
-.tl-points { margin: 0.7rem 0 0; padding-left: 1.1rem; color: var(--muted); }
+.tl-points { margin: 0.7rem 0 0; padding-left: 1.1rem; color: var(--text); }
 .tl-points li { margin-bottom: 0.3rem; }
 .tl-card .tags { margin: 0.85rem 0 0; } /* tech tags under the details */
 
@@ -895,8 +895,8 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   font-weight: 700;
   color: var(--accent);
 }
-.edu-details { color: var(--muted); margin: 0.5rem 0 0; }
-.edu-points { margin: 0.1rem 0 0; padding-left: 1.1rem; color: var(--muted); }
+.edu-details { color: var(--text); margin: 0.5rem 0 0; }
+.edu-points { margin: 0.1rem 0 0; padding-left: 1.1rem; color: var(--text); }
 .edu-points li { margin-bottom: 0.3rem; }
 /* On phones the timeline narrows and cards fill the remaining width */
 @media (max-width: 600px) {
@@ -1073,7 +1073,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   padding: 4rem 1.5rem 5rem;
   text-align: center;
 }
-.contact p { color: var(--muted); }
+.contact p { color: var(--text); }
 .contact-links {
   display: flex;
   justify-content: center;
@@ -1369,7 +1369,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   margin-bottom: 2rem;
 }
 .project-page h1 { font-size: 2.4rem; margin: 0 0 0.5rem; }
-.project-tagline { color: var(--muted); font-size: 1.15rem; margin: 0 0 0.75rem; }
+.project-tagline { color: var(--text); font-size: 1.15rem; margin: 0 0 0.75rem; }
 .project-date {
   color: var(--accent);
   font-size: 0.85rem;
