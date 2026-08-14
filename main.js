@@ -258,7 +258,6 @@
   setupSharedTransition();
   setupHeroArm();
   setupSkillsMasonry();
-  setupSkillTree(); // after the masonry — it measures the laid-out positions
 
   /* ---------- Experience + Education: one shared card width ----------
      Each timeline is its own grid, so their card columns size independently
@@ -334,53 +333,6 @@
     window.addEventListener("resize", () => {
       clearTimeout(rt);
       rt = setTimeout(layout, 150);
-    });
-  }
-
-  /* ---------- Skills: folder-tree trunk length + branch colour sync ----------
-     Two per-group measurements the CSS can't make on its own:
-     1. --trunk-cut: how far above the group's bottom edge the trunk should
-        stop, so it ends exactly at the LAST item's branch (the └ of a folder
-        tree) instead of running on past it. Robust against a wrapped last
-        item, unlike a hardcoded offset.
-     2. --branch-delay per item: the phase that makes a branch's colour cycle
-        match the trunk's colour AT ITS JUNCTION. The trunk slides a
-        300%-tall gradient by -300% per 4s — two full periods per loop — so a
-        fixed point's colour cycles every 2s, in reverse stop-order, with a
-        vertical phase of y/(3H) of the pattern (H = trunk height). With the
-        branch animation at `2s reverse`, delay = 2y/(3H) seconds lines the
-        two up exactly (see the derivation-free check: at t=0 the branch
-        shows keyframe progress y/3H — the same fraction of the same stop
-        list the gradient paints at height y). */
-  function setupSkillTree() {
-    const groups = Array.from(document.querySelectorAll(".skill-group"));
-    if (!groups.length) return;
-    const remPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
-    const sync = () => {
-      groups.forEach((g) => {
-        const tags = Array.from(g.querySelectorAll(".tag"));
-        if (!tags.length) return;
-        // branch centre offset within a tag: 0.3rem padding + 0.8em (keep in
-        // sync with the .skill-group .tag::before `top` calc in the CSS)
-        const branchY = (t) =>
-          t.offsetTop + 0.3 * remPx + 0.8 * parseFloat(getComputedStyle(t).fontSize);
-        const lastY = branchY(tags[tags.length - 1]);
-        g.style.setProperty("--trunk-cut", g.offsetHeight - lastY + "px");
-        const H = lastY; // trunk height AFTER the cut — the gradient sizes to it
-        tags.forEach((t) => {
-          t.style.setProperty("--branch-delay", ((2 * branchY(t)) / (3 * H)).toFixed(4) + "s");
-        });
-      });
-    };
-    sync();
-    window.addEventListener("load", sync);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
-    let rt;
-    // 250ms: deliberately AFTER the masonry's 150ms relayout, which can move
-    // groups between columns and change every offset this depends on
-    window.addEventListener("resize", () => {
-      clearTimeout(rt);
-      rt = setTimeout(sync, 250);
     });
   }
 

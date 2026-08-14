@@ -1328,7 +1328,12 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   transition: opacity 0.18s ease, transform 0.34s cubic-bezier(0.2, 0.95, 0.25, 1),
     top 0.24s cubic-bezier(0.3, 0.8, 0.3, 1);
 }
-@media (max-width: 1300px) {
+/* 1380px, not 1300px: the dock hugs the viewport edge (left: 1rem) rather
+   than tracking the content column, so at 1300-1360px its right edge
+   (16px + 230px wide = 246px) actually overlapped the centred 820px
+   .project-page's left edge — a real collision, not just tight spacing.
+   1380px keeps a ~24px+ gap between them at every width the dock shows. */
+@media (max-width: 1380px) {
   .project-dock,
   .dock-preview,
   .dock-reveal { display: none !important; }
