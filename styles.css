@@ -1,13 +1,13 @@
 ﻿/* ===== Theme tokens ===== */
 :root {
-  --bg: #0b0a12;
-  --bg-soft: #16131f;
-  --card: #181526;
-  --border: #2a2540;
-  --text: #ece9f3;
+  --bg: #14161c;
+  --bg-soft: #232733;
+  --card: #1b1e26;
+  --border: #2c313e;
+  --text: #ece7de;
   /* long-form copy: a notch dimmer than headings to avoid halation on dark */
-  --text-body: #d8d4e6;
-  --muted: #a39db5;
+  --text-body: #c9d1d9;
+  --muted: #8b8fa0;
   --accent: #a855f7;
   --accent-hover: #c084fc;
   --accent-rgb: 168, 85, 247; /* #a855f7 as r,g,b — for rgba() glows/washes */
@@ -21,33 +21,33 @@
   --radius: 12px;
   --max: 1100px;
   --shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
-  --pattern: rgba(236,233,243,.045);
+  --pattern: rgba(236,231,222,.045);
 }
 
 /* ===== Light theme ===== */
 :root[data-theme="light"] {
-  --bg: #f4f3fb;
-  --bg-soft: #ffffff;
-  --card: #ffffff;
-  --border: #e4e1f0;
-  --text: #1b1830;
-  --text-body: #1b1830; /* no halation on light — full contrast is fine */
-  --muted: #5c586f;
+  --bg: #f6f3ec;
+  --bg-soft: #efeae0;
+  --card: #fffdf9;
+  --border: #e2dbcd;
+  --text: #1d1a17;
+  --text-body: #1d1a17; /* no halation on light — full contrast is fine */
+  --muted: #7d7566;
   --accent: #6d28d9; /* deeper than dark mode's purple so small text clears AA on white */
   --accent-hover: #5b21b6;
   --accent-rgb: 109, 40, 217; /* #6d28d9 as r,g,b — for rgba() glows/washes */
   --grad: linear-gradient(120deg, #7c3aed, #be185d);
   --grad-btn: var(--grad); /* light stops are already deep enough for AA text */
   --shadow: 0 14px 40px rgba(91, 33, 182, 0.12);
-  --pattern: rgba(27,24,48,.05);
+  --pattern: rgba(29,26,23,.05);
 }
 :root[data-theme="light"] .hero h1 {
-  background: linear-gradient(120deg, #1b1830 10%, #7c3aed 55%, #be185d);
+  background: linear-gradient(120deg, #1d1a17 10%, #7c3aed 55%, #be185d);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
-:root[data-theme="light"] .project-content strong { color: #1b1830; }
+:root[data-theme="light"] .project-content strong { color: #1d1a17; }
 
 * { box-sizing: border-box; }
 
@@ -149,11 +149,11 @@ h1, h2, h3,
 }
 /* Frosted background once the page is scrolled (transparent only at the very top) */
 .site-header.scrolled {
-  background: rgba(11, 10, 18, 0.55);
+  background: rgba(20, 22, 28, 0.55);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
-:root[data-theme="light"] .site-header.scrolled { background: rgba(244, 243, 251, 0.6); }
+:root[data-theme="light"] .site-header.scrolled { background: rgba(246, 243, 236, 0.6); }
 /* Cursor spotlight that follows the mouse across the nav */
 .site-header::before {
   content: "";

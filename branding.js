@@ -27,7 +27,7 @@
       meta.name = "theme-color";
       document.head.appendChild(meta);
     }
-    meta.content = light ? "#f4f3fb" : "#0b0a12";
+    meta.content = light ? "#f6f3ec" : "#14161c";
   };
   syncThemeColor();
 
@@ -38,7 +38,7 @@
   const fontSize = initials.length > 2 ? 22 : 32;
   const buildFavicon = () => {
     const light = document.documentElement.getAttribute("data-theme") === "light";
-    const bg = light ? "#f4f3fb" : "#0b0a12";
+    const bg = light ? "#f6f3ec" : "#14161c";
     const g1 = light ? "#7c3aed" : "#a855f7";
     const g2 = light ? "#be185d" : "#ec4899";
     const svg =
