@@ -161,7 +161,7 @@ h1, h2, h3,
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(200px circle at var(--x, -300px) var(--y, 50%), rgba(168, 85, 247, 0.30), transparent 60%);
+  background: radial-gradient(200px circle at var(--x, -300px) var(--y, 50%), rgba(168, 85, 247, 0.14), transparent 60%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -302,11 +302,10 @@ h1, h2, h3,
   font-weight: 700;
   font-size: 0.82rem;
   white-space: nowrap;
-  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.45);
   margin-right: 0.5rem;
-  transition: box-shadow 0.2s ease;
+  transition: opacity 0.2s ease;
 }
-.nav-resume-btn:hover { box-shadow: 0 6px 22px rgba(168, 85, 247, 0.65); }
+.nav-resume-btn:hover { opacity: 0.85; }
 .nav-resume-btn svg { width: 17px; height: 17px; flex-shrink: 0; display: block; }
 
 /* Hamburger menu button (hidden until the links would crowd) */
@@ -498,9 +497,8 @@ h1, h2, h3,
 .section.flash .section-title { animation: title-pop 0.9s ease; }
 .section.flash .section-title::after { animation: underline-sweep 0.9s ease; }
 @keyframes title-pop {
-  0%   { transform: scale(1); }
-  30%  { transform: scale(1.1); text-shadow: 0 0 26px rgba(168, 85, 247, 0.75); }
-  100% { transform: scale(1); text-shadow: none; }
+  0%   { opacity: 0.6; }
+  100% { opacity: 1; }
 }
 @keyframes underline-sweep {
   0%   { width: 54px; }
@@ -625,37 +623,9 @@ h1, h2, h3,
   min-width: 0;
 }
 .skill-group {
-  position: relative;
-  padding-left: 1rem; /* room for the line */
   margin: 0 0 1.75rem; /* vertical gap between stacked categories */
 }
-/* Animated gradient "energy" line from the category down to the last skill */
-.skill-group::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  /* --trunk-cut (set by setupSkillTree in main.js) ends the trunk exactly at
-     the last item's branch, like the └ of a folder tree — instead of running
-     on past it to the group's bottom edge. */
-  bottom: var(--trunk-cut, 0px);
-  width: 3px;
-  border-radius: 3px;
-  background: linear-gradient(180deg, #a855f7, #ec4899, #c084fc, #a855f7);
-  background-size: 100% 300%;
-  box-shadow: 0 0 10px rgba(168, 85, 247, 0.55);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .skill-group::before {
-    animation: skill-line-flow 4s linear infinite, skill-line-glow 2.6s ease-in-out infinite;
-  }
-}
-@keyframes skill-line-flow { to { background-position: 0 -300%; } }
-@keyframes skill-line-glow {
-  0%, 100% { box-shadow: 0 0 6px rgba(168, 85, 247, 0.4); }
-  50%      { box-shadow: 0 0 16px rgba(236, 72, 153, 0.8); }
-}
-.skill-category { margin: 0 0 0.6rem; font-size: 1.1rem; font-weight: 700; color: #a855f7; letter-spacing: -0.01em; }
+.skill-category { margin: 0 0 0.6rem; font-size: 1.1rem; font-weight: 700; color: var(--accent); letter-spacing: -0.01em; }
 /* Plain list instead of pill/chip tags — every earlier fix here (radius,
    contrast, wrap width) was chasing problems that only existed BECAUSE it
    was a pill; a normal list sidesteps all of them at once: no shape to
@@ -680,47 +650,19 @@ h1, h2, h3,
   color: var(--text-body);
   text-align: left;
 }
-/* Folder-tree branch: a thin horizontal line from the category's vertical
-   gradient line out to each item, like the ├── connectors in a directory
-   tree. left:-1rem reaches back across .skill-group's 1rem padding to the
-   vertical line at the group's edge (overlapping its 3px width slightly, so
-   there's never a gap between trunk and branch); the width then extends
-   0.65rem into the tag's own 1.1rem text indent, leaving a small gap before
-   the text starts. */
+/* Small dash marker in front of each skill. */
 .skill-group .tag::before {
   content: "";
   position: absolute;
-  left: -1rem;
+  left: 0;
   /* Centred on the FIRST line (not the whole possibly-wrapped block):
      base .tag top padding (0.3rem) + half the 1.6 line-height (0.8em)
-     - half the 3px bar (same thickness as the trunk). */
-  top: calc(0.3rem + 0.8em - 1.5px);
-  width: 1.65rem;
-  height: 3px;
-  border-radius: 3px;
+     - half the 2px bar. */
+  top: calc(0.3rem + 0.8em - 1px);
+  width: 0.7rem;
+  height: 2px;
+  border-radius: 2px;
   background: var(--accent);
-}
-/* Each branch's colour tracks the trunk's colour AT ITS OWN JUNCTION, so
-   branch and trunk always read as one connected piece.
-   Why 2s and reverse, when the trunk's animation says 4s: the trunk slides a
-   300%-tall gradient by -300% per 4s loop — that's TWO full pattern periods
-   per loop, so the colour at any fixed point on the trunk cycles every 2s,
-   and (because the pattern travels downward) in reverse stop-order. The
-   original 4s forward branch animation could never match it.
-   The per-branch phase (--branch-delay = 2y/(3H), set by setupSkillTree in
-   main.js from each branch's measured position y on a trunk of height H)
-   makes the match exact at every junction, not just approximate.
-   Gated like the trunk's own animation: reduced-motion gets static accent. */
-@media (prefers-reduced-motion: no-preference) {
-  .skill-group .tag::before {
-    animation: skill-dot-hue 2s linear infinite reverse;
-    animation-delay: var(--branch-delay, 0s);
-  }
-}
-@keyframes skill-dot-hue {
-  0%, 100% { background-color: #a855f7; }
-  33.33% { background-color: #ec4899; }
-  66.67% { background-color: #c084fc; }
 }
 
 /* ===== Certifications: same card as projects, in the grid ===== */
@@ -938,19 +880,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .edu-major {
   font-family: var(--font-display);
   font-weight: 700;
-  background: var(--grad);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.45));
-}
-@media (prefers-reduced-motion: no-preference) {
-  .edu-major { animation: brand-flow 5s linear infinite, edu-major-glow 3s ease-in-out infinite; }
-}
-@keyframes edu-major-glow {
-  0%, 100% { filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.35)); }
-  50%      { filter: drop-shadow(0 0 13px rgba(168, 85, 247, 0.7)); }
+  color: var(--accent);
 }
 .edu-details { color: var(--muted); margin: 0.5rem 0 0; }
 .edu-points { margin: 0.1rem 0 0; padding-left: 1.1rem; color: var(--muted); }
@@ -1033,7 +963,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   transition: opacity 0.25s ease;
 }
 .card.tilting,
-.cert-card.tilting { box-shadow: 0 24px 60px rgba(168, 85, 247, 0.28); }
+.cert-card.tilting { box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22); }
 .card.tilting::after,
 .cert-card.tilting::after { opacity: 1; }
 .card-img {
@@ -1198,19 +1128,10 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   text-transform: uppercase;
   cursor: pointer;
   z-index: 41;
-  box-shadow: 0 4px 18px rgba(168, 85, 247, 0.55);
-  transition: padding 0.18s ease, box-shadow 0.18s ease;
+  transition: padding 0.18s ease;
 }
 .dock-reveal.show { display: block; }
-.dock-reveal:hover { padding-right: 0.7rem; box-shadow: 0 6px 26px rgba(168, 85, 247, 0.8); }
-/* One-time attention nudge so visitors notice the hidden panel exists */
-@media (prefers-reduced-motion: no-preference) {
-  .dock-reveal.pulse { animation: dock-tab-pulse 1.5s ease 1s 2; }
-}
-@keyframes dock-tab-pulse {
-  0%, 100% { box-shadow: 0 0 0 rgba(168, 85, 247, 0); }
-  50% { box-shadow: 0 0 22px rgba(168, 85, 247, 0.9); padding-right: 0.7rem; }
-}
+.dock-reveal:hover { padding-right: 0.7rem; }
 /* Manually scrollable viewport; scrollbar hidden; scroll stays inside the dock */
 .dock-viewport {
   flex: 1 1 auto;
@@ -1333,7 +1254,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border-color: var(--accent);
   border-left-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 14%, var(--card));
-  box-shadow: 0 0 18px rgba(168, 85, 247, 0.4);
   cursor: default;
 }
 .dock-card.active:hover { transform: none; }
@@ -1437,7 +1357,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .pager-card:hover {
   transform: translateY(-3px);
   border-color: var(--accent);
-  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.18);
+  box-shadow: var(--shadow);
 }
 .pager-next { flex-direction: row-reverse; text-align: right; justify-self: end; width: 100%; }
 .pager-thumb {
