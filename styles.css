@@ -640,8 +640,9 @@ h1, h2, h3,
   margin-bottom: 0;
 }
 .skill-group .tag {
-  position: relative;
-  padding-left: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   background: none;
   border: none;
   border-radius: 0;
@@ -650,18 +651,22 @@ h1, h2, h3,
   color: var(--text-body);
   text-align: left;
 }
-/* Small dash marker in front of each skill. */
+/* Small dash marker in front of each skill. Laid out as a real flex item
+   (not absolutely positioned via a calc() offset) so the browser centers it
+   directly, rather than us computing a top offset by hand. That still isn't
+   enough on its own though: every tag's vertical position in the page is a
+   product of ordinary document flow, so each one lands on a different
+   fractional sub-pixel row regardless of layout method — a truly unavoidable
+   web-rendering fact, not a bug in this rule. At 2px thick, ~1px of
+   antialiasing blur from that sub-pixel misalignment reads as a ~50%
+   difference in apparent weight between bars. 3px keeps the same blur at a
+   ~33% relative difference, which is what actually reads as "the same
+   thickness" at normal (non-zoomed) viewing. */
 .skill-group .tag::before {
   content: "";
-  position: absolute;
-  left: 0;
-  /* Centred on the FIRST line (not the whole possibly-wrapped block):
-     base .tag top padding (0.3rem) + half the 1.6 line-height (0.8em)
-     - half the 2px bar. */
-  top: calc(0.3rem + 0.8em - 1px);
-  width: 0.7rem;
-  height: 2px;
-  border-radius: 2px;
+  flex: 0 0 0.7rem;
+  height: 3px;
+  border-radius: 3px;
   background: var(--accent);
 }
 
