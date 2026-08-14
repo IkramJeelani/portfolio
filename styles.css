@@ -1,53 +1,53 @@
 ﻿/* ===== Theme tokens ===== */
 :root {
-  --bg: #14161c;
-  --bg-soft: #232733;
-  --card: #1b1e26;
-  --border: #2c313e;
-  --text: #ece7de;
+  --bg: #0b0a12;
+  --bg-soft: #16131f;
+  --card: #181526;
+  --border: #2a2540;
+  --text: #ece9f3;
   /* long-form copy: a notch dimmer than headings to avoid halation on dark */
-  --text-body: #c9d1d9;
-  --muted: #8b8fa0;
-  --accent: #e2695c;
-  --accent-hover: #ea8177;
-  --accent-rgb: 226, 105, 92; /* #e2695c as r,g,b — for rgba() glows/washes */
-  --grad: linear-gradient(120deg, #e2695c, #eda6b4);
+  --text-body: #d8d4e6;
+  --muted: #a39db5;
+  --accent: #a855f7;
+  --accent-hover: #c084fc;
+  --accent-rgb: 168, 85, 247; /* #a855f7 as r,g,b — for rgba() glows/washes */
+  --grad: linear-gradient(120deg, #a855f7, #ec4899);
   /* Deeper stops for gradients that carry white TEXT (buttons): white on
-     #e2695c/#eda6b4 is only 3.5-4.0:1, below the 4.5:1 AA floor for the
+     #a855f7/#ec4899 is only 3.5-4.0:1, below the 4.5:1 AA floor for the
      small bold labels these buttons use. Decorative gradients keep --grad. */
-  --grad-btn: linear-gradient(120deg, #b93c30, #a03227);
+  --grad-btn: linear-gradient(120deg, #8b2fd6, #d61f74);
   --font-display: "Sora", "Segoe UI", sans-serif;
   --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --radius: 12px;
   --max: 1100px;
   --shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
-  --pattern: rgba(236,231,222,.045);
+  --pattern: rgba(236,233,243,.045);
 }
 
 /* ===== Light theme ===== */
 :root[data-theme="light"] {
-  --bg: #f6f3ec;
-  --bg-soft: #efeae0;
-  --card: #fffdf9;
-  --border: #e2dbcd;
-  --text: #1d1a17;
-  --text-body: #1d1a17; /* no halation on light — full contrast is fine */
-  --muted: #7d7566;
-  --accent: #d0453a; /* deeper than dark mode's coral so small text clears AA on white */
-  --accent-hover: #b93c30;
-  --accent-rgb: 208, 69, 58; /* #d0453a as r,g,b — for rgba() glows/washes */
-  --grad: linear-gradient(120deg, #d0453a, #b93c30);
+  --bg: #f4f3fb;
+  --bg-soft: #ffffff;
+  --card: #ffffff;
+  --border: #e4e1f0;
+  --text: #1b1830;
+  --text-body: #1b1830; /* no halation on light — full contrast is fine */
+  --muted: #5c586f;
+  --accent: #6d28d9; /* deeper than dark mode's purple so small text clears AA on white */
+  --accent-hover: #5b21b6;
+  --accent-rgb: 109, 40, 217; /* #6d28d9 as r,g,b — for rgba() glows/washes */
+  --grad: linear-gradient(120deg, #7c3aed, #be185d);
   --grad-btn: var(--grad); /* light stops are already deep enough for AA text */
-  --shadow: 0 14px 40px rgba(176, 62, 48, 0.12);
-  --pattern: rgba(29,26,23,.05);
+  --shadow: 0 14px 40px rgba(91, 33, 182, 0.12);
+  --pattern: rgba(27,24,48,.05);
 }
 :root[data-theme="light"] .hero h1 {
-  background: linear-gradient(120deg, #1d1a17 10%, #d0453a 55%, #b93c30);
+  background: linear-gradient(120deg, #1b1830 10%, #7c3aed 55%, #be185d);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
-:root[data-theme="light"] .project-content strong { color: #1d1a17; }
+:root[data-theme="light"] .project-content strong { color: #1b1830; }
 
 * { box-sizing: border-box; }
 
@@ -161,7 +161,7 @@ h1, h2, h3,
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(200px circle at var(--x, -300px) var(--y, 50%), rgba(226, 105, 92, 0.30), transparent 60%);
+  background: radial-gradient(200px circle at var(--x, -300px) var(--y, 50%), rgba(168, 85, 247, 0.30), transparent 60%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -302,11 +302,11 @@ h1, h2, h3,
   font-weight: 700;
   font-size: 0.82rem;
   white-space: nowrap;
-  box-shadow: 0 4px 16px rgba(226, 105, 92, 0.45);
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.45);
   margin-right: 0.5rem;
   transition: box-shadow 0.2s ease;
 }
-.nav-resume-btn:hover { box-shadow: 0 6px 22px rgba(226, 105, 92, 0.65); }
+.nav-resume-btn:hover { box-shadow: 0 6px 22px rgba(168, 85, 247, 0.65); }
 .nav-resume-btn svg { width: 17px; height: 17px; flex-shrink: 0; display: block; }
 
 /* Hamburger menu button (hidden until the links would crowd) */
@@ -442,7 +442,7 @@ h1, h2, h3,
   font-size: clamp(2.5rem, 7vw, 4.5rem);
   margin: 0 0 1rem;
   line-height: 1.05;
-  background: linear-gradient(120deg, #ffffff 10%, #ea8177 55%, #eda6b4);
+  background: linear-gradient(120deg, #ffffff 10%, #c084fc 55%, #ec4899);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -499,7 +499,7 @@ h1, h2, h3,
 .section.flash .section-title::after { animation: underline-sweep 0.9s ease; }
 @keyframes title-pop {
   0%   { transform: scale(1); }
-  30%  { transform: scale(1.1); text-shadow: 0 0 26px rgba(226, 105, 92, 0.75); }
+  30%  { transform: scale(1.1); text-shadow: 0 0 26px rgba(168, 85, 247, 0.75); }
   100% { transform: scale(1); text-shadow: none; }
 }
 @keyframes underline-sweep {
@@ -573,7 +573,7 @@ h1, h2, h3,
   border-radius: 50%;
   background: var(--accent);
   border: 3px solid var(--bg);
-  box-shadow: 0 0 0 3px rgba(226, 105, 92, 0.25);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
 }
 .tl-date { color: var(--accent); font-weight: 600; white-space: nowrap; }
 .tl-loc { color: var(--muted); white-space: nowrap; line-height: 1.2; }
@@ -641,9 +641,9 @@ h1, h2, h3,
   bottom: var(--trunk-cut, 0px);
   width: 3px;
   border-radius: 3px;
-  background: linear-gradient(180deg, #e2695c, #eda6b4, #ea8177, #e2695c);
+  background: linear-gradient(180deg, #a855f7, #ec4899, #c084fc, #a855f7);
   background-size: 100% 300%;
-  box-shadow: 0 0 10px rgba(226, 105, 92, 0.55);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.55);
 }
 @media (prefers-reduced-motion: no-preference) {
   .skill-group::before {
@@ -652,10 +652,10 @@ h1, h2, h3,
 }
 @keyframes skill-line-flow { to { background-position: 0 -300%; } }
 @keyframes skill-line-glow {
-  0%, 100% { box-shadow: 0 0 6px rgba(226, 105, 92, 0.4); }
-  50%      { box-shadow: 0 0 16px rgba(237, 166, 180, 0.8); }
+  0%, 100% { box-shadow: 0 0 6px rgba(168, 85, 247, 0.4); }
+  50%      { box-shadow: 0 0 16px rgba(236, 72, 153, 0.8); }
 }
-.skill-category { margin: 0 0 0.6rem; font-size: 1.1rem; font-weight: 700; color: #e2695c; letter-spacing: -0.01em; }
+.skill-category { margin: 0 0 0.6rem; font-size: 1.1rem; font-weight: 700; color: #a855f7; letter-spacing: -0.01em; }
 /* Plain list instead of pill/chip tags — every earlier fix here (radius,
    contrast, wrap width) was chasing problems that only existed BECAUSE it
    was a pill; a normal list sidesteps all of them at once: no shape to
@@ -718,9 +718,9 @@ h1, h2, h3,
   }
 }
 @keyframes skill-dot-hue {
-  0%, 100% { background-color: #e2695c; }
-  33.33% { background-color: #eda6b4; }
-  66.67% { background-color: #ea8177; }
+  0%, 100% { background-color: #a855f7; }
+  33.33% { background-color: #ec4899; }
+  66.67% { background-color: #c084fc; }
 }
 
 /* ===== Certifications: same card as projects, in the grid ===== */
@@ -796,7 +796,7 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 }
 /* no leading dot when there's no issuer to separate it from */
 .cert-date:first-child::before { content: none; }
-/* Dark theme: --accent (#e2695c) on the dark card measures only 4.52:1 at this
+/* Dark theme: --accent (#a855f7) on the dark card measures only 4.52:1 at this
    size — technically AA, but no margin. --accent-hover is lighter, so on a dark
    background it lifts clear. (:not([data-theme=light]) also covers the default,
    attribute-less state, which uses the dark tokens.) */
@@ -896,7 +896,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border-radius: 50%;
   background: var(--accent);
   border: 3px solid var(--bg);
-  box-shadow: 0 0 0 3px rgba(226, 105, 92, 0.25);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
 }
 .edu-date { color: var(--accent); font-weight: 600; white-space: nowrap; }
 .edu-left .edu-loc { color: var(--muted); white-space: nowrap; line-height: 1.2; }
@@ -943,14 +943,14 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 6px rgba(226, 105, 92, 0.45));
+  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.45));
 }
 @media (prefers-reduced-motion: no-preference) {
   .edu-major { animation: brand-flow 5s linear infinite, edu-major-glow 3s ease-in-out infinite; }
 }
 @keyframes edu-major-glow {
-  0%, 100% { filter: drop-shadow(0 0 4px rgba(226, 105, 92, 0.35)); }
-  50%      { filter: drop-shadow(0 0 13px rgba(226, 105, 92, 0.7)); }
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.35)); }
+  50%      { filter: drop-shadow(0 0 13px rgba(168, 85, 247, 0.7)); }
 }
 .edu-details { color: var(--muted); margin: 0.5rem 0 0; }
 .edu-points { margin: 0.1rem 0 0; padding-left: 1.1rem; color: var(--muted); }
@@ -1033,7 +1033,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   transition: opacity 0.25s ease;
 }
 .card.tilting,
-.cert-card.tilting { box-shadow: 0 24px 60px rgba(226, 105, 92, 0.28); }
+.cert-card.tilting { box-shadow: 0 24px 60px rgba(168, 85, 247, 0.28); }
 .card.tilting::after,
 .cert-card.tilting::after { opacity: 1; }
 .card-img {
@@ -1198,18 +1198,18 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   text-transform: uppercase;
   cursor: pointer;
   z-index: 41;
-  box-shadow: 0 4px 18px rgba(226, 105, 92, 0.55);
+  box-shadow: 0 4px 18px rgba(168, 85, 247, 0.55);
   transition: padding 0.18s ease, box-shadow 0.18s ease;
 }
 .dock-reveal.show { display: block; }
-.dock-reveal:hover { padding-right: 0.7rem; box-shadow: 0 6px 26px rgba(226, 105, 92, 0.8); }
+.dock-reveal:hover { padding-right: 0.7rem; box-shadow: 0 6px 26px rgba(168, 85, 247, 0.8); }
 /* One-time attention nudge so visitors notice the hidden panel exists */
 @media (prefers-reduced-motion: no-preference) {
   .dock-reveal.pulse { animation: dock-tab-pulse 1.5s ease 1s 2; }
 }
 @keyframes dock-tab-pulse {
-  0%, 100% { box-shadow: 0 0 0 rgba(226, 105, 92, 0); }
-  50% { box-shadow: 0 0 22px rgba(226, 105, 92, 0.9); padding-right: 0.7rem; }
+  0%, 100% { box-shadow: 0 0 0 rgba(168, 85, 247, 0); }
+  50% { box-shadow: 0 0 22px rgba(168, 85, 247, 0.9); padding-right: 0.7rem; }
 }
 /* Manually scrollable viewport; scrollbar hidden; scroll stays inside the dock */
 .dock-viewport {
@@ -1253,7 +1253,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 }
 .dock-rail-thumb:active { cursor: grabbing; }
 .dock-rail:hover .dock-rail-thumb,
-.dock-rail.dragging .dock-rail-thumb { box-shadow: 0 0 10px rgba(226, 105, 92, 0.65); }
+.dock-rail.dragging .dock-rail-thumb { box-shadow: 0 0 10px rgba(168, 85, 247, 0.65); }
 /* Each dock row: project thumbnail + number on the left, title/date on the
    right — the image makes every project instantly distinguishable. */
 .dock-card {
@@ -1333,7 +1333,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border-color: var(--accent);
   border-left-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 14%, var(--card));
-  box-shadow: 0 0 18px rgba(226, 105, 92, 0.4);
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.4);
   cursor: default;
 }
 .dock-card.active:hover { transform: none; }
@@ -1437,7 +1437,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .pager-card:hover {
   transform: translateY(-3px);
   border-color: var(--accent);
-  box-shadow: 0 10px 30px rgba(226, 105, 92, 0.18);
+  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.18);
 }
 .pager-next { flex-direction: row-reverse; text-align: right; justify-self: end; width: 100%; }
 .pager-thumb {

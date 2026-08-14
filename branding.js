@@ -27,7 +27,7 @@
       meta.name = "theme-color";
       document.head.appendChild(meta);
     }
-    meta.content = light ? "#f6f3ec" : "#14161c";
+    meta.content = light ? "#f4f3fb" : "#0b0a12";
   };
   syncThemeColor();
 
@@ -38,9 +38,9 @@
   const fontSize = initials.length > 2 ? 22 : 32;
   const buildFavicon = () => {
     const light = document.documentElement.getAttribute("data-theme") === "light";
-    const bg = light ? "#f6f3ec" : "#14161c";
-    const g1 = light ? "#d0453a" : "#e2695c";
-    const g2 = light ? "#b93c30" : "#eda6b4";
+    const bg = light ? "#f4f3fb" : "#0b0a12";
+    const g1 = light ? "#7c3aed" : "#a855f7";
+    const g2 = light ? "#be185d" : "#ec4899";
     const svg =
       "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>" +
       "<defs><linearGradient id='g' x1='0%' y1='100%' x2='100%' y2='0%'>" +
@@ -337,8 +337,8 @@
     window.addEventListener("resize", resizeCanvas);
 
     // Lighter glow colours on dark mode; deeper, saturated colours so they read on white.
-    const colorsDark = ["#ea8177", "#eda6b4", "#e2695c", "#f3d9c9"];
-    const colorsLight = ["#d0453a", "#b93c30", "#e79aa8", "#c8963c"];
+    const colorsDark = ["#c084fc", "#f472b6", "#a78bfa", "#e9d5ff"];
+    const colorsLight = ["#7c3aed", "#db2777", "#6d28d9", "#c026d3"];
     const palette = () =>
       document.documentElement.getAttribute("data-theme") === "light" ? colorsLight : colorsDark;
     const particles = [];
