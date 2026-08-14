@@ -964,9 +964,24 @@
     const heroName = document.querySelector(".hero-name");
     const items = document.querySelectorAll(".intro-item");
     if (!heroName && !items.length) return;
-    if (reduced) {
-      if (heroName) heroName.classList.add("in");
-      items.forEach((e) => e.classList.add("in"));
+    // Skipped when arriving from elsewhere on the site (branding.js sets
+    // this before navigating, e.g. clicking the IJ logo from a project
+    // page) — the intro should only play on an actual fresh site load.
+    let skip = false;
+    try {
+      skip = sessionStorage.getItem("skipHeroIntro") === "1";
+      if (skip) sessionStorage.removeItem("skipHeroIntro");
+    } catch (e) {}
+    if (reduced || skip) {
+      // Suppress the transition itself, not just the staged delay — adding
+      // .in alone would still animate opacity/transform over their full
+      // duration instantly-triggered, just without the cascade timing.
+      const skipAnim = (el) => {
+        el.style.transition = "none";
+        el.classList.add("in");
+      };
+      if (heroName) skipAnim(heroName);
+      items.forEach(skipAnim);
       return;
     }
     // Double rAF: lets the browser commit the initial opacity:0 state to a

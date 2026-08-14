@@ -7,7 +7,6 @@
 
   if (!project) {
     page.innerHTML = `
-      <a class="back-link" href="index.html#projects">&larr; Back to projects</a>
       <h1>Project not found</h1>
       <p>Sorry, we couldn't find that project. It may have been renamed or removed.</p>`;
     return;
@@ -81,7 +80,6 @@
       : "";
 
   page.innerHTML = `
-    <a class="back-link" href="index.html#projects">&larr; Back to projects</a>
     <div class="project-hero" style="background-image:url('${project.image}')"></div>
     <h1>${project.title}</h1>
     <p class="project-tagline">${project.tagline || ""}</p>
@@ -104,7 +102,7 @@
   });
 
   // "Back to projects" — flag a return so the home page restores scroll + morphs the hero.
-  const backLink = page.querySelector(".back-link");
+  const backLink = document.getElementById("topBackLink");
   if (backLink) {
     backLink.addEventListener("click", () => {
       try {

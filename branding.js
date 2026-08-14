@@ -117,6 +117,15 @@
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
+    } else if (brand) {
+      // Navigating to the home page from elsewhere (e.g. a project page) —
+      // flag it so the hero's first-load intro (name-alone-then-cascade)
+      // doesn't replay; it should only play on an actual fresh site load.
+      brand.addEventListener("click", () => {
+        try {
+          sessionStorage.setItem("skipHeroIntro", "1");
+        } catch (e) {}
+      });
     }
 
     // Centred control group: theme toggle + particles toggle.
