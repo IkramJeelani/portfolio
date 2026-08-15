@@ -4,13 +4,10 @@
    ============================================================= */
 
 /* ---------- 0. DEFAULTS ----------
-   What a first-time visitor sees (they can still toggle either from the nav bar).
-   theme:     "dark" or "light"
-   particles: true  -> falling particles start ON
-              false -> start OFF */
+   What a first-time visitor sees (they can still toggle it from the nav bar).
+   theme: "dark" or "light" */
 const SETTINGS = {
   theme: "light",
-  particles: true,
 };
 
 /* ---------- 1. YOU ---------- */
@@ -22,8 +19,8 @@ const PROFILE = {
 };
 
 /* ---------- 1b. RESUME / CV ----------
-   A button in the nav bar (between the theme and particles toggles), always
-   present from the first load. Clicking it opens the SAME in-page PDF viewer
+   A button in the nav bar, next to the theme toggle, always present from
+   the first load. Clicking it opens the SAME in-page PDF viewer
    used for certifications — visitors see it without leaving the site.
    `show`:  true -> button appears. false -> hidden, no button at all.
    `label`: the text shown next to the icon.

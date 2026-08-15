@@ -229,8 +229,7 @@ h1, h2, h3,
 .site-header nav a[aria-current] { color: var(--text); }
 .site-header nav a[aria-current]::after { transform: scaleX(1); }
 
-/* Light/dark toggle — centred in the nav bar */
-/* Centred control group in the nav bar (theme toggle + particles toggle) */
+/* Centred control group in the nav bar (theme toggle + résumé button) */
 .header-controls {
   grid-column: 2;
   grid-row: 1;
@@ -245,9 +244,8 @@ h1, h2, h3,
      apart on first load. Spacing instead lives on theme-toggle's own
      margin-right, so it collapses to nothing right along with the button. */
 }
-.theme-toggle { margin-right: 0.6rem; }
-.theme-toggle,
-.fx-toggle {
+.theme-toggle {
+  margin-right: 0.6rem;
   position: relative; /* anchors the invisible touch-target extension below */
   display: flex;
   align-items: center;
@@ -261,25 +259,20 @@ h1, h2, h3,
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s, transform 0.15s, opacity 0.2s;
 }
-.theme-toggle:hover,
-.fx-toggle:hover {
+.theme-toggle:hover {
   border-color: var(--accent);
   transform: scale(1.1);
 }
-.theme-toggle svg,
-.fx-toggle svg { width: 17px; height: 17px; display: block; }
+.theme-toggle svg { width: 17px; height: 17px; display: block; }
 .theme-toggle .icon-sun { display: none; }
 .theme-toggle .icon-moon { display: block; }
 :root[data-theme="light"] .theme-toggle .icon-sun { display: block; }
 :root[data-theme="light"] .theme-toggle .icon-moon { display: none; }
-/* When particles are off, the sparkle button looks dimmed */
-.fx-toggle.off { color: var(--muted); opacity: 0.6; }
 
 /* Invisible touch-target extension: the header controls are drawn at
    32-34px but a fingertip needs ~44px — pad the hit area without changing
    the visual size. (-5px per side ≈ 44px effective.) */
 .theme-toggle::after,
-.fx-toggle::after,
 .nav-toggle::after,
 .nav-resume-btn::after {
   content: "";
@@ -287,8 +280,8 @@ h1, h2, h3,
   inset: -5px;
 }
 
-/* Nav résumé button — icon + label, always present between the theme and
-   particles toggles from first paint. No hero counterpart, no scroll-driven
+/* Nav résumé button — icon + label, always present next to the theme
+   toggle from first paint. No hero counterpart, no scroll-driven
    show/hide, no transition: just a normal static button. */
 .nav-resume-btn {
   position: relative;
@@ -1624,15 +1617,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   pointer-events: none;
 }
 
-/* Shining particles drifting down the sides (drawn on a fixed canvas behind content) */
-.particles {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-
-
 /* ===== PDF popup (certificate viewer) ===== */
 .pdf-modal {
   position: fixed;
@@ -1952,8 +1936,7 @@ html.theme-vt * { view-transition-name: none !important; }
   .hero h1 { font-size: 2.15rem; }
   .subtitle { font-size: 0.98rem; }
   .section-title { font-size: 1.6rem; }
-  .theme-toggle, .fx-toggle { width: 32px; height: 32px; }
-  .theme-toggle { margin-right: 0.45rem; }
+  .theme-toggle { width: 32px; height: 32px; margin-right: 0.45rem; }
   .nav-resume-btn {
     height: 32px;
     font-size: 0.78rem;
@@ -1963,15 +1946,14 @@ html.theme-vt * { view-transition-name: none !important; }
   }
   /* 32px visuals need a bigger extension to reach the ~44px touch floor */
   .theme-toggle::after,
-  .fx-toggle::after,
   .nav-toggle::after,
   .nav-resume-btn::after { inset: -6px; }
 }
 /* Below ~340px the header's own content (brand + theme toggle + résumé
-   button + particles toggle + hamburger) genuinely doesn't fit even at its
-   most compact — measured overflow of ~30px at 280px viewport. Drop the
-   résumé button's label there so it matches the toggles' compact icon-only
-   footprint instead of letting the header overflow. */
+   button + hamburger) genuinely doesn't fit even at its most compact —
+   measured overflow of ~30px at 280px viewport. Drop the résumé button's
+   label there so it matches the toggle's compact icon-only footprint
+   instead of letting the header overflow. */
 @media (max-width: 340px) {
   .nav-resume-btn { gap: 0; padding: 0; width: 32px; justify-content: center; }
   .nav-resume-btn span { display: none; }
