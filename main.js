@@ -355,7 +355,11 @@
     // on the denser screen. (drawFrame re-sets every style each frame, so only
     // the transform needs restoring after the resize wipes the context state.)
     const applyDpr = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Capped at 3, not 2: the arm is the hero's visual centerpiece, and on
+      // 3x-DPR phones/high-density monitors a 2x cap left its thin link
+      // outlines and joint gradients visibly softer than everything else on
+      // the page (native-resolution text, SVGs).
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
       // round: fractional ratios (Windows 125% => 1.25) otherwise truncate,
       // clipping a sliver off the bottom/right edge of the drawing
       canvas.width = Math.round(W * dpr);
@@ -1137,7 +1141,10 @@
       const doc = pdfDoc;
       box.classList.remove("fallback");
       box.innerHTML = "";
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Capped at 3, not 2: this is document TEXT — softness here is far more
+      // noticeable (and more annoying to actually read) than on decorative
+      // canvases, so it's worth the extra render cost on high-density screens.
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
       for (let n = 1; n <= doc.numPages; n++) {
         if (doc !== pdfDoc) return; // a newer document replaced this one mid-render
         const page = await doc.getPage(n);
