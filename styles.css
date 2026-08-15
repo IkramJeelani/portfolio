@@ -1128,19 +1128,16 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 /* ===== Floating quick-access project dock (detail page, wide screens) ===== */
 .project-dock {
   position: fixed;
-  /* Hugs the viewport edge on normal-to-wide screens, but on very wide/
-     ultra-wide monitors a flat 1rem left a huge orphaned gap (measured
-     616px at 2560px) between the dock and the centred 820px .project-page
-     column. This instead anchors the dock 2rem left of that column once
-     the viewport is wide enough to need it — (100% - 820px) / 2 is the
-     column's own left offset, minus the dock's 230px width and a 2rem gap —
-     while the max(1rem, …) floor keeps it hugging the edge exactly as
-     before at every narrower "wide" width down to the 1380px show/hide
-     threshold. */
-  left: max(1rem, calc((100% - 820px) / 2 - 230px - 2rem));
-  top: 84px;
+  /* Hugs the viewport edge rather than tracking the content column — by
+     design, so it reads as a panel of the browser chrome/viewport rather
+     than something anchored to the page content. */
+  left: 1rem;
+  /* Matches .project-page's own top offset exactly (header height + its
+     3rem top margin), so the dock's header row and the project content's
+     top edge line up instead of the dock starting noticeably higher. */
+  top: calc(var(--header-h, 72px) + 3rem);
   width: 230px;
-  max-height: calc(100vh - 104px);
+  max-height: calc(100vh - var(--header-h, 72px) - 3rem - 20px);
   display: flex;
   flex-direction: column;
   z-index: 40;
@@ -1156,7 +1153,10 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0.2rem 0 0.45rem;
+  /* No top margin: .project-dock's own top is now set to match
+     .project-page's top edge exactly, so the collapse button should start
+     flush with it, not drop below it. */
+  margin: 0 0 0.45rem;
   padding-left: 0.35rem;
 }
 .dock-title {
