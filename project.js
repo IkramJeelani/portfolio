@@ -3,23 +3,39 @@
   // Auto-scroll a scrollable container when the pointer hovers near its top
   // or bottom edge — lets you keep scrolling a long list just by parking the
   // cursor there, instead of having to keep moving the wheel/trackpad.
-  // Speed ramps up linearly the closer the cursor is to the edge, and stops
-  // the instant the pointer leaves the zone (or the container).
+  // Speed eases in quadratically (not linearly) the closer the cursor is to
+  // the edge — a linear ramp made the first pixels into the zone feel like
+  // an abrupt jump to "already scrolling" rather than a gradual start — and
+  // stops the instant the pointer leaves the zone (or the container). A
+  // small accent glow at the active edge (.edge-autoscroll-active-*, in
+  // styles.css) doubles as the only "hint" this exists — it lights up
+  // exactly where hovering starts to do something.
   function setupEdgeAutoScroll(el) {
-    const EDGE = 40; // px zone from top/bottom that triggers scrolling
-    const MAX_SPEED = 12; // px per frame at the very edge
+    const EDGE = 28; // px zone from top/bottom that triggers scrolling
+    const MAX_SPEED = 9; // px per frame at the very edge
     let y = null;
     let raf = null;
+    let dir = 0; // -1 top, 1 bottom, 0 neither — tracks the hint class
+    const setDir = (next) => {
+      if (next === dir) return;
+      el.classList.toggle("edge-autoscroll-active-top", next === -1);
+      el.classList.toggle("edge-autoscroll-active-bottom", next === 1);
+      dir = next;
+    };
     const tick = () => {
       raf = null;
       if (y == null) return;
       const h = el.clientHeight;
       let dy = 0;
-      if (y < EDGE) dy = -MAX_SPEED * (1 - y / EDGE);
-      else if (y > h - EDGE) dy = MAX_SPEED * (1 - (h - y) / EDGE);
+      if (y < EDGE) dy = -MAX_SPEED * Math.pow(1 - y / EDGE, 2);
+      else if (y > h - EDGE) dy = MAX_SPEED * Math.pow(1 - (h - y) / EDGE, 2);
+      setDir(dy < 0 ? -1 : dy > 0 ? 1 : 0);
       if (dy) {
+        el.classList.add("autoscrolling"); // suppresses scroll-snap while active
         el.scrollTop += dy;
         raf = requestAnimationFrame(tick);
+      } else {
+        el.classList.remove("autoscrolling");
       }
     };
     el.addEventListener("mousemove", (e) => {
@@ -28,6 +44,8 @@
     });
     el.addEventListener("mouseleave", () => {
       y = null;
+      setDir(0);
+      el.classList.remove("autoscrolling");
     });
   }
 

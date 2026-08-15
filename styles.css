@@ -1194,6 +1194,40 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   scroll-snap-type: y proximity;
   scroll-padding-block: 6px;
 }
+/* Suppresses snap while the edge auto-scroll (main.js/project.js) is actively
+   driving scrollTop — proximity snap fighting small per-frame increments is
+   what made the auto-scroll feel resistant/juddery instead of smooth. */
+.dock-viewport.autoscrolling { scroll-snap-type: none; }
+/* Edge auto-scroll hint (setupEdgeAutoScroll, shared by .dock-viewport and
+   .cert-dock): a soft accent glow fades in at whichever edge the pointer is
+   close enough to for auto-scroll to be active, so the feature is
+   discoverable — it visibly responds right where hovering starts to do
+   something, instead of scrolling with no explanation. */
+.edge-autoscroll-active-top,
+.edge-autoscroll-active-bottom {
+  position: relative;
+}
+.edge-autoscroll-active-top::before,
+.edge-autoscroll-active-bottom::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 36px;
+  pointer-events: none;
+  z-index: 8;
+  opacity: 0;
+  animation: edge-autoscroll-in 0.15s ease forwards;
+}
+.edge-autoscroll-active-top::before {
+  top: 0;
+  background: linear-gradient(to bottom, rgba(var(--accent-rgb), 0.22), transparent);
+}
+.edge-autoscroll-active-bottom::after {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(var(--accent-rgb), 0.22), transparent);
+}
+@keyframes edge-autoscroll-in { to { opacity: 1; } }
 .dock-viewport::-webkit-scrollbar { display: none; }
 .dock-reel { display: flex; flex-direction: column; gap: 0.6rem; }
 /* Vertical scroll line beside the dock */
