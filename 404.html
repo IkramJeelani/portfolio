@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Not Found - Ikram Jeelani</title>
+  <meta name="description" content="The page you're looking for doesn't exist." />
+  <meta name="author" content="Ikram Jeelani" />
+  <meta name="robots" content="noindex, follow" />
+  <!-- Matches SETTINGS.theme's default; branding.js re-syncs it on toggle. -->
+  <meta name="theme-color" content="#f6f3ec" />
+
+  <script src="data.js"></script>
+  <script>try{var t=localStorage.getItem('theme')||((window.SETTINGS||{}).theme==='light'?'light':null);if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Lets keyboard users bypass the header controls on every visit -->
+  <a class="skip-link" href="#notFound">Skip to content</a>
+
+  <header class="site-header">
+    <a href="index.html" class="brand" data-brand>IJ</a>
+    <nav aria-label="Sections">
+      <a href="index.html">Back to home</a>
+    </nav>
+  </header>
+
+  <main class="project-page" id="notFound">
+    <h1>Page not found</h1>
+    <p class="project-tagline">Sorry, that page doesn't exist. It may have been renamed or removed.</p>
+    <div class="project-links">
+      <a class="btn btn-primary" href="index.html">&larr; Back to home</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; <span data-year></span> <span data-name></span>.</p>
+  </footer>
+
+  <script src="branding.js"></script>
+</body>
+</html>

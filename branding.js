@@ -121,7 +121,7 @@
     controls.className = "header-controls";
     header.appendChild(controls);
 
-    // Light/dark toggle (dark is the default).
+    // Light/dark toggle (default theme comes from SETTINGS.theme in data.js).
     const toggle = document.createElement("button");
     toggle.className = "theme-toggle";
     toggle.type = "button";

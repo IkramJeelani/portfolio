@@ -15,8 +15,13 @@
        on SETTINGS.theme at request time. This file is kept in sync with
        SETTINGS.theme automatically by scripts/sync-og-image.py, which runs
        as a git pre-commit hook (see .githooks/pre-commit) — you shouldn't
-       need to touch og:image/twitter:image by hand. -->
-  <link rel="canonical" href="https://ikramjeelani.github.io/portfolio/" />
+       need to touch og:image/twitter:image by hand.
+       No static <link rel="canonical"> here on purpose: this one template
+       is shared by every project, so a static canonical can only ever point
+       somewhere WRONG for most of them. Asserting the site root used to do
+       exactly that, telling crawlers every project's "real" URL was the
+       homepage. project.js creates the canonical tag itself, pointed at the
+       actual project (or, for an invalid ?id=, at the page's own URL). -->
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Ikram Jeelani" />
   <meta property="og:title" content="Project — Ikram Jeelani" />

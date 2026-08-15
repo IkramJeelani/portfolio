@@ -17,7 +17,7 @@ deployed straight to GitHub Pages.
 | `data.js` | All site content (profile, sections, projects, certifications, …) as plain JS objects |
 | `index.html` | Home page shell; `main.js` renders the sections from `data.js` in the configured order |
 | `project.html` + `project.js` | Reusable project detail page (`?id=` selects the project) |
-| `branding.js` | Shared chrome: favicon generation, theme + particles toggles, header behaviour |
+| `branding.js` | Shared chrome: favicon generation, theme toggle, header behaviour |
 | `styles.css` | All styling — light/dark themes, responsive layout, animations |
 | `scripts/sync-og-image.py` | Pre-commit hook (via `.githooks/`) that keeps the social-share image in sync with the default theme |
 

@@ -5,10 +5,44 @@
   const id = new URLSearchParams(window.location.search).get("id");
   const project = projects.find((p) => p.id === id);
 
+  // project.html ships with no static <link rel="canonical"> — a shared
+  // template can't know a real project's URL ahead of time, and asserting
+  // the site ROOT as every project's canonical (the previous static value)
+  // actively told crawlers "the real version of this page is the homepage,"
+  // which can suppress a project page from being indexed as its own content.
+  // This always ensures one exists and points at the current, real URL.
+  const setCanonical = (href) => {
+    let canon = document.head.querySelector('link[rel="canonical"]');
+    if (!canon) {
+      canon = document.createElement("link");
+      canon.rel = "canonical";
+      document.head.appendChild(canon);
+    }
+    canon.href = href;
+  };
+
   if (!project) {
+    // No per-project data to show — give this state its own honest metadata
+    // instead of leaving the generic template values in place (which
+    // otherwise still claim, via title/OG tags, to be a real project page).
+    document.title = `Project Not Found - ${(window.PROFILE || {}).name || ""}`;
+    const notFoundDesc = "The project you're looking for doesn't exist. It may have been renamed or removed.";
+    const set = (sel, val) => {
+      const el = document.head.querySelector(sel);
+      if (el) el.setAttribute("content", val);
+    };
+    set('meta[name="description"]', notFoundDesc);
+    set('meta[property="og:title"]', document.title);
+    set('meta[property="og:description"]', notFoundDesc);
+    set('meta[property="og:url"]', location.href);
+    set('meta[name="twitter:title"]', document.title);
+    set('meta[name="twitter:description"]', notFoundDesc);
+    set('meta[name="robots"]', "noindex, follow"); // nothing here worth indexing
+    setCanonical(location.href); // self-referencing: no better URL exists for this state
     page.innerHTML = `
       <h1>Project not found</h1>
-      <p>Sorry, we couldn't find that project. It may have been renamed or removed.</p>`;
+      <p>Sorry, we couldn't find that project. It may have been renamed or removed.</p>
+      <a class="btn btn-primary" href="index.html#projects">&larr; Back to projects</a>`;
     return;
   }
 
@@ -33,8 +67,7 @@
     set('meta[property="og:url"]', url);
     set('meta[name="twitter:title"]', document.title);
     set('meta[name="twitter:description"]', desc);
-    const canon = document.head.querySelector('link[rel="canonical"]');
-    if (canon) canon.href = url;
+    setCanonical(url);
   })();
 
   // Remember which project, so going back morphs the hero into the right card.
@@ -88,6 +121,14 @@
     <div class="project-content">${bodyHtml}</div>
     <div class="project-links">${linksHtml}</div>
     ${pagerHtml}`;
+
+  // Free-form project bodies (data.js `body` strings) can contain hand-written
+  // <img> tags with no way to know their dimensions ahead of time, so they
+  // can't get explicit width/height like the fixed-size logo images — but
+  // every one of them is below the fold, so they can all still be deferred.
+  page.querySelectorAll(".project-content img").forEach((img) => {
+    if (!img.hasAttribute("loading")) img.loading = "lazy";
+  });
 
   // ←/→ step through projects (ignored while typing or with modifiers held).
   document.addEventListener("keydown", (e) => {

@@ -18,7 +18,14 @@
   --grad-btn: linear-gradient(120deg, #8b2fd6, #d61f74);
   --font-display: "Sora", "Segoe UI", sans-serif;
   --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Radius scale: xs for fine/text-level elements (inline code, PDF canvas),
+     sm for small square UI chips (logos, toolbar buttons, dock rows —
+     previously a mix of 7/8/9/10px with no reasoning behind which got which),
+     the base radius for cards/panels, pill for fully-rounded buttons/tags. */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
   --radius: 12px;
+  --radius-pill: 999px;
   --max: 1100px;
   --shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
   --pattern: rgba(236,231,222,.045);
@@ -32,7 +39,11 @@
   --border: #e2dbcd;
   --text: #1d1a17;
   --text-body: #1d1a17; /* no halation on light — full contrast is fine */
-  --muted: #7d7566;
+  /* Darkened from #7d7566: the original measured only 3.80:1 on --bg-soft
+     and 4.49:1 on --card, both under the 4.5:1 AA floor (dock-num digits,
+     the PDF zoom label, cert-issuer text). This clears both: 4.60:1 and
+     5.43:1 respectively. */
+  --muted: #6f685b;
   --accent: #6d28d9; /* deeper than dark mode's purple so small text clears AA on white */
   --accent-hover: #5b21b6;
   --accent-rgb: 109, 40, 217; /* #6d28d9 as r,g,b — for rgba() glows/washes */
@@ -91,7 +102,7 @@ a { color: inherit; text-decoration: none; }
   left: 8px;
   z-index: 200;
   padding: 0.6rem 1rem;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--bg-soft);
   border: 1px solid var(--accent);
   color: var(--text);
@@ -162,7 +173,7 @@ h1, h2, h3,
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(200px circle at var(--x, -300px) var(--y, 50%), rgba(168, 85, 247, 0.14), transparent 60%);
+  background: radial-gradient(200px circle at var(--x, -300px) var(--y, 50%), rgba(var(--accent-rgb), 0.14), transparent 60%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -290,7 +301,7 @@ h1, h2, h3,
   gap: 0.45rem;
   height: 34px;
   padding: 0 0.95rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--grad-btn); /* white label needs the AA-passing stops */
   color: #fff;
   font-weight: 700;
@@ -314,7 +325,7 @@ h1, h2, h3,
   justify-content: center;
   width: 34px;
   height: 34px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   background: var(--bg-soft);
   color: var(--text);
@@ -455,7 +466,7 @@ h1, h2, h3,
 .btn {
   display: inline-block;
   padding: 0.7rem 1.4rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid var(--border);
   background: var(--bg-soft);
   color: var(--text);
@@ -569,7 +580,7 @@ h1, h2, h3,
   border-radius: 50%;
   background: var(--accent);
   border: 3px solid var(--bg);
-  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.25);
 }
 .tl-date { color: var(--accent); font-weight: 600; white-space: nowrap; }
 .tl-loc { color: var(--muted); white-space: nowrap; line-height: 1.2; }
@@ -595,10 +606,13 @@ h1, h2, h3,
   object-fit: contain;
   margin-bottom: 0.7rem;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
 }
 .tl-role { font-weight: 700; font-size: 1.05rem; }
 .tl-company { color: var(--accent); font-weight: 600; margin-top: 0.1rem; }
+/* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
+   floor — same fix as .cert-date below. */
+:root:not([data-theme="light"]) .tl-company { color: var(--accent-hover); }
 .tl-points { margin: 0.7rem 0 0; padding-left: 1.1rem; color: var(--text); }
 .tl-points li { margin-bottom: 0.3rem; }
 .tl-card .tags { margin: 0.85rem 0 0; } /* tech tags under the details */
@@ -763,7 +777,7 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
   height: 42px;
   object-fit: contain;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
 }
 /* Open-in affordance, top-right of a card that has a viewable credential PDF.
    pointer-events:none — the whole card is the link; the icon is just a cue. */
@@ -847,7 +861,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border-radius: 50%;
   background: var(--accent);
   border: 3px solid var(--bg);
-  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.25);
 }
 .edu-date { color: var(--accent); font-weight: 600; white-space: nowrap; }
 .edu-left .edu-loc { color: var(--muted); white-space: nowrap; line-height: 1.2; }
@@ -878,7 +892,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   height: 56px;
   object-fit: contain;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
 }
 /* align-items:flex-start on .edu-card means these size to their own
    content (fit-content) rather than stretching — but fit-content sizing
@@ -897,6 +911,9 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   font-weight: 700;
   color: var(--accent);
 }
+/* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
+   floor — same fix as .cert-date. */
+:root:not([data-theme="light"]) .edu-major { color: var(--accent-hover); }
 .edu-details { color: var(--text); margin: 0.5rem 0 0; }
 .edu-points { margin: 0.1rem 0 0; padding-left: 1.1rem; color: var(--text); }
 .edu-points li { margin-bottom: 0.3rem; }
@@ -1037,6 +1054,9 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
+/* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
+   floor — same fix as .cert-date. */
+:root:not([data-theme="light"]) .card-date { color: var(--accent-hover); }
 /* tags grouped at the bottom; the gap sits above the tags */
 .card-foot { margin-top: 0.25rem; display: flex; flex-direction: column; gap: 0.3rem; }
 .card-foot .tags { margin: 0; align-content: flex-start; gap: 0.3rem; }
@@ -1108,8 +1128,16 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 /* ===== Floating quick-access project dock (detail page, wide screens) ===== */
 .project-dock {
   position: fixed;
-  /* Hugs the viewport edge rather than tracking the content column. */
-  left: 1rem;
+  /* Hugs the viewport edge on normal-to-wide screens, but on very wide/
+     ultra-wide monitors a flat 1rem left a huge orphaned gap (measured
+     616px at 2560px) between the dock and the centred 820px .project-page
+     column. This instead anchors the dock 2rem left of that column once
+     the viewport is wide enough to need it — (100% - 820px) / 2 is the
+     column's own left offset, minus the dock's 230px width and a 2rem gap —
+     while the max(1rem, …) floor keeps it hugging the edge exactly as
+     before at every narrower "wide" width down to the 1380px show/hide
+     threshold. */
+  left: max(1rem, calc((100% - 820px) / 2 - 230px - 2rem));
   top: 84px;
   width: 230px;
   max-height: calc(100vh - 104px);
@@ -1145,7 +1173,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   width: 28px;
   height: 28px;
   border: 1px solid var(--accent);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: color-mix(in srgb, var(--accent) 14%, var(--bg-soft));
   color: var(--accent);
   cursor: pointer;
@@ -1169,7 +1197,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   writing-mode: vertical-rl;
   padding: 0.95rem 0.5rem;
   border: none;
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 var(--radius) var(--radius) 0;
   background: var(--grad-btn); /* white label needs the AA-passing stops */
   color: #fff;
   font-family: var(--font-display);
@@ -1203,7 +1231,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   position: absolute;
   right: -18px; /* sits clear of the dock */
   width: 4px;
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   background: var(--border);
   overflow: hidden;
   cursor: pointer;
@@ -1214,7 +1242,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .dock-rail.dragging { width: 10px; right: -21px; background: var(--bg-soft); }
 .dock-rail-thumb {
   width: 100%;
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   background: var(--grad);
   cursor: grab;
   transition: transform 0.08s linear, box-shadow 0.18s ease;
@@ -1222,7 +1250,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 }
 .dock-rail-thumb:active { cursor: grabbing; }
 .dock-rail:hover .dock-rail-thumb,
-.dock-rail.dragging .dock-rail-thumb { box-shadow: 0 0 10px rgba(168, 85, 247, 0.65); }
+.dock-rail.dragging .dock-rail-thumb { box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.65); }
 /* Each dock row: project thumbnail + number on the left, title/date on the
    right — the image makes every project instantly distinguishable. */
 /* Each row: a small number badge + title/date — no image thumbnail. A 46px
@@ -1239,7 +1267,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   min-height: 88px;
   padding: 0.55rem 0.6rem;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--card);
   opacity: 0.72;
   transition: opacity 0.2s, border-color 0.2s, background 0.2s;
@@ -1260,7 +1288,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   background: var(--bg-soft);
   border: 1px solid var(--border);
   color: var(--muted);
@@ -1304,6 +1332,11 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   color: var(--accent);
   margin-bottom: 0.15rem;
 }
+/* Dark theme: the active card's background is a --card/--accent mix, close
+   enough in luminance to plain --card that --accent text still measures
+   only ~4.2:1 — under the 4.5:1 AA floor, same fix as .cert-date. */
+:root:not([data-theme="light"]) .dock-card.active .dock-name,
+:root:not([data-theme="light"]) .dock-flag { color: var(--accent-hover); }
 
 /* Hover preview image that genies out beside the dock */
 .dock-preview {
@@ -1360,17 +1393,26 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   text-transform: uppercase;
   margin: 0 0 1.5rem;
 }
+/* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
+   floor — same fix as .cert-date. */
+:root:not([data-theme="light"]) .project-date { color: var(--accent-hover); }
 .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
 .tag {
   font-size: 0.82rem;
   padding: 0.3rem 0.8rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--bg-soft);
   border: 1px solid var(--border);
   color: var(--accent);
   /* a single long token ("SOLIDWORKS") can otherwise overflow ~280px screens */
   overflow-wrap: anywhere;
 }
+/* Dark theme: --accent on --bg-soft measures only 3.77:1, well under the
+   4.5:1 AA floor — every project/cert tech-tag pill in dark mode.
+   :where() keeps this at .tag's own specificity so it still loses to the
+   more specific .skill-group .tag override below, which intentionally
+   uses a different color. */
+:where(:root:not([data-theme="light"])) .tag { color: var(--accent-hover); }
 .project-links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.5rem; }
 
 /* ===== Prev / next project pager at the end of a project page ===== */
@@ -1390,7 +1432,10 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card);
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  /* Matches .card/.cert-card/.edu-card's hover-lift timing (0.25s transform
+     + box-shadow, 0.2s border-color) — same interaction, was previously 0.2s
+     across the board here, a beat faster than its visual siblings. */
+  transition: transform 0.25s ease, border-color 0.2s ease, box-shadow 0.25s ease;
 }
 .pager-card:hover {
   transform: translateY(-3px);
@@ -1401,13 +1446,16 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .pager-thumb {
   flex: 0 0 64px;
   height: 48px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background-size: cover;
   background-position: center;
   border: 1px solid var(--border);
 }
 .pager-text { min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; }
 .pager-dir { font-size: 0.78rem; color: var(--accent); font-weight: 600; }
+/* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
+   floor — same fix as .cert-date. */
+:root:not([data-theme="light"]) .pager-dir { color: var(--accent-hover); }
 .pager-title {
   font-family: var(--font-display);
   font-weight: 700;
@@ -1430,6 +1478,9 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .project-content h2 { font-size: 1.6rem; margin: 2.5rem 0 1rem; }
 .project-content h3 { font-size: 1.25rem; margin: 1.8rem 0 0.75rem; }
 .project-content a { color: var(--accent); text-decoration: underline; }
+/* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
+   floor — same fix as .cert-date. */
+:root:not([data-theme="light"]) .project-content a { color: var(--accent-hover); }
 .project-content strong { color: #fff; }
 .project-content ul,
 .project-content ol { margin: 0 0 1.2rem; padding-left: 1.4rem; }
@@ -1479,7 +1530,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .project-content code {
   background: var(--bg-soft);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   padding: 0.1rem 0.4rem;
   font-size: 0.92em;
 }
@@ -1561,7 +1612,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
     padding: 0.5rem;
     background: var(--bg-soft);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: var(--radius);
     box-shadow: var(--shadow);
     opacity: 0;
     transform: translateY(-8px);
@@ -1573,7 +1624,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
     transform: none;
     pointer-events: auto;
   }
-  .site-header nav a { padding: 0.55rem 0.75rem; border-radius: 8px; }
+  .site-header nav a { padding: 0.55rem 0.75rem; border-radius: var(--radius-sm); }
   .site-header nav a::after { display: none; } /* no sliding underline in the dropdown */
   .site-header nav a:hover { background: var(--card); color: var(--text); }
   /* Scroll spy in the dropdown: the underline is hidden here, so mark the
@@ -1771,6 +1822,10 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   cursor: default;
 }
 .cert-dock .cert-dock-current .cert-name { color: var(--accent); }
+/* Dark theme: the active-card background is a --card/--accent mix, close
+   enough in luminance to plain --card that --accent text still measures
+   only ~4.2:1 — under the 4.5:1 AA floor, same fix as .cert-date. */
+:root:not([data-theme="light"]) .cert-dock .cert-dock-current .cert-name { color: var(--accent-hover); }
 /* 300 dock + 1.1rem gap + 900 viewer needs ~1218px; below that the dock would
    squeeze the viewer, so the modal goes back to the plain centred layout. */
 @media (max-width: 1279px) {
@@ -1801,7 +1856,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   align-items: center;
   justify-content: center;
   padding: 0;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--text);
@@ -1845,7 +1900,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 }
 .pdf-pages canvas {
   margin-inline: auto;
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   background: #fff;
   box-shadow: 0 10px 34px rgba(0, 0, 0, 0.4);
   flex-shrink: 0;

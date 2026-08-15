@@ -58,7 +58,7 @@
       .map((e, i) => {
         const points = (e.points || []).map((p) => `<li>${p}</li>`).join("");
         const logo = e.logo
-          ? `<img class="tl-logo" src="${e.logo}" alt="${e.company || "company"} logo">`
+          ? `<img class="tl-logo" src="${e.logo}" alt="${e.company || "company"} logo" width="48" height="48" loading="lazy">`
           : "";
         const tech = (e.tech || []).map((t) => `<span class="tag">${t}</span>`).join("");
         return `
@@ -137,7 +137,7 @@
         // hover. Without it (cert earned but no PDF yet) the card is a static tile.
         const hasCred = c.hasPdf === true && !!c.url;
         const logo = c.logo
-          ? `<img class="cert-logo" src="${c.logo}" alt="${c.issuer || c.name || "logo"}">`
+          ? `<img class="cert-logo" src="${c.logo}" alt="${c.issuer || c.name || "logo"}" width="42" height="42" loading="lazy">`
           : `<div class="cert-logo" aria-hidden="true"></div>`;
         // Top-right "open credential" affordance (external-link icon), only when
         // there's a PDF to open. aria-hidden: the card's own aria-label names it.
@@ -171,7 +171,7 @@
     const items = list
       .map((e, i) => {
         const logo = e.logo
-          ? `<img class="edu-logo" src="${e.logo}" alt="${e.school || "university"} logo">`
+          ? `<img class="edu-logo" src="${e.logo}" alt="${e.school || "university"} logo" width="56" height="56" loading="lazy">`
           : `<div class="edu-logo" aria-hidden="true"></div>`;
         const degreeLine = e.degree ? `<div class="edu-degree">${e.degree}</div>` : "";
         const majorLine = e.major ? `<div class="edu-major">${e.major}</div>` : "";
