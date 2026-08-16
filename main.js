@@ -23,8 +23,14 @@
   if (!heroArmOn) {
     const heroVisual = document.querySelector(".hero-visual");
     if (heroVisual) heroVisual.remove();
+    // Collapse the grid so hero-right fills the row instead of leaving the
+    // arm's old column reserved-but-empty (that emptiness is what was
+    // pushing everything over to the right with a dead gap on the left).
+    if (hero) hero.classList.add("hero-no-visual");
   }
-  if (!heroArmOn && !photo && hero) hero.classList.add("hero-solo");
+  // Only centers everything when there's ALSO no photo to anchor a
+  // left-aligned layout against — a photo keeps the left-aligned treatment.
+  if (!heroArmOn && !photo && hero) hero.classList.add("hero-centered");
 
   // About text under the name — auto-hides (stays "hidden") if ABOUT is empty.
   const aboutText = (window.ABOUT || "").trim();

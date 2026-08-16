@@ -402,17 +402,24 @@ h1, h2, h3,
 .hero-text { max-width: 600px; }
 .hero-text .subtitle { margin-left: 0; }
 /* SETTINGS.heroArm = false (data.js): main.js removes .hero-visual and adds
-   this class instead of leaving an empty grid slot where the arm would sit —
-   single centered column, same treatment the mobile breakpoint below uses
-   for the stacked layout, just without ever having a visual to stack. */
-.hero.hero-solo {
+   this class instead of leaving the arm's grid column reserved-but-empty
+   (that empty 500px column was what pushed hero-right over to the right
+   with a dead gap on the left). hero-right fills the full row either way —
+   whether it then CENTERS depends on .hero-centered below, since a photo
+   should still get the left-aligned treatment even with the arm off. */
+.hero.hero-no-visual {
   grid-template-columns: 1fr;
   grid-template-areas: "right";
+}
+.hero.hero-no-visual .hero-right { grid-area: right; }
+/* Only when there's ALSO no photo to anchor a left-aligned layout against —
+   same treatment the mobile breakpoint below uses for its stacked layout. */
+.hero.hero-centered {
   justify-items: center;
   text-align: center;
 }
-.hero.hero-solo .hero-right { grid-area: right; align-items: center; }
-.hero.hero-solo .hero-text .subtitle { margin-left: auto; margin-right: auto; }
+.hero.hero-centered .hero-right { align-items: center; }
+.hero.hero-centered .hero-text .subtitle { margin-left: auto; margin-right: auto; }
 /* Tablets: keep the two columns but let the arm shrink before the text wraps badly. */
 @media (max-width: 1180px) {
   .hero { grid-template-columns: minmax(0, min(44vw, 460px)) 1fr; }
