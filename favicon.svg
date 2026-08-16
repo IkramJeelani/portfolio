@@ -2,6 +2,12 @@
   <!-- Static fallback only: branding.js replaces this at runtime with a
        theme-synced version. Kept identical to the JS output for the default
        (light) theme so the icon doesn't visibly swap after load. -->
+  <defs>
+    <linearGradient id="g" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#be185d"/>
+    </linearGradient>
+  </defs>
   <rect width="64" height="64" rx="14" fill="#f6f3ec"/>
-  <text x="32" y="33" dominant-baseline="central" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="800" fill="#6d28d9" text-anchor="middle">IJ</text>
+  <text x="32" y="33" dominant-baseline="central" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="800" fill="url(#g)" text-anchor="middle">IJ</text>
 </svg>

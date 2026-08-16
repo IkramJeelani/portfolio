@@ -472,30 +472,17 @@
     const colors = () => {
       const light = document.documentElement.getAttribute("data-theme") === "light";
       return {
-        // Everything below is plain --text-toned black/white/gray EXCEPT
-        // jointHi/jointLo/joint — the joints are the one deliberate spot of
-        // purple, so the arm reads as monochrome machinery with three
-        // accent-colored pivots, not a uniformly purple illustration.
-        grid: light ? "rgba(29, 26, 23, 0.07)" : "rgba(236, 231, 222, 0.06)",
-        arc: light ? "rgba(29, 26, 23, 0.14)" : "rgba(236, 231, 222, 0.12)",
-        link: light ? "#1d1a17" : "#ece7de",
-        link2: light ? "#1d1a17" : "#ece7de",
-        // Groove line drawn ON TOP of the link fill: needs to sit lighter
-        // than a near-black light-theme link, and darker than a near-white
-        // dark-theme link — the reverse of which theme needed which before.
-        slot: light ? "rgba(255, 255, 255, 0.3)" : "rgba(20, 22, 28, 0.4)",
-        // The one accent: a purple radial gradient for each joint's ball,
-        // instead of the old neutral "polished metal" highlight.
-        jointHi: light ? "#c4a6f5" : "#3d2a5c",
-        jointLo: light ? "#6d28d9" : "#a855f7",
-        joint: light ? "#6d28d9" : "#a855f7", // joint's own outer ring stroke
-        // Bolts/pivot-pin sit ON the now-purple joint ball, so they need
-        // in-theme contrast against purple rather than against the old
-        // neutral disc.
-        bolt: light ? "#f6f3ec" : "#14161c",
-        tip: light ? "#1d1a17" : "#ece7de",
+        grid: light ? "rgba(109, 40, 217, 0.10)" : "rgba(168, 85, 247, 0.09)",
+        arc: light ? "rgba(109, 40, 217, 0.18)" : "rgba(168, 85, 247, 0.16)",
+        link: light ? "#6d28d9" : "#a855f7",
+        link2: light ? "#be185d" : "#ec4899",
+        slot: light ? "rgba(29, 26, 23, 0.20)" : "rgba(20, 22, 28, 0.38)",
+        jointHi: light ? "#ffffff" : "#2c313e",
+        jointLo: light ? "#e2dbcd" : "#14161c",
+        bolt: light ? "#a89a8a" : "#0a0b0e",
+        tip: light ? "#be185d" : "#f472b6",
         hud: light ? "rgba(125, 117, 102, 0.75)" : "rgba(139, 143, 160, 0.7)",
-        trail: light ? "29, 26, 23" : "236, 231, 222",
+        trail: light ? "190, 24, 93" : "244, 114, 182",
         glow: light ? 9 : 14,
         light,
       };
@@ -540,7 +527,7 @@
       ctx.fillStyle = rg;
       ctx.fill();
       ctx.lineWidth = 2;
-      ctx.strokeStyle = c.joint;
+      ctx.strokeStyle = c.link;
       ctx.stroke();
       for (let k = 0; k < 4; k++) {
         const ba = a + (k * Math.PI) / 2;
