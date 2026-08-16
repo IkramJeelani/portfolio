@@ -697,12 +697,17 @@ h1, h2, h3,
   transform-style: preserve-3d;
 }
 a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
-/* c.preview in data.js — a screenshot of the credential's first page. */
+/* c.preview in data.js — a screenshot of the credential's first page. Fixed
+   height + object-fit:contain: the whole document is visible (unlike
+   object-fit:cover, which crops), scaled to fit the box without ever
+   overflowing the card's width, letterboxed on whichever axis has room
+   to spare. */
 .cert-preview {
+  display: block;
+  width: 100%;
   height: 160px;
-  background-size: cover;
-  background-position: top center; /* most certs' header/logo is what identifies them at a glance */
-  background-color: var(--bg-soft);
+  object-fit: contain;
+  background: var(--bg-soft);
   flex: 0 0 auto;
 }
 /* Two columns: text left, logo right. Putting the logo beside the text
@@ -818,12 +823,10 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   max-width: 960px;
   margin: 0 auto;
 }
-/* 275px is a measured cliff, not a taste call: the longest title (Siemens, 66
-   chars) fits 3 lines down to a ~199px text column and breaks to 4 below it,
-   which adds ~20px to EVERY card since the equalizer matches the tallest. With
-   the 42px logo + 0.5rem gap + 0.65rem padding this leaves ~204px — a small
-   buffer over the cliff. Narrowing further means shrinking the title text. */
-.certifications .cert-card { flex: 0 1 275px; }
+/* A slight bump from the original 275px, not the full 300px tried earlier —
+   still comfortably clear of the text-wrap cliff described above (a wider
+   card only gives the title column MORE room, not less). */
+.certifications .cert-card { flex: 0 1 285px; }
 
 /* ===== Education: one-sided timeline (dates left · line · logo-on-top cards) ===== */
 .edu-timeline {
@@ -1732,11 +1735,11 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .cert-dock-wrap {
   position: relative;
   z-index: 1;
-  /* Wider than the 275px card on purpose: the scrollbar gutter and padding eat
+  /* Wider than the 285px card on purpose: the scrollbar gutter and padding eat
      into the content box, and a card even ~15px narrower drops its text column
      under the 3-line threshold, so clones would render taller than the
      originals. Extra width here + a fixed card width below keeps them identical. */
-  flex: 0 0 300px;
+  flex: 0 0 310px;
   height: min(90vh, 1000px);
   display: flex;
   flex-direction: column;
@@ -1771,7 +1774,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
    hover, and no lift/transform (the grid's own hover-lift is for cards
    sitting loose on the page — these are packed into a list). */
 .cert-dock .cert-card {
-  width: 275px;
+  width: 285px;
   flex: 0 0 auto;
   opacity: 0.72;
   transition: opacity 0.2s, border-color 0.2s, background 0.2s;
@@ -1839,7 +1842,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
    enough in luminance to plain --card that --accent text still measures
    only ~4.2:1 — under the 4.5:1 AA floor, same fix as .cert-date. */
 :root:not([data-theme="light"]) .cert-dock .cert-dock-current .cert-name { color: var(--accent-hover); }
-/* 300 dock + 1.1rem gap + 900 viewer needs ~1218px; below that the dock would
+/* 310 dock + 1.1rem gap + 900 viewer needs ~1228px; below that the dock would
    squeeze the viewer, so the modal goes back to the plain centred layout. */
 @media (max-width: 1279px) {
   .cert-dock-wrap { display: none; }

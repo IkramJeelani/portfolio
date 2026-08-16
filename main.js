@@ -164,8 +164,10 @@
           : "";
         // Preview image of the certificate itself across the top of the card,
         // same idea as a project card's thumbnail — optional, same as logo.
+        // object-fit:contain (in CSS) fits the whole document into a fixed-
+        // height box without cropping or ever overflowing the card's width.
         const preview = c.preview
-          ? `<div class="cert-preview" style="background-image:url('${c.preview}')"></div>`
+          ? `<img class="cert-preview" src="${c.preview}" alt="" loading="lazy">`
           : "";
         const inner = `
           ${preview}
