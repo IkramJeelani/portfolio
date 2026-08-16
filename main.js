@@ -733,6 +733,7 @@
       modal.classList.add("open");
       modal.querySelector(".pdf-close").focus();
       document.body.style.overflow = "hidden";
+      document.body.classList.add("pdf-open");
       const box = modal.querySelector(".pdf-pages");
       box.classList.remove("fallback");
       box.innerHTML = '<div class="pdf-spinner" aria-label="Loading"></div>';
@@ -757,6 +758,7 @@
       if (!modal || !modal.classList.contains("open")) return;
       modal.classList.remove("open");
       document.body.style.overflow = "";
+      document.body.classList.remove("pdf-open");
       if (opener && opener.focus) opener.focus(); // hand focus back to the triggering link
       opener = null;
       setTimeout(() => {
