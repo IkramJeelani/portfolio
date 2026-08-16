@@ -393,16 +393,17 @@ h1, h2, h3,
     text-align: center;
   }
   .hero-right.has-photo .hero-about-photo {
-    width: 180px;
-    height: 180px;
+    width: 140px;
+    height: 140px;
     /* Reset the desktop row's align-self:stretch — left unset, it still
        wins over the container's align-items:center once stretch can't
        actually stretch a fixed-size image, pinning it flex-start (left)
        instead of centering it. */
     align-self: center;
   }
-  .hero-right { padding: 1.5rem; }
-  .hero-about-text { margin-top: 0.75rem; }
+  .hero-right { padding: 1.25rem; }
+  .hero-about-text { margin-top: 0.6rem; font-size: 1rem; }
+  .hero-text .subtitle { margin-top: 0; }
 }
 /* Short viewports (landscape phones, small laptops with the window snapped):
    don't force a full-screen hero — let it size to its content. */
@@ -1884,7 +1885,7 @@ html.theme-vt * { view-transition-name: none !important; }
 }
 @media (max-width: 480px) {
   .site-header { padding: 0.85rem 1rem; }
-  .hero { padding: 4rem 1.1rem; }
+  .hero { padding: 2.5rem 1.1rem; }
   .hero h1 { font-size: 2.15rem; }
   .subtitle { font-size: 0.98rem; }
   .section-title { font-size: 1.6rem; }
