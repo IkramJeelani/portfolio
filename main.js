@@ -518,27 +518,8 @@
     const build = () => {
       modal = document.createElement("div");
       modal.className = "pdf-modal";
-      const chevronUp =
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>';
-      const chevronDown =
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
       modal.innerHTML =
         '<div class="pdf-backdrop"></div>' +
-        // The chevrons are SIBLINGS of the scrolling <nav>, not children of
-        // it — the nav has a mask-image fade at its own edges (see
-        // updateDockFade), and a mask fades EVERYTHING it paints, including
-        // its descendants. A chevron placed exactly at the edge it needs to
-        // mark would be faded to near-invisible by that same mask. As normal
-        // flex-column siblings (DOM order: up, nav, down) they get their OWN
-        // reserved strip of space above/below the list instead of floating
-        // on top of the end cards — no overlap, and the dock's own scrollable
-        // area shrinks by exactly the room the chevrons take, which is also
-        // why the dock now shows a bit less at once than before.
-        '<div class="cert-dock-wrap" hidden>' +
-        '<div class="cert-dock-nav cert-dock-nav-up" aria-hidden="true">' + chevronUp + "</div>" +
-        '<nav class="cert-dock" aria-label="All certifications"></nav>' +
-        '<div class="cert-dock-nav cert-dock-nav-down" aria-hidden="true">' + chevronDown + "</div>" +
-        "</div>" +
         '<div class="pdf-box" role="dialog" aria-modal="true" aria-label="Certificate viewer">' +
         '<div class="pdf-toolbar">' +
         '<span class="pdf-title"></span>' +
@@ -552,8 +533,6 @@
         "</div></div>" +
         '<div class="pdf-pages"></div></div>';
       document.body.appendChild(modal);
-      modal.querySelector(".cert-dock").addEventListener("scroll", scheduleDockFade, { passive: true });
-      window.addEventListener("resize", scheduleDockFade);
       modal.querySelector(".pdf-backdrop").addEventListener("click", close);
       modal.querySelector(".pdf-close").addEventListener("click", close);
       modal.querySelector(".pdf-zoom-in").addEventListener("click", () => setZoom(zoom + 0.25));
@@ -616,116 +595,12 @@
       if (pdfDoc) renderPages();
     });
 
-    /* The dock has no visible scrollbar (by request), so two cues stand in
-       for it: a soft edge fade (mask, so it reveals the blurred backdrop
-       instead of painting a colour patch that would need to match it) AND a
-       chevron at whichever edge(s) currently have hidden content — the fade
-       alone read as too subtle to notice at a glance. Both recomputed on
-       scroll/resize, since which edges are active changes as you scroll. */
-    let dockFadeRaf = null;
-    const updateDockFade = () => {
-      const wrap = modal.querySelector(".cert-dock-wrap");
-      const dock = modal.querySelector(".cert-dock");
-      if (!dock || wrap.hidden) return;
-      const F = "28px";
-      const canUp = dock.scrollTop > 2;
-      const canDown = dock.scrollTop < dock.scrollHeight - dock.clientHeight - 2;
-      let mask = "none";
-      if (canUp && canDown) mask = `linear-gradient(to bottom, transparent, black ${F}, black calc(100% - ${F}), transparent)`;
-      else if (canUp) mask = `linear-gradient(to bottom, transparent, black ${F})`;
-      else if (canDown) mask = `linear-gradient(to bottom, black calc(100% - ${F}), transparent)`;
-      dock.style.maskImage = mask;
-      dock.style.webkitMaskImage = mask;
-      modal.querySelector(".cert-dock-nav-up").classList.toggle("show", canUp);
-      modal.querySelector(".cert-dock-nav-down").classList.toggle("show", canDown);
-    };
-    const scheduleDockFade = () => {
-      if (dockFadeRaf) return;
-      dockFadeRaf = requestAnimationFrame(() => {
-        dockFadeRaf = null;
-        updateDockFade();
-      });
-    };
-
-    /* Side dock listing every certification, so you can move between them
-       without closing the viewer. The cards are CLONES of the real ones in the
-       grid rather than re-built markup — that way the design can never drift
-       apart from the main page. Clones keep their data-pdf, so the delegated
-       handler below already makes them work; nothing extra to wire up. */
-    const fillDock = (activeSrc) => {
-      const wrap = modal.querySelector(".cert-dock-wrap");
-      const dock = modal.querySelector(".cert-dock");
-      const originals = Array.from(document.querySelectorAll("#certifications .cert-card"));
-      if (originals.length < 2) {
-        wrap.hidden = true; // nothing to move between
-        return;
-      }
-      const firstBuild = !dock.childElementCount;
-      if (firstBuild) {
-        originals.forEach((card) => {
-          const clone = card.cloneNode(true);
-          // .reveal leaves an element at opacity:0 until its observer fires,
-          // and that observer only ever watches the original — a cloned card
-          // would sit invisible forever. It's on screen immediately, so drop
-          // the scroll-reveal state entirely.
-          clone.classList.remove("reveal", "in", "tilting");
-          clone.style.removeProperty("--reveal-delay");
-          // cloneNode(true) also copies the inline style ATTRIBUTE — so if the
-          // cursor happened to be hovering (tilting) the original the instant
-          // you clicked it, the clone inherits a frozen rotateX/rotateY/scale
-          // transform. Nothing ever clears it (the clone has no pointer
-          // events of its own to trigger setupTilt's pointerleave reset), so
-          // it sits permanently skewed — which is what was clipping an edge
-          // of the highlighted card's border. Strip everything setupTilt writes.
-          clone.style.removeProperty("transform");
-          clone.style.removeProperty("transition");
-          clone.style.removeProperty("--mx");
-          clone.style.removeProperty("--my");
-          dock.appendChild(clone);
-        });
-      }
-      Array.from(dock.children).forEach((clone, i) => {
-        // Copy the original's ACTUAL rendered width, not the CSS basis: the
-        // grid flexes its cards a few px narrower than 275, and at this size a
-        // few px is the difference between a 3- and 4-line title.
-        // minHeight is NOT copied (unlike width) — the grid's equalized
-        // height includes the .cert-preview strip, which the dock hides
-        // (.cert-dock .cert-preview), so reusing it here would leave a dead
-        // gap under each row's text instead. The clone sizes to its own
-        // (preview-less) content instead.
-        if (originals[i]) {
-          clone.style.width = originals[i].getBoundingClientRect().width + "px";
-        }
-        const isCurrent = clone.getAttribute("data-pdf") === activeSrc;
-        clone.classList.toggle("cert-dock-current", isCurrent);
-        if (isCurrent) clone.setAttribute("aria-current", "true");
-        else clone.removeAttribute("aria-current");
-      });
-      wrap.hidden = false;
-      // Clicking a card should not move the list — the card you just clicked
-      // is already visible, and re-centring it displaces every OTHER card
-      // you were just looking at. The one exception is the very first time
-      // the dock appears: nothing has been scrolled yet, so if the opened
-      // certificate starts off-screen (near the end of a long list), bring
-      // it into view with the smallest possible scroll (a no-op if it's
-      // already visible) rather than leaving the dock stuck at the top.
-      if (firstBuild) {
-        const cur = dock.querySelector(".cert-dock-current");
-        if (cur) cur.scrollIntoView({ block: "nearest" });
-      }
-      updateDockFade();
-    };
-
     let opener = null; // element to hand focus back to when the dialog closes
 
-    async function open(src, title, isCert) {
+    async function open(src, title) {
       if (!modal) build();
-      // Only capture the opener on the FIRST open. Hopping between certs via
-      // the dock would otherwise point focus-restore at a dock card, and on
-      // close the dock is hidden — focus would land nowhere.
+      // Only capture the opener on the FIRST open, not on every hop.
       if (!modal.classList.contains("open")) opener = document.activeElement;
-      if (isCert) fillDock(src);
-      else modal.querySelector(".cert-dock-wrap").hidden = true; // résumé: no dock
       modal.querySelector(".pdf-title").textContent = title || "Certificate";
       modal.querySelector(".pdf-box").setAttribute("aria-label", title || "Certificate viewer");
       modal.querySelector(".pdf-download").href = src;
@@ -733,7 +608,6 @@
       modal.classList.add("open");
       modal.querySelector(".pdf-close").focus();
       document.body.style.overflow = "hidden";
-      document.body.classList.add("pdf-open");
       const box = modal.querySelector(".pdf-pages");
       box.classList.remove("fallback");
       box.innerHTML = '<div class="pdf-spinner" aria-label="Loading"></div>';
@@ -758,7 +632,6 @@
       if (!modal || !modal.classList.contains("open")) return;
       modal.classList.remove("open");
       document.body.style.overflow = "";
-      document.body.classList.remove("pdf-open");
       if (opener && opener.focus) opener.focus(); // hand focus back to the triggering link
       opener = null;
       setTimeout(() => {
@@ -777,9 +650,7 @@
       // cards fall back to their own .cert-name text.
       const name = link.querySelector(".cert-name");
       const title = link.getAttribute("data-pdf-title") || (name ? name.textContent.trim() : "");
-      // .cert-card covers both the grid and the dock's clones; the résumé
-      // button is the only other data-pdf link and isn't a certification.
-      open(link.getAttribute("data-pdf"), title, link.classList.contains("cert-card"));
+      open(link.getAttribute("data-pdf"), title);
     });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") close();
