@@ -28,7 +28,7 @@ const PROFILE = {
             "assets/Resume.pdf") and point url at it — same as a certification's
             `url`, a GitHub "blob" link also works and is resolved automatically. */
 const RESUME = {
-  show: true,
+  show: false,
   label: "Résumé", // text shown next to the icon
   url: "assets/Resume.pdf",
 };
@@ -48,8 +48,8 @@ const RESUME = {
    ============================================================================ */
 const SECTIONS = [
   "about",
-  "experience",
-  "projects",
+  //"experience",
+  //"projects",
   "skills",
   "certifications",
   "education",
