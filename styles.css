@@ -348,97 +348,44 @@ h1, h2, h3,
   max-width: var(--max);
   margin: 0 auto;
   padding: 2rem 1.5rem;
-  text-align: left;
   /* Full viewport height, pulled up under the transparent sticky header, so
      the content centres in the whole screen rather than the area below it. */
   min-height: 100vh;
   min-height: 100svh;
   margin-top: calc(-1 * var(--header-h, 72px));
-  display: grid;
-  grid-template-columns: minmax(0, 500px) 1fr;
-  grid-template-areas: "visual right";
-  align-items: center;
-  /* Packs row tracks tightly (spacing comes only from row-gap/margins) and
-     centers that group vertically within the tall min-height box — without
-     this, auto-sized rows stretch across the leftover space instead. Mostly
-     matters once mobile stacks into 3 rows; harmless as a single row too. */
-  align-content: center;
-  justify-content: center;
-  column-gap: clamp(1rem, 4vw, 3.5rem);
-}
-.hero-visual { grid-area: visual; min-width: 0; }
-.hero-arm {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-/* Real-HTML hint for the arm's click interaction (canvas-drawn text is
-   invisible to assistive tech). Hidden under reduced motion, where the arm
-   renders a single static frame and clicking does nothing. */
-.hero-arm-hint {
-  margin: 0.15rem 0 0;
-  text-align: right;
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 0.72rem;
-  color: var(--muted);
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-arm-hint { display: none; }
-}
-.hero-right {
-  grid-area: right;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center; /* centers hero-right as a block, whichever mode it's in */
+  justify-content: center;
 }
-/* PROFILE.photo is set: name/about (left) + photo (right), same idea as the
-   arm|text split — the photo takes over that "visual" role. */
-.hero-right.has-photo {
-  flex-direction: row;
+.hero-right {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 2rem;
-}
-.hero-right.has-photo .hero-text { flex: 1 1 auto; min-width: 0; }
-.hero-text { max-width: 600px; }
-.hero-text .subtitle { margin-left: 0; }
-/* SETTINGS.heroArm = false (data.js): main.js removes .hero-visual and adds
-   this class instead of leaving the arm's grid column reserved-but-empty
-   (that empty 500px column was what pushed hero-right over to the right
-   with a dead gap on the left). hero-right fills the full row either way —
-   whether it then CENTERS depends on .hero-centered below, since a photo
-   should still get the left-aligned treatment even with the arm off. */
-.hero.hero-no-visual {
-  grid-template-columns: 1fr;
-  grid-template-areas: "right";
-}
-.hero.hero-no-visual .hero-right { grid-area: right; }
-/* Only when there's ALSO no photo to anchor a left-aligned layout against —
-   same treatment the mobile breakpoint below uses for its stacked layout. */
-.hero.hero-centered {
-  justify-items: center;
   text-align: center;
 }
-.hero.hero-centered .hero-right { align-items: center; }
-.hero.hero-centered .hero-text .subtitle { margin-left: auto; margin-right: auto; }
-/* Tablets: keep the two columns but let the arm shrink before the text wraps badly. */
-@media (max-width: 1180px) {
-  .hero { grid-template-columns: minmax(0, min(44vw, 460px)) 1fr; }
+.hero-text { max-width: 600px; }
+.hero-text .subtitle { margin: 0 auto; }
+/* PROFILE.photo is set: name/about on the left, photo on the right — a
+   contained, centered composition (max-width, not the full hero width)
+   rather than a row stretched edge-to-edge. */
+.hero-right.has-photo {
+  flex-direction: row;
+  align-items: stretch; /* photo's height matches the text column's height */
+  text-align: left;
+  max-width: 900px;
+  gap: 2.5rem;
 }
-/* Below ~1000px the columns get cramped — stack: name, then arm. */
-@media (max-width: 1000px) {
-  .hero {
-    grid-template-columns: 1fr;
-    grid-template-areas: "text" "visual";
-    justify-items: center;
-    row-gap: 2rem;
+.hero-right.has-photo .hero-text { flex: 1 1 auto; min-width: 0; max-width: none; }
+.hero-right.has-photo .hero-text .subtitle { margin: 0; }
+/* Below ~700px a text+photo row gets cramped — stack the photo under the text. */
+@media (max-width: 700px) {
+  .hero-right.has-photo {
+    flex-direction: column;
+    align-items: center;
     text-align: center;
   }
-  .hero-right { grid-area: text; }
-  .hero-visual { width: min(72vw, 340px); }
-  .hero-text .subtitle { margin-left: auto; margin-bottom: 0; }
-  /* A photo next to the name gets cramped once the hero itself has already
-     stacked to a single column — stack the photo below the text too. */
-  .hero-right.has-photo { flex-direction: column; align-items: center; }
+  .hero-right.has-photo .hero-about-photo { width: 200px; height: 200px; }
 }
 /* Short viewports (landscape phones, small laptops with the window snapped):
    don't force a full-screen hero — let it size to its content. */
@@ -564,8 +511,12 @@ h1, h2, h3,
 }
 .hero-about-photo {
   flex: 0 0 auto;
-  width: 220px;
-  height: 220px;
+  width: 260px;
+  /* Stretches to match the text column's height (align-items:stretch on
+     .hero-right.has-photo) instead of a fixed square, so its top and
+     bottom line up with the text's top and bottom. */
+  height: auto;
+  align-self: stretch;
   object-fit: cover;
   border-radius: var(--radius);
   border: 1px solid var(--border);

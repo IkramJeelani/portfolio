@@ -3,9 +3,7 @@
 My personal portfolio: **[ikramjeelani.github.io/portfolio](https://ikramjeelani.github.io/portfolio/)**
 
 Mechatronics engineering student — projects, experience, skills, certifications,
-and education, with an interactive canvas robotic arm on the landing page
-(3-link IK solver with servo-style PD control, joint limits, and an autonomous
-pick-and-place demo).
+and education.
 
 Built with plain HTML, CSS, and JavaScript — no framework, no build step —
 deployed straight to GitHub Pages.
