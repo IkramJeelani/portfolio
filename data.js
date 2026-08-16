@@ -22,7 +22,7 @@ const PROFILE = {
   // Shown beside the About text under your name. Put the file in assets/,
   // e.g. "assets/me.jpg". "" (or false) = no photo — About is then centered
   // instead of split into a left text / right photo layout.
-  photo: "",
+  photo: "assets/my_image.jpeg",
 };
 
 /* ---------- 1b. RESUME / CV ----------
