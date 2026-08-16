@@ -20,6 +20,26 @@
     if (hero) hero.classList.add("hero-solo");
   }
 
+  // About: lives in the hero under the name, not as its own section. Text on
+  // the left + PROFILE.photo on the right, or centered if there's no photo.
+  // Stays hidden (its "hidden" attribute in index.html) if ABOUT is empty.
+  (function setupHeroAbout() {
+    const block = document.getElementById("heroAbout");
+    const text = (window.ABOUT || "").trim();
+    if (!block || !text) return;
+    block.querySelector(".hero-about-text").innerHTML = window.ABOUT;
+    const photo = ((window.PROFILE || {}).photo || "").trim();
+    const img = block.querySelector(".hero-about-photo");
+    if (photo) {
+      img.src = photo;
+      img.alt = (window.PROFILE || {}).name ? `${window.PROFILE.name} — photo` : "";
+    } else {
+      img.remove();
+      block.classList.add("no-photo");
+    }
+    block.hidden = false;
+  })();
+
   /* Run `cb` whenever the display's pixel density changes — e.g. the window is
      dragged to a second monitor with a different scale factor. HTML/CSS/SVG
      re-rasterize themselves; <canvas> does not, so anything canvas-backed has
@@ -54,12 +74,6 @@
   /* ---------- Section builders ----------
      Each returns null when empty (so the section is hidden), or an object:
      { title, html, cls?, mount? }. */
-
-  function buildAbout() {
-    const text = (window.ABOUT || "").trim();
-    if (!text) return null;
-    return { title: "About", cls: "about", html: `<p class="about-text reveal">${window.ABOUT}</p>` };
-  }
 
   function buildExperience() {
     const list = window.EXPERIENCE || [];
@@ -227,7 +241,6 @@
   }
 
   const BUILDERS = {
-    about: buildAbout,
     experience: buildExperience,
     projects: buildProjects,
     skills: buildSkills,

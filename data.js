@@ -10,7 +10,7 @@
             false -> the hero shows just the name/text, centered, no arm */
 const SETTINGS = {
   theme: "light",
-  heroArm: true,
+  heroArm: false,
 };
 
 /* ---------- 1. YOU ---------- */
@@ -19,6 +19,10 @@ const PROFILE = {
   initials: "IJ", // shown top-left AND as the browser-tab icon (kept in sync)
   role: "Mechatronic Engineering Student",
   bio: "",
+  // Shown beside the About text under your name. Put the file in assets/,
+  // e.g. "assets/me.jpg". "" (or false) = no photo — About is then centered
+  // instead of split into a left text / right photo layout.
+  photo: "",
 };
 
 /* ---------- 1b. RESUME / CV ----------
@@ -46,11 +50,12 @@ const RESUME = {
      • A section also hides automatically if it has no content yet, so you can
        leave a line here and it simply won't appear until you fill that section.
 
-   Valid keys: "about", "experience", "projects", "skills",
+   Valid keys: "experience", "projects", "skills",
                "certifications", "education", "contact"
+   (About isn't listed here — it's shown in the hero, under your name, not
+   as its own section; see ABOUT + PROFILE.photo below.)
    ============================================================================ */
 const SECTIONS = [
-  "about",
   //"experience",
   //"projects",
   "skills",
@@ -60,8 +65,10 @@ const SECTIONS = [
 ];
 
 /* ---------- 2. ABOUT ----------
-   A short intro paragraph shown near the top. Plain text (you may use simple
-   HTML like <strong>…</strong> if you want). */
+   Shown in the hero, right under your name — text on the left, PROFILE.photo
+   on the right (or centered if you haven't set a photo). Plain text (you may
+   use simple HTML like <strong>…</strong> if you want). Leave it "" to hide
+   this block entirely. */
 const ABOUT =
   "I started engineering for the freedom it offers. With enough " +
   "knowledge, you're limited only by your own imagination. That pursuit of " +

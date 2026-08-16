@@ -534,17 +534,35 @@ h1, h2, h3,
   scroll-margin-top: 72px; /* header is ~60px tall; +12px breathing room on anchor jumps */
 }
 
-/* ===== About ===== */
-.about-text {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 1.5rem 1.75rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+/* ===== About (in the hero, under the name) ===== */
+.hero-about {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
   text-align: left;
-  color: var(--text);
-  font-size: 1.15rem;
+}
+.hero-about-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  color: var(--text-body);
+  font-size: 1rem;
+}
+.hero-about-photo {
+  flex: 0 0 auto;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+/* No PROFILE.photo set: centered block instead of the left-text/right-photo split. */
+.hero-about.no-photo {
+  justify-content: center;
+  text-align: center;
 }
 
 /* ===== Experience: timeline laid out exactly like Education ===== */
