@@ -393,6 +393,18 @@ h1, h2, h3,
 }
 .hero-text { max-width: 600px; }
 .hero-text .subtitle { margin-left: 0; }
+/* SETTINGS.heroArm = false (data.js): main.js removes .hero-visual and adds
+   this class instead of leaving an empty grid slot where the arm would sit —
+   single centered column, same treatment the mobile breakpoint below uses
+   for the stacked layout, just without ever having a visual to stack. */
+.hero.hero-solo {
+  grid-template-columns: 1fr;
+  grid-template-areas: "right";
+  justify-items: center;
+  text-align: center;
+}
+.hero.hero-solo .hero-right { grid-area: right; align-items: center; }
+.hero.hero-solo .hero-text .subtitle { margin-left: auto; margin-right: auto; }
 /* Tablets: keep the two columns but let the arm shrink before the text wraps badly. */
 @media (max-width: 1180px) {
   .hero { grid-template-columns: minmax(0, min(44vw, 460px)) 1fr; }

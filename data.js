@@ -4,10 +4,13 @@
    ============================================================= */
 
 /* ---------- 0. DEFAULTS ----------
-   What a first-time visitor sees (they can still toggle it from the nav bar).
-   theme: "dark" or "light" */
+   What a first-time visitor sees (they can still toggle the theme from the nav bar).
+   theme:   "dark" or "light"
+   heroArm: true  -> the hero shows the interactive canvas robotic arm
+            false -> the hero shows just the name/text, centered, no arm */
 const SETTINGS = {
   theme: "light",
+  heroArm: true,
 };
 
 /* ---------- 1. YOU ---------- */

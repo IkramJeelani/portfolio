@@ -9,6 +9,16 @@
   const reduced =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // SETTINGS.heroArm (data.js): when off, drop the canvas entirely rather
+  // than leaving an empty grid slot where it would sit — the hero collapses
+  // to a single centered column instead. setupHeroArm() below already no-ops
+  // if it can't find the canvas, so removing it here is the only change needed.
+  if ((window.SETTINGS || {}).heroArm === false) {
+    const heroVisual = document.querySelector(".hero-visual");
+    if (heroVisual) heroVisual.remove();
+    const hero = document.querySelector(".hero");
+    if (hero) hero.classList.add("hero-solo");
+  }
 
   /* Run `cb` whenever the display's pixel density changes — e.g. the window is
      dragged to a second monitor with a different scale factor. HTML/CSS/SVG
