@@ -391,6 +391,14 @@ h1, h2, h3,
   flex-direction: column;
   align-items: flex-start;
 }
+/* PROFILE.photo is set: name/about (left) + photo (right), same idea as the
+   arm|text split — the photo takes over that "visual" role. */
+.hero-right.has-photo {
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+}
+.hero-right.has-photo .hero-text { flex: 1 1 auto; min-width: 0; }
 .hero-text { max-width: 600px; }
 .hero-text .subtitle { margin-left: 0; }
 /* SETTINGS.heroArm = false (data.js): main.js removes .hero-visual and adds
@@ -421,6 +429,9 @@ h1, h2, h3,
   .hero-right { grid-area: text; }
   .hero-visual { width: min(72vw, 340px); }
   .hero-text .subtitle { margin-left: auto; margin-bottom: 0; }
+  /* A photo next to the name gets cramped once the hero itself has already
+     stacked to a single column — stack the photo below the text too. */
+  .hero-right.has-photo { flex-direction: column; align-items: center; }
 }
 /* Short viewports (landscape phones, small laptops with the window snapped):
    don't force a full-screen hero — let it size to its content. */
@@ -535,34 +546,22 @@ h1, h2, h3,
 }
 
 /* ===== About (in the hero, under the name) ===== */
-.hero-about {
-  width: 100%;
-  max-width: 600px;
-  margin-top: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  text-align: left;
-}
+/* Always left-justified, even when .hero-solo centers everything else in
+   the hero as a block — an explicit value here beats the inherited
+   text-align:center regardless of ancestor rules. */
 .hero-about-text {
-  flex: 1 1 auto;
-  min-width: 0;
-  margin: 0;
+  margin: 1rem 0 0;
   color: var(--text-body);
   font-size: 1rem;
+  text-align: left;
 }
 .hero-about-photo {
   flex: 0 0 auto;
-  width: 150px;
-  height: 150px;
+  width: 220px;
+  height: 220px;
   object-fit: cover;
   border-radius: var(--radius);
   border: 1px solid var(--border);
-}
-/* No PROFILE.photo set: centered block instead of the left-text/right-photo split. */
-.hero-about.no-photo {
-  justify-content: center;
-  text-align: center;
 }
 
 /* ===== Experience: timeline laid out exactly like Education ===== */

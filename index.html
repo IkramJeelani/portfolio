@@ -91,13 +91,11 @@
           <p class="eyebrow intro-item" style="--intro-delay:200ms" data-role>Engineering Portfolio</p>
           <h1 class="hero-name" data-name>Ikram Jeelani</h1>
           <p class="subtitle intro-item" style="--intro-delay:900ms" data-bio></p>
+          <!-- Filled in by main.js from ABOUT in data.js; stays hidden if empty. -->
+          <p class="hero-about-text intro-item" style="--intro-delay:1000ms" id="heroAboutText" hidden></p>
         </div>
-        <!-- Filled in by main.js from ABOUT/PROFILE.photo in data.js; stays
-             hidden if ABOUT is empty. -->
-        <div class="hero-about intro-item" style="--intro-delay:1000ms" id="heroAbout" hidden>
-          <p class="hero-about-text"></p>
-          <img class="hero-about-photo" alt="">
-        </div>
+        <!-- Filled in by main.js from PROFILE.photo; stays hidden if unset. -->
+        <img class="hero-about-photo intro-item" style="--intro-delay:1000ms" id="heroAboutPhoto" alt="" hidden>
       </div>
     </section>
   </main>

@@ -9,36 +9,40 @@
   const reduced =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // SETTINGS.heroArm (data.js): when off, drop the canvas entirely rather
-  // than leaving an empty grid slot where it would sit — the hero collapses
-  // to a single centered column instead. setupHeroArm() below already no-ops
-  // if it can't find the canvas, so removing it here is the only change needed.
-  if ((window.SETTINGS || {}).heroArm === false) {
+  // SETTINGS.heroArm / PROFILE.photo (data.js) together decide the hero's
+  // right-side layout:
+  //  - arm on: canvas stays, hero-right is unchanged (just the text column).
+  //  - arm off + a photo set: hero-right splits into name/about (left) and
+  //    the photo (right) — the photo takes over the arm's "visual" role.
+  //  - arm off + no photo: hero-right centers as a single column (the about
+  //    paragraph itself still stays left-justified within that block — see
+  //    .hero-about-text in styles.css).
+  const heroArmOn = (window.SETTINGS || {}).heroArm !== false;
+  const photo = ((window.PROFILE || {}).photo || "").trim();
+  const hero = document.querySelector(".hero");
+  if (!heroArmOn) {
     const heroVisual = document.querySelector(".hero-visual");
     if (heroVisual) heroVisual.remove();
-    const hero = document.querySelector(".hero");
-    if (hero) hero.classList.add("hero-solo");
+  }
+  if (!heroArmOn && !photo && hero) hero.classList.add("hero-solo");
+
+  // About text under the name — auto-hides (stays "hidden") if ABOUT is empty.
+  const aboutText = (window.ABOUT || "").trim();
+  const aboutEl = document.getElementById("heroAboutText");
+  if (aboutEl && aboutText) {
+    aboutEl.innerHTML = window.ABOUT;
+    aboutEl.hidden = false;
   }
 
-  // About: lives in the hero under the name, not as its own section. Text on
-  // the left + PROFILE.photo on the right, or centered if there's no photo.
-  // Stays hidden (its "hidden" attribute in index.html) if ABOUT is empty.
-  (function setupHeroAbout() {
-    const block = document.getElementById("heroAbout");
-    const text = (window.ABOUT || "").trim();
-    if (!block || !text) return;
-    block.querySelector(".hero-about-text").innerHTML = window.ABOUT;
-    const photo = ((window.PROFILE || {}).photo || "").trim();
-    const img = block.querySelector(".hero-about-photo");
-    if (photo) {
-      img.src = photo;
-      img.alt = (window.PROFILE || {}).name ? `${window.PROFILE.name} — photo` : "";
-    } else {
-      img.remove();
-      block.classList.add("no-photo");
-    }
-    block.hidden = false;
-  })();
+  // Photo beside the name/about — auto-hides if PROFILE.photo is unset.
+  const photoEl = document.getElementById("heroAboutPhoto");
+  if (photoEl && photo) {
+    photoEl.src = photo;
+    photoEl.alt = (window.PROFILE || {}).name ? `${window.PROFILE.name} — photo` : "";
+    photoEl.hidden = false;
+    const heroRight = hero && hero.querySelector(".hero-right");
+    if (heroRight) heroRight.classList.add("has-photo");
+  }
 
   /* Run `cb` whenever the display's pixel density changes — e.g. the window is
      dragged to a second monitor with a different scale factor. HTML/CSS/SVG
