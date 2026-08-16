@@ -144,8 +144,12 @@ const SKILLS = [
 
 /* ---------- 5. CERTIFICATIONS ----------
    Shown as a responsive card grid.
-   `logo` (optional): an issuer/company logo shown on the card (no certificate scan
-       is displayed). Put the file in assets/, e.g. "assets/siemens.png". "" = none.
+   `logo`    (optional): an issuer/company logo shown on the card. Put the file in
+       assets/, e.g. "assets/siemens.png". "" = none.
+   `preview` (optional): an image of the certificate itself, shown across the top of
+       the card like a project thumbnail. "" = card just shows the logo/name/date, no
+       preview strip. A screenshot of the credential's first page works well — put it
+       in assets/, e.g. "assets/Certifications/previews/cswa.jpg".
    `url`  (optional): link to the credential PDF. "" = none.
    `hasPdf` (boolean): set true if you have the credential PDF (in `url`). When true,
        a small open-in icon shows in the card's top-right corner, the card is
@@ -158,6 +162,7 @@ const CERTIFICATIONS = [
     issuer: "Siemens",
     date: "Sep 2024",
     logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/siemens.png"
+    preview: "assets/Certifications/previews/SMSCP-Assistant.jpg",
     url: "assets/Certifications/SMSCP-Assistant.pdf",
     hasPdf: true,
   },
@@ -166,6 +171,7 @@ const CERTIFICATIONS = [
     issuer: "Altium",
     date: "Nov 2025",
     logo: "assets/Logos/altium_logo.jpg",
+    preview: "assets/Certifications/previews/Altium Education - PCB Basic Design Course.jpg",
     url: "assets/Certifications/Altium Education - PCB Basic Design Course.pdf",
     hasPdf: true,
   },
@@ -174,6 +180,7 @@ const CERTIFICATIONS = [
     issuer: "Dassault Systèmes",
     date: "May 2026",
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
+    preview: "assets/Certifications/previews/CSWA.jpg",
     url: "assets/Certifications/CSWA.pdf",
     hasPdf: true,
   },
@@ -182,6 +189,7 @@ const CERTIFICATIONS = [
     issuer: "Dassault Systèmes",
     date: "Jun 2026",
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
+    preview: "assets/Certifications/previews/CSWP.jpg",
     url: "assets/Certifications/CSWP.pdf",
     hasPdf: true,
   },
@@ -190,6 +198,7 @@ const CERTIFICATIONS = [
     issuer: "Dassault Systèmes",
     date: "Jun 2026",
     logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
+    preview: "assets/Certifications/previews/CSWA_AM.jpg",
     url: "assets/Certifications/CSWA_AM.pdf",
     hasPdf: true,
   },
@@ -198,6 +207,7 @@ const CERTIFICATIONS = [
     issuer: "MathWorks",
     date: "Jul 2026",
     logo: "assets/Logos/MathWorks_logo.jpg",
+    preview: "assets/Certifications/previews/MATLAB Onramp.jpg",
     url: "assets/Certifications/MATLAB Onramp.pdf",
     hasPdf: true,
   },
@@ -206,6 +216,7 @@ const CERTIFICATIONS = [
     issuer: "MathWorks",
     date: "Jul 2026",
     logo: "assets/Logos/MathWorks_logo.jpg",
+    preview: "assets/Certifications/previews/Simulink Onramp.jpg",
     url: "assets/Certifications/Simulink Onramp.pdf",
     hasPdf: true,
   },
@@ -214,6 +225,7 @@ const CERTIFICATIONS = [
     issuer: "MathWorks",
     date: "Jul 2026",
     logo: "assets/Logos/MathWorks_logo.jpg",
+    preview: "assets/Certifications/previews/Control Design Onramp with Simulink.jpg",
     url: "assets/Certifications/Control Design Onramp with Simulink.pdf",
     hasPdf: true,
   },
@@ -222,6 +234,7 @@ const CERTIFICATIONS = [
     issuer: "MathWorks",
     date: "Jul 2026",
     logo: "assets/Logos/MathWorks_logo.jpg",
+    preview: "assets/Certifications/previews/Simscape Onramp.jpg",
     url: "assets/Certifications/Simscape Onramp.pdf",
     hasPdf: true,
   },
@@ -230,6 +243,7 @@ const CERTIFICATIONS = [
     issuer: "MathWorks",
     date: "Jul 2026",
     logo: "assets/Logos/MathWorks_logo.jpg",
+    preview: "assets/Certifications/previews/Multibody Simulation Onramp.jpg",
     url: "assets/Certifications/Multibody Simulation Onramp.pdf",
     hasPdf: true,
   },

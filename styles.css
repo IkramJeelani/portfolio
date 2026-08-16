@@ -683,25 +683,41 @@ h1, h2, h3,
 }
 
 /* ===== Certifications: same card as projects, in the grid ===== */
+/* Preview image on top (optional, like a project card's thumbnail), then
+   .cert-body below it — the original text-left/logo-right row, unchanged. */
+.cert-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden; /* clips the preview image to the card's rounded top corners */
+  box-shadow: var(--shadow);
+  transition: transform 0.25s ease, border-color 0.2s, box-shadow 0.25s ease;
+  transform-style: preserve-3d;
+}
+a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
+/* c.preview in data.js — a screenshot of the credential's first page. */
+.cert-preview {
+  height: 160px;
+  background-size: cover;
+  background-position: top center; /* most certs' header/logo is what identifies them at a glance */
+  background-color: var(--bg-soft);
+  flex: 0 0 auto;
+}
 /* Two columns: text left, logo right. Putting the logo beside the text
    instead of above it drops its whole row out of the card's height.
-   align-items:stretch (not flex-start) so .cert-text fills the card height
-   and its margin-top:auto can still pin the date to the bottom. */
-.cert-card {
+   align-items:stretch (not flex-start) so .cert-text fills the row's
+   height and its margin-top:auto can still pin the date to the bottom. */
+.cert-body {
   position: relative;
   display: flex;
   flex-direction: row;
   align-items: stretch;
   gap: 0.5rem;
   padding: 0.65rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  transition: transform 0.25s ease, border-color 0.2s, box-shadow 0.25s ease;
-  transform-style: preserve-3d;
+  flex: 1 1 auto;
 }
-a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 .cert-text {
   min-width: 0; /* lets the text column shrink beside the logo instead of overflowing */
   flex: 1 1 auto;
@@ -1760,6 +1776,9 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   opacity: 0.72;
   transition: opacity 0.2s, border-color 0.2s, background 0.2s;
 }
+/* Keeps the dock a compact scrollable list — the grid's preview image would
+   roughly triple each row's height here. */
+.cert-dock .cert-preview { display: none; }
 .cert-dock a.cert-card:hover {
   opacity: 1;
   transform: none;

@@ -162,12 +162,20 @@
         const openIcon = hasCred
           ? `<span class="cert-open" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span>`
           : "";
+        // Preview image of the certificate itself across the top of the card,
+        // same idea as a project card's thumbnail — optional, same as logo.
+        const preview = c.preview
+          ? `<div class="cert-preview" style="background-image:url('${c.preview}')"></div>`
+          : "";
         const inner = `
-          ${logo}
-          ${openIcon}
-          <div class="cert-text">
-            <span class="cert-name">${c.name || ""}</span>
-            ${meta ? `<span class="cert-meta">${meta}</span>` : ""}
+          ${preview}
+          <div class="cert-body">
+            ${logo}
+            ${openIcon}
+            <div class="cert-text">
+              <span class="cert-name">${c.name || ""}</span>
+              ${meta ? `<span class="cert-meta">${meta}</span>` : ""}
+            </div>
           </div>`;
         const embed = toEmbed(c.url);
         const pdfAttr = embed ? ` data-pdf="${embed}"` : "";
@@ -677,10 +685,13 @@
       Array.from(dock.children).forEach((clone, i) => {
         // Copy the original's ACTUAL rendered width, not the CSS basis: the
         // grid flexes its cards a few px narrower than 275, and at this size a
-        // few px is the difference between a 3- and 4-line title. Height is
-        // re-synced too because the equalizer re-runs on resize.
+        // few px is the difference between a 3- and 4-line title.
+        // minHeight is NOT copied (unlike width) — the grid's equalized
+        // height includes the .cert-preview strip, which the dock hides
+        // (.cert-dock .cert-preview), so reusing it here would leave a dead
+        // gap under each row's text instead. The clone sizes to its own
+        // (preview-less) content instead.
         if (originals[i]) {
-          clone.style.minHeight = originals[i].style.minHeight;
           clone.style.width = originals[i].getBoundingClientRect().width + "px";
         }
         const isCurrent = clone.getAttribute("data-pdf") === activeSrc;
