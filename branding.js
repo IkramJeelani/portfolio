@@ -27,21 +27,18 @@
   const buildFavicon = () => {
     const light = document.documentElement.getAttribute("data-theme") === "light";
     const bg = light ? "#f6f3ec" : "#14161c";
-    const g1 = light ? "#7c3aed" : "#a855f7";
-    const g2 = light ? "#be185d" : "#ec4899";
+    // B&W + one accent: solid fill (was a purple->pink gradient) to match
+    // the on-page logo, which is now solid too.
+    const fg = light ? "#6d28d9" : "#a855f7";
     const svg =
       "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>" +
-      "<defs><linearGradient id='g' x1='0%' y1='100%' x2='100%' y2='0%'>" +
-      "<stop offset='0%' stop-color='" + g1 + "'/>" +
-      "<stop offset='100%' stop-color='" + g2 + "'/>" +
-      "</linearGradient></defs>" +
       "<rect width='64' height='64' rx='14' fill='" + bg + "'/>" +
       // dominant-baseline="central" true-centers on font metrics instead of a
       // guessed y-offset — the old fixed baseline made the letters sit low
       // and look vertically squeezed at favicon size.
       "<text x='32' y='33' dominant-baseline='central' font-family='Segoe UI, Arial, sans-serif' font-size='" +
       fontSize +
-      "' font-weight='800' fill='url(#g)' text-anchor='middle'>" +
+      "' font-weight='800' fill='" + fg + "' text-anchor='middle'>" +
       initials +
       "</text></svg>";
 

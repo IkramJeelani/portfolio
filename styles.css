@@ -11,11 +11,15 @@
   --accent: #a855f7;
   --accent-hover: #c084fc;
   --accent-rgb: 168, 85, 247; /* #a855f7 as r,g,b — for rgba() glows/washes */
-  --grad: linear-gradient(120deg, #a855f7, #ec4899);
-  /* Deeper stops for gradients that carry white TEXT (buttons): white on
-     #a855f7/#ec4899 is only 3.5-4.0:1, below the 4.5:1 AA floor for the
-     small bold labels these buttons use. Decorative gradients keep --grad. */
-  --grad-btn: linear-gradient(120deg, #8b2fd6, #d61f74);
+  /* B&W + one accent: flat solid fills instead of the old purple->pink
+     gradient, so the palette reads as one hue, not two. Kept as --grad/
+     --grad-btn (not a rename) so every consumer — brand mark, hero name,
+     underlines, buttons — picks this up with zero changes on their end. */
+  --grad: var(--accent);
+  /* Plain --accent (#a855f7) is only 3.96:1 with white text, under the
+     4.5:1 AA floor for the bold button labels that sit on it — this deeper
+     stop (already used elsewhere in the old gradient) clears 6.04:1. */
+  --grad-btn: #8b2fd6;
   --font-display: "Sora", "Segoe UI", sans-serif;
   --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   /* Radius scale: xs for fine/text-level elements (inline code, PDF canvas),
@@ -47,17 +51,15 @@
   --accent: #6d28d9; /* deeper than dark mode's purple so small text clears AA on white */
   --accent-hover: #5b21b6;
   --accent-rgb: 109, 40, 217; /* #6d28d9 as r,g,b — for rgba() glows/washes */
-  --grad: linear-gradient(120deg, #7c3aed, #be185d);
-  --grad-btn: var(--grad); /* light stops are already deep enough for AA text */
+  --grad: var(--accent);
+  --grad-btn: var(--accent); /* 7.1:1 with white text, well clear of AA */
   --shadow: 0 14px 40px rgba(91, 33, 182, 0.12);
   --pattern: rgba(29,26,23,.05);
 }
-:root[data-theme="light"] .hero h1 {
-  background: linear-gradient(120deg, #1d1a17 10%, #7c3aed 55%, #be185d);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
+/* B&W + one accent: the name is the site's biggest piece of text, so it
+   stays plain --text — clean black/white typography — with the accent
+   reserved for smaller, purposeful spots (eyebrow, buttons, links, tags)
+   instead of colorizing the largest element on the page too. */
 :root[data-theme="light"] .project-content strong { color: #1d1a17; }
 
 * { box-sizing: border-box; }
@@ -446,10 +448,7 @@ h1, h2, h3,
   font-size: clamp(2.5rem, 7vw, 4.5rem);
   margin: 0 0 1rem;
   line-height: 1.05;
-  background: linear-gradient(120deg, #ffffff 10%, #c084fc 55%, #ec4899);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--text);
 }
 .subtitle {
   max-width: 600px;
