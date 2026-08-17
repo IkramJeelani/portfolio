@@ -715,7 +715,7 @@ a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
 .cert-preview {
   display: block;
   width: 100%;
-  height: 160px;
+  height: 190px;
   object-fit: contain;
   background: #fff;
   flex: 0 0 auto;
@@ -830,15 +830,12 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  /* 3 x 305px card + 2 x 1.5rem gap = 963px — max-width needs to clear that
+  /* 3 x 340px card + 2 x 1.5rem gap = 1068px — max-width needs to clear that
      or flex-shrink starts squeezing the 3rd card off the row. */
-  max-width: 970px;
+  max-width: 1080px;
   margin: 0 auto;
 }
-/* A slight bump from the original 275px, not the full 300px tried earlier —
-   still comfortably clear of the text-wrap cliff described above (a wider
-   card only gives the title column MORE room, not less). */
-.certifications .cert-card { flex: 0 1 305px; }
+.certifications .cert-card { flex: 0 1 340px; }
 
 /* ===== Education: one-sided timeline (dates left · line · logo-on-top cards) ===== */
 .edu-timeline {
