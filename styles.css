@@ -824,6 +824,10 @@ a.cert-card:hover .cert-open,
 a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1px); }
 .cert-static { cursor: default; }
 
+/* The section's own max-width (var(--max), 1100px) only leaves 1052px of
+   content width after its padding — less than the 1068px 3 cards + gaps
+   need, which was silently wrapping the 3rd card to a new row. */
+.section.certifications { max-width: 1150px; }
 /* Certifications grid: centred so partial rows are symmetric about the centre.
    Caps at 3 per row; e.g. 5 cards => 3 on top, 2 centred below. */
 .certifications .card-grid {
