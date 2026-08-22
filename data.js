@@ -54,7 +54,7 @@ const RESUME = {
    ============================================================================ */
 const SECTIONS = [
   //"experience",
-  //"projects",
+  "projects",
   "skills",
   "certifications",
   "education",
@@ -451,6 +451,50 @@ const PROJECTS = [
       <div class="gallery">
         <img src="assets/project3.svg" alt="">
         <img src="assets/project1.svg" alt="">
+      </div>
+    `,
+  },
+  {
+    id: "motor-speed-controller",
+    title: "DC Motor Speed Controller (8051)",
+    image: "assets/Projects/motor-speed-controller/breadboard-1.jpg",
+    date: "Sep 25 - Dec 25",
+    tagline: "Closed-loop PWM fan-speed control on an 8051 microcontroller",
+    tech: ["C", "8051", "PWM", "Closed-Loop Control", "Timers/Interrupts"],
+    links: [
+      { label: "View Report", url: "assets/Projects/motor-speed-controller/report.pdf" },
+      { label: "View Code", url: "assets/Projects/motor-speed-controller/motor-speed-controller.c" },
+    ],
+    body: `
+      <p>A closed-loop speed controller for a DC fan, built from scratch on a bare 8051
+      microcontroller for my Digital Logic &amp; Microcontroller course. A 3-bit DIP switch
+      selects one of 8 target speeds (0-2400 RPM); the controller measures the fan's actual
+      speed from its tachometer output and drives a PWM signal to a MOSFET so the fan
+      converges on whatever speed was selected — with the live RPM readout on a
+      multiplexed 3-digit seven-segment display. Built as a 3-person team project.</p>
+
+      <h2>How it works</h2>
+      <figure>
+        <img src="assets/Projects/motor-speed-controller/circuit-diagram.jpg" alt="Schematic: 8051, DIP switch, three 7-segment displays, and the MOSFET PWM driver stage">
+        <figcaption>Full schematic — DIP switch input, 8051, multiplexed 7-segment displays, and the MOSFET gate-drive stage for the fan.</figcaption>
+      </figure>
+      <ul>
+        <li><strong>Speed selection:</strong> the DIP switch (P1.0-P1.2, active-low) indexes a lookup table mapping 8 levels to 0-100% target speed, linearly scaled to a 0-2400 RPM reference.</li>
+        <li><strong>Speed measurement:</strong> Timer1 free-runs as a 16-bit tick counter; each rising edge of the tachometer signal (P2.4) gives an instantaneous RPM from the tick delta, smoothed with a 3-sample moving average.</li>
+        <li><strong>Control loop:</strong> a proportional controller compares reference vs. measured RPM each time a new sample lands, with a deadband to stop hunting near the setpoint and a max step size per update to keep it from overshooting.</li>
+        <li><strong>PWM generation:</strong> Timer0 runs in interrupt mode, toggling the output pin (P2.3) and reloading its interval on every overflow — high and low times are computed from the current duty value, so the ISR itself <em>is</em> the PWM signal.</li>
+        <li><strong>Display:</strong> the measured RPM is split into three digits and multiplexed across three common-anode 7-segment displays via NPN transistor switches, refreshed once per main-loop pass.</li>
+      </ul>
+
+      <h2>Results</h2>
+      <p>The controller tracked every DIP-selected setpoint with a small, repeatable
+      steady-state error — e.g. commanding 2400 RPM (input <code>111</code>) settled around
+      2450 RPM. The main practical issues were tachometer signal jitter and steady-state
+      offset from the controller's limited gain resolution, both typical of a bang-bang-ish
+      proportional loop on 8-bit hardware with no derivative term.</p>
+      <div class="gallery">
+        <img src="assets/Projects/motor-speed-controller/breadboard-1.jpg" alt="Breadboard showing the display reading 186 RPM/10">
+        <img src="assets/Projects/motor-speed-controller/breadboard-2.jpg" alt="Breadboard showing the display reading 245 RPM/10">
       </div>
     `,
   },
