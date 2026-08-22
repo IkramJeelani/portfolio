@@ -112,11 +112,11 @@
       : "";
 
   page.innerHTML = `
-    <div class="project-hero" style="background-image:url('${project.image}')"></div>
     <h1>${project.title}</h1>
     <p class="project-tagline">${project.tagline || ""}</p>
     ${project.date ? `<p class="project-date">${project.date}</p>` : ""}
     <div class="tags">${techHtml}</div>
+    <div class="project-hero" style="background-image:url('${project.image}')"></div>
     <div class="project-content">${bodyHtml}</div>
     <div class="project-links">${linksHtml}</div>
     ${pagerHtml}`;
