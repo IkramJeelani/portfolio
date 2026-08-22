@@ -285,6 +285,12 @@ const EDUCATION = [
 
    Each project has two parts:
    • CARD/HEADER fields:  id, title, image, date, tagline, tech, links, share
+        (id is OPTIONAL — leave it out and it's generated from title
+         automatically, lowercased with dashes instead of spaces, e.g.
+         "My Cool Project" -> "my-cool-project". This is also the project's
+         URL (project.html?id=...), so only set id by hand if you want that
+         URL to stay fixed even after you reword the title later — otherwise
+         a title edit changes the URL, which breaks any link/bookmark to it.)
         (date is a free-text string, e.g. "Jan 24 - May 24" — omit it to hide it)
         (share: true/false — not tied to anything on the site yet, just a
          plain per-project flag for your own reference/future use.)
@@ -332,148 +338,24 @@ const EDUCATION = [
 
    ADD a project:    copy a whole { ... } block and edit it.
    REMOVE a project:  delete its { ... } block.
-   Each project needs a unique `id` (used in the URL, no spaces).
+   Each project needs a unique `title` (its `id` — and URL — come from that,
+   see above, unless you set an explicit `id`).
    ============================================================================ */
 const PROJECTS = [
   {
-    id: "smart-thermostat",
-    title: "Smart Thermostat Controller",
-    image: "assets/project1.svg",
-    date: "Jan 24 - May 24",
-    tagline: "Embedded firmware for an energy-aware HVAC system",
-    tech: ["C", "STM32", "FreeRTOS", "PID Control"],
-    links: [
-      {
-        label: "View Code",
-        url: "https://github.com/IkramJeelani/smart-thermostat",
-      },
-    ],
-    share: true,
-    // ↓↓↓ This is your free-form "Notion-like" page. Edit it however you like. ↓↓↓
-    body: `
-      <p>A low-power thermostat that learns occupancy patterns and reduces energy
-      use by up to <strong>20%</strong>. This page shows the building blocks you can
-      use — replace it all with your own content.</p>
-
-      <div class="callout">
-        Tip: drop your real photos into the <code>assets/</code> folder and point the
-        <code>src</code> at them, e.g. <code>assets/thermostat.jpg</code>.
-      </div>
-
-      <h2>The hardware</h2>
-      <figure>
-        <img src="assets/project1.svg" alt="Thermostat prototype">
-        <figcaption>Replace this with a photo of your build.</figcaption>
-      </figure>
-
-      <h2>How it works</h2>
-      <p>Designed the firmware on an STM32 microcontroller running FreeRTOS, with a
-      PID control loop for precise temperature regulation.</p>
-      <ul>
-        <li>Scheduling engine that adapts to household routines</li>
-        <li>Wi-Fi module for remote control and OTA firmware updates</li>
-        <li>Aggressive low-power modes to minimise standby draw</li>
-      </ul>
-
-      <h2>Demo</h2>
-      <div class="video">
-        <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Demo" allowfullscreen></iframe>
-      </div>
-
-      <h2>Results</h2>
-      <div class="two-col">
-        <div>
-          <h3>Before</h3>
-          <p>Manual schedule, ~15% wasted heating overnight.</p>
-        </div>
-        <div>
-          <h3>After</h3>
-          <p>Learned schedule cut overnight waste to near zero.</p>
-        </div>
-      </div>
-
-      <blockquote>"The best project teaches you something you didn't expect." — me, probably.</blockquote>
-    `,
-  },
-  {
-    id: "bridge-sensor-net",
-    title: "Bridge Structural Sensor Network",
-    image: "assets/project2.svg",
-    date: "Jun 24 - Sep 24",
-    tagline: "Wireless strain monitoring for civil infrastructure",
-    tech: ["Python", "LoRa", "Raspberry Pi", "InfluxDB", "Grafana"],
-    links: [
-      {
-        label: "View Code",
-        url: "https://github.com/IkramJeelani/bridge-sensor-net",
-      },
-      { label: "Live Demo", url: "#" },
-    ],
-    share: true,
-    body: `
-      <p>A distributed sensor network that monitors structural strain on bridges and
-      flags anomalies in real time.</p>
-
-      <h2>Architecture</h2>
-      <ul>
-        <li>Mesh of LoRa-connected strain-gauge nodes</li>
-        <li>Raspberry Pi gateway running a Python ingestion pipeline</li>
-        <li>Time-series storage in InfluxDB, live dashboards in Grafana</li>
-      </ul>
-
-      <img src="assets/project2.svg" alt="System diagram">
-
-      <h2>Alerting</h2>
-      <p>Threshold-based alerts notify maintenance teams the moment readings exceed
-      safe limits.</p>
-    `,
-  },
-  {
-    id: "robotic-arm",
-    title: "6-DOF Robotic Arm",
-    image: "assets/project3.svg",
-    date: "Oct 24 - Dec 24",
-    tagline: "Inverse kinematics and motion planning from scratch",
-    tech: ["C++", "ROS", "OpenCV", "Arduino"],
-    links: [
-      {
-        label: "View Code",
-        url: "https://github.com/IkramJeelani/robotic-arm",
-      },
-    ],
-    share: true,
-    body: `
-      <p>A six-degree-of-freedom robotic arm capable of picking and placing objects
-      identified by a camera.</p>
-
-      <h2>What I built</h2>
-      <ul>
-        <li>Inverse-kinematics solver written in C++</li>
-        <li>Computer vision with OpenCV to detect and locate objects</li>
-        <li>ROS coordinating perception, planning, and Arduino motor control</li>
-      </ul>
-
-      <div class="gallery">
-        <img src="assets/project3.svg" alt="">
-        <img src="assets/project1.svg" alt="">
-      </div>
-    `,
-  },
-  {
-    id: "motor-speed-controller",
-    title: "DC Motor Speed Controller (8051)",
-    image: "assets/Projects/motor-speed-controller/breadboard-1.jpg",
+    title: "DC Fan Speed Controller using 8051",
+    image: "assets/Projects/fan-speed-controller/display.jpg",
     date: "Nov 25 - Dec 25",
     tagline: "Closed-loop PWM fan-speed control on an 8051 microcontroller",
     tech: ["8051", "PWM", "Closed-Loop Control", "C"],
     links: [
-      { label: "View Report", url: "assets/Projects/motor-speed-controller/report.pdf" },
-      { label: "View Code", url: "assets/Projects/motor-speed-controller/motor-speed-controller.c" },
+      { label: "View Report", url: "assets/Projects/fan-speed-controller/report.pdf" },
+      { label: "View Code", url: "assets/Projects/fan-speed-controller/fan-speed-controller.c" },
     ],
     share: true,
     body: `
-      <p>A closed-loop speed controller for a DC fan, built from scratch on a bare 8051
-      microcontroller for my Digital Logic &amp; Microcontroller course. A 3-bit DIP switch
+      <p>A closed-loop speed controller for a DC fan using an 8051 development board
+      for my Digital Logic &amp; Microcontroller (MSE 352) course. A 3-bit DIP switch
       selects one of 8 target speeds (0-2400 RPM); the controller measures the fan's actual
       speed from its tachometer output and drives a PWM signal to a MOSFET so the fan
       converges on whatever speed was selected — with the live RPM readout on a
@@ -481,7 +363,7 @@ const PROJECTS = [
 
       <h2>How it works</h2>
       <figure>
-        <img src="assets/Projects/motor-speed-controller/circuit-diagram.jpg" alt="Schematic: 8051, DIP switch, three 7-segment displays, and the MOSFET PWM driver stage">
+        <img src="assets/Projects/fan-speed-controller/circuit-diagram.jpg" alt="Schematic: 8051, DIP switch, three 7-segment displays, and the MOSFET PWM driver stage">
         <figcaption>Full schematic — DIP switch input, 8051, multiplexed 7-segment displays, and the MOSFET gate-drive stage for the fan.</figcaption>
       </figure>
       <ul>
@@ -499,8 +381,8 @@ const PROJECTS = [
       offset from the controller's limited gain resolution, both typical of a bang-bang-ish
       proportional loop on 8-bit hardware with no derivative term.</p>
       <div class="gallery">
-        <img src="assets/Projects/motor-speed-controller/breadboard-1.jpg" alt="Breadboard showing the display reading 186 RPM/10">
-        <img src="assets/Projects/motor-speed-controller/breadboard-2.jpg" alt="Breadboard showing the display reading 245 RPM/10">
+        <img src="assets/Projects/fan-speed-controller/breadboard-1.jpg" alt="Breadboard showing the display reading 186 RPM/10">
+        <img src="assets/Projects/fan-speed-controller/breadboard-2.jpg" alt="Breadboard showing the display reading 245 RPM/10">
       </div>
     `,
   },
@@ -517,6 +399,23 @@ const CONTACTS = [
 ];
 
 /* ---- (no need to edit below this line) ---- */
+
+// Fills in any project's missing `id` from its `title` — lowercased, with
+// runs of anything that isn't a letter/number collapsed to a single dash
+// (leading/trailing dashes trimmed). Runs before main.js/project.js, so
+// they only ever see the final id and don't need to know it was derived.
+(function fillProjectIds() {
+  const slugify = (s) =>
+    String(s)
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  (PROJECTS || []).forEach((p) => {
+    if (!p.id) p.id = slugify(p.title);
+  });
+})();
+
 window.SETTINGS = SETTINGS;
 window.SECTIONS = SECTIONS;
 window.PROFILE = PROFILE;
