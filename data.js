@@ -284,8 +284,10 @@ const EDUCATION = [
    6. PROJECTS
 
    Each project has two parts:
-   • CARD/HEADER fields:  id, title, image, date, tagline, tech, links
+   • CARD/HEADER fields:  id, title, image, date, tagline, tech, links, share
         (date is a free-text string, e.g. "Jan 24 - May 24" — omit it to hide it)
+        (share: true/false — not tied to anything on the site yet, just a
+         plain per-project flag for your own reference/future use.)
    • body:  the free-form "in-depth" content shown on the project page.
             Write whatever you want here using the building blocks below.
 
@@ -346,6 +348,7 @@ const PROJECTS = [
         url: "https://github.com/IkramJeelani/smart-thermostat",
       },
     ],
+    share: true,
     // ↓↓↓ This is your free-form "Notion-like" page. Edit it however you like. ↓↓↓
     body: `
       <p>A low-power thermostat that learns occupancy patterns and reduces energy
@@ -406,6 +409,7 @@ const PROJECTS = [
       },
       { label: "Live Demo", url: "#" },
     ],
+    share: true,
     body: `
       <p>A distributed sensor network that monitors structural strain on bridges and
       flags anomalies in real time.</p>
@@ -437,6 +441,7 @@ const PROJECTS = [
         url: "https://github.com/IkramJeelani/robotic-arm",
       },
     ],
+    share: true,
     body: `
       <p>A six-degree-of-freedom robotic arm capable of picking and placing objects
       identified by a camera.</p>
@@ -458,13 +463,14 @@ const PROJECTS = [
     id: "motor-speed-controller",
     title: "DC Motor Speed Controller (8051)",
     image: "assets/Projects/motor-speed-controller/breadboard-1.jpg",
-    date: "Sep 25 - Dec 25",
+    date: "Nov 25 - Dec 25",
     tagline: "Closed-loop PWM fan-speed control on an 8051 microcontroller",
-    tech: ["C", "8051", "PWM", "Closed-Loop Control", "Timers/Interrupts"],
+    tech: ["8051", "PWM", "Closed-Loop Control", "C"],
     links: [
       { label: "View Report", url: "assets/Projects/motor-speed-controller/report.pdf" },
       { label: "View Code", url: "assets/Projects/motor-speed-controller/motor-speed-controller.c" },
     ],
+    share: true,
     body: `
       <p>A closed-loop speed controller for a DC fan, built from scratch on a bare 8051
       microcontroller for my Digital Logic &amp; Microcontroller course. A 3-bit DIP switch

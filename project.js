@@ -52,8 +52,7 @@
   // Refine the sharing/SEO tags for this specific project so a shared project
   // link shows its own title, description and URL.
   (function updateMeta() {
-    const site = "https://ikramjeelani.github.io/portfolio/";
-    const url = site + "project.html?id=" + encodeURIComponent(project.id);
+    const url = "https://ikramjeelani.github.io/portfolio/project.html?id=" + encodeURIComponent(project.id);
     const desc =
       project.tagline || `An in-depth look at ${project.title} by ${(window.PROFILE || {}).name || ""}.`;
     // These tags all exist statically in project.html — just update them.
