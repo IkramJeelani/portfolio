@@ -1401,7 +1401,10 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 }
 
 .project-hero {
-  height: 320px;
+  /* Same 5:4 crop as the project card's .card-img, so the shared-element
+     morph between them doesn't change shape and the same image framing
+     carries over from card to detail page. */
+  aspect-ratio: 5 / 4;
   border-radius: var(--radius);
   background-size: cover;
   background-position: center;
@@ -1672,7 +1675,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   .subtitle { font-size: 1rem; }
   .project-content .two-col { grid-template-columns: 1fr; }
   .project-content img { max-width: 100%; }
-  .project-hero { height: 200px; }
   .project-page h1 { font-size: 1.9rem; }
   .project-page { padding: 2rem 1.25rem 3rem; }
   /* Full-width, easy-to-tap action buttons on phones */
