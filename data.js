@@ -350,7 +350,7 @@ const PROJECTS = [
     tech: ["8051", "PWM", "Closed-Loop Control", "C"],
     links: [
       { label: "View Report", url: "assets/Projects/fan-speed-controller/report.pdf" },
-      { label: "View Code", url: "assets/Projects/fan-speed-controller/fan-speed-controller.c" },
+      { label: "View Code", url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Projects/fan-speed-controller/fan-speed-controller.c" },
     ],
     share: true,
     body: `
