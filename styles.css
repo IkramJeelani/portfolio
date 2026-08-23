@@ -1622,6 +1622,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   margin: 1.8rem 0;
 }
 .project-content .gallery img { margin: 0; max-width: 100%; }
+.project-content .gallery figure { margin: 0; }
 
 /* Two columns side by side */
 .project-content .two-col {

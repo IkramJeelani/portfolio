@@ -398,8 +398,18 @@ const PROJECTS = [
       offset from the controller's limited gain resolution, both typical of a bang-bang-ish
       proportional loop on 8-bit hardware with no derivative term.</p>
       <div class="gallery">
-        <img src="assets/Projects/fan-speed-controller/breadboard-1.jpg" alt="Breadboard showing the display reading 186 RPM/10">
-        <img src="assets/Projects/fan-speed-controller/breadboard-2.jpg" alt="Breadboard showing the display reading 245 RPM/10">
+        <figure>
+          <img src="assets/Projects/fan-speed-controller/result-140.jpg" alt="Breadboard showing the display reading 140 RPM/10">
+          <figcaption>Input: 100, Desired Output: 144, Actual Output: 140</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/Projects/fan-speed-controller/result-186.jpg" alt="Breadboard showing the display reading 186 RPM/10">
+          <figcaption>Input: 101, Desired Output: 192, Actual Output: 186</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/Projects/fan-speed-controller/result-245.jpg" alt="Breadboard showing the display reading 245 RPM/10">
+          <figcaption>Input: 111, Desired Output: 240, Actual Output: 245</figcaption>
+        </figure>
       </div>
     `,
   },
