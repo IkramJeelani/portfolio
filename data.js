@@ -393,9 +393,11 @@ const PROJECTS = [
 
       <h2>Results</h2>
       <p>The controller tracked every DIP-selected setpoint with a small, repeatable
-      steady-state error. This happened for two reasons: the speed reading itself wasn't
-      perfectly steady, and the controller only used a P term (no I or D), so it could
-      get close to the target but not land on it exactly.</p>
+      steady-state error. This happened for two reasons:</p>
+      <ul>
+        <li>the speed reading from the tachometer wasn't perfectly steady</li>
+        <li>the controller only used a P term (no I or D), so it couldn't eliminate permanent steady-state errors or control overshoot and oscillations</li>
+      </ul>
       <div class="gallery">
         <figure>
           <img src="assets/Projects/fan-speed-controller/result-140.jpg" alt="Breadboard showing the display reading 140 RPM/10">
