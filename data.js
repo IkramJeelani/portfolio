@@ -340,8 +340,8 @@ const EDUCATION = [
        <div><h3>Right</h3><p>...</p></div>
      </div>
 
-   TIP: write the body between the backticks ` ... `. Just avoid typing a lone
-   backtick (`) or the characters ${ inside it, since those have special meaning.
+   TIP: in an inline `body` string (not a bodyFile), avoid typing a lone
+   backtick (`) or the characters ${ — they have special meaning there.
    ----------------------------------------------------------------------------
    ============================================================================ */
 const PROJECT_ORDER = ["dc-motor-speed-controller-using-8051-mcu"];
