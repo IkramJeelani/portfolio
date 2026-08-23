@@ -345,13 +345,13 @@ const PROJECTS = [
   {
     id: "dc-motor-speed-controller-using-8051-mcu",
     title: "DC Motor Speed Controller using 8051 MCU",
-    image: "assets/Projects/dc-motor-speed-controller/display.jpg",
+    image: "assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/display.jpg",
     date: "Nov 25 - Dec 25",
     tagline: "Closed-loop PWM fan-speed control on an 8051 microcontroller",
     tech: ["8051", "PWM", "Closed-Loop Control", "C"],
     links: [
-      { label: "View Report", url: "assets/Projects/dc-motor-speed-controller/report.pdf" },
-      { label: "View Code", url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Projects/dc-motor-speed-controller/dc-motor-speed-controller.c" },
+      { label: "View Report", url: "assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/report.pdf" },
+      { label: "View Code", url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/dc-motor-speed-controller.c" },
     ],
     share: true,
     body: `
@@ -364,7 +364,7 @@ const PROJECTS = [
 
       <h2>How it works</h2>
       <figure>
-        <img src="assets/Projects/dc-motor-speed-controller/schematic.jpg" alt="Schematic: 8051, DIP switch, three 7-segment displays, and the MOSFET PWM driver stage">
+        <img src="assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/schematic.jpg" alt="Schematic: 8051, DIP switch, three 7-segment displays, and the MOSFET PWM driver stage">
         <figcaption>Full schematic — DIP switch input, 8051, multiplexed 7-segment displays, and the MOSFET gate-drive stage for the fan.</figcaption>
       </figure>
       <ul>
@@ -401,15 +401,15 @@ const PROJECTS = [
       </ol>
       <div class="gallery">
         <figure>
-          <img src="assets/Projects/dc-motor-speed-controller/result-140.jpg" alt="Breadboard showing the display reading 140 RPM/10">
+          <img src="assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/result-140.jpg" alt="Breadboard showing the display reading 140 RPM/10">
           <figcaption>Input: 100, Desired Output: 144, Actual Output: 140</figcaption>
         </figure>
         <figure>
-          <img src="assets/Projects/dc-motor-speed-controller/result-186.jpg" alt="Breadboard showing the display reading 186 RPM/10">
+          <img src="assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/result-186.jpg" alt="Breadboard showing the display reading 186 RPM/10">
           <figcaption>Input: 101, Desired Output: 192, Actual Output: 186</figcaption>
         </figure>
         <figure>
-          <img src="assets/Projects/dc-motor-speed-controller/result-245.jpg" alt="Breadboard showing the display reading 245 RPM/10">
+          <img src="assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/result-245.jpg" alt="Breadboard showing the display reading 245 RPM/10">
           <figcaption>Input: 111, Desired Output: 240, Actual Output: 245</figcaption>
         </figure>
       </div>
