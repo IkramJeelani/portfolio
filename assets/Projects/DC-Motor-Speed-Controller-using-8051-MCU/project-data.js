@@ -64,9 +64,8 @@ window.PROJECT_DATA["dc-motor-speed-controller-using-8051-mcu"] = {
       </tbody>
     </table>
     <ul>
-      <li><strong>Speed measurement:</strong> Timer1 free-runs as a 16-bit tick counter; each rising edge of the tachometer signal (P2.4) gives an instantaneous RPM from the tick delta, smoothed with a 3-sample moving average.</li>
-      <li><strong>Control loop:</strong> a proportional controller compares reference vs. measured RPM each time a new sample lands, with a deadband to stop hunting near the setpoint and a max step size per update to keep it from overshooting.</li>
-      <li><strong>PWM generation:</strong> Timer0 runs in interrupt mode, toggling the output pin (P2.3) and reloading its interval on every overflow — high and low times are computed from the current duty value, so the ISR itself <em>is</em> the PWM signal.</li>
+      <li><strong>Speed measurement:</strong> Timer1 operates as a free-running 16-bit timer; consecutive rising edges of the tachometer signal (P2.4) are used to measure pulse period, which is converted to RPM and smoothed with a 3-sample moving average.</li>
+      <li><strong>Control loop:</strong> A proportional controller compares the reference RPM with the measured RPM whenever a new sample is available. A &plusmn;20 RPM deadband prevents small errors from causing unnecessary corrections, while a maximum duty change of 3 counts per update limits the controller's response and reduces overshoot.</li>
       <li><strong>Display:</strong> the measured RPM is reduced to its top 3 significant figures and multiplexed across three common-anode 7-segment displays via NPN transistor switches, refreshed once per main-loop pass.</li>
     </ul>
 
