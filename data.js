@@ -395,8 +395,8 @@ const PROJECTS = [
       <p>The controller tracked every DIP-selected setpoint with a small, repeatable
       steady-state error. This happened for two reasons:</p>
       <ol>
-        <li>The speed reading from the tachometer wasn't perfectly steady.</li>
-        <li>For the sake of simplicity, the controller only used a P term (no I or D), so it couldn't eliminate permanent steady-state errors or control overshoot and oscillations.</li>
+        <li>the speed reading from the tachometer wasn't perfectly steady</li>
+        <li>the controller only used a P term (no I or D), so it couldn't eliminate permanent steady-state errors or control overshoot and oscillations</li>
       </ol>
       <div class="gallery">
         <figure>

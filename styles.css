@@ -1514,7 +1514,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .project-content ul,
 .project-content ol { margin: 0 0 1.2rem; padding-left: 1.4rem; }
 .project-content li { margin-bottom: 0.5rem; }
-.project-content ol li { margin-bottom: 1rem; }
 
 /* Images */
 .project-content img {
