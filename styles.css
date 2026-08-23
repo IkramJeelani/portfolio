@@ -705,7 +705,7 @@ h1, h2, h3,
   box-shadow: var(--shadow);
   transition: transform 0.2s, border-color 0.2s;
 }
-a.cert-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+a.cert-card:hover { transform: translateY(-4px); border-color: var(--accent); }
 /* c.preview in data.js — a screenshot of the credential's first page. Fixed
    height + object-fit:contain: the whole document is visible (unlike
    object-fit:cover, which crops), scaled to fit the box without ever
@@ -1035,7 +1035,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   display: flex;
   flex-direction: column;
 }
-.card:hover { transform: translateY(-2px); border-color: var(--accent); }
+.card:hover { transform: translateY(-4px); border-color: var(--accent); }
 
 /* Image is deliberately the dominant part of the card — taller than the
    content beneath it, with that content trimmed down (tighter padding,
