@@ -29,7 +29,7 @@ window.PROJECT_DATA["dc-motor-speed-controller-using-8051-mcu"] = {
   tech: ["8051", "PWM", "Closed-Loop Control", "C"],
   links: [
     { label: "View Report", url: "assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/report.pdf" },
-    { label: "View Code", url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/dc-motor-speed-controller.c" },
+    { label: "View Code", url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/code.c" },
   ],
   share: true,
   body: `
