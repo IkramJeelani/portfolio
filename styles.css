@@ -1535,6 +1535,26 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   font-size: 0.9rem;
 }
 
+/* Table */
+.project-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.8rem 0;
+  font-size: 0.95rem;
+}
+.project-content th,
+.project-content td {
+  padding: 0.6rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.project-content th {
+  color: var(--muted);
+  font-weight: 600;
+  border-bottom: 2px solid var(--border);
+}
+.project-content tbody tr:nth-child(even) { background: var(--bg-soft); }
+
 /* Callout / highlight box */
 .project-content .callout {
   background: var(--bg-soft);

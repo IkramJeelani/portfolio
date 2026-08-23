@@ -368,6 +368,23 @@ const PROJECTS = [
       </figure>
       <ul>
         <li><strong>Speed selection:</strong> the DIP switch (P1.0-P1.2, active-low) indexes a lookup table mapping 8 levels to 0-100% target speed, linearly scaled to a 0-2400 RPM reference.</li>
+      </ul>
+      <table>
+        <thead>
+          <tr><th>Input</th><th>PWM %</th><th>Desired RPM</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>000</td><td>0</td><td>0</td></tr>
+          <tr><td>001</td><td>40</td><td>960</td></tr>
+          <tr><td>010</td><td>50</td><td>1200</td></tr>
+          <tr><td>011</td><td>60</td><td>1440</td></tr>
+          <tr><td>100</td><td>70</td><td>1680</td></tr>
+          <tr><td>101</td><td>80</td><td>1920</td></tr>
+          <tr><td>110</td><td>90</td><td>2160</td></tr>
+          <tr><td>111</td><td>100</td><td>2400</td></tr>
+        </tbody>
+      </table>
+      <ul>
         <li><strong>Speed measurement:</strong> Timer1 free-runs as a 16-bit tick counter; each rising edge of the tachometer signal (P2.4) gives an instantaneous RPM from the tick delta, smoothed with a 3-sample moving average.</li>
         <li><strong>Control loop:</strong> a proportional controller compares reference vs. measured RPM each time a new sample lands, with a deadband to stop hunting near the setpoint and a max step size per update to keep it from overshooting.</li>
         <li><strong>PWM generation:</strong> Timer0 runs in interrupt mode, toggling the output pin (P2.3) and reloading its interval on every overflow — high and low times are computed from the current duty value, so the ISR itself <em>is</em> the PWM signal.</li>
