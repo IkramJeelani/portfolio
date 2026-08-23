@@ -392,11 +392,10 @@ const PROJECTS = [
       </ul>
 
       <h2>Results</h2>
-      <p>The controller reached every speed the DIP switch was set to, but always ended up
-      a little off from the exact target, by about the same small amount each time. This
-      happened for two reasons: the speed reading itself wasn't perfectly steady, and the
-      controller could only change the speed in small fixed steps, so it could get close
-      to the target but not land on it exactly.</p>
+      <p>The controller tracked every DIP-selected setpoint with a small, repeatable
+      steady-state error. This happened for two reasons: the speed reading itself wasn't
+      perfectly steady, and the controller could only change the speed in small fixed
+      steps, so it could get close to the target but not land on it exactly.</p>
       <div class="gallery">
         <figure>
           <img src="assets/Projects/fan-speed-controller/result-140.jpg" alt="Breadboard showing the display reading 140 RPM/10">
