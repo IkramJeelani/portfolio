@@ -1,7 +1,11 @@
 /* Detail page: look up the project by ?id= and render the in-depth view. */
 (function () {
   const page = document.getElementById("projectPage");
-  const projects = window.PROJECTS || [];
+  // Each project's data self-registers into window.PROJECT_DATA (see its
+  // project-data.js); assemble the final ordered list from data.js's
+  // PROJECT_ORDER, dropping any id with no matching registered data.
+  const projectData = window.PROJECT_DATA || {};
+  const projects = (window.PROJECT_ORDER || []).map((id) => projectData[id]).filter(Boolean);
   const id = new URLSearchParams(window.location.search).get("id");
   const project = projects.find((p) => p.id === id);
 

@@ -96,8 +96,16 @@
     return { title: "Experience", cls: "experience", html: `<div class="timeline">${items}</div>` };
   }
 
+  // Each project's data self-registers into window.PROJECT_DATA (see its
+  // project-data.js); this assembles the final ordered list from data.js's
+  // PROJECT_ORDER, dropping any id with no matching registered data.
+  function getProjects() {
+    const data = window.PROJECT_DATA || {};
+    return (window.PROJECT_ORDER || []).map((id) => data[id]).filter(Boolean);
+  }
+
   function buildProjects() {
-    const list = window.PROJECTS || [];
+    const list = getProjects();
     if (!list.length) return null;
     const cards = list
       .map((p, i) => {

@@ -283,32 +283,29 @@ const EDUCATION = [
 /* ============================================================================
    6. PROJECTS
 
-   Each project has two parts:
-   • CARD/HEADER fields:  id, title, image, date, tagline, tech, links, share
-        (id is OPTIONAL — leave it out and it's generated from title
-         automatically, lowercased with dashes instead of spaces, e.g.
-         "My Cool Project" -> "my-cool-project". This is also the project's
-         URL (project.html?id=...), so only set id by hand if you want that
-         URL to stay fixed even after you reword the title later — otherwise
-         a title edit changes the URL, which breaks any link/bookmark to it.)
-        (date is a free-text string, e.g. "Jan 24 - May 24" — omit it to hide it)
-        (share: true/false — not tied to anything on the site yet, just a
-         plain per-project flag for your own reference/future use.)
-   • body / bodyFile:  the free-form "in-depth" content shown on the project page.
-            Write whatever you want here using the building blocks below. Two ways
-            to provide it:
-              - `body`: an inline template string, right here in this file. Fine
-                for a short write-up.
-              - `bodyFile`: a path to an external .html file (e.g. put it at
-                assets/Projects/<your-folder>/body.html) containing just the body
-                markup — no <html>/<body> wrapper needed. Keeps this file from
-                growing huge once you have a longer write-up or several projects.
-                Fetched at page-load time, so it only works when served over
-                http(s) (e.g. via a local dev server or GitHub Pages) — opening
-                project.html directly as a file:// URL won't load it.
-            If both are set, `body` wins.
+   A project's actual data (title, image, tech, links, body, etc.) does NOT
+   live in this file — each project has its own folder under assets/Projects/
+   with a project-data.js file that registers itself into window.PROJECT_DATA.
+   This keeps data.js from ballooning as more projects (and longer write-ups)
+   get added.
 
-   --- BODY BUILDING BLOCKS (copy/paste these into a project's `body`/bodyFile) ---------
+   This array is the ONLY thing about projects that lives in data.js: it's
+   just a list of ids controlling which projects appear and in what order.
+
+   ADD a project:
+     1. Copy an existing folder under assets/Projects/ (e.g. the one below)
+        and edit its project-data.js (field docs are there — id, title,
+        image, date, tagline, tech, links, share, body/bodyFile) and, if
+        using bodyFile, its body.html (see the BODY BUILDING BLOCKS below).
+     2. Add a <script src="assets/Projects/<your-folder>/project-data.js">
+        tag in BOTH index.html and project.html, next to the existing one
+        (must load before main.js / project.js).
+     3. Add its id to the array below.
+   REORDER:  reorder the ids below.
+   REMOVE:   delete its id below (and, if you want it fully gone, its script
+             tag + folder too).
+
+   --- BODY BUILDING BLOCKS (copy/paste these into a project's body/bodyFile) --
    Text:
      <h2>Section heading</h2>
      <h3>Smaller heading</h3>
@@ -343,34 +340,11 @@ const EDUCATION = [
        <div><h3>Right</h3><p>...</p></div>
      </div>
 
-   TIP: write the body between the backticks ` ... `. Just avoid typing a lone
-   backtick (`) or the characters ${ inside it, since those have special meaning.
+   TIP: in an inline `body` string (not a bodyFile), avoid typing a lone
+   backtick (`) or the characters ${ — they have special meaning there.
    ----------------------------------------------------------------------------
-
-   ADD a project:    copy a whole { ... } block and edit it.
-   REMOVE a project:  delete its { ... } block.
-   Each project needs a unique `title` (its `id` — and URL — come from that,
-   see above, unless you set an explicit `id`).
    ============================================================================ */
-const PROJECTS = [
-  {
-    id: "dc-motor-speed-controller-using-8051-mcu",
-    title: "DC Motor Speed Controller using 8051 MCU",
-    image: "assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/display.jpg",
-    date: "Nov 25 - Dec 25",
-    tagline: "Closed-loop PWM fan-speed control on an 8051 microcontroller",
-    tech: ["8051", "PWM", "Closed-Loop Control", "C"],
-    links: [
-      { label: "View Report", url: "assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/report.pdf" },
-      { label: "View Code", url: "https://github.com/IkramJeelani/portfolio/blob/main/assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/dc-motor-speed-controller.c" },
-    ],
-    share: true,
-    // Long-form body content lives in body.html next to the project's other
-    // assets instead of inline here — keeps this file from ballooning as
-    // more projects with long write-ups get added. project.js fetches it.
-    bodyFile: "assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/body.html",
-  },
-];
+const PROJECT_ORDER = ["dc-motor-speed-controller-using-8051-mcu"];
 
 /* ---------- 7. CONTACTS ----------
    ADD a contact:    copy a { ... } line and edit it.
@@ -384,22 +358,6 @@ const CONTACTS = [
 
 /* ---- (no need to edit below this line) ---- */
 
-// Fills in any project's missing `id` from its `title` — lowercased, with
-// runs of anything that isn't a letter/number collapsed to a single dash
-// (leading/trailing dashes trimmed). Runs before main.js/project.js, so
-// they only ever see the final id and don't need to know it was derived.
-(function fillProjectIds() {
-  const slugify = (s) =>
-    String(s)
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  (PROJECTS || []).forEach((p) => {
-    if (!p.id) p.id = slugify(p.title);
-  });
-})();
-
 window.SETTINGS = SETTINGS;
 window.SECTIONS = SECTIONS;
 window.PROFILE = PROFILE;
@@ -409,5 +367,5 @@ window.EXPERIENCE = EXPERIENCE;
 window.SKILLS = SKILLS;
 window.CERTIFICATIONS = CERTIFICATIONS;
 window.EDUCATION = EDUCATION;
-window.PROJECTS = PROJECTS;
+window.PROJECT_ORDER = PROJECT_ORDER;
 window.CONTACTS = CONTACTS;
