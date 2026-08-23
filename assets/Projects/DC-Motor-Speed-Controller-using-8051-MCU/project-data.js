@@ -74,7 +74,7 @@ window.PROJECT_DATA["dc-motor-speed-controller-using-8051-mcu"] = {
 
     <li><strong>Control loop:</strong> A proportional controller compares the reference RPM with the measured RPM whenever a new sample is available. A &plusmn;20 RPM deadband prevents small errors from causing unnecessary corrections, while a maximum duty change of 3 counts per update limits the controller's response and reduces the tendency to overshoot.</li>
 
-    <li><strong>PWM generation/drive:</strong> The controller's duty-cycle command is turned into an actual PWM signal by Timer0, running in interrupt mode: on each overflow it toggles output pin P2.3 and reloads the timer with a new high-time or low-time interval computed from the current duty value, so the interrupt service routine itself generates the PWM waveform. P2.3 drives the gate of a MOSFET, which switches the fan's supply current on and off at that duty cycle — the fan's own inertia and coil inductance average the switching into a smooth, proportional change in speed.</li>
+    <li><strong>PWM generation/drive:</strong> Timer0 generates the PWM waveform on P2.3 using interrupts, with the high- and low-time intervals determined by the controller's duty-cycle command. P2.3 drives a MOSFET that switches the fan's supply, converting the controller's output into a variable fan speed.</li>
 
     <li><strong>Display:</strong> The measured RPM is rounded to the nearest 10 RPM and displayed on a multiplexed 3-digit common-anode seven-segment display. Transistor switches independently enable each digit during multiplexing.</li>
   </ul>
