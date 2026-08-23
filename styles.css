@@ -488,7 +488,7 @@ h1, h2, h3,
   color: var(--text);
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.15s, background 0.2s, border-color 0.2s;
+  transition: transform 0.2s, background 0.2s, border-color 0.2s;
 }
 .btn:hover { transform: translateY(-2px); border-color: var(--accent); }
 .btn-primary {
@@ -1445,13 +1445,12 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card);
-  /* Matches .card/.cert-card/.edu-card's hover-lift timing (0.25s transform
-     + box-shadow, 0.2s border-color) — same interaction, was previously 0.2s
-     across the board here, a beat faster than its visual siblings. */
-  transition: transform 0.25s ease, border-color 0.2s ease, box-shadow 0.25s ease;
+  /* Same lift distance + timing as .card/.cert-card (0.2s) — one consistent
+     hover feel across every card on the site. */
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 .pager-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   border-color: var(--accent);
   box-shadow: var(--shadow);
 }
