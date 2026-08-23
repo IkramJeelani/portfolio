@@ -456,6 +456,28 @@ h1, h2, h3,
    it when there's nothing in it. */
 .subtitle:empty { display: none; }
 
+/* ===== Scroll-reveal animation ===== */
+/* Kept deliberately quick and light: opacity/transform share one duration
+   (they used to run 0.6s/0.7s on different easings, which combined with
+   per-item stagger delays and a scale() made items on the same row settle
+   at visibly different times depending on scroll speed).
+   Placed early in the file, before every card-ish component below, so
+   each component's own (non-staggered) transition rule always wins the
+   cascade for its hover transform — otherwise whichever of .reveal vs.
+   the component rule happens to come later in source order silently wins,
+   which previously left some card types hovering with the slow, staggered
+   reveal transition instead of a normal quick hover one. */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
 /* ===== Buttons ===== */
 .btn {
   display: inline-block;
@@ -956,22 +978,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   .timeline::before { left: 108px; }
   .tl-card { max-width: none; }
   .tl-left::after { right: -19px; }
-}
-
-/* ===== Scroll-reveal animation ===== */
-/* Kept deliberately quick and light: opacity/transform share one duration
-   (they used to run 0.6s/0.7s on different easings, which combined with
-   per-item stagger delays and a scale() made items on the same row settle
-   at visibly different times depending on scroll speed). */
-.reveal {
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.35s ease, transform 0.35s ease;
-  transition-delay: var(--reveal-delay, 0ms);
-}
-.reveal.in {
-  opacity: 1;
-  transform: none;
 }
 
 /* ===== First-load hero intro ===== */
