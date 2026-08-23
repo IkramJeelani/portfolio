@@ -388,7 +388,7 @@ const PROJECTS = [
         <li><strong>Speed measurement:</strong> Timer1 free-runs as a 16-bit tick counter; each rising edge of the tachometer signal (P2.4) gives an instantaneous RPM from the tick delta, smoothed with a 3-sample moving average.</li>
         <li><strong>Control loop:</strong> a proportional controller compares reference vs. measured RPM each time a new sample lands, with a deadband to stop hunting near the setpoint and a max step size per update to keep it from overshooting.</li>
         <li><strong>PWM generation:</strong> Timer0 runs in interrupt mode, toggling the output pin (P2.3) and reloading its interval on every overflow — high and low times are computed from the current duty value, so the ISR itself <em>is</em> the PWM signal.</li>
-        <li><strong>Display:</strong> the measured RPM is split into three digits and multiplexed across three common-anode 7-segment displays via NPN transistor switches, refreshed once per main-loop pass.</li>
+        <li><strong>Display:</strong> the measured RPM is reduced to its top 3 significant figures and multiplexed across three common-anode 7-segment displays via NPN transistor switches, refreshed once per main-loop pass.</li>
       </ul>
 
       <h2>Results</h2>
