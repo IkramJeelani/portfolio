@@ -356,14 +356,14 @@ const PROJECTS = [
     body: `
       <p>A closed-loop speed controller for a DC fan using an 8051 development board
       for my Digital Logic &amp; Microcontroller (MSE 352) course. A 3-bit DIP switch
-      selects one of 8 target speeds (0-2400 RPM); the controller measures the fan's actual
+      selects one of 8 target speeds (0-2400 RPM). The controller measures the fan's actual
       speed from its tachometer output and drives a PWM signal to a MOSFET so the fan
-      converges on whatever speed was selected — with the live RPM readout on a
+      converges on whatever speed was selected. The live RPM is shown on a
       multiplexed 3-digit seven-segment display. Built as a 3-person team project.</p>
 
       <h2>How it works</h2>
       <figure>
-        <img src="assets/Projects/fan-speed-controller/circuit-diagram.jpg" alt="Schematic: 8051, DIP switch, three 7-segment displays, and the MOSFET PWM driver stage">
+        <img src="assets/Projects/fan-speed-controller/schematic.jpg" alt="Schematic: 8051, DIP switch, three 7-segment displays, and the MOSFET PWM driver stage">
         <figcaption>Full schematic — DIP switch input, 8051, multiplexed 7-segment displays, and the MOSFET gate-drive stage for the fan.</figcaption>
       </figure>
       <ul>
