@@ -1537,15 +1537,18 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 
 /* Table */
 .project-content table {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
-  margin: 1.8rem 0;
+  margin: 1.8rem auto;
   font-size: 0.95rem;
 }
 .project-content th,
 .project-content td {
+  width: 8rem;
   padding: 0.6rem 1rem;
-  text-align: left;
+  text-align: center;
   border-bottom: 1px solid var(--border);
 }
 .project-content th {
