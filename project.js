@@ -86,10 +86,9 @@
     )
     .join("");
 
-  // Free-form body: inline `body` string, an external `bodyFile` fetched at
-  // render time, or (older projects) the overview/details fields.
+  // Free-form body if provided; otherwise fall back to the older overview/details fields.
   let bodyHtml = project.body;
-  if (!bodyHtml && !project.bodyFile) {
+  if (!bodyHtml) {
     bodyHtml =
       (project.overview ? `<p class="project-overview">${project.overview}</p>` : "") +
       (project.details || []).map((d) => `<p>${d}</p>`).join("");
@@ -122,39 +121,17 @@
     ${project.date ? `<p class="project-date">${project.date}</p>` : ""}
     <div class="tags">${techHtml}</div>
     <div class="project-hero" style="background-image:url('${project.image}')"></div>
-    <div class="project-content">${bodyHtml || ""}</div>
+    <div class="project-content">${bodyHtml}</div>
     <div class="project-links">${linksHtml}</div>
     ${pagerHtml}`;
 
-  const contentEl = page.querySelector(".project-content");
-
-  // Free-form project bodies (inline `body` strings or fetched `bodyFile`s)
-  // can contain hand-written <img> tags with no way to know their dimensions
-  // ahead of time, so they can't get explicit width/height like the
-  // fixed-size logo images — but every one of them is below the fold, so
-  // they can all still be deferred.
-  const deferBodyImages = () => {
-    contentEl.querySelectorAll("img").forEach((img) => {
-      if (!img.hasAttribute("loading")) img.loading = "lazy";
-    });
-  };
-
-  if (project.bodyFile) {
-    fetch(project.bodyFile)
-      .then((r) => {
-        if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
-        return r.text();
-      })
-      .then((html) => {
-        contentEl.innerHTML = html;
-        deferBodyImages();
-      })
-      .catch((err) => {
-        contentEl.innerHTML = `<p class="project-overview">Couldn't load this project's content (${err.message}).</p>`;
-      });
-  } else {
-    deferBodyImages();
-  }
+  // Free-form project bodies (data.js `body` strings) can contain hand-written
+  // <img> tags with no way to know their dimensions ahead of time, so they
+  // can't get explicit width/height like the fixed-size logo images — but
+  // every one of them is below the fold, so they can all still be deferred.
+  page.querySelectorAll(".project-content img").forEach((img) => {
+    if (!img.hasAttribute("loading")) img.loading = "lazy";
+  });
 
   // ←/→ step through projects (ignored while typing or with modifiers held).
   document.addEventListener("keydown", (e) => {

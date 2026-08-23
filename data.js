@@ -295,8 +295,8 @@ const EDUCATION = [
    ADD a project:
      1. Copy an existing folder under assets/Projects/ (e.g. the one below)
         and edit its project-data.js (field docs are there — id, title,
-        image, date, tagline, tech, links, share, body/bodyFile) and, if
-        using bodyFile, its body.html (see the BODY BUILDING BLOCKS below).
+        image, date, tagline, tech, links, share, body). See the BODY
+        BUILDING BLOCKS below for what to write in `body`.
      2. Add a <script src="assets/Projects/<your-folder>/project-data.js">
         tag in BOTH index.html and project.html, next to the existing one
         (must load before main.js / project.js).
@@ -305,7 +305,7 @@ const EDUCATION = [
    REMOVE:   delete its id below (and, if you want it fully gone, its script
              tag + folder too).
 
-   --- BODY BUILDING BLOCKS (copy/paste these into a project's body/bodyFile) --
+   --- BODY BUILDING BLOCKS (copy/paste these into a project's body) --------
    Text:
      <h2>Section heading</h2>
      <h3>Smaller heading</h3>
@@ -340,8 +340,8 @@ const EDUCATION = [
        <div><h3>Right</h3><p>...</p></div>
      </div>
 
-   TIP: in an inline `body` string (not a bodyFile), avoid typing a lone
-   backtick (`) or the characters ${ — they have special meaning there.
+   TIP: write the body between the backticks ` ... `. Just avoid typing a lone
+   backtick (`) or the characters ${ inside it, since those have special meaning.
    ----------------------------------------------------------------------------
    ============================================================================ */
 const PROJECT_ORDER = ["dc-motor-speed-controller-using-8051-mcu"];
