@@ -124,7 +124,7 @@ input:focus-visible,
 [tabindex]:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
 }
 /* Rounded cards: match the card's own radius so the ring hugs its shape
    instead of a generic square corner. */
