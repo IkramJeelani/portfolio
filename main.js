@@ -284,7 +284,6 @@
 
   setupHeroIntro();
   setupReveal();
-  setupTilt();
   setupSectionFlash();
   setupEqualize();
   setupTimelineWidth();
@@ -791,47 +790,5 @@
     if (location.hash.length > 1) {
       setTimeout(() => flash(location.hash.slice(1)), 450);
     }
-  }
-
-  /* ---------- 3D tilt on cards (pointer-following, with glare) ---------- */
-  function setupTilt() {
-    const canHover = window.matchMedia && window.matchMedia("(hover: hover)").matches;
-    if (reduced || !canHover) return;
-
-    const MAX = 8; // degrees
-    document.querySelectorAll(".card, .cert-card:not(.cert-static)").forEach((card) => {
-      // Both handlers list ALL THREE properties the base .card/.cert-card
-      // rule transitions (transform, box-shadow, border-color) — not just
-      // the two this effect animates. Setting style.transition replaces the
-      // property wholesale, not just the parts named; a shorthand missing
-      // border-color means border-color stops transitioning AT ALL once this
-      // has run once (inline always beats the base rule), so every hover
-      // border-colour change after the FIRST tilt would snap instead of
-      // ease — a real bug, not just a timing nit, since it made the card
-      // feel a little more "broken" each time you interacted with it.
-      // Leave also matches transform's and box-shadow's DURATIONS (both
-      // 0.4s) — they previously ran 0.4s/0.3s, so the glow finished fading
-      // a beat before the tilt settled, reading as two separate motions
-      // instead of one cohesive return.
-      card.addEventListener("pointerenter", () => {
-        card.classList.add("tilting");
-        card.style.transition = "transform 0.08s linear, box-shadow 0.25s ease, border-color 0.2s ease";
-      });
-      card.addEventListener("pointermove", (e) => {
-        const r = card.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width;
-        const py = (e.clientY - r.top) / r.height;
-        const rx = (py - 0.5) * -2 * MAX;
-        const ry = (px - 0.5) * 2 * MAX;
-        card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) scale(1.03)`;
-        card.style.setProperty("--mx", px * 100 + "%");
-        card.style.setProperty("--my", py * 100 + "%");
-      });
-      card.addEventListener("pointerleave", () => {
-        card.classList.remove("tilting");
-        card.style.transition = "transform 0.4s ease, box-shadow 0.4s ease, border-color 0.3s ease";
-        card.style.transform = "";
-      });
-    });
   }
 })();

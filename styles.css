@@ -703,10 +703,9 @@ h1, h2, h3,
   border-radius: var(--radius);
   overflow: hidden; /* clips the preview image to the card's rounded top corners */
   box-shadow: var(--shadow);
-  transition: transform 0.25s ease, border-color 0.2s, box-shadow 0.25s ease;
-  transform-style: preserve-3d;
+  transition: transform 0.2s, border-color 0.2s;
 }
-a.cert-card:hover { transform: translateY(-6px); border-color: var(--accent); }
+a.cert-card:hover { transform: translateY(-2px); border-color: var(--accent); }
 /* c.preview in data.js — a screenshot of the credential's first page. Fixed
    height + object-fit:contain: the whole document is visible (unlike
    object-fit:cover, which crops), scaled to fit the box without ever
@@ -1032,33 +1031,12 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition: transform 0.25s ease, border-color 0.2s, box-shadow 0.25s ease;
-  transform-style: preserve-3d;
+  transition: transform 0.2s, border-color 0.2s;
   display: flex;
   flex-direction: column;
 }
-.card:hover { transform: translateY(-6px); border-color: var(--accent); }
+.card:hover { transform: translateY(-2px); border-color: var(--accent); }
 
-/* Cursor-following glare for the 3D tilt (projects + certs) */
-.card::after,
-.cert-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  pointer-events: none;
-  background: radial-gradient(
-    circle at var(--mx, 50%) var(--my, 50%),
-    rgba(255, 255, 255, 0.16),
-    transparent 42%
-  );
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-.card.tilting,
-.cert-card.tilting { box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22); }
-.card.tilting::after,
-.cert-card.tilting::after { opacity: 1; }
 /* Image is deliberately the dominant part of the card — taller than the
    content beneath it, with that content trimmed down (tighter padding,
    smaller title/date, less spacing) so the whole card reads as compact
