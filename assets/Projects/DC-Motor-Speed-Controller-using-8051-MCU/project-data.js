@@ -38,8 +38,8 @@ window.PROJECT_DATA["dc-motor-speed-controller-using-8051-mcu"] = {
   speed from its tachometer output and adjusts a PWM signal driving a MOSFET so the fan
   converges toward the selected desired speed. The measured RPM is displayed on a multiplexed 3-digit seven-segment display
   with 10 RPM resolution. Built as a
-  3-person team project for my Digital Logic &amp; Microcontroller (MSE 352) course, which permitted the use of
-  generative AI to assist with writing the code.</p>
+  3-person team project for my Digital Logic &amp; Microcontroller (MSE 352) course.</p>
+  <p><strong>Note:</strong> this course permitted the use of generative AI to assist with writing the code.</p>
 
   <h2>How it works</h2>
 
