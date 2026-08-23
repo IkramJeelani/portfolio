@@ -25,11 +25,11 @@
   /* Radius scale: xs for fine/text-level elements (inline code, PDF canvas),
      sm for small square UI chips (logos, toolbar buttons, dock rows —
      previously a mix of 7/8/9/10px with no reasoning behind which got which),
-     the base radius for cards/panels, pill for fully-rounded buttons/tags. */
+     the base radius for everything else — cards/panels AND buttons/tags,
+     so every rounded corner on the site shares the same curve. */
   --radius-xs: 6px;
   --radius-sm: 8px;
   --radius: 12px;
-  --radius-pill: 999px;
   --max: 1100px;
   --shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
   --pattern: rgba(236,231,222,.045);
@@ -303,7 +303,7 @@ h1, h2, h3,
   gap: 0.45rem;
   height: 34px;
   padding: 0 0.95rem;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius);
   background: var(--grad-btn); /* white label needs the AA-passing stops */
   color: #fff;
   font-weight: 700;
@@ -460,7 +460,7 @@ h1, h2, h3,
 .btn {
   display: inline-block;
   padding: 0.7rem 1.4rem;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--bg-soft);
   color: var(--text);
@@ -1429,7 +1429,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .tag {
   font-size: 0.82rem;
   padding: 0.3rem 0.8rem;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius);
   background: var(--bg-soft);
   border: 1px solid var(--border);
   color: var(--accent);
