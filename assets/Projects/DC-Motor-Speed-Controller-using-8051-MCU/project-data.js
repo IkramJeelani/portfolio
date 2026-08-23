@@ -39,8 +39,7 @@ window.PROJECT_DATA["dc-motor-speed-controller-using-8051-mcu"] = {
   converges toward the selected desired speed. The measured RPM is displayed on a multiplexed 3-digit seven-segment display
   with 10 RPM resolution. Built as a
   3-person team project for my Digital Logic &amp; Microcontroller (MSE 352) course.</p>
-  <p><strong>Note:</strong> The course permitted writing the entire code with generative AI, compensated for by
-  each team being questioned on the code and the project's functionality for grades.</p>
+  <p><strong>Note:</strong> The course permitted unrestricted use of generative AI for writing the C code. However, each team member was individually questioned on the code and the project's functionality as part of the assessment, requiring a thorough understanding of the implementation.</p>
 
   <h2>How it works</h2>
 
@@ -74,6 +73,8 @@ window.PROJECT_DATA["dc-motor-speed-controller-using-8051-mcu"] = {
     <li><strong>Speed measurement:</strong> Timer1 operates as a free-running 16-bit timer; consecutive rising edges of the tachometer signal (P2.4) are used to measure the pulse period, which is converted to RPM and smoothed with a 3-sample moving average.</li>
 
     <li><strong>Control loop:</strong> A proportional controller compares the reference RPM with the measured RPM whenever a new sample is available. A &plusmn;20 RPM deadband prevents small errors from causing unnecessary corrections, while a maximum duty change of 3 counts per update limits the controller's response and reduces the tendency to overshoot.</li>
+
+    <li><strong>PWM generation/drive:</strong> The controller's duty-cycle command is turned into an actual PWM signal by Timer0, running in interrupt mode: on each overflow it toggles output pin P2.3 and reloads the timer with a new high-time or low-time interval computed from the current duty value, so the interrupt service routine itself generates the PWM waveform. P2.3 drives the gate of a MOSFET, which switches the fan's supply current on and off at that duty cycle — the fan's own inertia and coil inductance average the switching into a smooth, proportional change in speed.</li>
 
     <li><strong>Display:</strong> The measured RPM is rounded to the nearest 10 RPM and displayed on a multiplexed 3-digit common-anode seven-segment display. Transistor switches independently enable each digit during multiplexing.</li>
   </ul>
