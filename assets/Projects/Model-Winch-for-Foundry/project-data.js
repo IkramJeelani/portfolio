@@ -35,22 +35,20 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
 
   <h3>Gear specifications</h3>
   <p>All 3 stages use a normal module of 1.5mm, 20° pressure angle, and 30° helix angle
-  (helical gears — spur would be too noisy/vibration-prone at the higher-speed stages).
+  (chose helical gears as spur would be too noisy/vibration-prone at the higher-speed stages).
   Pitch diameter (d), center distance (a), and addendum (ha) were computed per stage from
   the tooth counts:</p>
   <table>
     <thead>
-      <tr><th>Stage</th><th>Pinion teeth</th><th>Gear teeth</th><th>Center distance a (mm)</th><th>Pinion d (mm)</th><th>Gear d (mm)</th></tr>
+      <tr><th>Stage</th><th>Pinion teeth</th><th>Gear teeth</th><th>Pinion d (mm)</th><th>Gear d (mm)</th><th>Center distance a (mm)</th></tr>
     </thead>
     <tbody>
-      <tr><td>1</td><td>17</td><td>51</td><td>58.89</td><td>29.44</td><td>88.33</td></tr>
-      <tr><td>2</td><td>17</td><td>68</td><td>73.61</td><td>29.44</td><td>117.78</td></tr>
-      <tr><td>3</td><td>17</td><td>85</td><td>88.33</td><td>29.44</td><td>147.22</td></tr>
+      <tr><td>1</td><td>17</td><td>51</td><td>29.44</td><td>88.33</td><td>58.89</td></tr>
+      <tr><td>2</td><td>17</td><td>68</td><td>29.44</td><td>117.78</td><td>73.61</td></tr>
+      <tr><td>3</td><td>17</td><td>85</td><td>29.44</td><td>147.22</td><td>88.33</td></tr>
     </tbody>
   </table>
-  <p>Addendum (ha) is 1.5mm for every gear and pinion across all 3 stages. From the resulting
-  2D sketches, the gearbox needed to be roughly 195mm wide, 160mm tall, and 105mm deep —
-  within the 200x200mm housing limit.</p>
+  <p>Addendum (ha) is 1.5mm for every gear and pinion across all 3 stages</p>
 
   <h3>Force analysis</h3>
   <p>The torques were later revisited against the motor's actual 2.1W input power (rather than
