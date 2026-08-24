@@ -150,6 +150,10 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   </div>
 
   <h3>Assembly</h3>
+  <figure>
+    <img src="assets/Projects/Model-Winch-for-Foundry/assembly_1.png" alt="Threading a bolt by hand into a hole drilled in a 3D-printed shaft">
+    <figcaption>Threading a bolt into a hole drilled in the shaft — the bolt cuts its own thread, so no separate tapping step is needed.</figcaption>
+  </figure>
 
   <h3>Challenges faced</h3>
   <ul>
