@@ -7,8 +7,8 @@ window.PROJECT_DATA = window.PROJECT_DATA || {};
 window.PROJECT_DATA["model-winch-for-foundry"] = {
   id: "model-winch-for-foundry",
   title: "Model Winch for Foundry",
-  image: "",
-  date: "Spring 2026",
+  image: "assets/Projects/Model-Winch-for-Foundry/display.jpg",
+  date: "Apr - July 2026",
   tagline: "Designing a 3-stage reduction gearbox and shaft for a crucible-lifting winch",
   tech: ["Gear Design", "Shaft Design", "Fusion 360", "Mechanical Design"],
   links: [],
