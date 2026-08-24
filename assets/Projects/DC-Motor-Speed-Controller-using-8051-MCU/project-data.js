@@ -9,7 +9,6 @@
      title    shown on the card and the project page.
      image    card thumbnail + page hero background.
      date     free-text, e.g. "Jan 24 - May 24" — omit to hide it.
-     tagline  short one-line description shown under the title.
      tech     array of tag strings shown on the card and page.
      links    array of { label, url } buttons on the project page.
      share    true/false — not tied to anything on the site yet, just a
@@ -25,7 +24,6 @@ window.PROJECT_DATA["dc-motor-speed-controller-using-8051-mcu"] = {
   title: "DC Motor Speed Controller using 8051 MCU",
   image: "assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/display.jpg",
   date: "Nov 25 - Dec 25",
-  tagline: "Closed-loop PWM fan-speed control on an 8051 microcontroller",
   tech: ["8051", "PWM", "Closed-Loop Control", "C"],
   links: [
     { label: "View Report", url: "assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/report.pdf" },

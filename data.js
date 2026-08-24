@@ -295,7 +295,7 @@ const EDUCATION = [
    ADD a project:
      1. Copy an existing folder under assets/Projects/ (e.g. the one below)
         and edit its project-data.js (field docs are there — id, title,
-        image, date, tagline, tech, links, share, body). See the BODY
+        image, date, tech, links, share, body). See the BODY
         BUILDING BLOCKS below for what to write in `body`.
      2. Add a <script src="assets/Projects/<your-folder>/project-data.js">
         tag in BOTH index.html and project.html, next to the existing one

@@ -57,8 +57,7 @@
   // link shows its own title, description and URL.
   (function updateMeta() {
     const url = "https://ikramjeelani.github.io/portfolio/project.html?id=" + encodeURIComponent(project.id);
-    const desc =
-      project.tagline || `An in-depth look at ${project.title} by ${(window.PROFILE || {}).name || ""}.`;
+    const desc = `An in-depth look at ${project.title} by ${(window.PROFILE || {}).name || ""}.`;
     // These tags all exist statically in project.html — just update them.
     const set = (sel, val) => {
       const el = document.head.querySelector(sel);
@@ -117,7 +116,6 @@
 
   page.innerHTML = `
     <h1>${project.title}</h1>
-    <p class="project-tagline">${project.tagline || ""}</p>
     ${project.date ? `<p class="project-date">${project.date}</p>` : ""}
     <div class="tags">${techHtml}</div>
     <div class="project-hero" style="background-image:url('${project.image}')"></div>
