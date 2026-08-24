@@ -1617,6 +1617,17 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 }
 .project-content .gallery figure { margin: 0; }
 
+/* Gallery modifier: force exactly 2 equal columns instead of the default
+   natural-width flex row (e.g. for a set of same-shape CAD view renders). */
+.project-content .gallery.cols-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.project-content .gallery.cols-2 img { width: 100%; height: auto; }
+@media (max-width: 480px) {
+  .project-content .gallery.cols-2 { grid-template-columns: 1fr; }
+}
+
 /* Two columns side by side */
 .project-content .two-col {
   display: grid;
