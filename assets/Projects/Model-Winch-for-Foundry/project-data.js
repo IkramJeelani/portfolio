@@ -53,21 +53,42 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <h3>Force analysis</h3>
   <p>The torques were later revisited against the motor's actual 2.1W input power (rather than
   just the idealized load-based figures), giving the following speed and torque at each shaft:</p>
-  <table>
-    <thead>
-      <tr><th>Shaft</th><th>Speed (RPM)</th><th>Torque (Nm)</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>Motor input</td><td>11,000</td><td>0.001823</td></tr>
-      <tr><td>Stage 1 (Shaft A)</td><td>3,666.67</td><td>0.005469</td></tr>
-      <tr><td>Stage 2 (Shaft B)</td><td>916.67</td><td>0.021876</td></tr>
-      <tr><td>Stage 3 (Output)</td><td>183.33</td><td>0.109380</td></tr>
-    </tbody>
-  </table>
+  <ul>
+    <li><strong>Motor input shaft:</strong> 11,000 RPM, 0.001823 Nm.</li>
+    <li><strong>Shaft A</strong> (after stage 1): 3,666.67 RPM, 0.005469 Nm.</li>
+    <li><strong>Shaft B</strong> (after stage 2): 916.67 RPM, 0.021876 Nm.</li>
+    <li><strong>Output shaft</strong> (after stage 3): 183.33 RPM, 0.109380 Nm — the highest-torque, lowest-speed
+    shaft in the system, and the one carrying the 1kg load directly.</li>
+  </ul>
   <p>As a sanity check, the output shaft's surface speed was converted back into a lifting time:
   <code>V<sub>lift</sub> = ω<sub>out</sub> × r<sub>shaft</sub> = 19.2 × 0.004 = 0.0768 m/s</code>, giving
   1.2 / 0.0768 ≈ 15.6 seconds to lift the full height — comfortably inside the 10-20 second
   requirement.</p>
+
+  <h3>Critical shaft — stress &amp; bearing analysis</h3>
+  <p>Carrying the highest torque and the full lifting load, the output shaft was identified as the
+  critical shaft and analyzed in detail. Its bearing reactions were resolved into radial loads at
+  each bearing:</p>
+  <table>
+    <thead>
+      <tr><th>Bearing</th><th>Radial reaction Fr (N)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Bearing 1</td><td>11.63</td></tr>
+      <tr><td>Bearing 2 (critical)</td><td>19.35</td></tr>
+    </tbody>
+  </table>
+  <p>The critical cross-section sits at Bearing 2 (90mm along the shaft), carrying both the peak
+  bending moment (1004.7 Nmm) and the full 109.38 Nmm operating torque. Using the Distortion
+  Energy (Von Mises) theory, this gives a static factor of safety of <strong>n = 2.44</strong> — comfortably
+  inside the 1.5-2.5 target range and safely within the elastic region. A fatigue check against the
+  Modified Goodman criteria gave a fatigue factor of safety of <strong>n<sub>f</sub> = 3.35</strong>; since n<sub>f</sub> &gt; 1,
+  the shaft falls in the infinite-life region and is theoretically immune to fatigue failure.</p>
+  <p>For the bearing itself, the equivalent dynamic load at Bearing 2 (P = 3.78N) was checked
+  against a target life of 15,000 hours (≈165 million revolutions), giving a required dynamic
+  capacity of just 0.0289kN. The selected 608 deep-groove ball bearing (rated at 3.45kN) far
+  exceeds that, working out to an expected life of roughly 2.56×10<sup>10</sup> hours — many orders of
+  magnitude beyond the 15,000-hour target.</p>
 
   <h3>Shaft &amp; key design</h3>
   <p>Square keys were chosen for most shaft-to-gear connections — simple, cheap, and able to
