@@ -107,5 +107,6 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <p>The output shaft is critical: static factor of safety n = 2.44 (Von Mises), fatigue factor
   n<sub>f</sub> = 3.35 (infinite life), and its selected 608 bearing (3.45kN rated) far exceeds the
   15,000-hour target life.</p>
+  <p><em>Full worked calculations for all of the above are in Project Submission 2.</em></p>
   `,
 };
