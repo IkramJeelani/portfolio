@@ -9,12 +9,12 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   title: "Model Winch for Foundry",
   image: "",
   date: "Spring 2026",
-  tagline: "3-stage reduction gearbox and shaft design for a crucible-lifting winch",
+  tagline: "Designing a 3-stage reduction gearbox and shaft for a crucible-lifting winch",
   tech: ["Gear Design", "Shaft Design", "Fusion 360", "Mechanical Design"],
   links: [],
   share: true,
   body: `
-  <p>A model winch system for lifting crucibles in a metal foundry, designed and built for my
+  <p>A model winch system for lifting crucibles in a metal foundry, being designed for my
   Engineering Design and Build (MMMB215) course. The system must lift a 1kg mass 120cm in
   strictly 10-20 seconds — fast enough to be practical, slow enough that molten metal in the
   crucible doesn't slosh or solidify. Driven by an 11000rpm/2.1W motor through a 3-stage
