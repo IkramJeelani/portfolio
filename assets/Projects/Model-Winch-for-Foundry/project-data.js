@@ -65,7 +65,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   </div>
 
   <h2>CAD Modelling</h2>
-  <p>The full assembly was modelled in Fusion 360.</p>
+  <p>The full assembly was modelled in Fusion 360:</p>
   <div class="gallery cols-2">
     <figure>
       <img src="assets/Projects/Model-Winch-for-Foundry/isometric.png" alt="Isometric CAD render of the full gearbox assembly">
