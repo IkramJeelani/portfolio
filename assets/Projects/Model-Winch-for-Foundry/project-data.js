@@ -61,9 +61,9 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
       <tr><th>Stage</th><th>Torque (Nm)</th><th>Angular velocity (rad/s)</th></tr>
     </thead>
     <tbody>
-      <tr><td>1 (input, helical)</td><td>0.00065</td><td>230.38</td></tr>
-      <tr><td>2 (helical)</td><td>0.00327</td><td>57.6</td></tr>
-      <tr><td>3 (output)</td><td>0.012308</td><td>19.2</td></tr>
+      <tr><td>1</td><td>0.00065</td><td>230.38</td></tr>
+      <tr><td>2</td><td>0.00327</td><td>57.6</td></tr>
+      <tr><td>3</td><td>0.012308</td><td>19.2</td></tr>
     </tbody>
   </table>
   <p>From the transmitted load at each stage, the radial (Wr) and axial (Wa) forces on the
