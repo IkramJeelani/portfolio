@@ -113,7 +113,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
 
   <h3>Shafts</h3>
   <p>3D-printed on an ELEGOO Neptune Pro 4 at 25% infill, printed horizontally so the print
-  extrusions run along the shaft's length — stronger against the bending and shear the shafts
+  extrusions run along the shaft's length which makes it stronger against the bending and shear the shafts
   actually experience than a vertical print would be.</p>
   <div class="gallery">
     <figure>
@@ -128,6 +128,14 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <p>Laser-cut from 6mm acrylic. Fusion 360 drawings were exported to .dxf, and tolerances for
   the bearing and press-fit holes were tested on a small offcut sheet first — cutting several hole
   diameters/widths and checking the fit — before committing to the final casing pieces.</p>
+  <div class="gallery">
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/case_1.png" alt="Laser-cut acrylic casing, first example">
+    </figure>
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/case_2.jpg" alt="Laser-cut acrylic casing, second example">
+    </figure>
+  </div>
 
   <h3>Gears</h3>
   <p>3D-printed at 25% infill on the ELEGOO Neptune Pro 4 and a Creality K2 Plus, initially with
