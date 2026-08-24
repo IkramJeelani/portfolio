@@ -50,6 +50,8 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   </table>
   <p>Addendum (ha) is 1.5mm for every gear and pinion across all 3 stages</p>
 
+  <h2>Modelling</h2>
+
   <h3>Shaft &amp; key design</h3>
   <p>Square and Woodruff keys were the original plan for locking each gear to its shaft, but the
   final build used M3/M4 bolts instead: a hole was drilled through both the shaft and the gear
