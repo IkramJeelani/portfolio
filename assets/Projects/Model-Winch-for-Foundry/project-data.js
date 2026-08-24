@@ -23,13 +23,9 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <img src="assets/Projects/Model-Winch-for-Foundry/initial_model.png" alt="Initial model concept of the winch and gearbox system">
 
   <h2>Initial Design &amp; Calculations</h2>
-  <p>The chosen layout stacks the three gear stages vertically rather than side-by-side, using
-  supporting walls for the shafts — a more compact footprint than a horizontal layout, at the
-  cost of one extra internal wall for structural support. Gears are PLA (3D-printed, since the
-  final gears are helical), shafts are aluminum, and the gearbox walls are acrylic (precise,
-  laser-cuttable, and see-through for inspecting the internals).</p>
 
   <h3>Gear ratio</h3>
+  <img src="assets/Projects/Model-Winch-for-Foundry/gear_ratio_FBD.png" alt="Free body diagram of the output shaft and hanging mass used to derive the required gear ratio">
   <p>The required output shaft speed was derived from the lifting constraint. With the mass's
   linear velocity <code>v = rω = x/t</code>, taking the lift height x = 1.2m at the midpoint of the
   allowed window (t = 15s) and a drum/shaft radius r = 4mm:</p>
