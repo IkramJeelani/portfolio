@@ -172,6 +172,15 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
     sleeve stiffening the output shaft against bending.</figcaption>
   </figure>
 
+  <h3>Results</h3>
+  <p>Tested by tying a string to the output shaft with the 1kg mass attached, then running the
+  motor (11,000 RPM input) until the mass was fully lifted. The gearbox lifted the mass 120cm in
+  roughly 14.5 seconds — close to the 15-second theoretical prediction, comfortably inside the
+  10-20 second requirement (the slight difference is likely from the thicker output shaft added
+  to counter bending). The assembly stayed structurally sound throughout: no bearings or shafts
+  came loose, no gear teeth broke, the casing held together, and vibration was minimal despite
+  the high input RPM.</p>
+
   <h3>Challenges faced</h3>
   <ul>
     <li>The first batch of 10mm aluminum shafts, sawn and then lathed to size, came out unusable
