@@ -22,7 +22,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   200x200mm housing, using an 8mm shaft, and staying within a 250Dhs budget.</p>
   <img src="assets/Projects/Model-Winch-for-Foundry/initial_model.png" alt="Initial model concept of the winch and gearbox system">
 
-  <h2>Initial Design &amp; Calculations</h2>
+  <h2>Initial Gear Design</h2>
 
   <h3>Gear ratio</h3>
   <img src="assets/Projects/Model-Winch-for-Foundry/gear_ratio_FBD.png" alt="Free body diagram of the output shaft and hanging mass used to derive the required gear ratio">
@@ -50,7 +50,13 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   </table>
   <p>Addendum (ha) is 1.5mm for every gear and pinion across all 3 stages</p>
 
-  <h3>Force analysis</h3>
+  <h3>Shaft &amp; key design</h3>
+  <p>Square keys were chosen for most shaft-to-gear connections — simple, cheap, and able to
+  handle higher torque — while a Woodruff key was used on the high-speed input shaft instead,
+  since its deeper, self-aligning seat suits high-RPM applications better despite being weaker
+  under heavy torque and harder to install.</p>
+
+  <h2>Force Analysis</h2>
   <table>
     <thead>
       <tr><th>Shaft</th><th>Speed (RPM)</th><th>Torque (Nm)</th><th>Bearing radial force Fr (N)</th></tr>
@@ -66,11 +72,5 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <p>The output shaft is critical: static factor of safety n = 2.44 (Von Mises), fatigue factor
   n<sub>f</sub> = 3.35 (infinite life), and its selected 608 bearing (3.45kN rated) far exceeds the
   15,000-hour target life.</p>
-
-  <h3>Shaft &amp; key design</h3>
-  <p>Square keys were chosen for most shaft-to-gear connections — simple, cheap, and able to
-  handle higher torque — while a Woodruff key was used on the high-speed input shaft instead,
-  since its deeper, self-aligning seat suits high-RPM applications better despite being weaker
-  under heavy torque and harder to install.</p>
   `,
 };
