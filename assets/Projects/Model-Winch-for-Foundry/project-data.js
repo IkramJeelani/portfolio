@@ -166,6 +166,10 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
     <img src="assets/Projects/Model-Winch-for-Foundry/assembly_4.png" alt="Two helical gears mounted on their shafts atop the casing base, checked for mesh alignment before final assembly">
     <figcaption>Gears mounted on their shafts and checked for mesh alignment before committing to final assembly.</figcaption>
   </figure>
+  <figure>
+    <img src="assets/Projects/Model-Winch-for-Foundry/assembly_5.png" alt="Full gear train assembled onto the casing with all bearings pressed into place">
+    <figcaption>The full gear train assembled onto the casing, with all bearings pressed into place.</figcaption>
+  </figure>
 
   <h3>Challenges faced</h3>
   <ul>
