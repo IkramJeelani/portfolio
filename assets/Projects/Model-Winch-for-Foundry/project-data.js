@@ -92,9 +92,12 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
       <tr><th>Shaft</th><th>Speed (RPM)</th><th>Torque (Nm)</th><th>Bearing radial force Fr (N)</th></tr>
     </thead>
     <tbody>
-      <tr><td>Shaft 1 (motor input)</td><td>11,000</td><td>0.001823</td><td>—</td></tr>
-      <tr><td>Shaft 2</td><td>3,666.67</td><td>0.005469</td><td>—</td></tr>
-      <tr><td>Shaft 3</td><td>916.67</td><td>0.021876</td><td>—</td></tr>
+      <tr><td>Shaft 1 (input) — Bearing 1</td><td>11,000</td><td>0.001823</td><td>0.15</td></tr>
+      <tr><td>Shaft 1 (input) — Bearing 2</td><td>11,000</td><td>0.001823</td><td>0.04</td></tr>
+      <tr><td>Shaft 2 — Bearing 1</td><td>3,666.67</td><td>0.005469</td><td>0.14</td></tr>
+      <tr><td>Shaft 2 — Bearing 2</td><td>3,666.67</td><td>0.005469</td><td>0.24</td></tr>
+      <tr><td>Shaft 3 — Bearing 1</td><td>916.67</td><td>0.021876</td><td>0.22</td></tr>
+      <tr><td>Shaft 3 — Bearing 2</td><td>916.67</td><td>0.021876</td><td>1.48</td></tr>
       <tr><td>Shaft 4 (output, critical) — Bearing 1</td><td>183.33</td><td>0.109380</td><td>11.63</td></tr>
       <tr><td>Shaft 4 (output, critical) — Bearing 2</td><td>183.33</td><td>0.109380</td><td>19.35</td></tr>
     </tbody>
