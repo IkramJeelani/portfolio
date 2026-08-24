@@ -22,7 +22,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   200x200mm housing, using an 8mm shaft, and staying within a 250Dhs budget.</p>
   <img src="assets/Projects/Model-Winch-for-Foundry/initial_model.png" alt="Initial model concept of the winch and gearbox system">
 
-  <h2>Initial Gearbox Design</h2>
+  <h2>Gearbox Parameters</h2>
 
   <h3>Gear ratio</h3>
   <img src="assets/Projects/Model-Winch-for-Foundry/gear_ratio_FBD.png" alt="Free body diagram of the output shaft and hanging mass used to derive the required gear ratio">
@@ -49,8 +49,22 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
     </tbody>
   </table>
   <p>Addendum (ha) is 1.5mm for every gear and pinion across all 3 stages</p>
+  <div class="gallery">
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/stage_1_2D.png" alt="2D sketch of Stage 1 gear pair">
+      <figcaption>Stage 1</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/stage_2_2D.png" alt="2D sketch of Stage 2 gear pair">
+      <figcaption>Stage 2</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/stage_3_2D.png" alt="2D sketch of Stage 3 gear pair">
+      <figcaption>Stage 3</figcaption>
+    </figure>
+  </div>
 
-  <h2>Modelling</h2>
+  <h2>CAD Modelling</h2>
 
   <h3>Shaft &amp; key design</h3>
   <p>Square and Woodruff keys were the original plan for locking each gear to its shaft, but the
