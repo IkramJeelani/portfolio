@@ -31,7 +31,8 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   allowed window (t = 15s) and a drum/shaft radius r = 4mm:</p>
   <blockquote>0.004 × ω = 1.2 / 15 → ω = 20 rad/s ≈ 191 RPM</blockquote>
   <p>Against the motor's 11,000 RPM input, that's a required total reduction of
-  G = 11000 / 191 ≈ 58, split across the 3 stages as G1 = 5, G2 = 4, G3 = 3.</p>
+  G = 11000 / 191 ≈ 58, initially split across the 3 stages as G1 = 5, G2 = 4, G3 = 3
+  (later revised to G1 = 3, G2 = 4, G3 = 5 to fit the housing constraint).</p>
 
   <h3>Gear specifications</h3>
   <p>All 3 stages use a normal module of 1.5mm, 20° pressure angle, and 30° helix angle
