@@ -126,8 +126,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
 
   <h3>Casing</h3>
   <p>Laser-cut from 6mm acrylic. Fusion 360 drawings were exported to .dxf, and tolerances for
-  the bearing and press-fit holes were tested on a small offcut sheet first — cutting several hole
-  diameters/widths and checking the fit — before committing to the final casing pieces.</p>
+  the bearing and press-fit holes were tested on a small offcut sheet first.</p>
   <div class="gallery">
     <figure>
       <img src="assets/Projects/Model-Winch-for-Foundry/case_1.png" alt="Laser-cut acrylic casing, first example">
@@ -151,12 +150,6 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   </div>
 
   <h3>Assembly</h3>
-  <p>Each gear was locked to its shaft with an M3 or M4 bolt threaded directly into a hole in the
-  shaft (the bolt cuts its own thread, so no separate tapping step was needed) and a nut through
-  a matching hole in the gear hub. Bearings were secured into the casing with acrylic glue to
-  keep them from working loose under rotation, and the casing walls were assembled around the
-  shafts with press-fit joints — base first, then the two main walls, then the side walls — for a
-  structurally rigid housing with no separate fasteners needed there.</p>
 
   <h3>Challenges faced</h3>
   <ul>
