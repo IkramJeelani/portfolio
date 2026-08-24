@@ -168,9 +168,8 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   </figure>
   <figure>
     <img src="assets/Projects/Model-Winch-for-Foundry/assembly_5.png" alt="Fully enclosed acrylic casing with the complete gear train assembled inside">
-    <figcaption>The fully assembled gearbox: shaft ends taped at the bearings to stop side-to-side
-    play and vibration, and a 3D-printed sleeve taped inside the output shaft to stiffen it against
-    bending under the 1kg load.</figcaption>
+    <figcaption>Fully assembled: shaft ends taped at the bearings, plus a taped-in 3D-printed
+    sleeve stiffening the output shaft against bending.</figcaption>
   </figure>
 
   <h3>Challenges faced</h3>
