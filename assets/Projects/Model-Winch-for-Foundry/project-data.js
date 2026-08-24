@@ -108,5 +108,44 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   n<sub>f</sub> = 3.35 (infinite life), and its selected 608 bearing (3.45kN rated) far exceeds the
   15,000-hour target life.</p>
   <p><em>Full worked calculations for all of the above are in Project Submission 2.</em></p>
+
+  <h2>Manufacturing</h2>
+
+  <h3>Shafts</h3>
+  <p>3D-printed on an ELEGOO Neptune Pro 4 at 25% infill, printed horizontally so the print
+  extrusions run along the shaft's length — stronger against the bending and shear the shafts
+  actually experience than a vertical print would be.</p>
+
+  <h3>Casing</h3>
+  <p>Laser-cut from 6mm acrylic. Fusion 360 drawings were exported to .dxf, and tolerances for
+  the bearing and press-fit holes were tested on a small offcut sheet first — cutting several hole
+  diameters/widths and checking the fit — before committing to the final casing pieces.</p>
+
+  <h3>Gears</h3>
+  <p>3D-printed at 25% infill on the ELEGOO Neptune Pro 4 and a Creality K2 Plus, initially with
+  rafts for bed adhesion. The rafts proved difficult to remove cleanly, so later reprints skipped
+  them.</p>
+
+  <h3>Assembly</h3>
+  <p>Each gear was locked to its shaft with an M3 or M4 bolt threaded directly into a hole in the
+  shaft (the bolt cuts its own thread, so no separate tapping step was needed) and a nut through
+  a matching hole in the gear hub. Bearings were secured into the casing with acrylic glue to
+  keep them from working loose under rotation, and the casing walls were assembled around the
+  shafts with press-fit joints — base first, then the two main walls, then the side walls — for a
+  structurally rigid housing with no separate fasteners needed there.</p>
+
+  <h3>Challenges faced</h3>
+  <ul>
+    <li>The first batch of 10mm aluminum shafts, sawn and then lathed to size, came out unusable
+    — the lathe was faulty and kept bending them, and with the digital measuring tool also broken,
+    diameter had to be checked manually after every rotation.</li>
+    <li>The output shaft bent under the 1kg load, so an extra 3D-printed sleeve was added inside
+    it and taped in place to stiffen it — a tight fit that was prone to cracking during sanding and
+    test-fitting.</li>
+    <li>Initial gear and shaft bolt-holes were printed too small, requiring redrilling before the
+    bolts would fit.</li>
+    <li>5mm acrylic wasn't available, forcing a late switch to 6mm for the casing walls; heavy lab
+    and 3D-printer demand also limited how much testing could happen before final assembly.</li>
+  </ul>
   `,
 };
