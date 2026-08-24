@@ -141,6 +141,14 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <p>3D-printed at 25% infill on the ELEGOO Neptune Pro 4 and a Creality K2 Plus, initially with
   rafts for bed adhesion. The rafts proved difficult to remove cleanly, so later reprints skipped
   them.</p>
+  <div class="gallery">
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/gears_1.png" alt="3D-printed helical gear, first example">
+    </figure>
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/gears_2.jpg" alt="3D-printed helical gear, second example">
+    </figure>
+  </div>
 
   <h3>Assembly</h3>
   <p>Each gear was locked to its shaft with an M3 or M4 bolt threaded directly into a hole in the
