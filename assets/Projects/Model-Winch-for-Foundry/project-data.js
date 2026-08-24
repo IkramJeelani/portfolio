@@ -158,6 +158,23 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
     <img src="assets/Projects/Model-Winch-for-Foundry/assembly_2.png" alt="Drilling out a gear hub hole while clamped in a vise">
     <figcaption>Drilling out a gear hub hole so the bolt can pass through.</figcaption>
   </figure>
+  <figure>
+    <img src="assets/Projects/Model-Winch-for-Foundry/assembly_3.png" alt="Pressing a bearing into the acrylic casing and securing it with glue">
+    <figcaption>Pressing a bearing into the casing and securing it with acrylic glue.</figcaption>
+  </figure>
 
+  <h3>Challenges faced</h3>
+  <ul>
+    <li>The first batch of 10mm aluminum shafts, sawn and then lathed to size, came out unusable
+    — the lathe was faulty and kept bending them, and with the digital measuring tool also broken,
+    diameter had to be checked manually after every rotation.</li>
+    <li>The output shaft bent under the 1kg load, so an extra 3D-printed sleeve was added inside
+    it and taped in place to stiffen it — a tight fit that was prone to cracking during sanding and
+    test-fitting.</li>
+    <li>Initial gear and shaft bolt-holes were printed too small, requiring redrilling before the
+    bolts would fit.</li>
+    <li>5mm acrylic wasn't available, forcing a late switch to 6mm for the casing walls; heavy lab
+    and 3D-printer demand also limited how much testing could happen before final assembly.</li>
+  </ul>
   `,
 };
