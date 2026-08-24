@@ -31,7 +31,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   allowed window (t = 15s) and a drum/shaft radius r = 4mm:</p>
   <blockquote>0.004 × ω = 1.2 / 15 → ω = 20 rad/s ≈ 191 RPM</blockquote>
   <p>Against the motor's 11,000 RPM input, that's a required total reduction of
-  G = 11000 / 191 ≈ 58, split across the 3 stages as G1 = 5, G2 = 4, G3 = 3.</p>
+  G = 11000 / 191 ≈ 58, split across the 3 stages as G1 = 3, G2 = 4, G3 = 5.</p>
 
   <h3>Gear specifications</h3>
   <p>All 3 stages use a normal module of 1.5mm, 20° pressure angle, and 30° helix angle
@@ -43,9 +43,9 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
       <tr><th>Stage</th><th>Pinion teeth</th><th>Gear teeth</th><th>Center distance a (mm)</th><th>Pinion d (mm)</th><th>Gear d (mm)</th></tr>
     </thead>
     <tbody>
-      <tr><td>1</td><td>17</td><td>85</td><td>88.33</td><td>29.44</td><td>147.22</td></tr>
+      <tr><td>1</td><td>17</td><td>51</td><td>58.89</td><td>29.44</td><td>88.33</td></tr>
       <tr><td>2</td><td>17</td><td>68</td><td>73.61</td><td>29.44</td><td>117.78</td></tr>
-      <tr><td>3</td><td>17</td><td>51</td><td>58.89</td><td>29.44</td><td>88.33</td></tr>
+      <tr><td>3</td><td>17</td><td>85</td><td>88.33</td><td>29.44</td><td>147.22</td></tr>
     </tbody>
   </table>
   <p>Addendum (ha) is 1.5mm for every gear and pinion across all 3 stages. From the resulting
@@ -53,30 +53,17 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   within the 200x200mm housing limit.</p>
 
   <h3>Force analysis</h3>
-  <p>Working backward from the 1kg lifting load at the output shaft (τ = F×r = 9.81N × 0.004m
-  = 0.03924 Nm), the transmitted load, then the resulting shaft torque, was calculated stage by
-  stage back up to the motor input:</p>
+  <p>The torques were later revisited against the motor's actual 2.1W input power (rather than
+  just the idealized load-based figures), giving the following speed and torque at each shaft:</p>
   <table>
     <thead>
-      <tr><th>Stage</th><th>Torque (Nm)</th><th>Angular velocity (rad/s)</th></tr>
+      <tr><th>Shaft</th><th>Speed (RPM)</th><th>Torque (Nm)</th></tr>
     </thead>
     <tbody>
-      <tr><td>1</td><td>0.00065</td><td>230.38</td></tr>
-      <tr><td>2</td><td>0.00327</td><td>57.6</td></tr>
-      <tr><td>3</td><td>0.012308</td><td>19.2</td></tr>
-    </tbody>
-  </table>
-  <p>From the transmitted load at each stage, the radial (Wr) and axial (Wa) forces on the
-  helical gears were found using <code>Wr = Wt·tan(φ)/cos(ψ)</code> and
-  <code>Wa = Wt·tan(ψ)</code> (φ = 20° pressure angle, ψ = 30° helix angle):</p>
-  <table>
-    <thead>
-      <tr><th>Stage</th><th>Tangential Wt (N)</th><th>Radial Wr (N)</th><th>Pitch-line velocity (m/s)</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>1</td><td>1.026</td><td>0.373</td><td>16.96</td></tr>
-      <tr><td>2</td><td>0.222</td><td>0.093</td><td>3.39</td></tr>
-      <tr><td>3</td><td>0.044</td><td>0.019</td><td>0.73</td></tr>
+      <tr><td>Motor input</td><td>11,000</td><td>0.001823</td></tr>
+      <tr><td>Stage 1 (Shaft A)</td><td>3,666.67</td><td>0.005469</td></tr>
+      <tr><td>Stage 2 (Shaft B)</td><td>916.67</td><td>0.021876</td></tr>
+      <tr><td>Stage 3 (Output)</td><td>183.33</td><td>0.109380</td></tr>
     </tbody>
   </table>
   <p>As a sanity check, the output shaft's surface speed was converted back into a lifting time:
