@@ -22,7 +22,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   200x200mm housing, using an 8mm shaft, and staying within a 250Dhs budget.</p>
   <img src="assets/Projects/Model-Winch-for-Foundry/initial_model.png" alt="Initial model concept of the winch and gearbox system">
 
-  <h2>Initial Gear Design</h2>
+  <h2>Initial Gearbox Design</h2>
 
   <h3>Gear ratio</h3>
   <img src="assets/Projects/Model-Winch-for-Foundry/gear_ratio_FBD.png" alt="Free body diagram of the output shaft and hanging mass used to derive the required gear ratio">
@@ -51,10 +51,12 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <p>Addendum (ha) is 1.5mm for every gear and pinion across all 3 stages</p>
 
   <h3>Shaft &amp; key design</h3>
-  <p>Square keys were chosen for most shaft-to-gear connections — simple, cheap, and able to
-  handle higher torque — while a Woodruff key was used on the high-speed input shaft instead,
-  since its deeper, self-aligning seat suits high-RPM applications better despite being weaker
-  under heavy torque and harder to install.</p>
+  <p>Square and Woodruff keys were the original plan for locking each gear to its shaft, but the
+  final build used M3/M4 bolts instead: a hole was drilled through both the shaft and the gear
+  hub at each connection, with the bolt threading directly into the shaft (acting as its own tap,
+  so no separate tapping step was needed) and a nut on the other side clamping the gear in
+  place. Simpler to manufacture and assemble than cutting keyways, while still locking each
+  gear securely to its shaft.</p>
 
   <h2>Force Analysis</h2>
   <table>
