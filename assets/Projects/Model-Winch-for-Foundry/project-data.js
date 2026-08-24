@@ -115,6 +115,14 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <p>3D-printed on an ELEGOO Neptune Pro 4 at 25% infill, printed horizontally so the print
   extrusions run along the shaft's length — stronger against the bending and shear the shafts
   actually experience than a vertical print would be.</p>
+  <div class="gallery">
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/shaft_1.png" alt="3D-printed shaft, first example">
+    </figure>
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/shaft_2.png" alt="3D-printed shaft, second example">
+    </figure>
+  </div>
 
   <h3>Casing</h3>
   <p>Laser-cut from 6mm acrylic. Fusion 360 drawings were exported to .dxf, and tolerances for
