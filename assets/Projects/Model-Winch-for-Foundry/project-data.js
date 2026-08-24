@@ -65,6 +65,24 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   </div>
 
   <h2>CAD Modelling</h2>
+  <div class="gallery">
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/isometric.png" alt="Isometric CAD render of the full gearbox assembly">
+      <figcaption>Isometric</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/front.png" alt="Front view CAD render of the gearbox assembly">
+      <figcaption>Front</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/top.png" alt="Top view CAD render of the gearbox assembly">
+      <figcaption>Top</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/right.png" alt="Right side view CAD render of the gearbox assembly">
+      <figcaption>Right</figcaption>
+    </figure>
+  </div>
 
   <h3>Shaft &amp; key design</h3>
   <p>Square and Woodruff keys were the original plan for locking each gear to its shaft, but the
