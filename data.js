@@ -344,7 +344,7 @@ const EDUCATION = [
    backtick (`) or the characters ${ — they have special meaning there.
    ----------------------------------------------------------------------------
    ============================================================================ */
-const PROJECT_ORDER = ["dc-motor-speed-controller-using-8051-mcu"];
+const PROJECT_ORDER = ["model-winch-for-foundry", "dc-motor-speed-controller-using-8051-mcu"];
 
 /* ---------- 7. CONTACTS ----------
    ADD a contact:    copy a { ... } line and edit it.
