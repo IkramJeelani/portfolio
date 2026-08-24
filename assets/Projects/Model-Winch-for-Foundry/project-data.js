@@ -150,14 +150,16 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   </div>
 
   <h3>Assembly</h3>
-  <figure>
-    <img src="assets/Projects/Model-Winch-for-Foundry/assembly_1.png" alt="Threading a bolt by hand into a hole drilled in a 3D-printed shaft">
-    <figcaption>Threading a bolt into the shaft. It cuts its own thread, no tapping needed.</figcaption>
-  </figure>
-  <figure>
-    <img src="assets/Projects/Model-Winch-for-Foundry/assembly_2.png" alt="Drilling out a gear hub hole while clamped in a vise">
-    <figcaption>Drilling out a gear hub hole so the bolt can pass through.</figcaption>
-  </figure>
+  <div class="gallery">
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/assembly_1.png" alt="Threading a bolt by hand into a hole drilled in a 3D-printed shaft">
+      <figcaption>Threading a bolt into the shaft. It cuts its own thread, no tapping needed.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/Projects/Model-Winch-for-Foundry/assembly_2.png" alt="Drilling out a gear hub hole while clamped in a vise">
+      <figcaption>Drilling out a gear hub hole so the bolt can pass through.</figcaption>
+    </figure>
+  </div>
 
   `,
 };
