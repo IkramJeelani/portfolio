@@ -85,15 +85,8 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
     </figure>
   </div>
 
-  <h3>Shaft &amp; key design</h3>
-  <p>Square and Woodruff keys were the original plan for locking each gear to its shaft, but the
-  final build used M3/M4 bolts instead: a hole was drilled through both the shaft and the gear
-  hub at each connection, with the bolt threading directly into the shaft (acting as its own tap,
-  so no separate tapping step was needed) and a nut on the other side clamping the gear in
-  place. Simpler to manufacture and assemble than cutting keyways, while still locking each
-  gear securely to its shaft.</p>
-
   <h2>Force Analysis</h2>
+  <img src="assets/Projects/Model-Winch-for-Foundry/force_analysis_shaft_label.png" alt="Labelled diagram of the shafts used in the force analysis">
   <table>
     <thead>
       <tr><th>Shaft</th><th>Speed (RPM)</th><th>Torque (Nm)</th><th>Bearing radial force Fr (N)</th></tr>
