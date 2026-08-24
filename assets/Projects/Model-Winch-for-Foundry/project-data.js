@@ -89,17 +89,19 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <img src="assets/Projects/Model-Winch-for-Foundry/force_analysis_shaft_label.png" alt="Labelled diagram of the shafts used in the force analysis">
   <table>
     <thead>
-      <tr><th>Shaft</th><th>Speed (RPM)</th><th>Torque (Nm)</th><th>Bearing radial force Fr (N)</th></tr>
+      <tr>
+        <th rowspan="2">Shaft</th>
+        <th rowspan="2">Speed (RPM)</th>
+        <th rowspan="2">Torque (Nm)</th>
+        <th colspan="2">Bearing radial force Fr (N)</th>
+      </tr>
+      <tr><th>Bearing 1</th><th>Bearing 2</th></tr>
     </thead>
     <tbody>
-      <tr><td>Shaft 1 (input) — Bearing 1</td><td>11,000</td><td>0.001823</td><td>0.15</td></tr>
-      <tr><td>Shaft 1 (input) — Bearing 2</td><td>11,000</td><td>0.001823</td><td>0.04</td></tr>
-      <tr><td>Shaft 2 — Bearing 1</td><td>3,666.67</td><td>0.005469</td><td>0.14</td></tr>
-      <tr><td>Shaft 2 — Bearing 2</td><td>3,666.67</td><td>0.005469</td><td>0.24</td></tr>
-      <tr><td>Shaft 3 — Bearing 1</td><td>916.67</td><td>0.021876</td><td>0.22</td></tr>
-      <tr><td>Shaft 3 — Bearing 2</td><td>916.67</td><td>0.021876</td><td>1.48</td></tr>
-      <tr><td>Shaft 4 (output, critical) — Bearing 1</td><td>183.33</td><td>0.109380</td><td>11.63</td></tr>
-      <tr><td>Shaft 4 (output, critical) — Bearing 2</td><td>183.33</td><td>0.109380</td><td>19.35</td></tr>
+      <tr><td>Shaft 1 (input)</td><td>11,000</td><td>0.001823</td><td>0.15</td><td>0.04</td></tr>
+      <tr><td>Shaft 2</td><td>3,666.67</td><td>0.005469</td><td>0.14</td><td>0.24</td></tr>
+      <tr><td>Shaft 3</td><td>916.67</td><td>0.021876</td><td>0.22</td><td>1.48</td></tr>
+      <tr><td>Shaft 4 (output, critical)</td><td>183.33</td><td>0.109380</td><td>11.63</td><td>19.35</td></tr>
     </tbody>
   </table>
   <p>The output shaft is critical: static factor of safety n = 2.44 (Von Mises), fatigue factor
