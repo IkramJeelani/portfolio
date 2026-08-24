@@ -1597,22 +1597,23 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border: 0;
 }
 
-/* Image gallery grid: every image forced to the exact same box (width from
-   the equal grid columns, fixed height) — object-fit:fill stretches to
-   match exactly, distorting the aspect ratio on any image that doesn't
-   already match, so source images should share a consistent ratio where
-   distortion would be noticeable. */
+/* Image gallery: same-height row, each image keeps its own natural width
+   (no cropping/stretching by default — override per-image with an inline
+   style when an image specifically needs to be forced to a size). */
 .project-content .gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 1rem;
   margin: 1.8rem 0;
 }
+.project-content .gallery figure { flex: 0 1 auto; min-width: 180px; }
 .project-content .gallery img {
   margin: 0;
-  width: 100%;
+  display: block;
   height: 220px;
-  object-fit: fill;
+  width: auto;
+  max-width: 100%;
 }
 .project-content .gallery figure { margin: 0; }
 

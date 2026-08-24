@@ -51,7 +51,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <p>Addendum (ha) is 1.5mm for every gear and pinion across all 3 stages</p>
   <div class="gallery">
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/stage_1_2D.png" alt="2D sketch of Stage 1 gear pair">
+      <img src="assets/Projects/Model-Winch-for-Foundry/stage_1_2D.png" alt="2D sketch of Stage 1 gear pair" style="width:308px;object-fit:fill;">
       <figcaption>Stage 1</figcaption>
     </figure>
     <figure>
