@@ -27,5 +27,6 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   and shaft system that takes a small, high-speed motor (11000rpm, 2.1W) and reliably reduces
   it to lift a 1kg mass 120cm within a strict 10-20 second window, while fitting inside a
   200x200mm housing, using an 8mm shaft, and staying within a 250Dhs budget.</p>
+  <img src="assets/Projects/Model-Winch-for-Foundry/initial_model.png" alt="Initial model concept of the winch and gearbox system">
   `,
 };
