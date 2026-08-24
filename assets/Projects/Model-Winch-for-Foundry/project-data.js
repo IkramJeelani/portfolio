@@ -92,11 +92,11 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
       <tr><th>Shaft</th><th>Speed (RPM)</th><th>Torque (Nm)</th><th>Bearing radial force Fr (N)</th></tr>
     </thead>
     <tbody>
-      <tr><td>Motor input</td><td>11,000</td><td>0.001823</td><td>—</td></tr>
-      <tr><td>Shaft A</td><td>3,666.67</td><td>0.005469</td><td>—</td></tr>
-      <tr><td>Shaft B</td><td>916.67</td><td>0.021876</td><td>—</td></tr>
-      <tr><td>Output (critical) — Bearing 1</td><td>183.33</td><td>0.109380</td><td>11.63</td></tr>
-      <tr><td>Output (critical) — Bearing 2</td><td>183.33</td><td>0.109380</td><td>19.35</td></tr>
+      <tr><td>Shaft 1 (motor input)</td><td>11,000</td><td>0.001823</td><td>—</td></tr>
+      <tr><td>Shaft 2</td><td>3,666.67</td><td>0.005469</td><td>—</td></tr>
+      <tr><td>Shaft 3</td><td>916.67</td><td>0.021876</td><td>—</td></tr>
+      <tr><td>Shaft 4 (output, critical) — Bearing 1</td><td>183.33</td><td>0.109380</td><td>11.63</td></tr>
+      <tr><td>Shaft 4 (output, critical) — Bearing 2</td><td>183.33</td><td>0.109380</td><td>19.35</td></tr>
     </tbody>
   </table>
   <p>The output shaft is critical: static factor of safety n = 2.44 (Von Mises), fatigue factor
