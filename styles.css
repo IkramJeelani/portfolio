@@ -1607,7 +1607,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .project-content .gallery img {
   margin: 0;
   width: 100%;
-  height: 220px;
+  aspect-ratio: 1.4;
   object-fit: cover;
 }
 .project-content .gallery figure { margin: 0; }
