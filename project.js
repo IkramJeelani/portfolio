@@ -131,6 +131,71 @@
     if (!img.hasAttribute("loading")) img.loading = "lazy";
   });
 
+  // Table of contents: built from the body's own h2/h3 headings, fixed to
+  // the left edge of the viewport on wide screens. Replaces the old
+  // floating project-dock (which listed OTHER projects) with something
+  // that actually helps navigate THIS page's numbered sections.
+  (function buildTOC() {
+    const contentEl = page.querySelector(".project-content");
+    const headings = contentEl ? Array.from(contentEl.querySelectorAll("h2, h3")) : [];
+    if (headings.length < 2) return; // not worth a TOC for a short page
+
+    const used = new Set();
+    const slugify = (s) => {
+      const base =
+        String(s).toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "section";
+      let slug = base,
+        n = 2;
+      while (used.has(slug)) slug = `${base}-${n++}`;
+      used.add(slug);
+      return slug;
+    };
+
+    const toc = document.createElement("nav");
+    toc.className = "project-toc";
+    toc.setAttribute("aria-label", "Table of contents");
+    const list = document.createElement("div");
+    list.className = "toc-list";
+    toc.innerHTML = '<div class="toc-title">Contents</div>';
+    toc.appendChild(list);
+
+    const links = [];
+    headings.forEach((h) => {
+      if (!h.id) h.id = slugify(h.textContent);
+      const a = document.createElement("a");
+      a.className = "toc-link" + (h.tagName === "H3" ? " toc-sub" : "");
+      a.href = "#" + h.id;
+      a.textContent = h.textContent;
+      list.appendChild(a);
+      links.push({ heading: h, link: a });
+    });
+    document.body.appendChild(toc);
+
+    // Highlight whichever section is currently in view.
+    const LINE = 140;
+    let ticking = false;
+    const check = () => {
+      ticking = false;
+      let current = null;
+      links.forEach(({ heading }) => {
+        if (heading.getBoundingClientRect().top - LINE <= 0) current = heading;
+      });
+      links.forEach(({ heading, link }) => {
+        if (heading === current) link.setAttribute("aria-current", "true");
+        else link.removeAttribute("aria-current");
+      });
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(check);
+      }
+    };
+    check();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+  })();
+
   // ←/→ step through projects (ignored while typing or with modifiers held).
   document.addEventListener("keydown", (e) => {
     if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;

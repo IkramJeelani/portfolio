@@ -1138,6 +1138,52 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border: 1px solid var(--border);
   border-radius: var(--radius);
 }
+/* ===== Table of contents (detail page, wide screens) =====
+   Fixed to the left edge, listing THIS page's own h2/h3 sections — built
+   from the numbered headings already in the body, so it stays in sync
+   automatically as sections are added/renamed. */
+.project-toc {
+  position: fixed;
+  left: 1rem;
+  top: calc(var(--header-h, 72px) + 3rem);
+  width: 210px;
+  max-height: calc(100vh - var(--header-h, 72px) - 3rem - 20px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  z-index: 40;
+}
+.project-toc::-webkit-scrollbar { display: none; }
+.toc-title {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin: 0 0 0.6rem 0.35rem;
+}
+.toc-list { display: flex; flex-direction: column; }
+.toc-link {
+  padding: 0.35rem 0.6rem;
+  border-left: 2px solid var(--border);
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.35;
+  transition: color 0.2s, border-color 0.2s;
+}
+.toc-link.toc-sub { padding-left: 1.2rem; font-size: 0.78rem; }
+.toc-link:hover { color: var(--text); }
+.toc-link[aria-current] {
+  color: var(--accent);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+:root:not([data-theme="light"]) .toc-link[aria-current] { color: var(--accent-hover); }
+/* Same collision logic as the old dock: hide once the fixed-width sidebar
+   would start overlapping the centred 820px .project-page column. */
+@media (max-width: 1380px) {
+  .project-toc { display: none; }
+}
+
 .project-hero {
   /* Same 5:4 crop as the project card's .card-img, so the shared-element
      morph between them doesn't change shape and the same image framing
