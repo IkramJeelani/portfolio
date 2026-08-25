@@ -194,23 +194,5 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <img src="assets/Projects/Model-Winch-for-Foundry/final_result.png" alt="The lifting test in progress: the assembled gearbox raising the 1kg mass on a string">
   <p>The project component of the course was graded 95/100.</p>
   <img class="full" src="assets/Projects/Model-Winch-for-Foundry/grade.png" alt="Final grade for the project component: 95 out of 100">
-
-  <h2>9. Challenges Faced</h2>
-  <figure>
-    <img src="assets/Projects/Model-Winch-for-Foundry/challenges_1.png" alt="A shaft being turned on a lathe that kept bending under the cut">
-    <figcaption>The lathe used to turn the first batch of aluminum shafts was faulty and kept bending them.</figcaption>
-  </figure>
-  <ul>
-    <li>The first batch of 10mm aluminum shafts, sawn and then lathed to size, came out unusable
-    — the lathe was faulty and kept bending them, and with the digital measuring tool also broken,
-    diameter had to be checked manually after every rotation.</li>
-    <li>The output shaft bent under the 1kg load, so an extra 3D-printed sleeve was added inside
-    it and taped in place to stiffen it — a tight fit that was prone to cracking during sanding and
-    test-fitting.</li>
-    <li>Initial gear and shaft bolt-holes were printed too small, requiring redrilling before the
-    bolts would fit.</li>
-    <li>5mm acrylic wasn't available, forcing a late switch to 6mm for the casing walls; heavy lab
-    and 3D-printer demand also limited how much testing could happen before final assembly.</li>
-  </ul>
   `,
 };
