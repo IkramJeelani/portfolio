@@ -7,13 +7,13 @@
    What a first-time visitor sees (they can still toggle the theme from the nav bar).
    theme: "dark" or "light" */
 const SETTINGS = {
-  theme: "light",
+  theme: "dark",
 };
 
 /* ---------- 1. YOU ---------- */
 const PROFILE = {
-  name: "Ikram Jeelani",
-  initials: "IJ", // shown top-left AND as the browser-tab icon (kept in sync)
+  name: "Ikram Jeelani Shaik",
+  initials: "IJS", // shown top-left AND as the browser-tab icon (kept in sync)
   role: "Mechatronic Engineering Student",
   bio: "",
   // Shown beside the About text under your name. Put the file in assets/,
