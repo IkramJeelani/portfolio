@@ -1,17 +1,20 @@
 #!/bin/sh
-# Keeps og:image/twitter:image in sync with SETTINGS.theme (data.js), and
-# regenerates the per-project share/*.html redirect pages, before every
-# commit — see scripts/sync-og-image.py and scripts/generate-share-pages.py
-# for why these can't just be done at runtime (link-preview crawlers don't
+# Keeps og:image/twitter:image in sync with SETTINGS.theme (data.js),
+# regenerates the share-preview wordmark image from PROFILE.name +
+# styles.css's colors, and regenerates the per-project share/*.html
+# redirect pages, before every commit — see scripts/sync-og-image.py,
+# scripts/generate-og-images.py and scripts/generate-share-pages.py for
+# why these can't just be done at runtime (link-preview crawlers don't
 # run JS).
 #
 # Activated once via: git config core.hooksPath .githooks
 
 ROOT="$(git rev-parse --show-toplevel)"
 python "$ROOT/scripts/sync-og-image.py" || exit 1
+python "$ROOT/scripts/generate-og-images.py" || exit 1
 python "$ROOT/scripts/generate-share-pages.py" || exit 1
 
-# Re-stage in case either script changed/added files, so the fix lands in
+# Re-stage in case any script changed/added files, so the fix lands in
 # the commit that's about to happen instead of showing up as an unstaged
 # change right after.
-git add index.html project.html share/ data.js
+git add index.html project.html share/ data.js assets/og-image-light.png assets/og-image-dark.png

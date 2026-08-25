@@ -17,10 +17,11 @@ Colors are the exact --bg/--text/--accent hex values from styles.css'
 :root and :root[data-theme="light"] blocks — keep these two in sync by
 hand if the palette ever changes there.
 
-Safe to run manually: `python scripts/generate-og-images.py`.
-Not currently wired into the pre-commit hook — PROFILE.name changes are
-rare, and hand-running this once after such a change is simpler than
-adding a Pillow dependency to every commit.
+Runs as a git pre-commit hook (see .githooks/pre-commit), alongside
+sync-og-image.py and generate-share-pages.py, so the image can't drift out
+of sync with PROFILE.name or the color tokens. Requires Pillow locally for
+that hook to succeed (`pip install pillow`). Safe to run manually too:
+`python scripts/generate-og-images.py`.
 """
 import re
 import sys
