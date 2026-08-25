@@ -7,7 +7,7 @@
    What a first-time visitor sees (they can still toggle the theme from the nav bar).
    theme: "dark" or "light" */
 const SETTINGS = {
-  theme: "dark",
+  theme: "light",
 };
 
 /* ---------- 1. YOU ---------- */
