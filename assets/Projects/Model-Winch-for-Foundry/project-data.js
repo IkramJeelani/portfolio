@@ -173,7 +173,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   </figure>
 
   <h2>Bill of Materials</h2>
-  <p>Several parts were revised after the first version (v1) — notably switching the shafts from
+  <p>Several parts were revised after the first version (v1), notably switching the shafts from
   aluminum to 3D-printed PLA. Final cost came in well under the 250Dhs budget:</p>
   <img class="full" src="assets/Projects/Model-Winch-for-Foundry/BOM.png" alt="Finalised Bill of Materials table from Project Submission 3, listing every part, material, version, quantity, and cost">
 
@@ -185,6 +185,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   to counter bending). The assembly stayed structurally sound throughout: no bearings or shafts
   came loose, no gear teeth broke, the casing held together, and vibration was minimal despite
   the high input RPM.</p>
+  <img src="assets/Projects/Model-Winch-for-Foundry/final_result.png" alt="The lifting test in progress: the assembled gearbox raising the 1kg mass on a string">
 
   <h3>Challenges faced</h3>
   <ul>
