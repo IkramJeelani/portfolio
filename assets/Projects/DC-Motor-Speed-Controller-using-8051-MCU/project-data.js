@@ -31,6 +31,7 @@ window.PROJECT_DATA["dc-motor-speed-controller-using-8051-mcu"] = {
   ],
   share: true,
   body: `
+  <h2>1. Introduction</h2>
   <p>A closed-loop speed controller for a DC motor/fan using an 8051 development board. A 3-bit DIP switch
   selects one of 8 desired speeds (0-2400 RPM). The controller measures the fan's actual
   speed from its tachometer output and adjusts a PWM signal driving a MOSFET so the fan
@@ -39,7 +40,7 @@ window.PROJECT_DATA["dc-motor-speed-controller-using-8051-mcu"] = {
   3-person team project for my Digital Logic &amp; Microcontroller (MSE 352) course.</p>
   <p><strong>Note:</strong> The course permitted unrestricted use of generative AI for writing the C code. However, each team member was individually questioned on the code and the project's functionality as part of the assessment, requiring a thorough understanding of the implementation.</p>
 
-  <h2>How it works</h2>
+  <h2>2. How it works</h2>
 
   <figure>
     <img src="assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/schematic.jpg"
@@ -77,7 +78,7 @@ window.PROJECT_DATA["dc-motor-speed-controller-using-8051-mcu"] = {
     <li><strong>Display:</strong> The measured RPM is rounded to the nearest 10 RPM and displayed on a multiplexed 3-digit common-anode seven-segment display. Transistor switches independently enable each digit during multiplexing.</li>
   </ul>
 
-  <h2>Results</h2>
+  <h2>3. Results</h2>
 
   <p>The controller tracked all DIP-selected setpoints with a small, repeatable
   steady-state error. The remaining error was primarily due to variation in the
