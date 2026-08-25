@@ -180,12 +180,13 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <h3>Results</h3>
   <p>Tested by tying a string to the output shaft with the 1kg mass attached, then running the
   motor (11,000 RPM input) until the mass was fully lifted. The gearbox lifted the mass 120cm in
-  roughly 14.5 seconds — close to the 15-second theoretical prediction, comfortably inside the
+  roughly 14.5 seconds, which is close to the 15-second theoretical prediction, comfortably inside the
   10-20 second requirement (the slight difference is likely from the thicker output shaft added
   to counter bending). The assembly stayed structurally sound throughout: no bearings or shafts
   came loose, no gear teeth broke, the casing held together, and vibration was minimal despite
   the high input RPM.</p>
   <img src="assets/Projects/Model-Winch-for-Foundry/final_result.png" alt="The lifting test in progress: the assembled gearbox raising the 1kg mass on a string">
+  <img class="full" src="assets/Projects/Model-Winch-for-Foundry/grade.png" alt="Final grade for the project component: 95 out of 100">
 
   <h3>Challenges faced</h3>
   <ul>
