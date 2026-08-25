@@ -141,12 +141,55 @@ def build_page(project_id, title, image_rel, name):
     )
 
 
+SHARE_LINKS_START = "/* ---- AUTO-GENERATED SHARE LINKS (scripts/generate-share-pages.py) ----"
+SHARE_LINKS_END = "---- END AUTO-GENERATED SHARE LINKS ---- */"
+
+
+def update_data_js_block(titles_by_id):
+    """Insert/replace a marked, auto-generated comment block right after
+    PROJECT_ORDER in data.js, listing every project's share link. Paste
+    THESE links (not a direct project.html?id=... one) when sharing a
+    project externally — see scripts/generate-share-pages.py's own
+    docstring for why. Re-running this script always regenerates the block
+    between its markers in place; nothing here is meant to be hand-edited."""
+    text = read(DATA_JS)
+    lines = [SHARE_LINKS_START]
+    lines.append("   Paste these when sharing a project externally (LinkedIn, etc.) instead")
+    lines.append("   of a direct project.html?id=... link, so the link preview shows the")
+    lines.append("   right project instead of the homepage. Do not edit by hand — this block")
+    lines.append("   is regenerated every commit from PROJECT_ORDER + each project's data.")
+    lines.append("")
+    for project_id, title in titles_by_id.items():
+        lines.append(f"   {title}:")
+        lines.append(f"     {SITE_URL}/share/{project_id}.html")
+    lines.append(SHARE_LINKS_END)
+    block = "\n".join(lines) + "\n"
+
+    pattern = re.compile(
+        re.escape(SHARE_LINKS_START) + r".*?" + re.escape(SHARE_LINKS_END) + r"\n?", re.S
+    )
+    if pattern.search(text):
+        new_text = pattern.sub(block, text)
+    else:
+        marker = re.search(r'const PROJECT_ORDER\s*=\s*\[.*?\];\n', text, re.S)
+        if not marker:
+            print("generate-share-pages: couldn't find PROJECT_ORDER in data.js, skipping block insert")
+            return
+        insert_at = marker.end()
+        new_text = text[:insert_at] + "\n" + block + text[insert_at:]
+
+    if new_text != text:
+        DATA_JS.write_text(new_text, encoding="utf-8", newline="\n")
+        print("generate-share-pages: updated share-link block in data.js")
+
+
 def main():
     name = profile_name()
     ids = project_order()
     SHARE_DIR.mkdir(exist_ok=True)
 
     generated = []
+    titles_by_id = {}
     for project_id in ids:
         pd_file = find_project_data_file(project_id)
         if not pd_file:
@@ -158,6 +201,7 @@ def main():
         if not title or not image_rel:
             print(f"generate-share-pages: '{project_id}' missing title/image, skipping")
             continue
+        titles_by_id[project_id] = title
 
         page = build_page(project_id, title, image_rel, name)
         out_path = SHARE_DIR / f"{project_id}.html"
@@ -170,6 +214,8 @@ def main():
         if f.stem not in ids:
             f.unlink()
             print(f"generate-share-pages: removed stale {f.relative_to(ROOT)}")
+
+    update_data_js_block(titles_by_id)
 
     if generated:
         print("generate-share-pages: wrote " + ", ".join(str(p.relative_to(ROOT)) for p in generated))
