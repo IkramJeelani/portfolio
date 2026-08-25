@@ -25,12 +25,12 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   design a gearbox and shaft system that takes a high-speed motor (11000rpm, 2.1W) and reliably
   reduces it to lift a 1kg mass 120cm within a strict 10-20 second window, while fitting inside a
   200x200mm housing, using an 8mm shaft, and staying within a 250Dhs budget.</p>
-  <img src="assets/Projects/Model-Winch-for-Foundry/initial_model.png" alt="Initial model concept of the winch and gearbox system">
+  <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/initial_model.png" width="553" height="442" alt="Initial model concept of the winch and gearbox system">
 
   <h2>2. Gearbox Parameters</h2>
 
   <h3>2.1 Gear ratio</h3>
-  <img src="assets/Projects/Model-Winch-for-Foundry/gear_ratio_FBD.png" alt="Free body diagram of the output shaft and hanging mass used to derive the required gear ratio">
+  <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/gear_ratio_FBD.png" width="1400" height="642" alt="Free body diagram of the output shaft and hanging mass used to derive the required gear ratio">
   <p>The required output shaft speed was derived from the lifting constraint. With the mass's
   linear velocity <code>v = rω = x/t</code>, taking the lift height x = 1.2m at the midpoint of the
   allowed window (t = 15s) and a drum/shaft radius r = 4mm:</p>
@@ -56,15 +56,15 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <p>Addendum (ha) is 1.5mm for every gear and pinion across all 3 stages</p>
   <div class="gallery">
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/stage_1_2D.png" alt="2D sketch of Stage 1 gear pair" style="width:308px;object-fit:fill;">
+      <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/stage_1_2D.png" width="925" height="607" alt="2D sketch of Stage 1 gear pair" style="width:308px;object-fit:fill;">
       <figcaption>Stage 1</figcaption>
     </figure>
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/stage_2_2D.png" alt="2D sketch of Stage 2 gear pair">
+      <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/stage_2_2D.png" width="911" height="651" alt="2D sketch of Stage 2 gear pair">
       <figcaption>Stage 2</figcaption>
     </figure>
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/stage_3_2D.png" alt="2D sketch of Stage 3 gear pair">
+      <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/stage_3_2D.png" width="916" height="654" alt="2D sketch of Stage 3 gear pair">
       <figcaption>Stage 3</figcaption>
     </figure>
   </div>
@@ -73,25 +73,25 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <p>The full assembly was modelled in Fusion 360, shown in the following views:</p>
   <div class="gallery cols-2">
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/isometric.png" alt="Isometric CAD render of the full gearbox assembly">
+      <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/isometric.png" width="1024" height="1024" alt="Isometric CAD render of the full gearbox assembly">
       <figcaption>Isometric</figcaption>
     </figure>
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/front.png" alt="Front view CAD render of the gearbox assembly">
+      <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/front.png" width="1024" height="1024" alt="Front view CAD render of the gearbox assembly">
       <figcaption>Front</figcaption>
     </figure>
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/top.png" alt="Top view CAD render of the gearbox assembly">
+      <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/top.png" width="1024" height="1024" alt="Top view CAD render of the gearbox assembly">
       <figcaption>Top</figcaption>
     </figure>
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/right.png" alt="Right side view CAD render of the gearbox assembly">
+      <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/right.png" width="1024" height="1024" alt="Right side view CAD render of the gearbox assembly">
       <figcaption>Right</figcaption>
     </figure>
   </div>
 
   <h2>4. Force Analysis</h2>
-  <img src="assets/Projects/Model-Winch-for-Foundry/force_analysis_shaft_label.png" alt="Labelled diagram of the shafts used in the force analysis">
+  <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/force_analysis_shaft_label.png" width="869" height="503" alt="Labelled diagram of the shafts used in the force analysis">
   <table>
     <thead>
       <tr>
@@ -123,10 +123,10 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   actually experience than a vertical print would be.</p>
   <div class="gallery">
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/shaft_1.png" alt="3D-printed shaft, first example">
+      <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/shaft_1.png" width="483" height="362" alt="3D-printed shaft, first example">
     </figure>
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/shaft_2.png" alt="3D-printed shaft, second example">
+      <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/shaft_2.png" width="403" height="302" alt="3D-printed shaft, second example">
     </figure>
   </div>
 
@@ -135,10 +135,10 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   the bearing and press-fit holes were tested on a small offcut sheet first.</p>
   <div class="gallery">
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/case_1.png" alt="Laser-cut acrylic casing, first example">
+      <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/case_1.png" width="514" height="385" alt="Laser-cut acrylic casing, first example">
     </figure>
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/case_2.jpg" alt="Laser-cut acrylic casing, second example">
+      <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/case_2.jpg" width="1200" height="900" alt="Laser-cut acrylic casing, second example">
     </figure>
   </div>
 
@@ -148,32 +148,32 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   them.</p>
   <div class="gallery">
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/gears_1.png" alt="3D-printed helical gear, first example">
+      <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/gears_1.png" width="628" height="471" alt="3D-printed helical gear, first example">
     </figure>
     <figure>
-      <img src="assets/Projects/Model-Winch-for-Foundry/gears_2.jpg" alt="3D-printed helical gear, second example">
+      <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/gears_2.jpg" width="900" height="675" alt="3D-printed helical gear, second example">
     </figure>
   </div>
 
   <h2>6. Assembly</h2>
   <figure>
-    <img src="assets/Projects/Model-Winch-for-Foundry/assembly_1.png" alt="Threading a bolt by hand into a hole drilled in a 3D-printed shaft">
+    <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/assembly_1.png" width="505" height="379" alt="Threading a bolt by hand into a hole drilled in a 3D-printed shaft">
     <figcaption>Threading a bolt into the shaft. It cuts its own thread, no tapping needed.</figcaption>
   </figure>
   <figure>
-    <img src="assets/Projects/Model-Winch-for-Foundry/assembly_2.png" alt="Drilling out a gear hub hole while clamped in a vise">
+    <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/assembly_2.png" width="537" height="403" alt="Drilling out a gear hub hole while clamped in a vise">
     <figcaption>Drilling out a gear hub hole so the bolt can pass through.</figcaption>
   </figure>
   <figure>
-    <img src="assets/Projects/Model-Winch-for-Foundry/assembly_3.png" alt="Pressing a bearing into the acrylic casing and securing it with glue">
+    <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/assembly_3.png" width="562" height="421" alt="Pressing a bearing into the acrylic casing and securing it with glue">
     <figcaption>Pressing a bearing into the casing and securing it with acrylic glue.</figcaption>
   </figure>
   <figure>
-    <img src="assets/Projects/Model-Winch-for-Foundry/assembly_4.png" alt="Two helical gears mounted on their shafts atop the casing base, checked for mesh alignment before final assembly">
+    <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/assembly_4.png" width="547" height="411" alt="Two helical gears mounted on their shafts atop the casing base, checked for mesh alignment before final assembly">
     <figcaption>Gears mounted on their shafts and checked for mesh alignment before committing to final assembly.</figcaption>
   </figure>
   <figure>
-    <img src="assets/Projects/Model-Winch-for-Foundry/assembly_5.jpg" alt="Fully enclosed acrylic casing with the complete gear train assembled inside">
+    <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/assembly_5.jpg" width="2000" height="1500" alt="Fully enclosed acrylic casing with the complete gear train assembled inside">
     <figcaption>Fully assembled: shaft ends taped at the bearings, plus a taped-in 3D-printed
     sleeve stiffening the output shaft against bending.</figcaption>
   </figure>
@@ -181,7 +181,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <h2>7. Bill of Materials</h2>
   <p>Several parts were revised after the first version (v1), notably switching the shafts from
   aluminum to 3D-printed PLA. Final cost came in well under the 250Dhs budget:</p>
-  <img class="full" src="assets/Projects/Model-Winch-for-Foundry/BOM.png" alt="Finalised Bill of Materials table from Project Submission 3, listing every part, material, version, quantity, and cost">
+  <img class="full" loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/BOM.png" width="1177" height="785" alt="Finalised Bill of Materials table from Project Submission 3, listing every part, material, version, quantity, and cost">
 
   <h2>8. Results</h2>
   <p>Tested by tying a string to the output shaft with the 1kg mass attached, then running the
@@ -191,8 +191,8 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   to counter bending). The assembly stayed structurally sound throughout: no bearings or shafts
   came loose, no gear teeth broke, the casing held together, and vibration was minimal despite
   the high input RPM.</p>
-  <img src="assets/Projects/Model-Winch-for-Foundry/final_result.png" alt="The lifting test in progress: the assembled gearbox raising the 1kg mass on a string">
+  <img loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/final_result.png" width="428" height="760" alt="The lifting test in progress: the assembled gearbox raising the 1kg mass on a string">
   <p>The project component of the course was graded 95/100.</p>
-  <img class="full" src="assets/Projects/Model-Winch-for-Foundry/grade.png" alt="Final grade for the project component: 95 out of 100">
+  <img class="full" loading="lazy" src="assets/Projects/Model-Winch-for-Foundry/grade.png" width="1291" height="130" alt="Final grade for the project component: 95 out of 100">
   `,
 };

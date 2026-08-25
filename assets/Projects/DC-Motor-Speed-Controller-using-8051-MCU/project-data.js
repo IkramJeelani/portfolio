@@ -43,7 +43,7 @@ window.PROJECT_DATA["dc-motor-speed-controller-using-8051-mcu"] = {
   <h2>2. How it works</h2>
 
   <figure>
-    <img src="assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/schematic.jpg"
+    <img loading="lazy" src="assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/schematic.jpg" width="1400" height="901"
         alt="Schematic: 8051, DIP switch, three 7-segment displays, and the MOSFET PWM driver stage">
     <figcaption>Full schematic — DIP switch input, 8051, multiplexed 7-segment displays, and the MOSFET gate-drive stage for the fan.</figcaption>
   </figure>
@@ -89,19 +89,19 @@ window.PROJECT_DATA["dc-motor-speed-controller-using-8051-mcu"] = {
 
   <div class="gallery">
     <figure>
-      <img src="assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/result-140.jpg"
+      <img loading="lazy" src="assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/result-140.jpg" width="595" height="445"
           alt="Breadboard showing a displayed value of 140, representing 1400 RPM">
       <figcaption>Input: 100<br>Desired Output: 1440 RPM<br>Actual Output: 1400 RPM</figcaption>
     </figure>
 
     <figure>
-      <img src="assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/result-186.jpg"
+      <img loading="lazy" src="assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/result-186.jpg" width="594" height="445"
           alt="Breadboard showing a displayed value of 186, representing 1860 RPM">
       <figcaption>Input: 101<br>Desired Output: 1920 RPM<br>Actual Output: 1860 RPM</figcaption>
     </figure>
 
     <figure>
-      <img src="assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/result-245.jpg"
+      <img loading="lazy" src="assets/Projects/DC-Motor-Speed-Controller-using-8051-MCU/result-245.jpg" width="596" height="446"
           alt="Breadboard showing a displayed value of 245, representing 2450 RPM">
       <figcaption>Input: 111<br>Desired Output: 2400 RPM<br>Actual Output: 2450 RPM</figcaption>
     </figure>

@@ -100,7 +100,7 @@
   const nextP = idx < projects.length - 1 ? projects[idx + 1] : null;
   const pagerCard = (p, dir) => `
     <a class="pager-card pager-${dir}" href="project.html?id=${encodeURIComponent(p.id)}">
-      <span class="pager-thumb" style="background-image:url('${p.image}')"></span>
+      <img class="pager-thumb" src="${p.image}" alt="" loading="lazy">
       <span class="pager-text">
         <span class="pager-dir">${dir === "prev" ? "&larr; Previous" : "Next &rarr;"}</span>
         <span class="pager-title">${p.title}</span>
