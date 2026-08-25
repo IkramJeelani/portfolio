@@ -1,11 +1,13 @@
 #!/bin/sh
 # Keeps og:image/twitter:image in sync with SETTINGS.theme (data.js),
 # regenerates the share-preview wordmark image from PROFILE.name +
-# styles.css's colors, and regenerates the per-project share/*.html
-# redirect pages, before every commit — see scripts/sync-og-image.py,
-# scripts/generate-og-images.py and scripts/generate-share-pages.py for
-# why these can't just be done at runtime (link-preview crawlers don't
-# run JS).
+# styles.css's colors, regenerates the per-project share/*.html redirect
+# pages, and renders any new/changed certification PDF's preview JPG,
+# before every commit — see scripts/sync-og-image.py,
+# scripts/generate-og-images.py, scripts/generate-share-pages.py and
+# scripts/generate-cert-previews.py for why these can't just be done at
+# runtime (link-preview crawlers don't run JS; a PDF can't render itself
+# to a JPG in the browser without shipping a whole PDF.js render pass).
 #
 # Activated once via: git config core.hooksPath .githooks
 
@@ -13,8 +15,9 @@ ROOT="$(git rev-parse --show-toplevel)"
 python "$ROOT/scripts/sync-og-image.py" || exit 1
 python "$ROOT/scripts/generate-og-images.py" || exit 1
 python "$ROOT/scripts/generate-share-pages.py" || exit 1
+python "$ROOT/scripts/generate-cert-previews.py" || exit 1
 
 # Re-stage in case any script changed/added files, so the fix lands in
 # the commit that's about to happen instead of showing up as an unstaged
 # change right after.
-git add index.html project.html share/ data.js assets/og-image-light.png assets/og-image-dark.png
+git add index.html project.html share/ data.js assets/og-image-light.png assets/og-image-dark.png assets/Certifications/previews/
