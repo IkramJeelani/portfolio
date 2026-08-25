@@ -1178,6 +1178,10 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   font-weight: 600;
 }
 :root:not([data-theme="light"]) .toc-link[aria-current] { color: var(--accent-hover); }
+/* A subsection's parent h2 while you're scrolled into one of its h3s —
+   lighter than the exact active link, but keeps the hierarchy visibly
+   connected instead of the parent looking un-highlighted. */
+.toc-link.toc-parent-active:not([aria-current]) { border-color: var(--accent); }
 /* Same collision logic as the old dock: hide once the fixed-width sidebar
    would start overlapping the centred 820px .project-page column. */
 @media (max-width: 1380px) {

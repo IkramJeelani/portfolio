@@ -159,15 +159,23 @@
     toc.innerHTML = '<div class="toc-title">Contents</div>';
     toc.appendChild(list);
 
+    // Track each h3's parent h2 link too, so scrolling into a subsection
+    // (e.g. "5.1 Shafts") can keep its parent ("5. Manufacturing") visibly
+    // active alongside it, instead of the parent looking un-highlighted
+    // while you're clearly still inside its section.
     const links = [];
+    let lastH2Link = null;
     headings.forEach((h) => {
       if (!h.id) h.id = slugify(h.textContent);
       const a = document.createElement("a");
-      a.className = "toc-link" + (h.tagName === "H3" ? " toc-sub" : "");
+      const isSub = h.tagName === "H3";
+      a.className = "toc-link" + (isSub ? " toc-sub" : "");
       a.href = "#" + h.id;
       a.textContent = h.textContent;
       list.appendChild(a);
-      links.push({ heading: h, link: a });
+      const entry = { heading: h, link: a, parentLink: isSub ? lastH2Link : null };
+      links.push(entry);
+      if (!isSub) lastH2Link = a;
     });
     document.body.appendChild(toc);
 
@@ -181,19 +189,25 @@
       if (target) target.scrollIntoView();
     }
 
-    // Highlight whichever section is currently in view.
+    // Highlight whichever section is currently in view — and, if that's a
+    // subsection, its parent too (a lighter "toc-parent-active" indicator),
+    // so the hierarchy stays visually consistent instead of only ever one
+    // isolated link lighting up.
     const LINE = 140;
     let ticking = false;
     const check = () => {
       ticking = false;
       let current = null;
-      links.forEach(({ heading }) => {
-        if (heading.getBoundingClientRect().top - LINE <= 0) current = heading;
+      links.forEach((entry) => {
+        if (entry.heading.getBoundingClientRect().top - LINE <= 0) current = entry;
       });
-      links.forEach(({ heading, link }) => {
-        if (heading === current) link.setAttribute("aria-current", "true");
-        else link.removeAttribute("aria-current");
+      const activeParent = current && current.parentLink;
+      links.forEach(({ link }) => {
+        link.removeAttribute("aria-current");
+        link.classList.remove("toc-parent-active");
       });
+      if (current) current.link.setAttribute("aria-current", "true");
+      if (activeParent) activeParent.classList.add("toc-parent-active");
     };
     const onScroll = () => {
       if (!ticking) {
