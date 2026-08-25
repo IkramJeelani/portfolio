@@ -13,7 +13,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   links: [],
   share: true,
   body: `
-  <h2>Introduction</h2>
+  <h2>1. Introduction</h2>
   <p>A foundry crucible needs to be lifted by a winch at a speed that's neither too fast nor too
   slow: too fast, and the molten metal inside sloshes around, a major safety hazard; too slow,
   and the metal solidifies and fuses to the crucible, ruining it. Built as a 4-person team project
@@ -23,9 +23,9 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   200x200mm housing, using an 8mm shaft, and staying within a 250Dhs budget.</p>
   <img src="assets/Projects/Model-Winch-for-Foundry/initial_model.png" alt="Initial model concept of the winch and gearbox system">
 
-  <h2>Gearbox Parameters</h2>
+  <h2>2. Gearbox Parameters</h2>
 
-  <h3>Gear ratio</h3>
+  <h3>2.1 Gear ratio</h3>
   <img src="assets/Projects/Model-Winch-for-Foundry/gear_ratio_FBD.png" alt="Free body diagram of the output shaft and hanging mass used to derive the required gear ratio">
   <p>The required output shaft speed was derived from the lifting constraint. With the mass's
   linear velocity <code>v = rω = x/t</code>, taking the lift height x = 1.2m at the midpoint of the
@@ -34,7 +34,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <p>Against the motor's 11,000 RPM input, that's a required total reduction of
   G = 11000 / 191 ≈ 58, split across the 3 stages as G1 = 3, G2 = 4, G3 = 5.</p>
 
-  <h3>Gear specifications</h3>
+  <h3>2.2 Gear specifications</h3>
   <p>All 3 stages use a normal module of 1.5mm, 20° pressure angle, and 30° helix angle
   (chose helical gears as spur would be too noisy/vibration-prone at the higher-speed stages).
   Pitch diameter (d), center distance (a), and addendum (ha) were computed per stage from
@@ -65,7 +65,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
     </figure>
   </div>
 
-  <h2>CAD Modelling</h2>
+  <h2>3. CAD Modelling</h2>
   <p>The full assembly was modelled in Fusion 360, shown in the following views:</p>
   <div class="gallery cols-2">
     <figure>
@@ -86,7 +86,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
     </figure>
   </div>
 
-  <h2>Force Analysis</h2>
+  <h2>4. Force Analysis</h2>
   <img src="assets/Projects/Model-Winch-for-Foundry/force_analysis_shaft_label.png" alt="Labelled diagram of the shafts used in the force analysis">
   <table>
     <thead>
@@ -110,9 +110,9 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   15,000-hour target life.</p>
   <p><em>Full worked calculations for all of the above are in Project Submission 2.</em></p>
 
-  <h2>Manufacturing</h2>
+  <h2>5. Manufacturing</h2>
 
-  <h3>Shafts</h3>
+  <h3>5.1 Shafts</h3>
   <p>3D-printed on an ELEGOO Neptune Pro 4 at 25% infill, printed horizontally so the print
   extrusions run along the shaft's length which makes it stronger against the bending and shear the shafts
   actually experience than a vertical print would be.</p>
@@ -125,7 +125,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
     </figure>
   </div>
 
-  <h3>Casing</h3>
+  <h3>5.2 Casing</h3>
   <p>Laser-cut from 6mm acrylic. Fusion 360 drawings were exported to .dxf, and tolerances for
   the bearing and press-fit holes were tested on a small offcut sheet first.</p>
   <div class="gallery">
@@ -137,7 +137,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
     </figure>
   </div>
 
-  <h3>Gears</h3>
+  <h3>5.3 Gears</h3>
   <p>3D-printed at 25% infill on the ELEGOO Neptune Pro 4 and a Creality K2 Plus, initially with
   rafts for bed adhesion. The rafts proved difficult to remove cleanly, so later reprints skipped
   them.</p>
@@ -150,7 +150,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
     </figure>
   </div>
 
-  <h2>Assembly</h2>
+  <h2>6. Assembly</h2>
   <figure>
     <img src="assets/Projects/Model-Winch-for-Foundry/assembly_1.png" alt="Threading a bolt by hand into a hole drilled in a 3D-printed shaft">
     <figcaption>Threading a bolt into the shaft. It cuts its own thread, no tapping needed.</figcaption>
@@ -173,12 +173,12 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
     sleeve stiffening the output shaft against bending.</figcaption>
   </figure>
 
-  <h2>Bill of Materials</h2>
+  <h2>7. Bill of Materials</h2>
   <p>Several parts were revised after the first version (v1), notably switching the shafts from
   aluminum to 3D-printed PLA. Final cost came in well under the 250Dhs budget:</p>
   <img class="full" src="assets/Projects/Model-Winch-for-Foundry/BOM.png" alt="Finalised Bill of Materials table from Project Submission 3, listing every part, material, version, quantity, and cost">
 
-  <h3>Results</h3>
+  <h3>7.1 Results</h3>
   <p>Tested by tying a string to the output shaft with the 1kg mass attached, then running the
   motor (11,000 RPM input) until the mass was fully lifted. The gearbox lifted the mass 120cm in
   roughly 14.5 seconds, which is close to the 15-second theoretical prediction, comfortably inside the
@@ -190,7 +190,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <p>The project component of the course was graded 95/100.</p>
   <img class="full" src="assets/Projects/Model-Winch-for-Foundry/grade.png" alt="Final grade for the project component: 95 out of 100">
 
-  <h3>Challenges faced</h3>
+  <h3>7.2 Challenges faced</h3>
   <ul>
     <li>The first batch of 10mm aluminum shafts, sawn and then lathed to size, came out unusable
     as the lathe was faulty and kept bending them, and with the digital measuring tool also broken,
