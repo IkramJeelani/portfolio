@@ -175,7 +175,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <h2>Bill of Materials</h2>
   <p>Several parts were revised after the first version (v1) — notably switching the shafts from
   aluminum to 3D-printed PLA. Final cost came in well under the 250Dhs budget:</p>
-  <img class="full" src="assets/Projects/Model-Winch-for-Foundry/bom_table.png" alt="Finalised Bill of Materials table from Project Submission 3, listing every part, material, version, quantity, and cost">
+  <img class="full" src="assets/Projects/Model-Winch-for-Foundry/BOM.png" alt="Finalised Bill of Materials table from Project Submission 3, listing every part, material, version, quantity, and cost">
   <table>
     <thead>
       <tr><th>Part</th><th>Material</th><th>Version</th><th>Qty</th><th>Cost (Dhs)</th></tr>
