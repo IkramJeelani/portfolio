@@ -167,10 +167,46 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
     <figcaption>Gears mounted on their shafts and checked for mesh alignment before committing to final assembly.</figcaption>
   </figure>
   <figure>
-    <img src="assets/Projects/Model-Winch-for-Foundry/assembly_5.png" alt="Fully enclosed acrylic casing with the complete gear train assembled inside">
+    <img src="assets/Projects/Model-Winch-for-Foundry/assembly_5.jpg" alt="Fully enclosed acrylic casing with the complete gear train assembled inside">
     <figcaption>Fully assembled: shaft ends taped at the bearings, plus a taped-in 3D-printed
     sleeve stiffening the output shaft against bending.</figcaption>
   </figure>
+
+  <h3>Bill of Materials</h3>
+  <p>Several parts were revised after the first version (v1) — notably switching the shafts from
+  aluminum to 3D-printed PLA. Final cost came in well under the 250Dhs budget:</p>
+  <table>
+    <thead>
+      <tr><th>Part</th><th>Material</th><th>Version</th><th>Qty</th><th>Cost (Dhs)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Shaft - Input</td><td>Aluminium</td><td>v1</td><td>1</td><td>2.28</td></tr>
+      <tr><td>Shaft - Input</td><td>PLA</td><td>v2</td><td>1</td><td>0.92</td></tr>
+      <tr><td>Shaft - Stage 2</td><td>Aluminium</td><td>v1</td><td>1</td><td>1.63</td></tr>
+      <tr><td>Shaft - Stage 2</td><td>PLA</td><td>v2</td><td>1</td><td>0.73</td></tr>
+      <tr><td>Shaft - Stage 3</td><td>Aluminium</td><td>v1</td><td>1</td><td>1.63</td></tr>
+      <tr><td>Shaft - Stage 3</td><td>PLA</td><td>v2</td><td>1</td><td>0.79</td></tr>
+      <tr><td>Shaft - Output</td><td>Aluminium</td><td>v1</td><td>1</td><td>2.93</td></tr>
+      <tr><td>Shaft - Output</td><td>PLA</td><td>v2</td><td>1</td><td>1.33</td></tr>
+      <tr><td>Output Shaft Support</td><td>PLA</td><td>v1</td><td>1</td><td>0.66</td></tr>
+      <tr><td>Gear - Stage 1</td><td>PLA</td><td>v1</td><td>1</td><td>2.84</td></tr>
+      <tr><td>Gear - Stage 1</td><td>PLA</td><td>v2</td><td>1</td><td>2.83</td></tr>
+      <tr><td>Gear - Stage 2</td><td>PLA</td><td>v1</td><td>1</td><td>4.49</td></tr>
+      <tr><td>Gear - Stage 2</td><td>PLA</td><td>v2</td><td>1</td><td>4.48</td></tr>
+      <tr><td>Gear - Stage 3</td><td>PLA</td><td>v1</td><td>1</td><td>7.26</td></tr>
+      <tr><td>Pinion</td><td>PLA</td><td>v1</td><td>2</td><td>1.34</td></tr>
+      <tr><td>Pinion</td><td>PLA</td><td>v2</td><td>3</td><td>2.02</td></tr>
+      <tr><td>Case - Bottom</td><td>Acrylic</td><td>v1</td><td>1</td><td>3.89</td></tr>
+      <tr><td>Case - Front/Back</td><td>Acrylic</td><td>v1</td><td>2</td><td>6.98</td></tr>
+      <tr><td>Case - Left/Right</td><td>Acrylic</td><td>v1</td><td>2</td><td>5.38</td></tr>
+      <tr><td>608 Bearing</td><td>—</td><td>—</td><td>8</td><td>16.00</td></tr>
+      <tr><td>Bolts - M3</td><td>—</td><td>—</td><td>3</td><td>0.90</td></tr>
+      <tr><td>Bolts - M4</td><td>—</td><td>—</td><td>3</td><td>1.20</td></tr>
+      <tr><td>Nuts - M3</td><td>—</td><td>—</td><td>3</td><td>0.45</td></tr>
+      <tr><td>Nuts - M4</td><td>—</td><td>—</td><td>3</td><td>0.60</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Total cost: 73.54 Dhs</strong> of a 250 Dhs budget (176.46 Dhs remaining).</p>
 
   <h3>Results</h3>
   <p>Tested by tying a string to the output shaft with the 1kg mass attached, then running the
