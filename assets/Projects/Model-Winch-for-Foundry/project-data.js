@@ -172,7 +172,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
     sleeve stiffening the output shaft against bending.</figcaption>
   </figure>
 
-  <h3>Bill of Materials</h3>
+  <h2>Bill of Materials</h2>
   <p>Several parts were revised after the first version (v1) — notably switching the shafts from
   aluminum to 3D-printed PLA. Final cost came in well under the 250Dhs budget:</p>
   <table>
