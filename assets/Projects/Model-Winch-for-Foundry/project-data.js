@@ -10,7 +10,11 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   image: "assets/Projects/Model-Winch-for-Foundry/display.jpg",
   date: "Apr - July 2026",
   tech: ["Gear Design", "Shaft Design", "Fusion 360", "Mechanical Design"],
-  links: [],
+  links: [
+    { label: "Submission 1 (PDF)", url: "assets/Projects/Model-Winch-for-Foundry/MMMB215%20Project%20Submission%201.pdf" },
+    { label: "Submission 2 (PDF)", url: "assets/Projects/Model-Winch-for-Foundry/MMMB215%20Project%20Submission%202.pdf" },
+    { label: "Submission 3 (PDF)", url: "assets/Projects/Model-Winch-for-Foundry/MMMB215%20Project%20Submission%203.pdf" },
+  ],
   share: true,
   body: `
   <h2>1. Introduction</h2>
@@ -108,7 +112,8 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <p>The output shaft is critical: static factor of safety n = 2.44 (Von Mises), fatigue factor
   n<sub>f</sub> = 3.35 (infinite life), and its selected 608 bearing (3.45kN rated) far exceeds the
   15,000-hour target life.</p>
-  <p><em>Full worked calculations for all of the above are in Project Submission 2.</em></p>
+  <p><em>Full worked calculations for all of the above are in
+  <a href="assets/Projects/Model-Winch-for-Foundry/MMMB215%20Project%20Submission%202.pdf" target="_blank" rel="noopener">Project Submission 2</a>.</em></p>
 
   <h2>5. Manufacturing</h2>
 
@@ -189,18 +194,5 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <img src="assets/Projects/Model-Winch-for-Foundry/final_result.png" alt="The lifting test in progress: the assembled gearbox raising the 1kg mass on a string">
   <p>The project component of the course was graded 95/100.</p>
   <img class="full" src="assets/Projects/Model-Winch-for-Foundry/grade.png" alt="Final grade for the project component: 95 out of 100">
-
-  <h2>9. Challenges Faced</h2>
-  <ul>
-    <li>The first batch of 10mm aluminum shafts, sawn and then lathed to size, came out unusable
-    as the lathe was faulty and kept bending them, and with the digital measuring tool also broken,
-    diameter had to be checked manually after every rotation.</li>
-    <li>The output shaft bent under the 1kg load, so an extra 3D-printed sleeve was added outside
-    it and taped in place to stiffen it.</li>
-    <li>Initial gear and shaft bolt-holes were printed too small, requiring redrilling before the
-    bolts would fit.</li>
-    <li>5mm acrylic wasn't available, forcing a late switch to 6mm for the casing walls; heavy lab
-    and 3D-printer demand also limited how much testing could happen before final assembly.</li>
-  </ul>
   `,
 };
