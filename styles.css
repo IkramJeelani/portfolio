@@ -130,7 +130,6 @@ input:focus-visible,
    instead of a generic square corner. */
 .card:focus-visible,
 .cert-card:focus-visible,
-.dock-card:focus-visible,
 .pager-card:focus-visible {
   outline-offset: 2px;
   border-radius: var(--radius);
@@ -223,6 +222,10 @@ h1, h2, h3,
   font-size: 0.92rem;
   transition: color 0.2s;
 }
+/* Project detail page's "Back to projects" link — accent-colored so it
+   reads as the page's one clear way back, not just another muted nav item. */
+#topBackLink { color: var(--accent); font-weight: 600; }
+#topBackLink:hover { color: var(--accent-hover); }
 .site-header nav a::after {
   content: "";
   position: absolute;
@@ -1135,255 +1138,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border: 1px solid var(--border);
   border-radius: var(--radius);
 }
-/* ===== Floating quick-access project dock (detail page, wide screens) ===== */
-.project-dock {
-  position: fixed;
-  /* Hugs the viewport edge rather than tracking the content column — by
-     design, so it reads as a panel of the browser chrome/viewport rather
-     than something anchored to the page content. */
-  left: 1rem;
-  /* Matches .project-page's own top offset exactly (header height + its
-     3rem top margin), so the dock's header row and the project content's
-     top edge line up instead of the dock starting noticeably higher. */
-  top: calc(var(--header-h, 72px) + 3rem);
-  width: 230px;
-  max-height: calc(100vh - var(--header-h, 72px) - 3rem - 20px);
-  display: flex;
-  flex-direction: column;
-  z-index: 40;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-.project-dock.collapsed {
-  transform: translateX(calc(-100% - 1.5rem));
-  opacity: 0;
-  pointer-events: none;
-}
-.dock-no-anim { transition: none !important; }
-.dock-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  /* No top margin: .project-dock's own top is now set to match
-     .project-page's top edge exactly, so the collapse button should start
-     flush with it, not drop below it. */
-  margin: 0 0 0.45rem;
-  padding-left: 0.35rem;
-}
-.dock-title {
-  font-family: var(--font-display);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--muted);
-}
-.dock-collapse {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--accent) 14%, var(--bg-soft));
-  color: var(--accent);
-  cursor: pointer;
-  font-size: 1.2rem;
-  line-height: 1;
-  transition: background 0.2s, transform 0.15s;
-}
-.dock-collapse svg { width: 15px; height: 15px; display: block; }
-.dock-collapse:hover {
-  background: var(--accent);
-  color: #fff;
-  transform: scale(1.1);
-}
-/* Bold gradient edge tab to bring the panel back when hidden */
-.dock-reveal {
-  position: fixed;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  display: none;
-  writing-mode: vertical-rl;
-  padding: 0.95rem 0.5rem;
-  border: none;
-  border-radius: 0 var(--radius) var(--radius) 0;
-  background: var(--grad-btn); /* white label needs the AA-passing stops */
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  z-index: 41;
-  transition: padding 0.18s ease;
-}
-.dock-reveal.show { display: block; }
-.dock-reveal:hover { padding-right: 0.7rem; }
-/* Manually scrollable viewport; scrollbar hidden; scroll stays inside the dock */
-.dock-viewport {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  scrollbar-width: none;
-  overscroll-behavior: contain; /* don't chain scroll to the page */
-  padding: 2px;
-  /* Native momentum + gentle snap: the reel coasts with the browser's own
-     inertia and settles with a card neatly framed (proximity = only snaps
-     when already near one, so free scrolling never fights back). */
-  scroll-snap-type: y proximity;
-  scroll-padding-block: 6px;
-}
-.dock-viewport::-webkit-scrollbar { display: none; }
-.dock-reel { display: flex; flex-direction: column; gap: 0.6rem; }
-/* Vertical scroll line beside the dock */
-.dock-rail {
-  position: absolute;
-  right: -18px; /* sits clear of the dock */
-  width: 4px;
-  border-radius: var(--radius-xs);
-  background: var(--border);
-  overflow: hidden;
-  cursor: pointer;
-  transition: width 0.18s ease, right 0.18s ease, background 0.18s ease;
-}
-/* grows on both sides on hover (right shifts so the centre stays put) */
-.dock-rail:hover,
-.dock-rail.dragging { width: 10px; right: -21px; background: var(--bg-soft); }
-.dock-rail-thumb {
-  width: 100%;
-  border-radius: var(--radius-xs);
-  background: var(--grad);
-  cursor: grab;
-  transition: transform 0.08s linear, box-shadow 0.18s ease;
-  will-change: transform;
-}
-.dock-rail-thumb:active { cursor: grabbing; }
-.dock-rail:hover .dock-rail-thumb,
-.dock-rail.dragging .dock-rail-thumb { box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.65); }
-/* Each dock row: project thumbnail + number on the left, title/date on the
-   right — the image makes every project instantly distinguishable. */
-/* Each row: a small number badge + title/date — no image thumbnail. A 46px
-   thumbnail was tried and dropped; at that size it read as visual noise
-   rather than actually helping identify the row, which the title text
-   already does on its own. Fixed min-height (sized to the tallest possible
-   row — the active one, with its extra "Now viewing" flag line) so every
-   row is identical and the dock never resizes between projects. */
-.dock-card {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  scroll-snap-align: center;
-  min-height: 88px;
-  padding: 0.55rem 0.6rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--card);
-  opacity: 0.72;
-  transition: opacity 0.2s, border-color 0.2s, background 0.2s;
-}
-/* Muted, not var(--accent) — that's reserved for "this is the project
-   you're currently viewing" (.dock-card.active below). Hovering some OTHER
-   row getting the identical accent border made it look like two rows were
-   both "selected" at once. */
-.dock-card:hover {
-  opacity: 1;
-  border-color: var(--muted);
-}
-.dock-num {
-  flex: 0 0 auto;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-sm);
-  background: var(--bg-soft);
-  border: 1px solid var(--border);
-  color: var(--muted);
-  font-family: var(--font-display);
-  font-size: 0.68rem;
-  font-weight: 700;
-  line-height: 1;
-}
-.dock-body { min-width: 0; display: flex; flex-direction: column; }
-.dock-name {
-  font-weight: 700;
-  font-size: 0.8rem;
-  line-height: 1.2;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.dock-date {
-  color: var(--muted);
-  font-size: 0.65rem; /* sub-10px text was below any legibility floor */
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  margin-top: 0.2rem;
-}
-/* The project you're currently viewing — unmistakable */
-.dock-card.active {
-  opacity: 1;
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 14%, var(--card));
-  cursor: default;
-}
-.dock-card.active .dock-num { background: var(--accent); border-color: var(--accent); color: #fff; }
-.dock-card.active .dock-name { color: var(--accent); }
-.dock-flag {
-  font-size: 0.6rem; /* sub-10px text was below any legibility floor */
-  font-weight: 700;
-  letter-spacing: 0.7px;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.15rem;
-}
-/* Dark theme: the active card's background is a --card/--accent mix, close
-   enough in luminance to plain --card that --accent text still measures
-   only ~4.2:1 — under the 4.5:1 AA floor, same fix as .cert-date. */
-:root:not([data-theme="light"]) .dock-card.active .dock-name,
-:root:not([data-theme="light"]) .dock-flag { color: var(--accent-hover); }
-
-/* Hover preview image that genies out beside the dock */
-.dock-preview {
-  position: fixed;
-  width: 260px;
-  height: 170px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background-size: cover;
-  background-position: center;
-  background-color: var(--bg-soft);
-  box-shadow: var(--shadow);
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0;
-  transform: scale(0.15);
-  transform-origin: left center;
-  transition: opacity 0.18s ease, transform 0.34s cubic-bezier(0.2, 0.95, 0.25, 1);
-}
-/* Once visible, the preview glides between cards instead of teleporting */
-.dock-preview.show {
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 0.18s ease, transform 0.34s cubic-bezier(0.2, 0.95, 0.25, 1),
-    top 0.24s cubic-bezier(0.3, 0.8, 0.3, 1);
-}
-/* 1380px, not 1300px: the dock hugs the viewport edge (left: 1rem) rather
-   than tracking the content column, so at 1300-1360px its right edge
-   (16px + 230px wide = 246px) actually overlapped the centred 820px
-   .project-page's left edge — a real collision, not just tight spacing.
-   1380px keeps a ~24px+ gap between them at every width the dock shows. */
-@media (max-width: 1380px) {
-  .project-dock,
-  .dock-preview,
-  .dock-reveal { display: none !important; }
-}
-
 .project-hero {
   /* Same 5:4 crop as the project card's .card-img, so the shared-element
      morph between them doesn't change shape and the same image framing
@@ -1882,13 +1636,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 /* clip both snapshots to the same rounded shape so corners stay smooth through the morph */
 ::view-transition-image-pair(project-hero) { border-radius: var(--radius); overflow: hidden; }
 
-/* Project→project navigation: the dock (and its reveal tab) get their own
-   snapshots so they stay ANCHORED while the page content swaps around them.
-   The reel is pre-centred on the active card on both sides of the swap, so
-   the dock simply crossfades in place — no sliding highlight, no post-hop
-   glide (both removed: their distance varied per hop, which felt erratic). */
-.project-dock { view-transition-name: project-dock; }
-.dock-reveal.show { view-transition-name: dock-tab; }
 
 /* Reduced motion: swap pages instantly — no fades, no morphs */
 @media (prefers-reduced-motion: reduce) {
