@@ -13,7 +13,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   links: [],
   share: true,
   body: `
-  <h2>Problem Statement</h2>
+  <h2>Introduction</h2>
   <p>A foundry crucible needs to be lifted by a winch at a speed that's neither too fast nor too
   slow: too fast, and the molten metal inside sloshes around, a major safety hazard; too slow,
   and the metal solidifies and fuses to the crucible, ruining it. Built as a 4-person team project
