@@ -14,12 +14,12 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   share: true,
   body: `
   <h2>Problem Statement</h2>
-  <p>A 4-person team project for MMMB215 (Mechanical Design 1) at the University of Wollongong
-  in Dubai. A foundry crucible needs to be lifted by a winch at a speed that's neither too fast
-  nor too slow: too fast, and the molten metal inside sloshes around, a major safety hazard; too
-  slow, and the metal solidifies and fuses to the crucible, ruining it. The task is to design a
-  gearbox and shaft system that takes a high-speed motor (11000rpm, 2.1W) and reliably reduces
-  it to lift a 1kg mass 120cm within a strict 10-20 second window, while fitting inside a
+  <p>A foundry crucible needs to be lifted by a winch at a speed that's neither too fast nor too
+  slow: too fast, and the molten metal inside sloshes around, a major safety hazard; too slow,
+  and the metal solidifies and fuses to the crucible, ruining it. Built as a 4-person team project
+  for MMMB215 (Mechanical Design 1) at the University of Wollongong in Dubai, the task was to
+  design a gearbox and shaft system that takes a high-speed motor (11000rpm, 2.1W) and reliably
+  reduces it to lift a 1kg mass 120cm within a strict 10-20 second window, while fitting inside a
   200x200mm housing, using an 8mm shaft, and staying within a 250Dhs budget.</p>
   <img src="assets/Projects/Model-Winch-for-Foundry/initial_model.png" alt="Initial model concept of the winch and gearbox system">
 
