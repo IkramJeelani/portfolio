@@ -6,6 +6,11 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://ikramjeelani.github.io/portfolio/project.html?id=model-winch-for-foundry</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://ikramjeelani.github.io/portfolio/project.html?id=dc-motor-speed-controller-using-8051-mcu</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
