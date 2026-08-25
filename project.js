@@ -171,6 +171,16 @@
     });
     document.body.appendChild(toc);
 
+    // A deep link loaded fresh (e.g. a bookmarked/shared #section URL) has
+    // its target heading added to the DOM by this same script — too late
+    // for the browser's own native "jump to fragment on load" step, which
+    // already ran and found nothing there. Re-trigger it manually once the
+    // heading actually exists.
+    if (location.hash) {
+      const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (target) target.scrollIntoView();
+    }
+
     // Highlight whichever section is currently in view.
     const LINE = 140;
     let ticking = false;

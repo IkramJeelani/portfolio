@@ -1287,6 +1287,11 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 
 .project-content > :first-child { margin-top: 0; }
 .project-content p { margin: 0 0 1.2rem; }
+/* Clears the sticky header when a TOC link jumps to a heading — without
+   this, the heading lands flush with the viewport top, right under the
+   header, so its own text is hidden behind it. */
+.project-content h2,
+.project-content h3 { scroll-margin-top: calc(var(--header-h, 72px) + 1rem); }
 .project-content h2 { font-size: 1.6rem; margin: 2.5rem 0 1rem; }
 .project-content h3 { font-size: 1.25rem; margin: 1.8rem 0 0.75rem; }
 .project-content a { color: var(--accent); text-decoration: underline; }
