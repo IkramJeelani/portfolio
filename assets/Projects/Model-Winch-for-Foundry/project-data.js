@@ -178,7 +178,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   aluminum to 3D-printed PLA. Final cost came in well under the 250Dhs budget:</p>
   <img class="full" src="assets/Projects/Model-Winch-for-Foundry/BOM.png" alt="Finalised Bill of Materials table from Project Submission 3, listing every part, material, version, quantity, and cost">
 
-  <h3>7.1 Results</h3>
+  <h2>8. Results</h2>
   <p>Tested by tying a string to the output shaft with the 1kg mass attached, then running the
   motor (11,000 RPM input) until the mass was fully lifted. The gearbox lifted the mass 120cm in
   roughly 14.5 seconds, which is close to the 15-second theoretical prediction, comfortably inside the
@@ -190,7 +190,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   <p>The project component of the course was graded 95/100.</p>
   <img class="full" src="assets/Projects/Model-Winch-for-Foundry/grade.png" alt="Final grade for the project component: 95 out of 100">
 
-  <h3>7.2 Challenges faced</h3>
+  <h2>9. Challenges Faced</h2>
   <ul>
     <li>The first batch of 10mm aluminum shafts, sawn and then lathed to size, came out unusable
     as the lathe was faulty and kept bending them, and with the digital measuring tool also broken,
