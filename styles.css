@@ -159,8 +159,7 @@ input:focus-visible,
 /* Rounded cards: match the card's own radius so the ring hugs its shape
    instead of a generic square corner. */
 .card:focus-visible,
-.cert-card:focus-visible,
-.pager-card:focus-visible {
+.cert-card:focus-visible {
   outline-offset: 2px;
   border-radius: var(--radius);
 }
@@ -1269,62 +1268,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
    uses a different color. */
 :where(:root:not([data-theme="light"])) .tag { color: var(--accent-hover); }
 .project-links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.5rem; }
-
-/* ===== Prev / next project pager at the end of a project page ===== */
-.project-pager {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
-}
-.pager-card {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--card);
-  /* Same lift distance + timing as .card/.cert-card (0.2s) — one consistent
-     hover feel across every card on the site. */
-  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-}
-.pager-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent);
-  box-shadow: var(--shadow);
-}
-.pager-card:active { transform: translateY(-1px) scale(0.99); }
-.pager-next { flex-direction: row-reverse; text-align: right; justify-self: end; width: 100%; }
-.pager-thumb {
-  display: block;
-  flex: 0 0 64px;
-  height: 48px;
-  border-radius: var(--radius-sm);
-  object-fit: cover;
-  object-position: center;
-  background-color: var(--bg-soft); /* visible while the image loads */
-  border: 1px solid var(--border);
-}
-.pager-text { min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; }
-.pager-dir { font-size: var(--fs-78); color: var(--accent); font-weight: 600; }
-/* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
-   floor — same fix as .cert-date. */
-:root:not([data-theme="light"]) .pager-dir { color: var(--accent-hover); }
-.pager-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--fs-95);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-@media (max-width: 600px) {
-  .project-pager { grid-template-columns: 1fr; }
-  .pager-next { flex-direction: row; text-align: left; }
-}
 
 /* ===== Free-form project content (the `body` field) ===== */
 .project-content { font-size: var(--fs-108); color: var(--text); }

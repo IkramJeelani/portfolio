@@ -93,35 +93,13 @@
       (project.details || []).map((d) => `<p>${d}</p>`).join("");
   }
 
-  // Previous / next projects (data.js order) — pager cards at the end of the
-  // page so a reader is never left at a dead end, plus ←/→ keyboard nav.
-  const idx = projects.indexOf(project);
-  const prevP = idx > 0 ? projects[idx - 1] : null;
-  const nextP = idx < projects.length - 1 ? projects[idx + 1] : null;
-  const pagerCard = (p, dir) => `
-    <a class="pager-card pager-${dir}" href="project.html?id=${encodeURIComponent(p.id)}">
-      <img class="pager-thumb" src="${p.image}" alt="" loading="lazy">
-      <span class="pager-text">
-        <span class="pager-dir">${dir === "prev" ? "&larr; Previous" : "Next &rarr;"}</span>
-        <span class="pager-title">${p.title}</span>
-      </span>
-    </a>`;
-  const pagerHtml =
-    prevP || nextP
-      ? `<nav class="project-pager" aria-label="More projects">
-          ${prevP ? pagerCard(prevP, "prev") : "<span></span>"}
-          ${nextP ? pagerCard(nextP, "next") : "<span></span>"}
-        </nav>`
-      : "";
-
   page.innerHTML = `
     <h1>${project.title}</h1>
     ${project.date ? `<p class="project-date">${project.date}</p>` : ""}
     <div class="tags">${techHtml}</div>
     <div class="project-hero" style="background-image:url('${project.image}')"></div>
     <div class="project-content">${bodyHtml}</div>
-    <div class="project-links">${linksHtml}</div>
-    ${pagerHtml}`;
+    <div class="project-links">${linksHtml}</div>`;
 
   // Free-form project bodies (data.js `body` strings) can contain hand-written
   // <img> tags with no way to know their dimensions ahead of time, so they
@@ -219,18 +197,6 @@
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
   })();
-
-  // ←/→ step through projects (ignored while typing or with modifiers held).
-  document.addEventListener("keydown", (e) => {
-    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
-    const t = e.target;
-    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
-    if (e.key === "ArrowLeft" && prevP) {
-      location.href = "project.html?id=" + encodeURIComponent(prevP.id);
-    } else if (e.key === "ArrowRight" && nextP) {
-      location.href = "project.html?id=" + encodeURIComponent(nextP.id);
-    }
-  });
 
   // "Back to projects" — flag a return so the home page restores scroll + morphs the hero.
   const backLink = document.getElementById("topBackLink");
