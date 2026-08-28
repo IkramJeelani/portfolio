@@ -126,7 +126,7 @@ const SKILLS = [
   },
     {
     category: "Programming",
-    items: ["Python", "MATLAB", "C", "C++"],
+    items: ["Python", "MATLAB", "C", "C++", "Git/GitHub"],
   },
   {
     category: "Controls",
