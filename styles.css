@@ -42,6 +42,7 @@
   --fs-105: 1.05rem;
   --fs-108: 1.08rem;
   --fs-110: 1.1rem;
+  --fs-112: 1.12rem;
   --fs-115: 1.15rem;
   --fs-120: 1.2rem;
   --fs-125: 1.25rem;
@@ -496,7 +497,10 @@ h1, h2, h3,
   margin: 0 0 0.5rem;
 }
 .hero h1 {
-  font-size: clamp(2.5rem, 7vw, 4.6rem);
+  /* Max capped at 3.6rem so "Ikram Jeelani" always stays on one line at
+     the card's fixed 502px width (measured: wraps to two lines starting
+     at 3.7rem). */
+  font-size: clamp(2.5rem, 7vw, 3.6rem);
   margin: 0 0 1rem;
   line-height: 1.05;
   color: var(--text);
@@ -597,13 +601,16 @@ h1, h2, h3,
 }
 
 /* ===== About (in the hero, under the name) ===== */
-/* Always left-justified, even when .hero-solo centers everything else in
-   the hero as a block — an explicit value here beats the inherited
+/* Always left-justified, even when .hero-card centers everything else
+   (no PROFILE.photo set) — an explicit value here beats the inherited
    text-align:center regardless of ancestor rules. */
 .hero-about-text {
   margin: 1rem 0 0;
   color: var(--text-body);
-  font-size: var(--fs-115);
+  /* Tuned (not arbitrary) so the card's total height, with the name now
+     on one line, lands within a pixel of the photo's fixed 444px height
+     — verified in-browser. */
+  font-size: var(--fs-112);
   text-align: left;
 }
 .hero-about-photo {
@@ -1137,7 +1144,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   padding: 0.15rem 0.5rem;
 }
 /* Open-in affordance, top-right of the card (over the image). Circular chip so
-   it stays legible on any image; z-index clears the tilt glare (::after, z 5).
+   it stays legible on any image.
    pointer-events:none — the whole card is the link; the icon is just a cue. */
 .card-open {
   position: absolute;
@@ -1256,7 +1263,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   margin-bottom: 2rem;
 }
 .project-page h1 { font-size: var(--fs-240); margin: 0 0 0.5rem; }
-.project-tagline { color: var(--text); font-size: var(--fs-115); margin: 0 0 0.75rem; }
 .project-date {
   color: var(--accent);
   font-size: var(--fs-85);

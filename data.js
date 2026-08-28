@@ -32,7 +32,7 @@ const PROFILE = {
             "assets/Resume.pdf") and point url at it — same as a certification's
             `url`, a GitHub "blob" link also works and is resolved automatically. */
 const RESUME = {
-  show: true, // show the button in the nav bar
+  show: false, // assets/Resume.pdf doesn't exist yet — flip true once it's added, or it 404s
   label: "Résumé", // text shown next to the icon
   url: "assets/Resume.pdf",
 };
