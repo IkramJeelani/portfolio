@@ -745,15 +745,24 @@ h1, h2, h3,
    marker like ordinary body text. Scoped to skills only — the base .tag
    (project/experience tech tags) is untouched. */
 .skill-group .tags {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.5rem;
+  display: block;
   margin-bottom: 0;
 }
+/* A native list-item marker instead of a hand-positioned flex/absolute
+   ::before. Two earlier attempts at manually computing the marker's
+   vertical offset (a flex align-items:flex-start + measured margin-top,
+   then a position:absolute + em-based top) both measured as pixel-exact
+   against a wrapped skill's first line in every test — yet still landed
+   wrong in the field. Rather than guess a third offset, this hands first-
+   line alignment to the browser's own list-marker layout, which every
+   engine already gets right for real <li> elements — no coordinate math
+   of ours involved at all. list-style-type accepts a literal string
+   (CSS Lists Level 3, broadly supported), so the marker IS the dash
+   character itself, not a drawn bar. */
 .skill-group .tag {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.4rem;
+  display: list-item;
+  list-style-type: "— ";
+  margin: 0 0 0.5rem 1.1rem;
   background: none;
   border: none;
   border-radius: 0;
@@ -762,31 +771,8 @@ h1, h2, h3,
   color: var(--text-body);
   text-align: left;
 }
-/* Small dash marker in front of each skill. Laid out as a real flex item
-   (not absolutely positioned via a calc() offset) so the browser centers it
-   directly, rather than us computing a top offset by hand. That still isn't
-   enough on its own though: every tag's vertical position in the page is a
-   product of ordinary document flow, so each one lands on a different
-   fractional sub-pixel row regardless of layout method — a truly unavoidable
-   web-rendering fact, not a bug in this rule. At 2px thick, ~1px of
-   antialiasing blur from that sub-pixel misalignment reads as a ~50%
-   difference in apparent weight between bars. 3px keeps the same blur at a
-   ~33% relative difference, which is what actually reads as "the same
-   thickness" at normal (non-zoomed) viewing. */
-.skill-group .tag::before {
-  content: "";
-  flex: 0 0 0.7rem;
-  height: 3px;
-  border-radius: 3px;
-  background: var(--accent);
-  /* align-items on the parent is flex-start (not center) so a wrapped
-     multi-line skill doesn't pull the marker down to the middle of the
-     whole block — it needs to sit level with the FIRST line specifically.
-     15.3px is that first line's own vertical center (measured: line box
-     starts 6.4px below the flex container's top edge, is 20.8px tall),
-     minus this marker's own half-height. */
-  margin-top: 15.3px;
-}
+.skill-group .tag:last-child { margin-bottom: 0; }
+.skill-group .tag::marker { color: var(--accent); }
 
 /* ===== Certifications: same card as projects, in the grid ===== */
 /* Preview image on top (optional, like a project card's thumbnail), then
