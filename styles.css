@@ -1439,6 +1439,11 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   grid-template-columns: 1fr 1fr;
 }
 .project-content .gallery.cols-2 img { width: 100%; height: auto; }
+/* cols-2 images span the full column width, unlike the default gallery's
+   natural-width images — so the 260px caption cap (needed there to stop a
+   long caption forcing its figure oversized) would leave the caption
+   looking off-center against a much wider image. Let it match instead. */
+.project-content .gallery.cols-2 figcaption { max-width: none; }
 @media (max-width: 480px) {
   .project-content .gallery.cols-2 { grid-template-columns: 1fr; }
 }
