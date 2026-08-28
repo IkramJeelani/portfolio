@@ -117,7 +117,7 @@ const SKILLS = [
     category: "Electrical",
     items: [
       "Arduino",
-      "PCB design (KiCad/Altium/EasyEDA)",
+      "PCB design (KiCad, Altium, EasyEDA)",
       "LTspice",
       "Soldering",
       "Multimeter",
