@@ -107,7 +107,13 @@ body {
   color: var(--text-body);
   line-height: 1.6;
   background-color: var(--bg);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  /* No transition here on purpose. A transition on a property whose value
+     comes from a custom property (--bg/--text-body, both flipped on
+     :root by the theme toggle) reliably failed to ever actually run in
+     testing — data-theme kept updating correctly, but body's rendered
+     background/text color got stuck on the very first toggle and never
+     moved again. Removing it fixes the toggle; the switch is now instant
+     instead of faded. */
 }
 
 /* Seigaiha (青海波) — traditional Japanese overlapping-wave pattern.
@@ -1711,19 +1717,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   ::view-transition-new(root),
   ::view-transition-group(*) { animation: none !important; }
 }
-
-/* ===== Theme toggle: new theme expands as a circle from the toggle button =====
-   .theme-vt is set by branding.js only for the toggle's own view transition. */
-html.theme-vt::view-transition-old(root),
-html.theme-vt::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-/* keep the old theme fully visible underneath while the circle grows on top */
-html.theme-vt::view-transition-old(root) { z-index: 0; }
-html.theme-vt::view-transition-new(root) { z-index: 1; }
-/* no separate snapshots during the theme switch — everything stays inside the circle */
-html.theme-vt * { view-transition-name: none !important; }
 
 /* Respect users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {

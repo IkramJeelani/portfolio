@@ -149,59 +149,22 @@
       '<circle cx="12" cy="12" r="4"/>' +
       '<path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/></svg>';
     controls.appendChild(toggle);
+    // Used to just call apply() through document.startViewTransition() for a
+    // circular-reveal effect. Removed: repeated/rapid clicks could overlap
+    // two in-flight transitions, and the browser would get stuck rendering
+    // a stale --bg value on <body> — a real, reproducible bug, not a
+    // one-off. Plain CSS (the transition on body's background-color/color
+    // in the base stylesheet) handles the fade reliably instead.
     toggle.addEventListener("click", () => {
       const isLight = document.documentElement.getAttribute("data-theme") === "light";
       const next = isLight ? "dark" : "light";
-      const apply = () => {
-        document.documentElement.setAttribute("data-theme", next);
-        buildFavicon(); // keep the tab icon's gradient in sync with the theme
-        syncThemeColor();
-        syncThemeLabel();
-        try {
-          localStorage.setItem("theme", next);
-        } catch (e) {}
-      };
-
-      // Circular reveal from the toggle button. Falls back to an instant
-      // switch when the View Transitions API is missing or motion is reduced.
-      const noMotion =
-        window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (!document.startViewTransition || noMotion) {
-        apply();
-        return;
-      }
-
-      const r = toggle.getBoundingClientRect();
-      const cx = r.left + r.width / 2;
-      const cy = r.top + r.height / 2;
-      // Radius to the farthest viewport corner so the circle always covers everything.
-      const radius = Math.hypot(
-        Math.max(cx, window.innerWidth - cx),
-        Math.max(cy, window.innerHeight - cy)
-      );
-
-      // .theme-vt scopes the CSS that mutes the default cross-fade / page-nav
-      // animations so they don't fight the clip-path circle.
-      document.documentElement.classList.add("theme-vt");
-      const vt = document.startViewTransition(apply);
-      vt.ready
-        .then(() => {
-          document.documentElement.animate(
-            {
-              clipPath: [
-                `circle(0px at ${cx}px ${cy}px)`,
-                `circle(${radius}px at ${cx}px ${cy}px)`,
-              ],
-            },
-            {
-              duration: 420,
-              easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-              pseudoElement: "::view-transition-new(root)",
-            }
-          );
-        })
-        .catch(() => {});
-      vt.finished.finally(() => document.documentElement.classList.remove("theme-vt"));
+      document.documentElement.setAttribute("data-theme", next);
+      buildFavicon(); // keep the tab icon's gradient in sync with the theme
+      syncThemeColor();
+      syncThemeLabel();
+      try {
+        localStorage.setItem("theme", next);
+      } catch (e) {}
     });
 
     // Résumé button, between the two toggles — created here (not main.js) so
