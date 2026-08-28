@@ -83,14 +83,18 @@
   <main id="sections">
     <section id="home" class="hero">
       <div class="hero-right">
-        <div class="hero-text">
-          <p class="eyebrow intro-item" style="--intro-delay:200ms" data-role>Engineering Portfolio</p>
-          <h1 class="hero-name" data-name>Ikram Jeelani</h1>
-          <p class="subtitle intro-item" style="--intro-delay:900ms" data-bio></p>
-          <!-- Filled in by main.js from ABOUT in data.js; stays hidden if empty. -->
-          <p class="hero-about-text intro-item" style="--intro-delay:1000ms" id="heroAboutText" hidden></p>
+        <div class="hero-card">
+          <div class="hero-text">
+            <p class="eyebrow intro-item" style="--intro-delay:200ms" data-role>Engineering Portfolio</p>
+            <h1 class="hero-name" data-name>Ikram Jeelani</h1>
+            <p class="subtitle intro-item" style="--intro-delay:900ms" data-bio></p>
+            <!-- Filled in by main.js from ABOUT in data.js; stays hidden if empty. -->
+            <p class="hero-about-text intro-item" style="--intro-delay:1000ms" id="heroAboutText" hidden></p>
+          </div>
         </div>
-        <!-- Filled in by main.js from PROFILE.photo; stays hidden if unset. -->
+        <!-- Filled in by main.js from PROFILE.photo; stays hidden if unset. Sits
+             outside .hero-card (not inside it) but stretches to match its
+             height — see .hero-about-photo in styles.css. -->
         <img class="hero-about-photo intro-item" style="--intro-delay:1000ms" id="heroAboutPhoto" alt="" width="260" height="340" fetchpriority="high" hidden>
       </div>
     </section>

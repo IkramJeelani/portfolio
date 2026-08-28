@@ -397,9 +397,17 @@ h1, h2, h3,
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+/* The actual visual card (background/border/radius/shadow off the shared
+   tokens, same treatment as .card, .tl-card, .edu-card, .project-page) —
+   wraps ONLY the text. The photo (when PROFILE.photo is set) sits outside
+   it as a sibling, not inside, so the card's edges never extend behind or
+   around the photo. */
+.hero-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  /* Same card treatment as the rest of the site (.card, .tl-card, .edu-card,
-     .project-page): background/border/radius/shadow off the shared tokens. */
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -408,25 +416,30 @@ h1, h2, h3,
 }
 .hero-text { max-width: 600px; }
 .hero-text .subtitle { margin: 0 auto; }
-/* PROFILE.photo is set: name/about on the left, photo on the right — a
+/* PROFILE.photo is set: card on the left, photo on the right — a
    contained, centered composition (max-width, not the full hero width)
    rather than a row stretched edge-to-edge. */
 .hero-right.has-photo {
   flex-direction: row;
-  align-items: stretch; /* photo's height matches the text column's height */
-  text-align: left;
+  align-items: stretch; /* photo's height matches the card's own height */
   max-width: 900px;
   gap: 2.5rem;
 }
-.hero-right.has-photo .hero-text { flex: 1 1 auto; min-width: 0; max-width: none; }
+.hero-right.has-photo .hero-card {
+  flex: 1 1 auto;
+  min-width: 0;
+  align-items: flex-start;
+  text-align: left;
+}
+.hero-right.has-photo .hero-text { max-width: none; }
 .hero-right.has-photo .hero-text .subtitle { margin: 0; }
-/* Below ~700px a text+photo row gets cramped — stack the photo under the text. */
+/* Below ~700px a text+photo row gets cramped — stack the photo under the card. */
 @media (max-width: 700px) {
   .hero-right.has-photo {
     flex-direction: column;
     align-items: center;
-    text-align: center;
   }
+  .hero-right.has-photo .hero-card { align-items: center; text-align: center; }
   .hero-right.has-photo .hero-about-photo {
     width: 140px;
     height: 140px;
@@ -436,7 +449,7 @@ h1, h2, h3,
        instead of centering it. */
     align-self: center;
   }
-  .hero-right { padding: 1.25rem; }
+  .hero-card { padding: 1.25rem; }
   .hero-about-text { margin-top: 0.6rem; font-size: var(--fs-100); }
   .hero-text .subtitle { margin-top: 0; }
 }
@@ -588,14 +601,13 @@ h1, h2, h3,
 .hero-about-photo {
   flex: 0 0 auto;
   width: 260px;
-  /* Fixed height instead of stretching to match the text column
-     (align-items:stretch) — that used to look right only by coincidence,
-     because the About text happened to compute to this height; a
-     shorter/longer rewrite of it would shrink or stretch the photo along
-     with it. 444px is the .hero-text column's actual measured height
-     with the original (longer) About copy — the size this photo has
-     always visually been — not an arbitrary number. */
-  height: 444px;
+  /* Stretches to match .hero-card's own rendered height (padding included)
+     via align-items:stretch on their shared row container — always exactly
+     right regardless of how long the About text is, since the card and
+     the photo are direct siblings in that row (unlike when the photo used
+     to live INSIDE the card and only matched the inner text column). */
+  height: auto;
+  align-self: stretch;
   object-fit: cover;
   border-radius: var(--radius);
   border: 1px solid var(--border);
