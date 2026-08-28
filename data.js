@@ -32,7 +32,7 @@ const PROFILE = {
             "assets/Resume.pdf") and point url at it — same as a certification's
             `url`, a GitHub "blob" link also works and is resolved automatically. */
 const RESUME = {
-  show: true, // show the button in the nav bar
+  show: false,
   label: "Résumé", // text shown next to the icon
   url: "assets/Resume.pdf",
 };
@@ -345,18 +345,6 @@ const EDUCATION = [
    ----------------------------------------------------------------------------
    ============================================================================ */
 const PROJECT_ORDER = ["model-winch-for-foundry", "dc-motor-speed-controller-using-8051-mcu"];
-
-/* ---- AUTO-GENERATED SHARE LINKS (scripts/generate-share-pages.py) ----
-   Paste these when sharing a project externally (LinkedIn, etc.) instead
-   of a direct project.html?id=... link, so the link preview shows the
-   right project instead of the homepage. Do not edit by hand — this block
-   is regenerated every commit from PROJECT_ORDER + each project's data.
-
-   Model Winch for Foundry:
-     https://ikramjeelani.github.io/portfolio/share/model-winch-for-foundry.html
-   DC Motor Speed Controller using 8051 MCU:
-     https://ikramjeelani.github.io/portfolio/share/dc-motor-speed-controller-using-8051-mcu.html
----- END AUTO-GENERATED SHARE LINKS ---- */
 
 /* ---------- 7. CONTACTS ----------
    ADD a contact:    copy a { ... } line and edit it.

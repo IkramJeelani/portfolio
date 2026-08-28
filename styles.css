@@ -22,36 +22,6 @@
   --grad-btn: #8b2fd6;
   --font-display: "Sora", "Segoe UI", sans-serif;
   --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  /* Type scale — every font-size below is one of these tokens, named
-     by its rem value x100 (e.g. --fs-100 = 1rem). Nothing in this file
-     sets a bare font-size number anymore, so a difference between two
-     elements always shows up as a different named token, never an
-     untraceable one-off. Values themselves are unchanged from before —
-     this only makes the existing scale explicit. */
-  --fs-68: 0.68rem;
-  --fs-72: 0.72rem;
-  --fs-78: 0.78rem;
-  --fs-80: 0.8rem;
-  --fs-82: 0.82rem;
-  --fs-85: 0.85rem;
-  --fs-90: 0.9rem;
-  --fs-92: 0.92rem;
-  --fs-95: 0.95rem;
-  --fs-98: 0.98rem;
-  --fs-100: 1rem;
-  --fs-105: 1.05rem;
-  --fs-108: 1.08rem;
-  --fs-110: 1.1rem;
-  --fs-115: 1.15rem;
-  --fs-120: 1.2rem;
-  --fs-125: 1.25rem;
-  --fs-130: 1.3rem;
-  --fs-160: 1.6rem;
-  --fs-175: 1.75rem;
-  --fs-190: 1.9rem;
-  --fs-200: 2rem;
-  --fs-215: 2.15rem;
-  --fs-240: 2.4rem;
   /* Radius scale: xs for fine/text-level elements (inline code, PDF canvas),
      sm for small square UI chips (logos, toolbar buttons, dock rows —
      previously a mix of 7/8/9/10px with no reasoning behind which got which),
@@ -159,7 +129,8 @@ input:focus-visible,
 /* Rounded cards: match the card's own radius so the ring hugs its shape
    instead of a generic square corner. */
 .card:focus-visible,
-.cert-card:focus-visible {
+.cert-card:focus-visible,
+.pager-card:focus-visible {
   outline-offset: 2px;
   border-radius: var(--radius);
 }
@@ -220,7 +191,7 @@ h1, h2, h3,
   position: relative;
   z-index: 2;
   font-weight: 700;
-  font-size: var(--fs-115);
+  font-size: 1.15rem;
   letter-spacing: 0.5px;
   background: var(--grad);
   background-size: 200% auto;
@@ -248,7 +219,7 @@ h1, h2, h3,
   position: relative;
   color: var(--muted);
   font-weight: 500;
-  font-size: var(--fs-92);
+  font-size: 0.92rem;
   transition: color 0.2s;
 }
 /* Project detail page's "Back to projects" link — accent-colored so it
@@ -308,7 +279,6 @@ h1, h2, h3,
   border-color: var(--accent);
   transform: scale(1.1);
 }
-.theme-toggle:active { transform: scale(0.95); }
 .theme-toggle svg { width: 17px; height: 17px; display: block; }
 .theme-toggle .icon-sun { display: none; }
 .theme-toggle .icon-moon { display: block; }
@@ -340,13 +310,12 @@ h1, h2, h3,
   background: var(--grad-btn); /* white label needs the AA-passing stops */
   color: #fff;
   font-weight: 700;
-  font-size: var(--fs-82);
+  font-size: 0.82rem;
   white-space: nowrap;
   margin-right: 0.5rem;
-  transition: opacity 0.2s ease, transform 0.15s ease;
+  transition: opacity 0.2s ease;
 }
 .nav-resume-btn:hover { opacity: 0.85; }
-.nav-resume-btn:active { transform: scale(0.97); }
 .nav-resume-btn svg { width: 17px; height: 17px; flex-shrink: 0; display: block; }
 
 /* Hamburger menu button (hidden until the links would crowd) */
@@ -369,7 +338,6 @@ h1, h2, h3,
   transition: border-color 0.2s, transform 0.15s;
 }
 .nav-toggle:hover { border-color: var(--accent); }
-.nav-toggle:active { transform: scale(0.93); }
 .nav-toggle svg { width: 17px; height: 17px; display: block; } /* one icon size across the header */
 .nav-toggle .icon-close { display: none; }
 .nav-toggle[aria-expanded="true"] .icon-bars { display: none; }
@@ -437,7 +405,7 @@ h1, h2, h3,
     align-self: center;
   }
   .hero-right { padding: 1.25rem; }
-  .hero-about-text { margin-top: 0.6rem; font-size: var(--fs-100); }
+  .hero-about-text { margin-top: 0.6rem; font-size: 1rem; }
   .hero-text .subtitle { margin-top: 0; }
 }
 /* Short viewports (landscape phones, small laptops with the window snapped):
@@ -470,7 +438,7 @@ h1, h2, h3,
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 3px;
-  font-size: var(--fs-80);
+  font-size: 0.8rem;
   color: var(--accent);
   margin: 0 0 0.5rem;
 }
@@ -484,7 +452,7 @@ h1, h2, h3,
   max-width: 600px;
   margin: 0 auto 2rem;
   color: var(--text);
-  font-size: var(--fs-110);
+  font-size: 1.1rem;
 }
 /* No bio text set: an empty paragraph still carries its 2rem margin, which
    read as a mysterious, oversized, unexplained gap under the name. Collapse
@@ -526,7 +494,6 @@ h1, h2, h3,
   transition: transform 0.2s, background 0.2s, border-color 0.2s;
 }
 .btn:hover { transform: translateY(-2px); border-color: var(--accent); }
-.btn:active { transform: translateY(0) scale(0.97); }
 .btn-primary {
   background: var(--grad-btn); /* white label needs the AA-passing stops */
   border-color: transparent;
@@ -537,7 +504,7 @@ h1, h2, h3,
 /* ===== Section headings ===== */
 .section-title {
   text-align: center;
-  font-size: var(--fs-200);
+  font-size: 2rem;
   margin: 0 0 2rem;
 }
 .section-title::after {
@@ -582,7 +549,7 @@ h1, h2, h3,
 .hero-about-text {
   margin: 1rem 0 0;
   color: var(--text-body);
-  font-size: var(--fs-115);
+  font-size: 1.15rem;
   text-align: left;
 }
 .hero-about-photo {
@@ -626,7 +593,7 @@ h1, h2, h3,
   flex-direction: column;
   align-items: center;
   gap: 0.2rem;
-  font-size: var(--fs-85);
+  font-size: 0.85rem;
   line-height: 1;
   text-align: center;
   padding-top: calc(1.6rem + 7px - 0.5em);
@@ -670,7 +637,7 @@ h1, h2, h3,
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
 }
-.tl-role { font-weight: 700; font-size: var(--fs-105); }
+.tl-role { font-weight: 700; font-size: 1.05rem; }
 .tl-company { color: var(--accent); font-weight: 600; margin-top: 0.1rem; }
 /* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
    floor — same fix as .cert-date below. */
@@ -705,7 +672,7 @@ h1, h2, h3,
   border: 1px solid var(--border);
   border-radius: var(--radius);
 }
-.skill-category { margin: 0 0 0.5rem; font-size: var(--fs-100); font-weight: 700; letter-spacing: -0.01em; }
+.skill-category { margin: 0 0 0.5rem; font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
 /* Plain list instead of pill/chip tags — every earlier fix here (radius,
    contrast, wrap width) was chasing problems that only existed BECAUSE it
    was a pill; a normal list sidesteps all of them at once: no shape to
@@ -726,7 +693,7 @@ h1, h2, h3,
   background: none;
   border: none;
   border-radius: 0;
-  font-size: var(--fs-95);
+  font-size: 0.95rem;
   font-weight: 400;
   color: var(--text-body);
   text-align: left;
@@ -764,7 +731,6 @@ h1, h2, h3,
   transition: transform 0.2s, border-color 0.2s;
 }
 a.cert-card:hover { transform: translateY(-4px); border-color: var(--accent); }
-a.cert-card:active { transform: translateY(-1px) scale(0.99); }
 /* c.preview in data.js — a screenshot of the credential's first page. Fixed
    height + object-fit:contain: the whole document is visible (unlike
    object-fit:cover, which crops), scaled to fit the box without ever
@@ -804,7 +770,7 @@ a.cert-card:active { transform: translateY(-1px) scale(0.99); }
 .cert-name {
   color: var(--text);
   font-weight: 700;
-  font-size: var(--fs-90);
+  font-size: 0.9rem;
   line-height: 1.38;
   letter-spacing: -0.01em; /* bold text at this size reads tighter */
   text-wrap: balance;
@@ -819,7 +785,7 @@ a.cert-card:active { transform: translateY(-1px) scale(0.99); }
   align-items: baseline;
   flex-wrap: wrap;
   column-gap: 0.4rem;
-  font-size: var(--fs-80);
+  font-size: 0.8rem;
   margin-top: auto;
   padding-top: 0.3rem;
 }
@@ -831,7 +797,7 @@ a.cert-card:active { transform: translateY(-1px) scale(0.99); }
 .cert-date {
   color: var(--accent);
   font-weight: 600;
-  font-size: var(--fs-72);
+  font-size: 0.72rem;
   letter-spacing: 0.4px;
   text-transform: uppercase;
   white-space: nowrap; /* never split "Sep 2024" across lines */
@@ -928,7 +894,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   flex-direction: column;
   align-items: center; /* date & location centred to each other */
   gap: 0.2rem;
-  font-size: var(--fs-85);
+  font-size: 0.85rem;
   line-height: 1;
   text-align: center;
   /* push the text down so the date line sits level with the dot near the card top */
@@ -988,8 +954,8 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .edu-school, .edu-degree, .edu-major, .edu-details, .edu-points {
   width: 100%;
 }
-.edu-school { font-weight: 700; font-size: var(--fs-110); }
-.edu-degree { font-size: var(--fs-100); color: var(--text); }
+.edu-school { font-weight: 700; font-size: 1.1rem; }
+.edu-degree { font-size: 1rem; color: var(--text); }
 .edu-major {
   font-family: var(--font-display);
   font-weight: 700;
@@ -1079,27 +1045,24 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   flex-direction: column;
 }
 .card:hover { transform: translateY(-4px); border-color: var(--accent); }
-.card:active { transform: translateY(-1px) scale(0.99); }
 
 /* Image is deliberately the dominant part of the card — taller than the
    content beneath it, with that content trimmed down (tighter padding,
    smaller title/date, less spacing) so the whole card reads as compact
    rather than the image and text competing for equal weight. */
 .card-img {
-  display: block;
-  width: 100%;
   height: 240px;
-  object-fit: cover;
-  object-position: center;
-  background-color: var(--bg-soft); /* visible while the image loads */
+  background-size: cover;
+  background-position: center;
+  background-color: var(--bg-soft);
   border-radius: var(--radius) var(--radius) 0 0; /* matches the morph target's rounding */
 }
 .card-body { padding: 0.65rem 0.85rem; display: flex; flex-direction: column; }
-.card-title { margin: 0 0 0.1rem; font-size: var(--fs-100); }
+.card-title { margin: 0 0 0.1rem; font-size: 1rem; }
 .card-date {
   margin: 0 0 0.25rem;
   color: var(--accent);
-  font-size: var(--fs-68);
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -1115,7 +1078,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
    narrower column, which at full size wrapped across 2-3 lines and made
    the tag row feel like it was taking over the card's footer. */
 .card-foot .tag {
-  font-size: var(--fs-68);
+  font-size: 0.68rem;
   padding: 0.15rem 0.5rem;
 }
 /* Open-in affordance, top-right of the card (over the image). Circular chip so
@@ -1163,7 +1126,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   text-align: center;
   padding: 2rem 1.5rem;
   color: var(--muted);
-  font-size: var(--fs-90);
+  font-size: 0.9rem;
 }
 
 /* ===== Project detail page ===== */
@@ -1192,7 +1155,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .project-toc::-webkit-scrollbar { display: none; }
 .toc-title {
   font-family: var(--font-display);
-  font-size: var(--fs-72);
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: var(--muted);
@@ -1203,11 +1166,11 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   padding: 0.35rem 0.6rem;
   border-left: 2px solid var(--border);
   color: var(--muted);
-  font-size: var(--fs-85);
+  font-size: 0.85rem;
   line-height: 1.35;
   transition: color 0.2s, border-color 0.2s;
 }
-.toc-link.toc-sub { padding-left: 1.2rem; font-size: var(--fs-78); }
+.toc-link.toc-sub { padding-left: 1.2rem; font-size: 0.78rem; }
 .toc-link:hover { color: var(--text); }
 .toc-link[aria-current] {
   color: var(--accent);
@@ -1237,11 +1200,11 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border: 1px solid var(--border);
   margin-bottom: 2rem;
 }
-.project-page h1 { font-size: var(--fs-240); margin: 0 0 0.5rem; }
-.project-tagline { color: var(--text); font-size: var(--fs-115); margin: 0 0 0.75rem; }
+.project-page h1 { font-size: 2.4rem; margin: 0 0 0.5rem; }
+.project-tagline { color: var(--text); font-size: 1.15rem; margin: 0 0 0.75rem; }
 .project-date {
   color: var(--accent);
-  font-size: var(--fs-85);
+  font-size: 0.85rem;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -1252,7 +1215,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 :root:not([data-theme="light"]) .project-date { color: var(--accent-hover); }
 .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
 .tag {
-  font-size: var(--fs-82);
+  font-size: 0.82rem;
   padding: 0.3rem 0.8rem;
   border-radius: var(--radius);
   background: var(--bg-soft);
@@ -1269,9 +1232,62 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 :where(:root:not([data-theme="light"])) .tag { color: var(--accent-hover); }
 .project-links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.5rem; }
 
+/* ===== Prev / next project pager at the end of a project page ===== */
+.project-pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.pager-card {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  /* Same lift distance + timing as .card/.cert-card (0.2s) — one consistent
+     hover feel across every card on the site. */
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.pager-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow);
+}
+.pager-next { flex-direction: row-reverse; text-align: right; justify-self: end; width: 100%; }
+.pager-thumb {
+  flex: 0 0 64px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--border);
+}
+.pager-text { min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+.pager-dir { font-size: 0.78rem; color: var(--accent); font-weight: 600; }
+/* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
+   floor — same fix as .cert-date. */
+:root:not([data-theme="light"]) .pager-dir { color: var(--accent-hover); }
+.pager-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .project-pager { grid-template-columns: 1fr; }
+  .pager-next { flex-direction: row; text-align: left; }
+}
+
 /* ===== Free-form project content (the `body` field) ===== */
-.project-content { font-size: var(--fs-108); color: var(--text); }
-.project-overview { font-size: var(--fs-120); margin-bottom: 1.5rem; } /* used by the fallback */
+.project-content { font-size: 1.08rem; color: var(--text); }
+.project-overview { font-size: 1.2rem; margin-bottom: 1.5rem; } /* used by the fallback */
 
 .project-content > :first-child { margin-top: 0; }
 .project-content p { margin: 0 0 1.2rem; }
@@ -1280,8 +1296,8 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
    header, so its own text is hidden behind it. */
 .project-content h2,
 .project-content h3 { scroll-margin-top: calc(var(--header-h, 72px) + 1rem); }
-.project-content h2 { font-size: var(--fs-160); margin: 2.5rem 0 1rem; }
-.project-content h3 { font-size: var(--fs-125); margin: 1.8rem 0 0.75rem; }
+.project-content h2 { font-size: 1.6rem; margin: 2.5rem 0 1rem; }
+.project-content h3 { font-size: 1.25rem; margin: 1.8rem 0 0.75rem; }
 .project-content a { color: var(--accent); text-decoration: underline; }
 /* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
    floor — same fix as .cert-date. */
@@ -1308,7 +1324,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .project-content .caption {
   text-align: center;
   color: var(--muted);
-  font-size: var(--fs-90);
+  font-size: 0.9rem;
 }
 
 /* Table */
@@ -1318,7 +1334,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   table-layout: fixed;
   border-collapse: collapse;
   margin: 1.8rem auto;
-  font-size: var(--fs-95);
+  font-size: 0.95rem;
 }
 .project-content th,
 .project-content td {
@@ -1351,7 +1367,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border-left: 3px solid var(--border);
   color: var(--muted);
   font-style: italic;
-  font-size: var(--fs-115);
+  font-size: 1.15rem;
 }
 
 /* Inline + block code */
@@ -1423,11 +1439,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   grid-template-columns: 1fr 1fr;
 }
 .project-content .gallery.cols-2 img { width: 100%; height: auto; }
-/* cols-2 images span the full column width, unlike the default gallery's
-   natural-width images — so the 260px caption cap (needed there to stop a
-   long caption forcing its figure oversized) would leave the caption
-   looking off-center against a much wider image. Let it match instead. */
-.project-content .gallery.cols-2 figcaption { max-width: none; }
 @media (max-width: 480px) {
   .project-content .gallery.cols-2 { grid-template-columns: 1fr; }
 }
@@ -1499,15 +1510,15 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   /* Equal top/bottom padding — the hero centers its content vertically via
      flexbox, so asymmetric padding here visibly pushes it off-center. */
   .hero { padding: 4.5rem 1.25rem; }
-  .section-title { font-size: var(--fs-175); }
+  .section-title { font-size: 1.75rem; }
 }
 
 @media (max-width: 600px) {
   .hero { padding-top: 4rem; padding-bottom: 4rem; }
-  .subtitle { font-size: var(--fs-100); }
+  .subtitle { font-size: 1rem; }
   .project-content .two-col { grid-template-columns: 1fr; }
   .project-content img { max-width: 100%; }
-  .project-page h1 { font-size: var(--fs-190); }
+  .project-page h1 { font-size: 1.9rem; }
   .project-page { padding: 2rem 1.25rem 3rem; }
   /* Full-width, easy-to-tap action buttons on phones */
   .project-links { flex-direction: column; align-items: stretch; }
@@ -1576,7 +1587,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 }
 .pdf-title {
   font-weight: 600;
-  font-size: var(--fs-95);
+  font-size: 0.95rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1593,18 +1604,18 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--text);
-  font-size: var(--fs-105);
+  font-size: 1.05rem;
   line-height: 1;
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s;
 }
 .pdf-tool-btn:hover { border-color: var(--accent); color: var(--accent); }
 .pdf-tool-btn svg { width: 16px; height: 16px; }
-.pdf-close { font-size: var(--fs-130); }
+.pdf-close { font-size: 1.3rem; }
 .pdf-zoom-label {
   min-width: 3em;
   text-align: center;
-  font-size: var(--fs-85);
+  font-size: 0.85rem;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
 }
@@ -1714,13 +1725,13 @@ html.theme-vt * { view-transition-name: none !important; }
 @media (max-width: 480px) {
   .site-header { padding: 0.85rem 1rem; }
   .hero { padding: 2.5rem 1.1rem; }
-  .hero h1 { font-size: var(--fs-215); }
-  .subtitle { font-size: var(--fs-98); }
-  .section-title { font-size: var(--fs-160); }
+  .hero h1 { font-size: 2.15rem; }
+  .subtitle { font-size: 0.98rem; }
+  .section-title { font-size: 1.6rem; }
   .theme-toggle { width: 32px; height: 32px; margin-right: 0.45rem; }
   .nav-resume-btn {
     height: 32px;
-    font-size: var(--fs-78);
+    font-size: 0.78rem;
     gap: 0.35rem;
     padding: 0 0.75rem;
     margin-right: 0.45rem;
