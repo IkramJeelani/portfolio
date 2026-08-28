@@ -421,13 +421,19 @@ h1, h2, h3,
    rather than a row stretched edge-to-edge. */
 .hero-right.has-photo {
   flex-direction: row;
-  align-items: stretch; /* photo's height matches the card's own height */
+  align-items: center;
   max-width: 900px;
   gap: 2.5rem;
 }
 .hero-right.has-photo .hero-card {
-  flex: 1 1 auto;
-  min-width: 0;
+  /* Fixed (not flex-grow-to-fill) so moving the photo out from inside this
+     card didn't shift its on-page position or size — the card used to be
+     implicitly ~502px (900 max-width minus the photo's 260px minus the
+     2.5rem gap minus the OLD single shared padding), which flex-grow no
+     longer reproduces now that the card has its own padding on both
+     sides. Pinned to the exact value that keeps the photo's position and
+     dimensions pixel-identical to before this split, verified in-browser. */
+  flex: 0 0 502px;
   align-items: flex-start;
   text-align: left;
 }
@@ -439,7 +445,9 @@ h1, h2, h3,
     flex-direction: column;
     align-items: center;
   }
-  .hero-right.has-photo .hero-card { align-items: center; text-align: center; }
+  /* Undo the desktop row's fixed 502px flex-basis — in column direction
+     that would set the card's HEIGHT to 502px instead of its width. */
+  .hero-right.has-photo .hero-card { flex: 1 1 auto; width: 100%; align-items: center; text-align: center; }
   .hero-right.has-photo .hero-about-photo {
     width: 140px;
     height: 140px;
@@ -601,13 +609,8 @@ h1, h2, h3,
 .hero-about-photo {
   flex: 0 0 auto;
   width: 260px;
-  /* Stretches to match .hero-card's own rendered height (padding included)
-     via align-items:stretch on their shared row container — always exactly
-     right regardless of how long the About text is, since the card and
-     the photo are direct siblings in that row (unlike when the photo used
-     to live INSIDE the card and only matched the inner text column). */
-  height: auto;
-  align-self: stretch;
+  height: 444px;
+  align-self: center;
   object-fit: cover;
   border-radius: var(--radius);
   border: 1px solid var(--border);
