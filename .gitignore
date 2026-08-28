@@ -1,2 +1,5 @@
 # Local editor / tooling config — not part of the website
 .claude/
+
+# Python bytecode cache from running the scripts/*.py hook helpers
+__pycache__/
