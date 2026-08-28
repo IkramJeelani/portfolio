@@ -752,7 +752,7 @@ h1, h2, h3,
 }
 .skill-group .tag {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.4rem;
   background: none;
   border: none;
@@ -779,6 +779,13 @@ h1, h2, h3,
   height: 3px;
   border-radius: 3px;
   background: var(--accent);
+  /* align-items on the parent is flex-start (not center) so a wrapped
+     multi-line skill doesn't pull the marker down to the middle of the
+     whole block — it needs to sit level with the FIRST line specifically.
+     15.3px is that first line's own vertical center (measured: line box
+     starts 6.4px below the flex container's top edge, is 20.8px tall),
+     minus this marker's own half-height. */
+  margin-top: 15.3px;
 }
 
 /* ===== Certifications: same card as projects, in the grid ===== */

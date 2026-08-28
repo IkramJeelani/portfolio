@@ -110,31 +110,27 @@ const EXPERIENCE = [
    ADD/REMOVE a category or an item by editing the arrays. */
 const SKILLS = [
   {
-    category: "Programming",
-    items: ["Python", "MATLAB"],
+    category: "Mechanical",
+    items: ["SOLIDWORKS", "Fusion 360", "FDM 3D Printing", "Lathe"],
   },
   {
-    category: "Mechanical Design, Analysis & Manufacturing",
-    items: ["SOLIDWORKS", "Fusion 360", "FDM 3D Printing"],
-  },
-  {
-    category: "Electronics & Embedded Systems",
+    category: "Electrical",
     items: [
       "Arduino",
-      "PCB design (KiCad/Altium)",
+      "PCB design (KiCad/Altium/EasyEDA)",
       "LTspice",
       "Soldering",
       "Multimeter",
-      "Oscilloscopes",
+      "Oscilloscope",
     ],
   },
-  {
-    category: "Controls & Automations",
-    items: ["PID Control", "Sensors & Actuators", "Simulink"],
+    {
+    category: "Programming",
+    items: ["Python", "MATLAB", "C", "C++"],
   },
   {
-    category: "Tools",
-    items: ["Git/Github", "MS Office"],
+    category: "Controls",
+    items: ["PID Control", "Sensors & Actuators", "Simulink"],
   },
 ];
 
