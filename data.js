@@ -67,15 +67,11 @@ const SECTIONS = [
    use simple HTML like <strong>…</strong> if you want). Leave it "" to hide
    this block entirely. */
 const ABOUT =
-  "I started engineering for the freedom it offers. With enough " +
-  "knowledge, you're limited only by your own imagination. That pursuit of " +
-  "capability is what drew me to mechatronics and the challenge of building " +
-  "complete systems from the ground up. " +
-  "Today, I enjoy working across the full stack of a system: mechanical design, " +
-  "electronics, control systems, and software. " +
-  "My goal is to become a design engineer in the robotics and automation industry, developing " +
-  "intelligent systems that bridge mechanical, electrical, and software engineering. Away from engineering, " +
-  "you'll usually find me gaming, watching cricket, or searching for great food.";
+  "I got into engineering for the freedom of it; with enough knowledge, " +
+  "you're limited only by your imagination. That pull toward building complete " +
+  "systems led me to mechatronics, where I work across mechanical design, " +
+  "electronics, control systems, and software. I'm aiming to become a design " +
+  "engineer in the field of robotics and automation. Outside of that: gaming, cricket, and good food.";
 
 /* ---------- 3. EXPERIENCE ----------
    ADD/REMOVE a role by copying or deleting a { ... } block.

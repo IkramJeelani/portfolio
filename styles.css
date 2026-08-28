@@ -588,11 +588,13 @@ h1, h2, h3,
 .hero-about-photo {
   flex: 0 0 auto;
   width: 260px;
-  /* Stretches to match the text column's height (align-items:stretch on
-     .hero-right.has-photo) instead of a fixed square, so its top and
-     bottom line up with the text's top and bottom. */
-  height: auto;
-  align-self: stretch;
+  /* Fixed to its originally-declared intrinsic size (see the width/height
+     attributes on the <img> itself in index.html) rather than stretching
+     to match the text column's height — that used to look right only by
+     coincidence, because the About text happened to compute to ~340px
+     tall; a shorter/longer rewrite of it would shrink or stretch the
+     photo along with it. */
+  height: 340px;
   object-fit: cover;
   border-radius: var(--radius);
   border: 1px solid var(--border);
