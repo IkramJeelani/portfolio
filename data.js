@@ -336,7 +336,7 @@ const EDUCATION = [
    backtick (`) or the characters ${ — they have special meaning there.
    ----------------------------------------------------------------------------
    ============================================================================ */
-const PROJECT_ORDER = ["model-winch-for-foundry", "dc-motor-speed-controller-using-8051-mcu"];
+const PROJECT_ORDER = ["model-winch-for-foundry", "dc-motor-speed-controller-using-8051-mcu", "stapler-cad-model"];
 
 /* ---- AUTO-GENERATED SHARE LINKS (scripts/generate-share-pages.py) ----
    Paste these when sharing a project externally (LinkedIn, etc.) instead
@@ -348,6 +348,8 @@ const PROJECT_ORDER = ["model-winch-for-foundry", "dc-motor-speed-controller-usi
      https://ikramjeelani.github.io/portfolio/share/model-winch-for-foundry.html
    DC Motor Speed Controller using 8051 MCU:
      https://ikramjeelani.github.io/portfolio/share/dc-motor-speed-controller-using-8051-mcu.html
+   Stapler CAD Model:
+     https://ikramjeelani.github.io/portfolio/share/stapler-cad-model.html
 ---- END AUTO-GENERATED SHARE LINKS ---- */
 
 /* ---------- 7. CONTACTS ----------
