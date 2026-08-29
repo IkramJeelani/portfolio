@@ -21,7 +21,8 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <p>A full reverse-engineering of a standard office stapler: disassembling it down to its individual
   parts, measuring each one by hand to &plusmn;0.1 mm, and rebuilding all 15+ components as a fully
   functional, dimensionally accurate SolidWorks assembly. Beyond just matching geometry, the assembly
-  models proper mating constraints.</p>
+  models proper mating constraints. Built as an individual project for my Engineering Graphics
+  &amp; Design (MSE 100) course.</p>
 
   <figure>
     <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/amazon_basics_stapler.jpg" width="3000" height="2856"
