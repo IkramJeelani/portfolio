@@ -125,7 +125,7 @@ const SKILLS = [
     ],
   },
     {
-    category: "Programming",
+    category: "Software",
     items: ["Python", "MATLAB", "C", "C++", "Git/GitHub"],
   },
   {
