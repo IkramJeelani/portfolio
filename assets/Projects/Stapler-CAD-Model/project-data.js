@@ -31,7 +31,7 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   </figure>
 
   <h2>2. Individual Components</h2>
-  <p><em>Note: springs were not modeled, as they were not required for the project grade.</em></p>
+  <p><em>Note: springs were not modeled.</em></p>
 
   <h3>2.1 Part 1</h3>
   <div class="gallery cols-3">
@@ -67,8 +67,42 @@ window.PROJECT_DATA["stapler-cad-model"] = {
     </figure>
   </div>
 
-  <!-- Copy the 2.1 block above for each additional part (2.2 Part 2, 2.3
-       Part 3, ...), pointing at that part's own folder. -->
+  <h3>2.2 Part 2</h3>
+  <div class="gallery cols-3">
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_2/isometric.png" width="1155" height="866"
+          alt="Part 2, isometric view">
+      <figcaption>Isometric view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_2/front.png" width="703" height="527"
+          alt="Part 2, front view">
+      <figcaption>Front view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_2/top.png" width="1113" height="835"
+          alt="Part 2, top view">
+      <figcaption>Top view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_2/right.png" width="792" height="594"
+          alt="Part 2, right view">
+      <figcaption>Right view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_2/bottom.png" width="1119" height="839"
+          alt="Part 2, bottom view">
+      <figcaption>Bottom view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_2/section.png" width="1025" height="768"
+          alt="Part 2, section view">
+      <figcaption>Section view</figcaption>
+    </figure>
+  </div>
+
+  <!-- Copy the 2.1 block above for each additional part (2.3 Part 3, 2.4
+       Part 4, ...), pointing at that part's own folder. -->
 
   <h2>3. Assembly</h2>
 
