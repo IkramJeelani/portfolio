@@ -21,15 +21,20 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <p>A full reverse-engineering of a standard office stapler: disassembling it down to its individual
   parts, measuring each one by hand to &plusmn;0.1 mm, and rebuilding all 15+ components as a fully
   functional, dimensionally accurate SolidWorks assembly. Beyond just matching geometry, the assembly
-  models proper mating constraints and motion alignment, so the model's linkage, spring, and lever
-  action move the way the real stapler does. Detailed 2D drawings &mdash; dimensions, tolerances, and
-  exploded views &mdash; were also produced from the model to support manufacturing, prototyping, and
-  assembly documentation.</p>
+  models proper mating constraints.</p>
 
   <figure>
     <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/amazon_basics_stapler.jpg" width="1500" height="1500"
         alt="AmazonBasics stapler product photo, the physical unit that was reverse-engineered">
     <figcaption>The physical stapler (AmazonBasics) that was disassembled and reverse-engineered for this project.</figcaption>
+  </figure>
+
+  <h2>2. CAD Model</h2>
+
+  <figure>
+    <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/display.jpg" width="986" height="789"
+        alt="SolidWorks assembly render of the stapler, shown open with the top cover raised">
+    <figcaption>SolidWorks assembly of the reverse-engineered stapler, shown open.</figcaption>
   </figure>
   `,
 };
