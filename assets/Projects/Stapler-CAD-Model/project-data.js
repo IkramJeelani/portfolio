@@ -25,5 +25,11 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   action move the way the real stapler does. Detailed 2D drawings &mdash; dimensions, tolerances, and
   exploded views &mdash; were also produced from the model to support manufacturing, prototyping, and
   assembly documentation.</p>
+
+  <figure>
+    <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/amazon_basics_stapler.jpg" width="1500" height="1500"
+        alt="AmazonBasics stapler product photo, the physical unit that was reverse-engineered">
+    <figcaption>The physical stapler (AmazonBasics) that was disassembled and reverse-engineered for this project.</figcaption>
+  </figure>
   `,
 };

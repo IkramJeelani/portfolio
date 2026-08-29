@@ -8,7 +8,7 @@ window.PROJECT_DATA["model-winch-for-foundry"] = {
   id: "model-winch-for-foundry",
   title: "Model Winch for Foundry",
   image: "assets/Projects/Model-Winch-for-Foundry/display.jpg",
-  date: "Apr - July 2026",
+  date: "Apr - Jul 2026",
   tech: ["Gear Design", "Shaft Design", "Fusion 360", "Mechanical Design"],
   links: [
     { label: "Submission 1 (PDF)", url: "assets/Projects/Model-Winch-for-Foundry/MMMB215%20Project%20Submission%201.pdf" },
