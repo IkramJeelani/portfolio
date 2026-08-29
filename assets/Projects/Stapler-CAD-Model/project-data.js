@@ -11,7 +11,7 @@ window.PROJECT_DATA = window.PROJECT_DATA || {};
 window.PROJECT_DATA["stapler-cad-model"] = {
   id: "stapler-cad-model",
   title: "Stapler CAD Model",
-  image: "assets/Projects/Stapler-CAD-Model/display.jpg",
+  image: "assets/Projects/Stapler-CAD-Model/display.png",
   date: "Nov - Dec 2024",
   tech: ["SolidWorks", "Reverse Engineering"],
   links: [],
@@ -33,7 +33,7 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <h2>2. Individual Components</h2>
 
   <h3>2.1 Part 1</h3>
-  <div class="gallery cols-2">
+  <div class="gallery cols-3">
     <figure>
       <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_1/isometric.png" width="1186" height="889"
           alt="Part 1, isometric view">

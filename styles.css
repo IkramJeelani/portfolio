@@ -1455,6 +1455,20 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   .project-content .gallery.cols-2 { grid-template-columns: 1fr; }
 }
 
+/* Gallery modifier: force exactly 3 equal columns. */
+.project-content .gallery.cols-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.project-content .gallery.cols-3 img { width: 100%; height: auto; }
+.project-content .gallery.cols-3 figcaption { max-width: none; }
+@media (max-width: 700px) {
+  .project-content .gallery.cols-3 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  .project-content .gallery.cols-3 { grid-template-columns: 1fr; }
+}
+
 /* Two columns side by side */
 .project-content .two-col {
   display: grid;
