@@ -35,7 +35,7 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <h2>3. Assembly</h2>
 
   <figure>
-    <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/display.jpg" width="3312" height="2649"
+    <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/display.jpg" width="2580" height="2500"
         alt="SolidWorks assembly render of the stapler, shown open with the top cover raised">
     <figcaption>SolidWorks assembly of the reverse-engineered stapler, shown open.</figcaption>
   </figure>
