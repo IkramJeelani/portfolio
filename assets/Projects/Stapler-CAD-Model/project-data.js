@@ -31,7 +31,23 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   </figure>
 
   <h2>2. Individual Components</h2>
-  <p>TODO: add renders of the individual modeled components here.</p>
+
+  <h3>2.1 Part 1</h3>
+  <div class="gallery cols-2">
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part-1/view1.jpg" width="800" height="600"
+          alt="Part 1, view 1">
+      <figcaption>TODO: caption</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part-1/view2.jpg" width="800" height="600"
+          alt="Part 1, view 2">
+      <figcaption>TODO: caption</figcaption>
+    </figure>
+  </div>
+
+  <!-- Copy the 2.1 block above for each additional part (2.2 Part 2, 2.3
+       Part 3, ...), pointing at that part's own folder. -->
 
   <h2>3. Assembly</h2>
 
