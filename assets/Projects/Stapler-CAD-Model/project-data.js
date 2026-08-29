@@ -29,7 +29,10 @@ window.PROJECT_DATA["stapler-cad-model"] = {
     <figcaption>The physical stapler (AmazonBasics) that was disassembled and reverse-engineered for this project.</figcaption>
   </figure>
 
-  <h2>2. CAD Model</h2>
+  <h2>2. Individual Components</h2>
+  <p>TODO: add renders of the individual modeled components here.</p>
+
+  <h2>3. Assembly</h2>
 
   <figure>
     <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/display.jpg" width="986" height="789"
