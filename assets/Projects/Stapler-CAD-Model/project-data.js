@@ -12,12 +12,18 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   id: "stapler-cad-model",
   title: "Stapler CAD Model",
   image: "assets/Projects/Stapler-CAD-Model/display.jpg",
-  date: "",
+  date: "Nov - Dec 2024",
   tech: ["SolidWorks"],
   links: [],
   share: true,
   body: `
   <h2>1. Introduction</h2>
-  <p>TODO: write an intro for the stapler CAD model.</p>
+  <p>A full reverse-engineering of a standard office stapler: disassembling it down to its individual
+  parts, measuring each one by hand to &plusmn;0.1 mm, and rebuilding all 15+ components as a fully
+  functional, dimensionally accurate SolidWorks assembly. Beyond just matching geometry, the assembly
+  models proper mating constraints and motion alignment, so the model's linkage, spring, and lever
+  action move the way the real stapler does. Detailed 2D drawings &mdash; dimensions, tolerances, and
+  exploded views &mdash; were also produced from the model to support manufacturing, prototyping, and
+  assembly documentation.</p>
   `,
 };
