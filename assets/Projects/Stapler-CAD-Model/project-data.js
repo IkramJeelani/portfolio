@@ -35,14 +35,34 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <h3>2.1 Part 1</h3>
   <div class="gallery cols-2">
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part-1/view1.jpg" width="800" height="600"
-          alt="Part 1, view 1">
-      <figcaption>TODO: caption</figcaption>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_1/isometric.png" width="1186" height="889"
+          alt="Part 1, isometric view">
+      <figcaption>Isometric view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part-1/view2.jpg" width="800" height="600"
-          alt="Part 1, view 2">
-      <figcaption>TODO: caption</figcaption>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_1/front.png" width="1070" height="802"
+          alt="Part 1, front view">
+      <figcaption>Front view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_1/top.png" width="940" height="705"
+          alt="Part 1, top view">
+      <figcaption>Top view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_1/right.png" width="1112" height="834"
+          alt="Part 1, right view">
+      <figcaption>Right view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_1/bottom.png" width="1131" height="848"
+          alt="Part 1, bottom view">
+      <figcaption>Bottom view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_1/section.png" width="964" height="723"
+          alt="Part 1, section view">
+      <figcaption>Section view</figcaption>
     </figure>
   </div>
 
