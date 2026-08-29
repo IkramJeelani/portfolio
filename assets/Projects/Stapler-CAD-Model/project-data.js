@@ -13,7 +13,7 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   title: "Stapler CAD Model",
   image: "assets/Projects/Stapler-CAD-Model/display.jpg",
   date: "Nov - Dec 2024",
-  tech: ["SolidWorks"],
+  tech: ["SolidWorks", "Reverse Engineering"],
   links: [],
   share: true,
   body: `
