@@ -31,6 +31,7 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   </figure>
 
   <h2>2. Individual Components</h2>
+  <p><em>Note: springs were not modeled, as they were not required for the project grade.</em></p>
 
   <h3>2.1 Part 1</h3>
   <div class="gallery cols-3">
@@ -71,10 +72,6 @@ window.PROJECT_DATA["stapler-cad-model"] = {
 
   <h2>3. Assembly</h2>
 
-  <figure>
-    <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/display.jpg" width="2580" height="2500"
-        alt="SolidWorks assembly render of the stapler, shown open with the top cover raised">
-    <figcaption>SolidWorks assembly of the reverse-engineered stapler, shown open.</figcaption>
-  </figure>
+
   `,
 };
