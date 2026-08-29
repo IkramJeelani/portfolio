@@ -24,7 +24,7 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   models proper mating constraints.</p>
 
   <figure>
-    <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/amazon_basics_stapler.jpg" width="1500" height="1500"
+    <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/amazon_basics_stapler.jpg" width="3000" height="2856"
         alt="AmazonBasics stapler product photo, the physical unit that was reverse-engineered">
     <figcaption>The physical stapler (AmazonBasics) that was disassembled and reverse-engineered for this project.</figcaption>
   </figure>
@@ -35,7 +35,7 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <h2>3. Assembly</h2>
 
   <figure>
-    <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/display.jpg" width="986" height="789"
+    <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/display.jpg" width="3312" height="2649"
         alt="SolidWorks assembly render of the stapler, shown open with the top cover raised">
     <figcaption>SolidWorks assembly of the reverse-engineered stapler, shown open.</figcaption>
   </figure>
