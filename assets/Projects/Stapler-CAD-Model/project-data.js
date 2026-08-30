@@ -31,7 +31,7 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   </figure>
 
   <h2>2. Individual Components</h2>
-  <p><em>Note: springs were not modeled.</em></p>
+  <p><em>Note: springs were not modeled, nor are part of the assembly.</em></p>
 
   <h3>2.1 Part 1</h3>
   <div class="gallery cols-3">
@@ -271,8 +271,27 @@ window.PROJECT_DATA["stapler-cad-model"] = {
     </figure>
   </div>
 
-  <!-- Copy the 2.1 block above for each additional part (2.8 Part 8, 2.9
-       Part 9, ...), pointing at that part's own folder. -->
+  <h3>2.8 Part 8</h3>
+  <div class="gallery cols-3">
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_8/isometric.png" width="800" height="600"
+          alt="Part 8, isometric view">
+      <figcaption>Isometric view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_8/front.png" width="800" height="600"
+          alt="Part 8, front view">
+      <figcaption>Front view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_8/top.png" width="800" height="600"
+          alt="Part 8, top view">
+      <figcaption>Top view</figcaption>
+    </figure>
+  </div>
+
+  <!-- Copy the 2.1 block above for each additional part (2.9 Part 9, 2.10
+       Part 10, ...), pointing at that part's own folder. -->
 
   <h2>3. Assembly</h2>
 
