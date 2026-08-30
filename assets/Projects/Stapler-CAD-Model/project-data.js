@@ -293,24 +293,43 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <h3>2.9 Part 9</h3>
   <div class="gallery cols-3">
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_9/isometric.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_9/isometric.png" width="1055" height="791"
           alt="Part 9, isometric view">
       <figcaption>Isometric view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_9/front.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_9/front.png" width="467" height="350"
           alt="Part 9, front view">
       <figcaption>Front view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_9/top.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_9/top.png" width="1067" height="800"
           alt="Part 9, top view">
       <figcaption>Top view</figcaption>
     </figure>
   </div>
 
-  <!-- Copy the 2.1 block above for each additional part (2.10 Part 10, 2.11
-       Part 11, ...), pointing at that part's own folder. -->
+  <h3>2.10 Part 10</h3>
+  <div class="gallery cols-3">
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_10/isometric.png" width="800" height="600"
+          alt="Part 10, isometric view">
+      <figcaption>Isometric view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_10/front.png" width="800" height="600"
+          alt="Part 10, front view">
+      <figcaption>Front view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_10/top.png" width="800" height="600"
+          alt="Part 10, top view">
+      <figcaption>Top view</figcaption>
+    </figure>
+  </div>
+
+  <!-- Copy the 2.1 block above for each additional part (2.11 Part 11, 2.12
+       Part 12, ...), pointing at that part's own folder. -->
 
   <h2>3. Assembly</h2>
 
