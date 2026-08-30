@@ -240,32 +240,32 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <h3>2.7 Part 7</h3>
   <div class="gallery cols-3">
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/isometric.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/isometric.png" width="560" height="420"
           alt="Part 7, isometric view">
       <figcaption>Isometric view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/front.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/front.png" width="431" height="323"
           alt="Part 7, front view">
       <figcaption>Front view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/top.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/top.png" width="1500" height="897"
           alt="Part 7, top view">
       <figcaption>Top view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/right.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/right.png" width="429" height="322"
           alt="Part 7, right view">
       <figcaption>Right view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/bottom.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/bottom.png" width="620" height="465"
           alt="Part 7, bottom view">
       <figcaption>Bottom view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/section.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/section.png" width="1546" height="902"
           alt="Part 7, section view">
       <figcaption>Section view</figcaption>
     </figure>
