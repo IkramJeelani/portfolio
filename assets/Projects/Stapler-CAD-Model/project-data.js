@@ -369,17 +369,17 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <h3>2.13 Part 13</h3>
   <div class="gallery cols-3">
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_13/isometric.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_13/isometric.png" width="702" height="527"
           alt="Part 13, isometric view">
       <figcaption>Isometric view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_13/front.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_13/front.png" width="464" height="348"
           alt="Part 13, front view">
       <figcaption>Front view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_13/top.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_13/top.png" width="535" height="401"
           alt="Part 13, top view">
       <figcaption>Top view</figcaption>
     </figure>
