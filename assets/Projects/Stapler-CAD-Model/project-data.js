@@ -331,39 +331,43 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <h3>2.11 Part 11</h3>
   <div class="gallery cols-3">
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_11/isometric.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_11/isometric.png" width="618" height="464"
           alt="Part 11, isometric view">
       <figcaption>Isometric view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_11/front.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_11/front.png" width="650" height="487"
           alt="Part 11, front view">
       <figcaption>Front view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_11/top.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_11/top.png" width="525" height="394"
           alt="Part 11, top view">
       <figcaption>Top view</figcaption>
     </figure>
+  </div>
+
+  <h3>2.12 Part 12</h3>
+  <div class="gallery cols-3">
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_11/right.png" width="800" height="600"
-          alt="Part 11, right view">
-      <figcaption>Right view</figcaption>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_12/isometric.png" width="800" height="600"
+          alt="Part 12, isometric view">
+      <figcaption>Isometric view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_11/bottom.png" width="800" height="600"
-          alt="Part 11, bottom view">
-      <figcaption>Bottom view</figcaption>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_12/front.png" width="800" height="600"
+          alt="Part 12, front view">
+      <figcaption>Front view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_11/section.png" width="800" height="600"
-          alt="Part 11, section view">
-      <figcaption>Section view</figcaption>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_12/top.png" width="800" height="600"
+          alt="Part 12, top view">
+      <figcaption>Top view</figcaption>
     </figure>
   </div>
 
-  <!-- Copy the 2.1 block above for each additional part (2.12 Part 12, 2.13
-       Part 13, ...), pointing at that part's own folder. -->
+  <!-- Copy the 2.1 block above for each additional part (2.13 Part 13, 2.14
+       Part 14, ...), pointing at that part's own folder. -->
 
   <h2>3. Assembly</h2>
 
