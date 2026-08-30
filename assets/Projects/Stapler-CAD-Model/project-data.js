@@ -350,24 +350,43 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <h3>2.12 Part 12</h3>
   <div class="gallery cols-3">
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_12/isometric.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_12/isometric.png" width="521" height="390"
           alt="Part 12, isometric view">
       <figcaption>Isometric view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_12/front.png" width="800" height="600"
-          alt="Part 12, front view">
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_12/top.png" width="521" height="391"
+          alt="Part 12, top view">
+      <figcaption>Top view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_12/section.png" width="810" height="608"
+          alt="Part 12, section view">
+      <figcaption>Section view</figcaption>
+    </figure>
+  </div>
+
+  <h3>2.13 Part 13</h3>
+  <div class="gallery cols-3">
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_13/isometric.png" width="800" height="600"
+          alt="Part 13, isometric view">
+      <figcaption>Isometric view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_13/front.png" width="800" height="600"
+          alt="Part 13, front view">
       <figcaption>Front view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_12/top.png" width="800" height="600"
-          alt="Part 12, top view">
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_13/top.png" width="800" height="600"
+          alt="Part 13, top view">
       <figcaption>Top view</figcaption>
     </figure>
   </div>
 
-  <!-- Copy the 2.1 block above for each additional part (2.13 Part 13, 2.14
-       Part 14, ...), pointing at that part's own folder. -->
+  <!-- Copy the 2.1 block above for each additional part (2.14 Part 14, 2.15
+       Part 15, ...), pointing at that part's own folder. -->
 
   <h2>3. Assembly</h2>
 
