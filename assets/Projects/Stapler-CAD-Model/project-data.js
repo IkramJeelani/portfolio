@@ -250,7 +250,7 @@ window.PROJECT_DATA["stapler-cad-model"] = {
       <figcaption>Front view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/top.png" width="1500" height="897"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/top.png" width="520" height="390"
           alt="Part 7, top view">
       <figcaption>Top view</figcaption>
     </figure>
@@ -265,7 +265,7 @@ window.PROJECT_DATA["stapler-cad-model"] = {
       <figcaption>Bottom view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/section.png" width="1546" height="902"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_7/section.png" width="750" height="562"
           alt="Part 7, section view">
       <figcaption>Section view</figcaption>
     </figure>
