@@ -18,11 +18,11 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   share: true,
   body: `
   <h2>1. Introduction</h2>
-  <p>A full reverse-engineering of a standard office stapler. The project explicitly required us to
-  order a physical stapler, disassemble it down to its individual parts, measure each one by hand to
-  &plusmn;0.1 mm, and model all 15+ components as a fully functional, dimensionally accurate SolidWorks
-  assembly. Beyond just matching geometry, the assembly models proper mating constraints. Built as an
-  individual project for my Engineering Graphics &amp; Design (MSE 100) course.</p>
+  <p>A full reverse-engineering of a standard office stapler. This individual project for my Engineering Graphics &amp; 
+  Design (MSE 100) course required us to
+  order an AmazonBasics stapler, disassemble it down to its individual parts, measure each one by hand to
+  &plusmn;0.1 mm, and model all 10+ components as a fully functional, dimensionally accurate SolidWorks
+  assembly.</p>
 
   <figure>
     <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/amazon_basics_stapler.jpg" width="3000" height="2856"
@@ -67,9 +67,42 @@ window.PROJECT_DATA["stapler-cad-model"] = {
     </figure>
   </div>
 
-  <!-- 2.2 Part 2 removed for now -- images pulled, will be re-added later.
-       Copy the 2.1 block above for each part (2.2 Part 2, 2.3 Part 3, ...),
-       pointing at that part's own folder. -->
+  <h3>2.2 Part 2</h3>
+  <div class="gallery cols-3">
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_2/isometric.png" width="1229" height="922"
+          alt="Part 2, isometric view">
+      <figcaption>Isometric view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_2/front.png" width="648" height="486"
+          alt="Part 2, front view">
+      <figcaption>Front view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_2/top.png" width="1105" height="829"
+          alt="Part 2, top view">
+      <figcaption>Top view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_2/right.png" width="1072" height="804"
+          alt="Part 2, right view">
+      <figcaption>Right view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_2/bottom.png" width="1115" height="836"
+          alt="Part 2, bottom view">
+      <figcaption>Bottom view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Part_2/section.png" width="988" height="741"
+          alt="Part 2, section view">
+      <figcaption>Section view</figcaption>
+    </figure>
+  </div>
+
+  <!-- Copy the 2.1 block above for each additional part (2.3 Part 3, 2.4
+       Part 4, ...), pointing at that part's own folder. -->
 
   <h2>3. Assembly</h2>
 
