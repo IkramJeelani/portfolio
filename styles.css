@@ -95,12 +95,6 @@
 
 * { box-sizing: border-box; }
 
-/* Animated anchor scrolling is still motion — gate it like every other
-   animation on the site instead of forcing it on reduced-motion users. */
-@media (prefers-reduced-motion: no-preference) {
-  html { scroll-behavior: smooth; }
-}
-
 body {
   margin: 0;
   font-family: var(--font-body);
@@ -215,10 +209,6 @@ h1, h2, h3,
   transition: opacity 0.3s ease;
 }
 .site-header:hover::before { opacity: 1; }
-@media (prefers-reduced-motion: no-preference) {
-  .brand { animation: brand-flow 5s linear infinite; }
-}
-@keyframes brand-flow { to { background-position: 200% center; } }
 
 .brand {
   grid-column: 1;
@@ -488,13 +478,6 @@ h1, h2, h3,
   opacity: 0.7;
 }
 .hero { position: relative; }
-@media (prefers-reduced-motion: no-preference) {
-  .hero::after { animation: hero-cue 2.2s ease-in-out infinite; }
-}
-@keyframes hero-cue {
-  0%, 100% { transform: translateX(-50%) translateY(0) rotate(45deg); opacity: 0.7; }
-  50%      { transform: translateX(-50%) translateY(7px) rotate(45deg); opacity: 0.3; }
-}
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 3px;
@@ -533,16 +516,7 @@ h1, h2, h3,
    the component rule happens to come later in source order silently wins,
    which previously left some card types hovering with the slow, staggered
    reveal transition instead of a normal quick hover one. */
-.reveal {
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.35s ease, transform 0.35s ease;
-  transition-delay: var(--reveal-delay, 0ms);
-}
-.reveal.in {
-  opacity: 1;
-  transform: none;
-}
+.reveal { opacity: 1; transform: none; }
 
 /* ===== Buttons ===== */
 .btn {
@@ -579,23 +553,6 @@ h1, h2, h3,
   margin: 0.7rem auto 0;
   border-radius: 3px;
   background: var(--grad);
-}
-
-/* "Arrival" flash when you navigate to a section from the nav */
-.section.flash .section-title { animation: title-pop 0.9s ease; }
-.section.flash .section-title::after { animation: underline-sweep 0.9s ease; }
-@keyframes title-pop {
-  0%   { opacity: 0.6; }
-  100% { opacity: 1; }
-}
-@keyframes underline-sweep {
-  0%   { width: 54px; }
-  45%  { width: 210px; }
-  100% { width: 54px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .section.flash .section-title,
-  .section.flash .section-title::after { animation: none; }
 }
 
 /* ===== Generic section wrapper ===== */
@@ -1049,28 +1006,8 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
    just another item in the same staggered list. Both are triggered
    together (no delay on either) by setupHeroIntro() in main.js — it's the
    ONLY thing visible at first paint since everything else has a delay. */
-.hero-name {
-  opacity: 0;
-  transform: scale(0.94) translateY(6px);
-  transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-.hero-name.in {
-  opacity: 1;
-  transform: none;
-}
-.intro-item {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  transition-delay: var(--intro-delay, 0ms);
-}
-.intro-item.in {
-  opacity: 1;
-  transform: none;
-}
-@media (prefers-reduced-motion: reduce) {
-  .intro-item, .hero-name { opacity: 1; transform: none; transition: none; }
-}
+.hero-name { opacity: 1; transform: none; }
+.intro-item { opacity: 1; transform: none; }
 
 /* ===== Projects + Certifications: responsive card grid (2–3 columns) ===== */
 .card-grid {
@@ -1682,9 +1619,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border-radius: 50%;
   border: 3px solid var(--border);
   border-top-color: var(--accent);
-  animation: pdf-spin 0.8s linear infinite;
 }
-@keyframes pdf-spin { to { transform: rotate(360deg); } }
 /* iframe fallback when pdf.js can't load */
 .pdf-pages.fallback { padding: 0; }
 .pdf-pages.fallback iframe { flex: 1; width: 100%; border: 0; background: #fff; }
@@ -1693,43 +1628,11 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   .pdf-box { width: 96vw; height: 92vh; }
 }
 
-/* ===== Cross-page transitions =====
-   ONE uniform, quick crossfade for every navigation — no zoom, no per-route
-   variation. The previous scale(0.98→1.02) zoom ran on top of the hero morph
-   and read differently depending on where the clicked card sat on screen,
-   which is why each click felt like a slightly different animation. */
-@view-transition { navigation: auto; }
-::view-transition-old(root) { animation: vt-out 0.22s ease both; }
-::view-transition-new(root) { animation: vt-in 0.26s ease both; }
-@keyframes vt-out { to { opacity: 0; } }
-@keyframes vt-in { from { opacity: 0; } }
+/* Cross-page transitions and the project-hero shared-element morph were
+   removed -- every page swap is now an instant, plain navigation. */
+@view-transition { navigation: none; }
 
-/* Shared-element morph: the clicked project image grows into the detail hero
-   (and back). main.js tags the clicked card image with this same name before
-   navigating — and on return, ONLY on the explicit "Back to projects" path,
-   so the morph always plays between two on-screen elements. */
-.project-hero { view-transition-name: project-hero; }
-::view-transition-group(project-hero) {
-  animation-duration: 0.45s;
-  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
-  border-radius: var(--radius);
-}
-/* clip both snapshots to the same rounded shape so corners stay smooth through the morph */
-::view-transition-image-pair(project-hero) { border-radius: var(--radius); overflow: hidden; }
-
-
-/* Reduced motion: swap pages instantly — no fades, no morphs */
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root),
-  ::view-transition-group(*) { animation: none !important; }
-}
-
-/* Respect users who prefer reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; transition: none; }
-  .scroll-progress { display: none; }
-}
+.scroll-progress { display: none; }
 
 /* ===== Small-screen polish ===== */
 @media (max-width: 900px) {
