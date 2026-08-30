@@ -555,6 +555,19 @@ h1, h2, h3,
   background: var(--grad);
 }
 
+/* "Arrival" flash when you navigate to a section from the nav */
+.section.flash .section-title { animation: title-pop 0.9s ease; }
+.section.flash .section-title::after { animation: underline-sweep 0.9s ease; }
+@keyframes title-pop {
+  0%   { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+@keyframes underline-sweep {
+  0%   { width: 54px; }
+  45%  { width: 210px; }
+  100% { width: 54px; }
+}
+
 /* ===== Generic section wrapper ===== */
 .section {
   max-width: var(--max);
