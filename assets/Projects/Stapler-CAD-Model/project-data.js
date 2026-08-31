@@ -399,7 +399,7 @@ window.PROJECT_DATA["stapler-cad-model"] = {
       <figcaption>Isometric view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/right_closed.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/right_closed.png" width="1118" height="838"
           alt="Assembly, closed, right view">
       <figcaption>Right view</figcaption>
     </figure>
@@ -419,18 +419,30 @@ window.PROJECT_DATA["stapler-cad-model"] = {
     </figure>
   </div>
 
-  <h3>3.3 Section &amp; Exploded</h3>
-  <div class="gallery cols-2">
+  <h3>3.3 Section</h3>
+  <div class="gallery cols-3">
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section.png" width="800" height="600"
-          alt="Assembly, section view">
-      <figcaption>Section view</figcaption>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section_iso1.png" width="800" height="600"
+          alt="Assembly, section view, isometric 1">
+      <figcaption>Isometric view 1</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/exploded.png" width="800" height="600"
-          alt="Assembly, exploded view">
-      <figcaption>Exploded view</figcaption>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section_iso2.png" width="800" height="600"
+          alt="Assembly, section view, isometric 2">
+      <figcaption>Isometric view 2</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section_right.png" width="800" height="600"
+          alt="Assembly, section view, right">
+      <figcaption>Right view</figcaption>
     </figure>
   </div>
+
+  <h3>3.4 Exploded</h3>
+  <figure>
+    <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/exploded.png" width="800" height="600"
+        alt="Assembly, exploded view">
+    <figcaption>Exploded view</figcaption>
+  </figure>
   `,
 };
