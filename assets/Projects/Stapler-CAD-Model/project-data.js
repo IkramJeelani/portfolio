@@ -444,10 +444,17 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   </div>
 
   <h3>3.4 Exploded</h3>
-  <figure>
-    <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/exploded.png" width="800" height="600"
-        alt="Assembly, exploded view">
-    <figcaption>Exploded view</figcaption>
-  </figure>
+  <div class="gallery cols-2">
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/exploded_front.png" width="800" height="600"
+          alt="Assembly, exploded view, front">
+      <figcaption>Front view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/exploded_right.png" width="800" height="600"
+          alt="Assembly, exploded view, right">
+      <figcaption>Right view</figcaption>
+    </figure>
+  </div>
   `,
 };
