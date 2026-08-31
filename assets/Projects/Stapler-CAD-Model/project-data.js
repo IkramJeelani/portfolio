@@ -391,46 +391,45 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <h2>3. Assembly</h2>
   <p>TODO: describe how the parts fit together -- key mates/constraints and the lever's motion.</p>
 
+  <h3>3.1 Closed</h3>
+  <div class="gallery cols-3">
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/isometric_closed.png" width="542" height="407"
+          alt="Assembly, closed, isometric view">
+      <figcaption>Isometric view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/right_closed.png" width="800" height="600"
+          alt="Assembly, closed, right view">
+      <figcaption>Right view</figcaption>
+    </figure>
+  </div>
+
+  <h3>3.2 Open</h3>
   <div class="gallery cols-3">
     <figure>
       <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/isometric_open.png" width="800" height="600"
-          alt="Assembly, isometric view, open">
-      <figcaption>Isometric view (open)</figcaption>
+          alt="Assembly, open, isometric view">
+      <figcaption>Isometric view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/isometric_closed.png" width="800" height="600"
-          alt="Assembly, isometric view, closed">
-      <figcaption>Isometric view (closed)</figcaption>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/right_open.png" width="800" height="600"
+          alt="Assembly, open, right view">
+      <figcaption>Right view</figcaption>
+    </figure>
+  </div>
+
+  <h3>3.3 Section &amp; Exploded</h3>
+  <div class="gallery cols-3">
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section.png" width="800" height="600"
+          alt="Assembly, section view">
+      <figcaption>Section view</figcaption>
     </figure>
     <figure>
       <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/exploded.png" width="800" height="600"
           alt="Assembly, exploded view">
       <figcaption>Exploded view</figcaption>
-    </figure>
-    <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/front.png" width="800" height="600"
-          alt="Assembly, front view">
-      <figcaption>Front view</figcaption>
-    </figure>
-    <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/top.png" width="800" height="600"
-          alt="Assembly, top view">
-      <figcaption>Top view</figcaption>
-    </figure>
-    <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/right.png" width="800" height="600"
-          alt="Assembly, right view">
-      <figcaption>Right view</figcaption>
-    </figure>
-    <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/bottom.png" width="800" height="600"
-          alt="Assembly, bottom view">
-      <figcaption>Bottom view</figcaption>
-    </figure>
-    <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section.png" width="800" height="600"
-          alt="Assembly, section view">
-      <figcaption>Section view</figcaption>
     </figure>
   </div>
   `,
