@@ -408,14 +408,14 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <h3>3.2 Open</h3>
   <div class="gallery cols-2">
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/isometric_open.png" width="800" height="600"
-          alt="Assembly, open, isometric view">
-      <figcaption>Isometric view</figcaption>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/front_top_open.png" width="985" height="739"
+          alt="Assembly, open, front view">
+      <figcaption>Front view</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/right_open.png" width="800" height="600"
-          alt="Assembly, open, right view">
-      <figcaption>Right view</figcaption>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/top_open.png" width="959" height="719"
+          alt="Assembly, open, top view">
+      <figcaption>Top view</figcaption>
     </figure>
   </div>
 
