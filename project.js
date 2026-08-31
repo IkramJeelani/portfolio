@@ -94,6 +94,7 @@
   }
 
   page.innerHTML = `
+    <a href="index.html" id="topBackLink" class="project-back">&larr; Back to projects</a>
     <h1>${project.title}</h1>
     ${project.date ? `<p class="project-date">${project.date}</p>` : ""}
     <div class="tags">${techHtml}</div>
