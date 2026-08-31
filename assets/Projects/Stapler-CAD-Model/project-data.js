@@ -389,7 +389,6 @@ window.PROJECT_DATA["stapler-cad-model"] = {
        Part 15, ...), pointing at that part's own folder. -->
 
   <h2>3. Assembly</h2>
-  <p>TODO: describe how the parts fit together -- key mates/constraints and the lever's motion.</p>
 
   <h3>3.1 Closed</h3>
   <div class="gallery cols-2">
@@ -409,8 +408,8 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <div class="gallery cols-2">
     <figure>
       <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/front_top_open.png" width="985" height="739"
-          alt="Assembly, open, front view">
-      <figcaption>Front view</figcaption>
+          alt="Assembly, open, front top view">
+      <figcaption>Front top view</figcaption>
     </figure>
     <figure>
       <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/top_open.png" width="959" height="719"
