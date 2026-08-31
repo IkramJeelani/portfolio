@@ -1,9 +1,25 @@
 ﻿/* ===== Theme tokens ===== */
+/* ===== Neumorphism + Glassmorphism =====
+   Every "surface" (card/bg-soft) is a TRANSLUCENT tint of the theme's base
+   color, blurred via backdrop-filter (the glass half) and still carrying
+   the paired light/dark soft shadow from the neumorphism pass (the depth
+   half) -- so panels read as frosted glass sitting slightly proud of the
+   page, not flat cutouts. --shadow-pressed is the inset
+   counterpart for :active/pressed states and "recessed" content (code
+   blocks, callouts). --border is a translucent glass-edge highlight, not
+   a hard line -- kept faint on structural dividers (timeline rail, TOC)
+   that still need to read as a line. */
 :root {
   --bg: #14161c;
-  --bg-soft: #232733;
-  --card: #1b1e26;
-  --border: #2c313e;
+  --bg-soft: rgba(255, 255, 255, 0.035);
+  --card: rgba(255, 255, 255, 0.045);
+  --border: rgba(255, 255, 255, 0.1);
+  --glass-blur: 16px;
+  --shadow-dark: rgba(0, 0, 0, 0.55);
+  --shadow-light: rgba(255, 255, 255, 0.035);
+  --shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+  --shadow-sm: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+  --shadow-pressed: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
   --text: #ece7de;
   /* long-form copy: a notch dimmer than headings to avoid halation on dark */
   --text-body: #c9d1d9;
@@ -58,20 +74,25 @@
      previously a mix of 7/8/9/10px with no reasoning behind which got which),
      the base radius for everything else — cards/panels AND buttons/tags,
      so every rounded corner on the site shares the same curve. */
-  --radius-xs: 6px;
-  --radius-sm: 8px;
-  --radius: 12px;
+  --radius-xs: 7px;
+  --radius-sm: 11px;
+  --radius: 18px;
   --max: 1100px;
-  --shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
   --pattern: rgba(236,231,222,.045);
 }
 
 /* ===== Light theme ===== */
 :root[data-theme="light"] {
   --bg: #f6f3ec;
-  --bg-soft: #efeae0;
-  --card: #fffdf9;
-  --border: #e2dbcd;
+  --bg-soft: rgba(255, 255, 255, 0.45);
+  --card: rgba(255, 255, 255, 0.55);
+  --border: rgba(255, 255, 255, 0.65);
+  --glass-blur: 16px;
+  --shadow-dark: rgba(163, 153, 132, 0.55);
+  --shadow-light: rgba(255, 255, 255, 0.9);
+  --shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+  --shadow-sm: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+  --shadow-pressed: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
   --text: #1d1a17;
   --text-body: #1d1a17; /* no halation on light — full contrast is fine */
   /* Darkened from #7d7566: the original measured only 3.80:1 on --bg-soft
@@ -84,7 +105,6 @@
   --accent-rgb: 109, 40, 217; /* #6d28d9 as r,g,b — for rgba() glows/washes */
   --grad: var(--accent);
   --grad-btn: var(--accent); /* 7.1:1 with white text, well clear of AA */
-  --shadow: 0 14px 40px rgba(91, 33, 182, 0.12);
   --pattern: rgba(29,26,23,.05);
 }
 /* B&W + one accent: the name is the site's biggest piece of text, so it
@@ -136,7 +156,10 @@ a { color: inherit; text-decoration: none; }
   z-index: 200;
   padding: 0.6rem 1rem;
   border-radius: var(--radius-sm);
-  background: var(--bg-soft);
+  /* Deliberately opaque, not the translucent --bg-soft: this needs to
+     read clearly against WHATEVER page content sits behind it when a
+     keyboard user focuses it, not blend into it. */
+  background: var(--bg);
   border: 1px solid var(--accent);
   color: var(--text);
   font-weight: 600;
@@ -297,15 +320,16 @@ h1, h2, h3,
   border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--bg-soft);
+  box-shadow: var(--shadow-sm);
   color: var(--accent);
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, transform 0.15s, opacity 0.2s;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s, opacity 0.2s, box-shadow 0.15s;
 }
 .theme-toggle:hover {
   border-color: var(--accent);
   transform: scale(1.1);
 }
-.theme-toggle:active { transform: scale(0.95); }
+.theme-toggle:active { transform: scale(0.95); box-shadow: var(--shadow-pressed); }
 .theme-toggle svg { width: 17px; height: 17px; display: block; }
 .theme-toggle .icon-sun { display: none; }
 .theme-toggle .icon-moon { display: block; }
@@ -335,15 +359,16 @@ h1, h2, h3,
   padding: 0 0.95rem;
   border-radius: var(--radius);
   background: var(--grad-btn); /* white label needs the AA-passing stops */
+  box-shadow: var(--shadow-sm);
   color: #fff;
   font-weight: 700;
   font-size: var(--fs-82);
   white-space: nowrap;
   margin-right: 0.5rem;
-  transition: opacity 0.2s ease, transform 0.15s ease;
+  transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.15s;
 }
 .nav-resume-btn:hover { opacity: 0.85; }
-.nav-resume-btn:active { transform: scale(0.97); }
+.nav-resume-btn:active { transform: scale(0.97); box-shadow: var(--shadow-pressed); }
 .nav-resume-btn svg { width: 17px; height: 17px; flex-shrink: 0; display: block; }
 
 /* Hamburger menu button (hidden until the links would crowd) */
@@ -361,12 +386,13 @@ h1, h2, h3,
   border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--bg-soft);
+  box-shadow: var(--shadow-sm);
   color: var(--text);
   cursor: pointer;
-  transition: border-color 0.2s, transform 0.15s;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.15s;
 }
 .nav-toggle:hover { border-color: var(--accent); }
-.nav-toggle:active { transform: scale(0.93); }
+.nav-toggle:active { transform: scale(0.93); box-shadow: var(--shadow-pressed); }
 .nav-toggle svg { width: 17px; height: 17px; display: block; } /* one icon size across the header */
 .nav-toggle .icon-close { display: none; }
 .nav-toggle[aria-expanded="true"] .icon-bars { display: none; }
@@ -525,13 +551,14 @@ h1, h2, h3,
   border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--bg-soft);
+  box-shadow: var(--shadow-sm);
   color: var(--text);
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s, background 0.2s, border-color 0.2s;
+  transition: transform 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.15s;
 }
 .btn:hover { transform: translateY(-2px); border-color: var(--accent); }
-.btn:active { transform: translateY(0) scale(0.97); }
+.btn:active { transform: translateY(0) scale(0.97); box-shadow: var(--shadow-pressed); }
 .btn-primary {
   background: var(--grad-btn); /* white label needs the AA-passing stops */
   border-color: transparent;
@@ -597,6 +624,7 @@ h1, h2, h3,
   object-fit: cover;
   border-radius: var(--radius);
   border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
 /* ===== Experience: timeline laid out exactly like Education ===== */
@@ -660,6 +688,7 @@ h1, h2, h3,
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  box-shadow: var(--shadow);
   padding: 1rem 1.25rem;
 }
 .tl-logo {
@@ -670,6 +699,7 @@ h1, h2, h3,
   margin-bottom: 0.7rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
 }
 .tl-role { font-weight: 700; font-size: var(--fs-105); }
 .tl-company { color: var(--accent); font-weight: 600; margin-top: 0.1rem; }
@@ -705,6 +735,7 @@ h1, h2, h3,
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 .skill-category { margin: 0 0 0.5rem; font-size: var(--fs-100); font-weight: 700; letter-spacing: -0.01em; }
 /* Plain list instead of pill/chip tags — every earlier fix here (radius,
@@ -736,6 +767,9 @@ h1, h2, h3,
   background: none;
   border: none;
   border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   font-size: var(--fs-95);
   font-weight: 400;
   color: var(--text-body);
@@ -755,10 +789,10 @@ h1, h2, h3,
   border-radius: var(--radius);
   overflow: hidden; /* clips the preview image to the card's rounded top corners */
   box-shadow: var(--shadow);
-  transition: transform 0.2s, border-color 0.2s;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.15s;
 }
 a.cert-card:hover { transform: translateY(-4px); border-color: var(--accent); }
-a.cert-card:active { transform: translateY(-1px) scale(0.99); }
+a.cert-card:active { transform: translateY(-1px) scale(0.99); box-shadow: var(--shadow-pressed); }
 /* c.preview in data.js — a screenshot of the credential's first page. Fixed
    height + object-fit:contain: the whole document is visible (unlike
    object-fit:cover, which crops), scaled to fit the box without ever
@@ -855,6 +889,7 @@ a.cert-card:active { transform: translateY(-1px) scale(0.99); }
   object-fit: contain;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
 }
 /* Open-in affordance, top-right of a card that has a viewable credential PDF.
    pointer-events:none — the whole card is the link; the icon is just a cue. */
@@ -971,6 +1006,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   object-fit: contain;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
 }
 /* align-items:flex-start on .edu-card means these size to their own
    content (fit-content) rather than stretching — but fit-content sizing
@@ -1048,12 +1084,12 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition: transform 0.2s, border-color 0.2s;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.15s;
   display: flex;
   flex-direction: column;
 }
 .card:hover { transform: translateY(-4px); border-color: var(--accent); }
-.card:active { transform: translateY(-1px) scale(0.99); }
+.card:active { transform: translateY(-1px) scale(0.99); box-shadow: var(--shadow-pressed); }
 
 /* Image is deliberately the dominant part of the card — taller than the
    content beneath it, with that content trimmed down (tighter padding,
@@ -1105,7 +1141,10 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: var(--card);
+  /* Opaque, not the translucent --card: this floats over an arbitrary
+     project photo, so it needs to stay legible against any image rather
+     than blend/blur into it. */
+  background: var(--bg);
   color: var(--accent);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
   opacity: 0.9;
@@ -1148,6 +1187,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 /* ===== Table of contents (detail page, wide screens) =====
    Fixed to the left edge, listing THIS page's own h2/h3 sections — built
@@ -1209,6 +1249,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   background-position: center;
   background-color: var(--bg-soft);
   border: 1px solid var(--border);
+  box-shadow: var(--shadow);
   margin-bottom: 2rem;
 }
 .project-page h1 { font-size: var(--fs-240); margin: 0 0 0.5rem; }
@@ -1230,6 +1271,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   border-radius: var(--radius);
   background: var(--bg-soft);
   border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
   color: var(--accent);
   /* a single long token ("SOLIDWORKS") can otherwise overflow ~280px screens */
   overflow-wrap: anywhere;
@@ -1272,6 +1314,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   margin: 1.8rem auto;
   border-radius: var(--radius);
   border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 .project-content img.full,
 .project-content video.full { max-width: 100%; width: 100%; }
@@ -1312,6 +1355,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   background: var(--bg-soft);
   border-left: 4px solid var(--accent);
   border-radius: 0 var(--radius) var(--radius) 0;
+  box-shadow: var(--shadow-pressed);
   padding: 1rem 1.25rem;
   margin: 1.5rem 0;
   color: var(--muted);
@@ -1332,6 +1376,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   background: var(--bg-soft);
   border: 1px solid var(--border);
   border-radius: var(--radius-xs);
+  box-shadow: var(--shadow-pressed);
   padding: 0.1rem 0.4rem;
   font-size: 0.92em;
 }
@@ -1339,11 +1384,12 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   background: var(--bg-soft);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  box-shadow: var(--shadow-pressed);
   padding: 1rem 1.25rem;
   overflow-x: auto;
   margin: 1.5rem 0;
 }
-.project-content pre code { background: none; border: none; padding: 0; }
+.project-content pre code { background: none; border: none; box-shadow: none; padding: 0; }
 
 /* Responsive video embeds (16:9) */
 .project-content .video {
@@ -1534,6 +1580,14 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   background: rgba(5, 4, 10, 0.72);
   backdrop-filter: blur(4px);
 }
+/* .pdf-box/.pdf-toolbar/.pdf-tool-btn are deliberately OPAQUE (var(--bg)),
+   not the translucent glass --card/--bg-soft: this modal already sits over
+   its own dedicated dark, blurred .pdf-backdrop, so a translucent panel on
+   top of that let the dark backdrop bleed through -- barely visible in
+   light theme (where --card is a bright translucent white that still
+   dominates), but read as an ugly dark glow/halo in dark theme (where
+   --card is only ~4% opaque, so almost none of it masked the backdrop).
+   A modal with its own backdrop for depth doesn't need to be glass too. */
 .pdf-box {
   position: relative;
   z-index: 1;
@@ -1541,11 +1595,10 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   height: min(90vh, 1000px);
   display: flex;
   flex-direction: column;
-  background: var(--card);
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: var(--shadow);
   transform: scale(0.96);
   transition: transform 0.25s ease;
 }
@@ -1559,7 +1612,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   gap: 1rem;
   padding: 0.55rem 0.8rem;
   border-bottom: 1px solid var(--border);
-  background: var(--bg-soft);
+  background: var(--bg);
 }
 .pdf-title {
   font-weight: 600;
@@ -1578,13 +1631,15 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   padding: 0;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: var(--card);
+  background: var(--bg);
+  box-shadow: var(--shadow-sm);
   color: var(--text);
   font-size: var(--fs-105);
   line-height: 1;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
+  transition: border-color 0.2s, color 0.2s, box-shadow 0.15s;
 }
+.pdf-tool-btn:active { box-shadow: var(--shadow-pressed); }
 .pdf-tool-btn:hover { border-color: var(--accent); color: var(--accent); }
 .pdf-tool-btn svg { width: 16px; height: 16px; }
 .pdf-close { font-size: var(--fs-130); }
@@ -1678,4 +1733,26 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 @media (max-width: 340px) {
   .nav-resume-btn { gap: 0; padding: 0; width: 32px; justify-content: center; }
   .nav-resume-btn span { display: none; }
+}
+
+/* ===== Glassmorphism: backdrop blur =====
+   The translucent --card/--bg-soft backgrounds above only read as GLASS
+   once whatever's behind them is blurred -- one combined rule for every
+   surface that uses those tokens, appended last so it doesn't need to
+   touch each rule's own background/border/shadow individually. Skips:
+   - .skip-link, .card-open: deliberately opaque (var(--bg)) -- they need
+     to stay legible against WHATEVER arbitrary content sits behind them
+     (page content / a project photo), not blend into it.
+   - .pdf-box, .pdf-toolbar, .pdf-tool-btn: also opaque (var(--bg)) -- this
+     modal already sits over its own dedicated dark, blurred backdrop, so
+     stacking glass on glass let that backdrop bleed through inconsistently
+     between themes (near-invisible in light, an ugly dark halo in dark).
+   - plain opaque photos (card-img, project-hero, logos): blurring what's
+     behind a fully opaque image is invisible, so there's no point. */
+.theme-toggle, .nav-toggle, .hero-card, .btn, .tl-card, .skill-group,
+.cert-card, .edu-card, .card, .project-page, .tag,
+.project-content .callout, .project-content code, .project-content pre,
+.site-header nav {
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
 }
