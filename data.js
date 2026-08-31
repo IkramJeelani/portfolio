@@ -124,7 +124,7 @@ const SKILLS = [
       "Oscilloscope",
     ],
   },
-    {
+  {
     category: "Software",
     items: ["Python", "MATLAB", "C", "C++", "Git/GitHub"],
   },
@@ -156,15 +156,6 @@ const CERTIFICATIONS = [
     logo: "assets/Logos/siemens_logo.jpg", // e.g. "assets/siemens.png"
     preview: "assets/Certifications/previews/SMSCP-Assistant.jpg",
     url: "assets/Certifications/SMSCP-Assistant.pdf",
-    hasPdf: true,
-  },
-  {
-    name: "Altium Education - PCB Basic Design Course",
-    issuer: "Altium",
-    date: "Nov 2025",
-    logo: "assets/Logos/altium_logo.jpg",
-    preview: "assets/Certifications/previews/Altium Education - PCB Basic Design Course.jpg",
-    url: "assets/Certifications/Altium Education - PCB Basic Design Course.pdf",
     hasPdf: true,
   },
   {
@@ -237,6 +228,15 @@ const CERTIFICATIONS = [
     logo: "assets/Logos/MathWorks_logo.jpg",
     preview: "assets/Certifications/previews/Multibody Simulation Onramp.jpg",
     url: "assets/Certifications/Multibody Simulation Onramp.pdf",
+    hasPdf: true,
+  },
+  {
+    name: "Altium Education - PCB Basic Design Course",
+    issuer: "Altium",
+    date: "Nov 2025",
+    logo: "assets/Logos/altium_logo.jpg",
+    preview: "assets/Certifications/previews/Altium Education - PCB Basic Design Course.jpg",
+    url: "assets/Certifications/Altium Education - PCB Basic Design Course.pdf",
     hasPdf: true,
   },
 ];
