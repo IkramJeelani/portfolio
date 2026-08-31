@@ -455,19 +455,5 @@ window.PROJECT_DATA["stapler-cad-model"] = {
       <figcaption>Right view</figcaption>
     </figure>
   </div>
-
-  <h2>4. Final Comparison</h2>
-  <div class="two-col">
-    <div>
-      <h3>Physical</h3>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Comparison/amazon.png" width="773" height="580"
-          alt="The physical AmazonBasics stapler">
-    </div>
-    <div>
-      <h3>CAD Model</h3>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Comparison/cad.png" width="1118" height="838"
-          alt="The SolidWorks CAD model, matching angle">
-    </div>
-  </div>
   `,
 };
