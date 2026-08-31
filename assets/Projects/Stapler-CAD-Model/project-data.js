@@ -408,8 +408,8 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <div class="gallery cols-2">
     <figure>
       <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/front_top_open.png" width="985" height="739"
-          alt="Assembly, open, front top view">
-      <figcaption>Front top view</figcaption>
+          alt="Assembly, open, front-top view">
+      <figcaption>Front-Top view</figcaption>
     </figure>
     <figure>
       <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/top_open.png" width="959" height="719"
