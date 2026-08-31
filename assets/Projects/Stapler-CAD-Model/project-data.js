@@ -5,7 +5,7 @@ window.PROJECT_DATA = window.PROJECT_DATA || {};
 window.PROJECT_DATA["stapler-cad-model"] = {
   id: "stapler-cad-model",
   title: "Stapler CAD Model",
-  image: "assets/Projects/Stapler-CAD-Model/display.png",
+  image: "assets/Projects/Stapler-CAD-Model/display.jpg",
   date: "Nov - Dec 2024",
   tech: ["SolidWorks", "Reverse Engineering"],
   links: [],
