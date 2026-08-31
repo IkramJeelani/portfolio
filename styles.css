@@ -11,10 +11,10 @@
    that still need to read as a line. */
 :root {
   --bg: #14161c;
-  --bg-soft: rgba(255, 255, 255, 0.022);
-  --card: rgba(255, 255, 255, 0.03);
+  --bg-soft: rgba(255, 255, 255, 0.014);
+  --card: rgba(255, 255, 255, 0.02);
   --border: rgba(255, 255, 255, 0.1);
-  --glass-blur: 10px;
+  --glass-blur: 6px;
   --shadow-dark: rgba(0, 0, 0, 0.55);
   --shadow-light: rgba(255, 255, 255, 0.035);
   --shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
@@ -84,10 +84,10 @@
 /* ===== Light theme ===== */
 :root[data-theme="light"] {
   --bg: #f6f3ec;
-  --bg-soft: rgba(255, 255, 255, 0.32);
-  --card: rgba(255, 255, 255, 0.4);
+  --bg-soft: rgba(255, 255, 255, 0.22);
+  --card: rgba(255, 255, 255, 0.28);
   --border: rgba(255, 255, 255, 0.65);
-  --glass-blur: 10px;
+  --glass-blur: 6px;
   --shadow-dark: rgba(163, 153, 132, 0.55);
   --shadow-light: rgba(255, 255, 255, 0.9);
   --shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
@@ -220,8 +220,8 @@ h1, h2, h3,
   border: 1px solid var(--border);
   background: var(--liquid-sheen, none), var(--card);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(var(--glass-blur, 10px)) saturate(130%);
-  -webkit-backdrop-filter: blur(var(--glass-blur, 10px)) saturate(130%);
+  backdrop-filter: blur(var(--glass-blur, 6px)) saturate(110%);
+  -webkit-backdrop-filter: blur(var(--glass-blur, 6px)) saturate(110%);
 }
 /* Cursor spotlight that follows the mouse across the nav -- rounded to
    match the pill so the glow doesn't spill past the rounded corners. */
@@ -1503,8 +1503,8 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    backdrop-filter: blur(var(--glass-blur)) saturate(130%);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(130%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(110%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(110%);
     opacity: 0;
     transform: translateY(-8px);
     pointer-events: none;
@@ -1748,6 +1748,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .theme-toggle, .nav-toggle, .hero-card, .btn, .tl-card, .skill-group,
 .cert-card, .edu-card, .card, .project-page, .tag,
 .project-content .callout, .project-content code, .project-content pre {
-  backdrop-filter: blur(var(--glass-blur)) saturate(130%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(130%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(110%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(110%);
 }
