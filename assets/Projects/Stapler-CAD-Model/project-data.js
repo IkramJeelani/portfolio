@@ -420,21 +420,26 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   </div>
 
   <h3>3.3 Section</h3>
-  <div class="gallery cols-3">
+  <div class="gallery cols-2">
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section_iso1.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section_iso1.png" width="865" height="649"
           alt="Assembly, section view, isometric 1">
       <figcaption>Isometric view 1</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section_iso2.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section_iso2.png" width="1024" height="768"
           alt="Assembly, section view, isometric 2">
       <figcaption>Isometric view 2</figcaption>
     </figure>
     <figure>
-      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section_right.png" width="800" height="600"
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section_right.png" width="1151" height="864"
           alt="Assembly, section view, right">
       <figcaption>Right view</figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section_right_back.png" width="1039" height="779"
+          alt="Assembly, section view, right back">
+      <figcaption>Right back view</figcaption>
     </figure>
   </div>
 
