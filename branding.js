@@ -195,7 +195,9 @@
         "<span>" + label + "</span>";
       const embed = toEmbed(RESUME.url);
       if (embed) resumeBtn.setAttribute("data-pdf", embed);
-      controls.appendChild(resumeBtn);
+      // Résumé first, then the theme toggle -- inserted before it rather
+      // than appended, since toggle is already in the DOM by this point.
+      controls.insertBefore(resumeBtn, toggle);
     }
 
     // Hamburger menu — collapses the nav links into a dropdown on narrow screens.

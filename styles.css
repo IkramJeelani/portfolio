@@ -242,6 +242,13 @@ h1, h2, h3,
   position: relative;
   z-index: 2;
   flex-shrink: 0;
+  /* Without this it inherits body's line-height:1.6 at the brand's own
+     larger font-size, giving it a taller line box than the nav links
+     (which use a smaller font-size, so the SAME 1.6 multiplier yields a
+     shorter box) -- different absolute leading between the two can shift
+     where the glyphs sit within an align-items:center flex row, even
+     though both boxes are centered identically by height. */
+  line-height: 1;
   font-weight: 700;
   font-size: var(--fs-115);
   letter-spacing: 0.5px;
@@ -275,24 +282,9 @@ h1, h2, h3,
    reads as the page's one clear way back, not just another muted nav item. */
 #topBackLink { color: var(--accent); font-weight: 600; }
 #topBackLink:hover { color: var(--accent-hover); }
-.site-header nav a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -4px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--grad);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.25s ease;
-}
 .site-header nav a:hover { color: var(--text); }
-.site-header nav a:hover::after { transform: scaleX(1); }
 /* Scroll spy: the section currently being read (aria-current set by main.js) */
 .site-header nav a[aria-current] { color: var(--text); }
-.site-header nav a[aria-current]::after { transform: scaleX(1); }
 
 /* Control group (theme toggle + résumé button), pushed to the pill's
    right edge via margin-left:auto -- everything before it (brand, nav
@@ -311,7 +303,6 @@ h1, h2, h3,
      margin-right, so it collapses to nothing right along with the button. */
 }
 .theme-toggle {
-  margin-right: 0.6rem;
   position: relative; /* anchors the invisible touch-target extension below */
   display: flex;
   align-items: center;
@@ -1525,7 +1516,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
     pointer-events: auto;
   }
   .site-header nav a { padding: 0.55rem 0.75rem; border-radius: var(--radius-sm); }
-  .site-header nav a::after { display: none; } /* no sliding underline in the dropdown */
   .site-header nav a:hover { background: var(--card); color: var(--text); }
   /* Scroll spy in the dropdown: the underline is hidden here, so mark the
      current section with the accent instead */

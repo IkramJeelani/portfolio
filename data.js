@@ -358,7 +358,6 @@ const PROJECT_ORDER = ["model-winch-for-foundry", "dc-motor-speed-controller-usi
    Use a "mailto:" url for email; https links open in a new tab.   */
 const CONTACTS = [
   { label: "Email", url: "mailto:ikram.jeelani05@hotmail.com" },
-  { label: "GitHub", url: "https://github.com/IkramJeelani" },
   { label: "LinkedIn", url: "https://www.linkedin.com/in/ikramjeelani/" },
 ];
 
