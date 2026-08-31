@@ -1,12 +1,6 @@
 /* This project's full card + page data. Registers itself into
    window.PROJECT_DATA — data.js's PROJECT_ORDER array (and a matching
-   <script> tag in index.html + project.html) decide if/where it appears.
-
-   TODO before this project is finished:
-   - Drop a thumbnail/hero image into this folder and point `image` at it.
-   - Fill in `date`, `tech`, `links` as needed.
-   - Write the real `body` content — see data.js's own comment block for
-     the supported building blocks (headings, images, galleries, tables). */
+   <script> tag in index.html + project.html) decide if/where it appears. */
 window.PROJECT_DATA = window.PROJECT_DATA || {};
 window.PROJECT_DATA["stapler-cad-model"] = {
   id: "stapler-cad-model",
@@ -21,7 +15,7 @@ window.PROJECT_DATA["stapler-cad-model"] = {
   <p>A full reverse-engineering of a standard office stapler. This individual project for my Engineering Graphics &amp; 
   Design (MSE 100) course required us to
   order an AmazonBasics stapler, disassemble it down to its individual parts, measure each one by hand to
-  &plusmn;0.1 mm, and model all 10+ components as a fully functional, dimensionally accurate SolidWorks
+  &plusmn;0.1 mm, and model all 13 components as a fully functional, dimensionally accurate SolidWorks
   assembly.</p>
 
   <figure>
