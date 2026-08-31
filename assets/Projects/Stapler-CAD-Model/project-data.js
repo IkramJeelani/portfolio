@@ -437,8 +437,8 @@ window.PROJECT_DATA["stapler-cad-model"] = {
     </figure>
     <figure>
       <img loading="lazy" src="assets/Projects/Stapler-CAD-Model/Assembly/section_right_back.png" width="1039" height="779"
-          alt="Assembly, section view, right back">
-      <figcaption>Right back view</figcaption>
+          alt="Assembly, section view, right-back">
+      <figcaption>Right-Back view</figcaption>
     </figure>
   </div>
 
