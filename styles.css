@@ -1508,6 +1508,8 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
+    backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
     opacity: 0;
     transform: translateY(-8px);
     pointer-events: none;
@@ -1751,8 +1753,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
      behind a fully opaque image is invisible, so there's no point. */
 .theme-toggle, .nav-toggle, .hero-card, .btn, .tl-card, .skill-group,
 .cert-card, .edu-card, .card, .project-page, .tag,
-.project-content .callout, .project-content code, .project-content pre,
-.site-header nav {
+.project-content .callout, .project-content code, .project-content pre {
   backdrop-filter: blur(var(--glass-blur)) saturate(150%);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
 }
