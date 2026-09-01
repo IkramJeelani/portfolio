@@ -72,11 +72,6 @@
     setCanonical(url);
   })();
 
-  // Remember which project, so going back morphs the hero into the right card.
-  try {
-    sessionStorage.setItem("lastProject", encodeURIComponent(project.id));
-  } catch (e) {}
-
   const techHtml = (project.tech || []).map((t) => `<span class="tag">${t}</span>`).join("");
   const linksHtml = (project.links || [])
     .map(
@@ -199,7 +194,7 @@
     window.addEventListener("resize", onScroll);
   })();
 
-  // "Back to projects" — flag a return so the home page restores scroll + morphs the hero.
+  // "Back to projects" — flag a return so the home page restores scroll position.
   const backLink = document.getElementById("topBackLink");
   if (backLink) {
     backLink.addEventListener("click", () => {
@@ -208,7 +203,4 @@
       } catch (e) {}
     });
   }
-
-  // Back link goes to the home page; main.js restores scroll + morph on arrival.
-  if (backLink) backLink.setAttribute("href", "index.html");
 })();

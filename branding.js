@@ -69,6 +69,25 @@
     document.title = (p.name || "") + " - Portfolio";
   }
 
+  // Non-home pages (project detail) don't run main.js, so they can't build
+  // their own nav links from window.SECTIONS the way the home page does.
+  // They used to hardcode a copy of the section list directly in the HTML,
+  // which silently drifted out of sync the moment SECTIONS changed (e.g.
+  // gained "experience") -- generating it here from the same single source
+  // of truth keeps it correct with zero extra upkeep. Titles match main.js's
+  // builder titles exactly because both simply capitalize the SECTIONS key.
+  if (!document.body.hasAttribute("data-home")) {
+    const navEl = document.querySelector(".site-header nav");
+    if (navEl && !navEl.children.length) {
+      (window.SECTIONS || []).forEach((key) => {
+        const a = document.createElement("a");
+        a.href = "index.html#" + key;
+        a.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+        navEl.appendChild(a);
+      });
+    }
+  }
+
   // Cursor spotlight that follows the mouse across the nav bar.
   const header = document.querySelector(".site-header");
   if (header) {
@@ -83,11 +102,6 @@
     setHeaderH();
     window.addEventListener("resize", setHeaderH);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(setHeaderH);
-
-    // Transparent at the very top; frosted background once scrolled.
-    const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 8);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
 
     // Batched to one update per animation frame (same ticking-flag pattern
     // as the scroll-spy below) — pointermove can fire far faster than the
@@ -244,22 +258,5 @@
     } else {
       setupMenu();
     }
-  }
-
-  // Gradient scroll-progress bar at the top of every page.
-  const reduced =
-    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!reduced) {
-    const bar = document.createElement("div");
-    bar.className = "scroll-progress";
-    document.body.appendChild(bar);
-    const update = () => {
-      const doc = document.documentElement;
-      const max = doc.scrollHeight - doc.clientHeight;
-      bar.style.transform = `scaleX(${max > 0 ? doc.scrollTop / max : 0})`;
-    };
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    update();
   }
 })();

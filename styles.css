@@ -83,7 +83,6 @@
   --radius-sm: 11px;
   --radius: 18px;
   --max: 1100px;
-  --pattern: rgba(236,231,222,.045);
 }
 
 /* ===== Light theme ===== */
@@ -116,7 +115,6 @@
   --accent-rgb: 109, 40, 217; /* #6d28d9 as r,g,b — for rgba() glows/washes */
   --grad: var(--accent);
   --grad-btn: var(--accent); /* 7.1:1 with white text, well clear of AA */
-  --pattern: rgba(29,26,23,.05);
 }
 /* B&W + one accent: the name is the site's biggest piece of text, so it
    stays plain --text — clean black/white typography — with the accent
@@ -401,6 +399,7 @@ h1, h2, h3,
    screen shows only the name — the About section starts below the fold.
    Desktop: 2 columns, arm | text. Mobile: stacks name then arm. */
 .hero {
+  position: relative; /* anchors .hero::after (the scroll cue) below */
   max-width: var(--max);
   margin: 0 auto;
   padding: 2rem 1.5rem;
@@ -501,7 +500,6 @@ h1, h2, h3,
   transform: translateX(-50%) rotate(45deg);
   opacity: 0.7;
 }
-.hero { position: relative; }
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 3px;
@@ -1549,20 +1547,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   .project-links .btn { width: 100%; text-align: center; padding: 0.85rem 1.4rem; }
 }
 
-/* ===== Scroll progress bar (gradient, top of page) ===== */
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  width: 100%;
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  background: var(--grad);
-  z-index: 100;
-  pointer-events: none;
-}
-
 /* ===== PDF popup (certificate viewer) ===== */
 .pdf-modal {
   position: fixed;
@@ -1701,8 +1685,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 /* Cross-page transitions and the project-hero shared-element morph were
    removed -- every page swap is now an instant, plain navigation. */
 @view-transition { navigation: none; }
-
-.scroll-progress { display: none; }
 
 /* ===== Small-screen polish ===== */
 @media (max-width: 900px) {

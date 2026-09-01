@@ -289,7 +289,7 @@
   setupTimelineWidth();
   setupPdfModal();
   setupScrollSpy();
-  setupSharedTransition();
+  setupScrollRestore();
   setupSkillsMasonry();
 
   /* ---------- Experience + Education: one shared card width ----------
@@ -433,18 +433,18 @@
     els.forEach((e) => io.observe(e));
   }
 
-  /* ---------- Shared-element page transition (card image <-> detail hero) ---------- */
-  function setupSharedTransition() {
+  /* ---------- Scroll restore (returning from a project's detail page) ----------
+     Used to also tag the clicked card's image with a view-transition-name so
+     the hero would morph back into it on return — removed along with every
+     other page-load/transition animation on the site (see @view-transition
+     in styles.css). Only the scroll-position restore is still live behavior. */
+  function setupScrollRestore() {
     const projSec = document.getElementById("projects");
     if (!projSec) return;
-    const cardFor = (id) => projSec.querySelector(`a.card[href$="id=${id}"]`);
 
-    // Returning via "Back to projects" ONLY: restore the exact scroll position
-    // and tag the card so the hero morphs back into it. Every other way of
-    // arriving (brand link, fresh visit, browser back) gets the plain
-    // crossfade — previously the card was tagged on EVERY index load, so e.g.
-    // clicking the brand logo sent the hero flying to an off-screen card:
-    // a different animation depending on how you left. One path, one animation.
+    // Returning via "Back to projects" ONLY: restore the exact scroll position.
+    // Every other way of arriving (brand link, fresh visit, browser back)
+    // just lands at the top, which is the plain/expected behavior for those.
     try {
       if (sessionStorage.getItem("returnToProjects")) {
         sessionStorage.removeItem("returnToProjects");
@@ -456,32 +456,16 @@
           window.scrollTo(0, y);
           root.style.scrollBehavior = prev;
         }
-        const last = sessionStorage.getItem("lastProject");
-        const card = last && cardFor(last);
-        const img = card && card.querySelector(".card-img");
-        if (img) img.style.viewTransitionName = "project-hero";
-        // The morph target must be VISIBLE at first paint. .reveal elements
-        // start at opacity:0 until IntersectionObserver fires — but IO is
-        // async and lands AFTER the view-transition snapshot, so the hero
-        // would morph into an empty slot and the grid would then replay its
-        // entrance stagger. The visitor has already seen this page: mark
-        // everything revealed up front (pre-paint, so nothing animates).
-        document.querySelectorAll(".reveal").forEach((el) => el.classList.add("in"));
       }
     } catch (e) {}
 
-    // Opening a project: remember scroll + tag the clicked card's image before navigating.
+    // Opening a project: remember the scroll position to restore on return.
     projSec.addEventListener("click", (e) => {
       const card = e.target.closest("a.card");
       if (!card) return;
-      const m = (card.getAttribute("href") || "").match(/id=([^&]+)/);
       try {
-        if (m) sessionStorage.setItem("lastProject", m[1]);
         sessionStorage.setItem("indexScroll", String(window.scrollY));
       } catch (e2) {}
-      projSec.querySelectorAll(".card-img").forEach((im) => (im.style.viewTransitionName = ""));
-      const img = card.querySelector(".card-img");
-      if (img) img.style.viewTransitionName = "project-hero";
     });
   }
 
