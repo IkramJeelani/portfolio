@@ -1505,40 +1505,54 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   /* True centering relative to the whole pill (not "centered in the space
      left over after brand"): flexbox auto-margins only give space-between-
      style centering, which shifts off-center as soon as brand's width
-     changes. Absolute + translateX(-50%) centers on the header itself,
-     independent of brand's width, matching the original 3-column
-     brand|controls|nav grid this replaced. */
+     changes. left:0/right:0 + width:fit-content + margin-inline:auto centers
+     on the header itself, independent of brand's width, matching the
+     original 3-column brand|controls|nav grid this replaced — deliberately
+     NOT transform:translateX(-50%): its children (.theme-toggle,
+     .nav-toggle) carry backdrop-filter, and a transformed ancestor wrapping
+     backdrop-filter descendants is the same combination confirmed broken
+     on real Mobile Safari for the nav dropdown below (see its comment). */
   .header-controls {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-left: 0;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    margin-inline: auto;
   }
   .site-header nav {
     position: absolute;
     top: calc(100% + 8px);
     left: 50%;
-    transform: translateX(-50%) translateY(-8px);
+    /* Fixed width + margin-left (not transform: translateX(-50%)) so
+       centering doesn't rely on transform at all — see the note on
+       backdrop-filter below for why that combination is avoided here. */
+    width: 210px;
+    margin-left: -105px;
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
     gap: 0.15rem;
-    min-width: 190px;
     padding: 0.5rem;
-    background: var(--bg-soft);
+    /* Deliberately OPAQUE (var(--bg)), not the translucent glass
+       --bg-soft/--card the rest of the header uses — same reasoning as
+       .skip-link/.card-open/.pdf-box: this sits over arbitrary hero
+       content (photo, prose) and has to stay legible regardless of
+       what's behind it. It also can't lean on backdrop-filter for that
+       legibility even in principle: on real Mobile Safari this popover
+       (position:absolute, transitioning opacity, living inside a
+       position:sticky header) rendered with NO visible blur or tint at
+       all — a confirmed WebKit backdrop-filter compositing gap, not a
+       Chromium-testable one. An opaque background can't fail that way. */
+    background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    backdrop-filter: blur(var(--glass-blur)) saturate(150%);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
     opacity: 0;
-    transform: translateY(-8px);
     pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.2s ease;
   }
   .site-header nav.open {
     opacity: 1;
-    transform: translateX(-50%); /* keep the centering, drop only the Y offset */
     pointer-events: auto;
   }
   .site-header nav a { padding: 0.55rem 0.75rem; border-radius: var(--radius-sm); }
