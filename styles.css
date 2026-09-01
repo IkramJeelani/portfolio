@@ -14,6 +14,11 @@
   --bg-soft: rgba(255, 255, 255, 0.05);
   --card: rgba(255, 255, 255, 0.065);
   --border: rgba(255, 255, 255, 0.1);
+  /* A genuinely visible hairline for STRUCTURAL dividers (timeline rail,
+     TOC rail, table rows, blockquote) -- distinct from --border, which is
+     a barely-there glass-edge highlight meant for card/button outlines,
+     not something meant to read as an actual line on its own. */
+  --divider: rgba(255, 255, 255, 0.22);
   --glass-blur: 14px;
   --shadow-dark: rgba(0, 0, 0, 0.55);
   --shadow-light: rgba(255, 255, 255, 0.035);
@@ -87,6 +92,7 @@
   --bg-soft: rgba(255, 255, 255, 0.5);
   --card: rgba(255, 255, 255, 0.6);
   --border: rgba(255, 255, 255, 0.65);
+  --divider: rgba(29, 26, 23, 0.18);
   --glass-blur: 14px;
   --shadow-dark: rgba(163, 153, 132, 0.55);
   --shadow-light: rgba(255, 255, 255, 0.9);
@@ -633,7 +639,7 @@ h1, h2, h3,
   left: 140px; /* 120 + 20 */
   transform: translateX(-50%);
   width: 2px;
-  background: var(--border);
+  background: var(--divider);
 }
 .tl-left {
   grid-column: 1;
@@ -934,7 +940,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   left: 140px; /* 120 (left column) + 20 (half the gap) */
   transform: translateX(-50%);
   width: 2px;
-  background: var(--border);
+  background: var(--divider);
 }
 /* Left column: date + location, vertically centred on the dot */
 .edu-left {
@@ -1202,7 +1208,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .toc-list { display: flex; flex-direction: column; }
 .toc-link {
   padding: 0.35rem 0.6rem;
-  border-left: 2px solid var(--border);
+  border-left: 2px solid var(--divider);
   color: var(--muted);
   font-size: var(--fs-85);
   line-height: 1.35;
@@ -1335,12 +1341,12 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   width: 8rem;
   padding: 0.6rem 1rem;
   text-align: center;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--divider);
 }
 .project-content th {
   color: var(--muted);
   font-weight: 600;
-  border-bottom: 2px solid var(--border);
+  border-bottom: 2px solid var(--divider);
 }
 .project-content tbody tr:nth-child(even) { background: var(--bg-soft); }
 
@@ -1359,7 +1365,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .project-content blockquote {
   margin: 1.8rem 0;
   padding-left: 1.25rem;
-  border-left: 3px solid var(--border);
+  border-left: 3px solid var(--divider);
   color: var(--muted);
   font-style: italic;
   font-size: var(--fs-115);
@@ -1602,7 +1608,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   justify-content: space-between;
   gap: 1rem;
   padding: 0.55rem 0.8rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--divider);
   background: var(--bg);
 }
 .pdf-title {
@@ -1676,7 +1682,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   height: 42px;
   margin: auto;
   border-radius: 50%;
-  border: 3px solid var(--border);
+  border: 3px solid var(--divider);
   border-top-color: var(--accent);
 }
 /* iframe fallback when pdf.js can't load */
