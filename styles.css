@@ -91,7 +91,12 @@
   --bg: #f6f3ec;
   --bg-soft: rgba(255, 255, 255, 0.5);
   --card: rgba(255, 255, 255, 0.6);
-  --border: rgba(255, 255, 255, 0.65);
+  /* A white glass-edge highlight (the "correct" look for a raised card)
+     is invisible against the equally-light cream page background -- it
+     only reads at the corner the dark drop-shadow also darkens. A dark,
+     subtle line instead gives every card a visible boundary on all four
+     sides regardless of which corner the shadow lights up. */
+  --border: rgba(29, 26, 23, 0.12);
   --divider: rgba(29, 26, 23, 0.18);
   --glass-blur: 14px;
   --shadow-dark: rgba(163, 153, 132, 0.55);
