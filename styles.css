@@ -303,11 +303,13 @@ h1, h2, h3,
   z-index: 3;
   display: flex;
   align-items: center;
-  /* No flex `gap` here on purpose: gap inserts space on BOTH sides of every
-     child, including the résumé button when it's collapsed to width:0 while
-     hidden — that phantom double-gap is what used to wedge the two toggles
-     apart on first load. Spacing instead lives on theme-toggle's own
-     margin-right, so it collapses to nothing right along with the button. */
+  /* The résumé button is only ever added to the DOM at all when RESUME.show
+     is true (branding.js) — never rendered-then-hidden — so a plain gap
+     here can't produce a phantom double-gap around a collapsed button.
+     Keeps spacing consistent regardless of which controls are present or
+     what order they're in (dropdown/résumé/toggle on small screens,
+     résumé/toggle on wide ones). */
+  gap: 0.5rem;
 }
 .theme-toggle {
   position: relative; /* anchors the invisible touch-target extension below */
@@ -363,7 +365,6 @@ h1, h2, h3,
   font-weight: 700;
   font-size: var(--fs-82);
   white-space: nowrap;
-  margin-right: 0.5rem;
   transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.15s;
 }
 .nav-resume-btn:hover { opacity: 0.85; }
@@ -1714,13 +1715,12 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   .hero h1 { font-size: var(--fs-215); }
   .subtitle { font-size: var(--fs-98); }
   .section-title { font-size: var(--fs-160); }
-  .theme-toggle { width: 32px; height: 32px; margin-right: 0.45rem; }
+  .theme-toggle { width: 32px; height: 32px; }
   .nav-resume-btn {
     height: 32px;
     font-size: var(--fs-78);
     gap: 0.35rem;
     padding: 0 0.75rem;
-    margin-right: 0.45rem;
   }
   /* 32px visuals need a bigger extension to reach the ~44px touch floor */
   .theme-toggle::after,

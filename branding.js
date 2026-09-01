@@ -229,10 +229,11 @@
       menuBtn.innerHTML =
         '<svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>' +
         '<svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-      // Appended into .header-controls (not the header directly) so it
-      // groups with the résumé/theme buttons as one centered cluster on
-      // small screens, instead of sitting off on its own at the right edge.
-      controls.appendChild(menuBtn);
+      // Inserted as the FIRST control (not appended) so the order reads
+      // dropdown, résumé, theme toggle — grouped with the résumé/theme
+      // buttons as one centered cluster on small screens, instead of
+      // sitting off on its own at the right edge.
+      controls.insertBefore(menuBtn, controls.firstChild);
 
       const setOpen = (open) => {
         navEl.classList.toggle("open", open);
