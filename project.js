@@ -160,7 +160,20 @@
     // heading actually exists.
     if (location.hash) {
       const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
-      if (target) target.scrollIntoView();
+      if (target) {
+        target.scrollIntoView();
+        // This page's body text is still in the fallback font at this point
+        // (font-display: swap) and most of its images haven't loaded yet —
+        // a gallery-heavy project page reflows by thousands of pixels once
+        // both settle, leaving the first jump wildly short or long. Snap
+        // back to the target after each settles, same pattern used for
+        // font-driven reflow elsewhere (setupEqualize/setupTimelineWidth in
+        // main.js).
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(() => target.scrollIntoView());
+        }
+        window.addEventListener("load", () => target.scrollIntoView());
+      }
     }
 
     // Highlight whichever section is currently in view — and, if that's a

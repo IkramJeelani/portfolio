@@ -481,6 +481,13 @@
     let modal, pdfDoc, libPromise;
     let zoom = 1;
     let curSrc = "";
+    // Bumped on every open() call; a stale call (superseded by a rapid
+    // repeat click before its own awaits resolve) checks this and backs off
+    // instead of racing the newer call to paint pdf-pages — without it, two
+    // overlapping opens could each clear the box and hand off mid-render,
+    // and whichever happened to finish last could bail on a staleness check
+    // AFTER already blanking the box, leaving it permanently empty.
+    let openToken = 0;
 
     const loadLib = () => {
       if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
@@ -551,10 +558,10 @@
     const setZoom = (z) => {
       zoom = Math.min(3, Math.max(0.5, z));
       modal.querySelector(".pdf-zoom-label").textContent = Math.round(zoom * 100) + "%";
-      if (pdfDoc) renderPages();
+      if (pdfDoc) renderPages(openToken);
     };
 
-    async function renderPages() {
+    async function renderPages(token) {
       const box = modal.querySelector(".pdf-pages");
       const doc = pdfDoc;
       box.classList.remove("fallback");
@@ -564,7 +571,9 @@
       // canvases, so it's worth the extra render cost on high-density screens.
       const dpr = Math.min(window.devicePixelRatio || 1, 3);
       for (let n = 1; n <= doc.numPages; n++) {
-        if (doc !== pdfDoc) return; // a newer document replaced this one mid-render
+        // A newer open() call superseded this one, or replaced the document
+        // mid-render — stop instead of racing it to paint pdf-pages.
+        if (token !== openToken || doc !== pdfDoc) return;
         const page = await doc.getPage(n);
         const vp1 = page.getViewport({ scale: 1 });
         const fit = (box.clientWidth - 44) / vp1.width; // fit page to the modal width
@@ -583,12 +592,16 @@
     // one display density. Re-render them if the window moves to a monitor with
     // a different one, otherwise an open certificate stays soft until reopened.
     onDprChange(() => {
-      if (pdfDoc) renderPages();
+      if (pdfDoc) renderPages(openToken);
     });
 
     let opener = null; // element to hand focus back to when the dialog closes
 
     async function open(src, title) {
+      // This call's own identity — a later open() (rapid repeat click)
+      // bumps openToken again, and every check below makes this call back
+      // off rather than race the newer one to paint pdf-pages.
+      const myToken = ++openToken;
       if (!modal) build();
       // Only capture the opener on the FIRST open, not on every hop.
       if (!modal.classList.contains("open")) opener = document.activeElement;
@@ -606,13 +619,25 @@
       modal.querySelector(".pdf-zoom-label").textContent = "100%";
       try {
         const lib = await loadLib();
+        if (myToken !== openToken) return;
         if (curSrc !== src || !pdfDoc) {
+          // Fetch into a local first — a superseded call reaching this point
+          // (its getDocument() started before a newer open() bumped the
+          // token, resolves after) must not overwrite the shared pdfDoc a
+          // fresher call is already relying on. Discard its own document
+          // instead once it turns out to be stale.
+          const doc = await lib.getDocument(src).promise;
+          if (myToken !== openToken) {
+            doc.destroy();
+            return;
+          }
           if (pdfDoc) pdfDoc.destroy();
-          pdfDoc = await lib.getDocument(src).promise;
+          pdfDoc = doc;
           curSrc = src;
         }
-        await renderPages();
+        await renderPages(myToken);
       } catch (err) {
+        if (myToken !== openToken) return;
         // CDN blocked or the PDF failed to parse — browser's viewer still works.
         box.classList.add("fallback");
         box.innerHTML = '<iframe title="Certificate" src="' + src + '"></iframe>';
@@ -626,6 +651,10 @@
       if (opener && opener.focus) opener.focus(); // hand focus back to the triggering link
       opener = null;
       setTimeout(() => {
+        // A rapid re-open before this fires already restarted the dialog
+        // (its own pdfDoc/curSrc, its own render in flight) — wiping that
+        // out here left the modal stuck open with a blank pdf-pages box.
+        if (modal.classList.contains("open")) return;
         if (pdfDoc) pdfDoc.destroy();
         pdfDoc = null;
         curSrc = "";
