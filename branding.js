@@ -28,8 +28,13 @@
     const light = document.documentElement.getAttribute("data-theme") === "light";
     const bg = light ? "#f6f3ec" : "#14161c";
     // B&W + one accent: solid fill (was a purple->pink gradient) to match
-    // the on-page logo, which is now solid too.
-    const fg = light ? "#6d28d9" : "#a855f7";
+    // the on-page logo, which is now solid too. Read live off --accent
+    // (not a hardcoded hex per theme) so the two can't silently drift out
+    // of sync the next time the accent color changes — that's exactly what
+    // happened here before this fix: the on-page .brand mark picks up
+    // var(--accent) automatically, but this hex was a frozen duplicate.
+    const fg = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() ||
+      (light ? "#c2410c" : "#f97316");
     const svg =
       "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>" +
       "<rect width='64' height='64' rx='14' fill='" + bg + "'/>" +

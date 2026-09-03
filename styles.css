@@ -29,18 +29,18 @@
   /* long-form copy: a notch dimmer than headings to avoid halation on dark */
   --text-body: #c9d1d9;
   --muted: #8b8fa0;
-  --accent: #a855f7;
-  --accent-hover: #c084fc;
-  --accent-rgb: 168, 85, 247; /* #a855f7 as r,g,b — for rgba() glows/washes */
+  --accent: #f97316;
+  --accent-hover: #fb923c;
+  --accent-rgb: 249, 115, 22; /* #f97316 as r,g,b — for rgba() glows/washes */
   /* B&W + one accent: flat solid fills instead of the old purple->pink
      gradient, so the palette reads as one hue, not two. Kept as --grad/
      --grad-btn (not a rename) so every consumer — brand mark, hero name,
      underlines, buttons — picks this up with zero changes on their end. */
   --grad: var(--accent);
-  /* Plain --accent (#a855f7) is only 3.96:1 with white text, under the
-     4.5:1 AA floor for the bold button labels that sit on it — this deeper
-     stop (already used elsewhere in the old gradient) clears 6.04:1. */
-  --grad-btn: #8b2fd6;
+  /* Plain --accent (#f97316) is too light with white text for the bold
+     button labels that sit on it — this deeper stop clears the 4.5:1 AA
+     floor with real margin. */
+  --grad-btn: #c2410c;
   --font-display: "Sora", "Segoe UI", sans-serif;
   --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   /* Type scale — every font-size below is one of these tokens, named
@@ -110,11 +110,11 @@
      the PDF zoom label, cert-issuer text). This clears both: 4.60:1 and
      5.43:1 respectively. */
   --muted: #6f685b;
-  --accent: #6d28d9; /* deeper than dark mode's purple so small text clears AA on white */
-  --accent-hover: #5b21b6;
-  --accent-rgb: 109, 40, 217; /* #6d28d9 as r,g,b — for rgba() glows/washes */
+  --accent: #c2410c; /* deeper than dark mode's orange so small text clears AA on cream */
+  --accent-hover: #9a3412;
+  --accent-rgb: 194, 65, 12; /* #c2410c as r,g,b — for rgba() glows/washes */
   --grad: var(--accent);
-  --grad-btn: var(--accent); /* 7.1:1 with white text, well clear of AA */
+  --grad-btn: var(--accent); /* deep enough to clear AA with white text */
 }
 /* B&W + one accent: the name is the site's biggest piece of text, so it
    stays plain --text — clean black/white typography — with the accent
@@ -700,8 +700,9 @@ h1, h2, h3,
 }
 .tl-role { font-weight: 700; font-size: var(--fs-105); }
 .tl-company { color: var(--accent); font-weight: 600; margin-top: 0.1rem; }
-/* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
-   floor — same fix as .cert-date below. */
+/* Dark theme: kept on --accent-hover (not --accent) for text on --card —
+   the lighter hover stop keeps a comfortable AA margin regardless of which
+   accent hue is active, same fix as .cert-date below. */
 :root:not([data-theme="light"]) .tl-company { color: var(--accent-hover); }
 .tl-points { margin: 0.7rem 0 0; padding-left: 1.1rem; color: var(--text); }
 .tl-points li { margin-bottom: 0.3rem; }
@@ -869,10 +870,11 @@ a.cert-card:active { transform: translateY(-1px) scale(0.99); box-shadow: var(--
 }
 /* no leading dot when there's no issuer to separate it from */
 .cert-date:first-child::before { content: none; }
-/* Dark theme: --accent (#a855f7) on the dark card measures only 4.52:1 at this
-   size — technically AA, but no margin. --accent-hover is lighter, so on a dark
-   background it lifts clear. (:not([data-theme=light]) also covers the default,
-   attribute-less state, which uses the dark tokens.) */
+/* Dark theme: kept on --accent-hover (not --accent) at this size for a
+   comfortable AA margin regardless of which accent hue is active —
+   --accent-hover is lighter, so on a dark background it lifts clear.
+   (:not([data-theme=light]) also covers the default, attribute-less state,
+   which uses the dark tokens.) */
 :root:not([data-theme="light"]) .cert-date { color: var(--accent-hover); }
 /* Rounded + outlined so each mark reads as a deliberate brand tile: these are
    square JPEGs with baked-in white backgrounds, which otherwise bleed into a
@@ -1022,8 +1024,9 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   font-weight: 700;
   color: var(--accent);
 }
-/* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
-   floor — same fix as .cert-date. */
+/* Dark theme: kept on --accent-hover (not --accent) for text on --card —
+   the lighter hover stop keeps a comfortable AA margin regardless of which
+   accent hue is active, same fix as .cert-date. */
 :root:not([data-theme="light"]) .edu-major { color: var(--accent-hover); }
 .edu-details { color: var(--text); margin: 0.5rem 0 0; }
 .edu-points { margin: 0.1rem 0 0; padding-left: 1.1rem; color: var(--text); }
@@ -1111,8 +1114,9 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
-/* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
-   floor — same fix as .cert-date. */
+/* Dark theme: kept on --accent-hover (not --accent) for text on --card —
+   the lighter hover stop keeps a comfortable AA margin regardless of which
+   accent hue is active, same fix as .cert-date. */
 :root:not([data-theme="light"]) .card-date { color: var(--accent-hover); }
 /* tags grouped at the bottom; the gap sits above the tags */
 .card-foot { margin-top: 0.25rem; display: flex; flex-direction: column; gap: 0.3rem; }
@@ -1265,8 +1269,9 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   text-transform: uppercase;
   margin: 0 0 1.5rem;
 }
-/* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
-   floor — same fix as .cert-date. */
+/* Dark theme: kept on --accent-hover (not --accent) for text on --card —
+   the lighter hover stop keeps a comfortable AA margin regardless of which
+   accent hue is active, same fix as .cert-date. */
 :root:not([data-theme="light"]) .project-date { color: var(--accent-hover); }
 .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
 .tag {
@@ -1280,11 +1285,12 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   /* a single long token ("SOLIDWORKS") can otherwise overflow ~280px screens */
   overflow-wrap: anywhere;
 }
-/* Dark theme: --accent on --bg-soft measures only 3.77:1, well under the
-   4.5:1 AA floor — every project/cert tech-tag pill in dark mode.
-   :where() keeps this at .tag's own specificity so it still loses to the
-   more specific .skill-group .tag override below, which intentionally
-   uses a different color. */
+/* Dark theme: kept on --accent-hover (not --accent) for a comfortable AA
+   margin against --bg-soft regardless of which accent hue is active —
+   every project/cert tech-tag pill in dark mode. :where() keeps this at
+   .tag's own specificity so it still loses to the more specific
+   .skill-group .tag override below, which intentionally uses a different
+   color. */
 :where(:root:not([data-theme="light"])) .tag { color: var(--accent-hover); }
 .project-links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.5rem; }
 
@@ -1302,8 +1308,9 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
 .project-content h2 { font-size: var(--fs-160); margin: 2.5rem 0 1rem; }
 .project-content h3 { font-size: var(--fs-125); margin: 1.8rem 0 0.75rem; }
 .project-content a { color: var(--accent); text-decoration: underline; }
-/* Dark theme: --accent on --card measures only 4.21:1, under the 4.5:1 AA
-   floor — same fix as .cert-date. */
+/* Dark theme: kept on --accent-hover (not --accent) for text on --card —
+   the lighter hover stop keeps a comfortable AA margin regardless of which
+   accent hue is active, same fix as .cert-date. */
 :root:not([data-theme="light"]) .project-content a { color: var(--accent-hover); }
 .project-content strong { color: #fff; }
 .project-content ul,
