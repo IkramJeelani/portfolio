@@ -53,7 +53,7 @@ const RESUME = {
    as its own section; see ABOUT + PROFILE.photo below.)
    ============================================================================ */
 const SECTIONS = [
-  "experience",
+  //"experience",
   "projects",
   "skills",
   "certifications",
