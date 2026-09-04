@@ -197,7 +197,7 @@ h1, h2, h3,
   display: flex;
   align-items: center;
   gap: 1.75rem;
-  padding: 0.9rem 1.5rem;
+  padding: 1.15rem 1.5rem;
   background: var(--bg);
   border-bottom: 1px solid var(--divider);
 }
@@ -1135,15 +1135,13 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   font-size: var(--fs-90);
 }
 
-/* ===== Project detail page ===== */
+/* ===== Project detail page =====
+   No boxed card wrapper — the write-up sits directly on the page
+   background, just a constrained reading width. */
 .project-page {
   max-width: 820px;
   margin: 3rem auto 4rem;
-  padding: 2rem 2rem 2.5rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  padding: 0 1.5rem;
 }
 /* ===== Table of contents (detail page, wide screens) =====
    Fixed to the left edge, listing THIS page's own h2/h3 sections — built
@@ -1546,7 +1544,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   .project-content .two-col { grid-template-columns: 1fr; }
   .project-content img { max-width: 100%; }
   .project-page h1 { font-size: var(--fs-190); }
-  .project-page { padding: 2rem 1.25rem 3rem; }
+  .project-page { padding: 0 1.25rem; }
   /* Full-width, easy-to-tap action buttons on phones */
   .project-links { flex-direction: column; align-items: stretch; }
   .project-links .btn { width: 100%; text-align: center; padding: 0.85rem 1.4rem; }
@@ -1696,7 +1694,7 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   .section { padding: 3rem 1.25rem; }
 }
 @media (max-width: 480px) {
-  .site-header { padding: 0.85rem 1rem; }
+  .site-header { padding: 1.1rem 1rem; }
   .hero { padding: 2.5rem 1.1rem; }
   .hero h1 { font-size: var(--fs-215); }
   .subtitle { font-size: var(--fs-98); }
