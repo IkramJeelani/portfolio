@@ -93,7 +93,6 @@
     }
   }
 
-  // Cursor spotlight that follows the mouse across the nav bar.
   const header = document.querySelector(".site-header");
   if (header) {
     // Publish the header's real height as --header-h. The header is transparent
@@ -107,25 +106,6 @@
     setHeaderH();
     window.addEventListener("resize", setHeaderH);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(setHeaderH);
-
-    // Batched to one update per animation frame (same ticking-flag pattern
-    // as the scroll-spy below) — pointermove can fire far faster than the
-    // screen refreshes, and this used to force a synchronous
-    // getBoundingClientRect() + two style writes on every single event,
-    // not just once per frame.
-    let lastMove = null;
-    let moveTicking = false;
-    header.addEventListener("pointermove", (e) => {
-      lastMove = e;
-      if (moveTicking) return;
-      moveTicking = true;
-      requestAnimationFrame(() => {
-        moveTicking = false;
-        const r = header.getBoundingClientRect();
-        header.style.setProperty("--x", lastMove.clientX - r.left + "px");
-        header.style.setProperty("--y", lastMove.clientY - r.top + "px");
-      });
-    });
 
     // Clicking the IJ logo scrolls all the way to the top (nav goes transparent).
     const brand = header.querySelector(".brand");

@@ -1,25 +1,21 @@
 ﻿/* ===== Theme tokens ===== */
-/* ===== Neumorphism + Glassmorphism =====
-   Every "surface" (card/bg-soft) is a TRANSLUCENT tint of the theme's base
-   color, blurred via backdrop-filter (the glass half) and still carrying
-   the paired light/dark soft shadow from the neumorphism pass (the depth
-   half) -- so panels read as frosted glass sitting slightly proud of the
-   page, not flat cutouts. --shadow-pressed is the inset
-   counterpart for :active/pressed states and "recessed" content (code
-   blocks, callouts). --border is a translucent glass-edge highlight, not
-   a hard line -- kept faint on structural dividers (timeline rail, TOC)
-   that still need to read as a line. */
+/* ===== Minimalist Neumorphism =====
+   Every "surface" (card/bg-soft) is a plain OPAQUE tone a few percent off
+   the page background — no translucency, no backdrop-filter, no blur. Shape
+   comes entirely from the paired light/dark soft shadow: --shadow reads as
+   raised, --shadow-pressed (its inset counterpart) reads as recessed, for
+   :active/pressed states and "sunken" content (code blocks, callouts).
+   --border is intentionally near-invisible (shadow does the defining work,
+   not an outline) — kept just barely present as an anti-aliasing edge.
+   --divider is the one genuinely visible line, reserved for STRUCTURAL
+   dividers (timeline rail, TOC rail, table rows, blockquote) that need to
+   read as an actual line rather than a surface edge. */
 :root {
-  --bg: #14161c;
-  --bg-soft: rgba(255, 255, 255, 0.05);
-  --card: rgba(255, 255, 255, 0.065);
-  --border: rgba(255, 255, 255, 0.1);
-  /* A genuinely visible hairline for STRUCTURAL dividers (timeline rail,
-     TOC rail, table rows, blockquote) -- distinct from --border, which is
-     a barely-there glass-edge highlight meant for card/button outlines,
-     not something meant to read as an actual line on its own. */
-  --divider: rgba(255, 255, 255, 0.22);
-  --glass-blur: 14px;
+  --bg: #24262d;
+  --bg-soft: #2b2e36;
+  --card: #2b2e36;
+  --border: rgba(255, 255, 255, 0.03);
+  --divider: rgba(255, 255, 255, 0.12);
   --shadow-dark: rgba(0, 0, 0, 0.55);
   --shadow-light: rgba(255, 255, 255, 0.035);
   --shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
@@ -87,29 +83,25 @@
 
 /* ===== Light theme ===== */
 :root[data-theme="light"] {
-  --bg: #f6f3ec;
-  --bg-soft: rgba(255, 255, 255, 0.5);
-  --card: rgba(255, 255, 255, 0.6);
-  /* A white glass-edge highlight (the "correct" look for a raised card)
-     is invisible against the equally-light cream page background -- it
-     only reads at the corner the dark drop-shadow also darkens. A dark,
-     subtle line instead gives every card a visible boundary on all four
-     sides regardless of which corner the shadow lights up. */
-  --border: rgba(29, 26, 23, 0.12);
-  --divider: rgba(29, 26, 23, 0.18);
-  --glass-blur: 14px;
-  --shadow-dark: rgba(163, 153, 132, 0.55);
+  --bg: #e6eaf0;
+  --bg-soft: #eef1f6;
+  --card: #eef1f6;
+  /* No glass-edge highlight to worry about anymore — plain opaque surfaces
+     define their own shape via --shadow instead. --border stays here only
+     as a near-invisible anti-aliasing edge, not a boundary you're meant to
+     actually see. */
+  --border: rgba(0, 0, 0, 0.04);
+  --divider: rgba(0, 0, 0, 0.12);
+  --shadow-dark: rgba(163, 170, 186, 0.55);
   --shadow-light: rgba(255, 255, 255, 0.9);
   --shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
   --shadow-sm: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
   --shadow-pressed: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
-  --text: #1d1a17;
-  --text-body: #1d1a17; /* no halation on light — full contrast is fine */
-  /* Darkened from #7d7566: the original measured only 3.80:1 on --bg-soft
-     and 4.49:1 on --card, both under the 4.5:1 AA floor (dock-num digits,
-     the PDF zoom label, cert-issuer text). This clears both: 4.60:1 and
-     5.43:1 respectively. */
-  --muted: #6f685b;
+  --text: #262a33;
+  --text-body: #262a33; /* no halation on light — full contrast is fine */
+  /* Kept deep enough to clear the 4.5:1 AA floor on both --bg-soft and
+     --card (dock-num digits, the PDF zoom label, cert-issuer text). */
+  --muted: #6b7280;
   --accent: #c2410c; /* deeper than dark mode's orange so small text clears AA on cream */
   --accent-hover: #9a3412;
   --accent-rgb: 194, 65, 12; /* #c2410c as r,g,b — for rgba() glows/washes */
@@ -120,7 +112,7 @@
    stays plain --text — clean black/white typography — with the accent
    reserved for smaller, purposeful spots (eyebrow, buttons, links, tags)
    instead of colorizing the largest element on the page too. */
-:root[data-theme="light"] .project-content strong { color: #1d1a17; }
+:root[data-theme="light"] .project-content strong { color: #262a33; }
 
 * { box-sizing: border-box; }
 
@@ -137,22 +129,6 @@ body {
      background/text color got stuck on the very first toggle and never
      moved again. Removing it fixes the toggle; the switch is now instant
      instead of faded. */
-}
-
-/* Seigaiha (青海波) — traditional Japanese overlapping-wave pattern.
-   Two staggered rows of concentric semicircle arcs create the classic
-   fish-scale motif. Kept very faint (half the opacity of an earlier pass)
-   so it reads as texture, not visible grain. */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='30' viewBox='0 0 60 30'%3E%3Cg fill='none' stroke='%23ece7de' stroke-width='0.7'%3E%3Cpath d='M0 15a15 15 0 0 1 30 0M30 15a15 15 0 0 1 30 0M-15 30a15 15 0 0 1 30 0M15 30a15 15 0 0 1 30 0M45 30a15 15 0 0 1 30 0'/%3E%3Cpath d='M5 15a10 10 0 0 1 20 0M35 15a10 10 0 0 1 20 0M-10 30a10 10 0 0 1 20 0M20 30a10 10 0 0 1 20 0M50 30a10 10 0 0 1 20 0'/%3E%3Cpath d='M10 15a5 5 0 0 1 10 0M40 15a5 5 0 0 1 10 0M-5 30a5 5 0 0 1 10 0M25 30a5 5 0 0 1 10 0M55 30a5 5 0 0 1 10 0'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 80px 40px;
-  opacity: 0.02;
-}
-:root[data-theme="light"] body::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='30' viewBox='0 0 60 30'%3E%3Cg fill='none' stroke='%231d1a17' stroke-width='0.7'%3E%3Cpath d='M0 15a15 15 0 0 1 30 0M30 15a15 15 0 0 1 30 0M-15 30a15 15 0 0 1 30 0M15 30a15 15 0 0 1 30 0M45 30a15 15 0 0 1 30 0'/%3E%3Cpath d='M5 15a10 10 0 0 1 20 0M35 15a10 10 0 0 1 20 0M-10 30a10 10 0 0 1 20 0M20 30a10 10 0 0 1 20 0M50 30a10 10 0 0 1 20 0'/%3E%3Cpath d='M10 15a5 5 0 0 1 10 0M40 15a5 5 0 0 1 10 0M-5 30a5 5 0 0 1 10 0M25 30a5 5 0 0 1 10 0M55 30a5 5 0 0 1 10 0'/%3E%3C/g%3E%3C/svg%3E");
-  opacity: 0.022;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -210,42 +186,21 @@ h1, h2, h3,
 }
 
 /* ===== Header ===== */
-/* Floating glass pill (not an edge-to-edge bar): a fixed max-width, centred,
-   fully rounded (border-radius: 999px, so it stays a true pill/stadium
-   shape regardless of height), always-on frosted glass rather than only
-   once scrolled -- it needs to read as glass floating over the hero from
-   first paint, matching the reference. */
+/* Plain flush bar, not a floating pill: full width, flat against the
+   viewport top, no radius, no shadow lifting it off the page. Reads as
+   part of the page rather than a card sitting on top of it — separated
+   from the content below by nothing more than a hairline. */
 .site-header {
   position: sticky;
-  top: 0.9rem;
+  top: 0;
   z-index: 50;
   display: flex;
   align-items: center;
   gap: 1.75rem;
-  max-width: min(1050px, 94vw);
-  margin: 0 auto;
-  padding: 0.8rem 1.35rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--liquid-sheen, none), var(--card);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(var(--glass-blur, 14px)) saturate(150%);
-  -webkit-backdrop-filter: blur(var(--glass-blur, 14px)) saturate(150%);
+  padding: 0.9rem 1.5rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--divider);
 }
-/* Cursor spotlight that follows the mouse across the nav -- rounded to
-   match the pill so the glow doesn't spill past the rounded corners. */
-.site-header::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: radial-gradient(200px circle at var(--x, -300px) var(--y, 50%), rgba(var(--accent-rgb), 0.14), transparent 60%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.site-header:hover::before { opacity: 1; }
 
 .brand {
   position: relative;
@@ -1526,34 +1481,32 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
     width: fit-content;
     margin-inline: auto;
   }
+  /* Full-bleed solid panel dropping straight down from the header, not a
+     small floating box — no radius, no side margins, edge to edge with the
+     viewport. Deliberately OPAQUE (var(--grad-btn), the same AA-verified
+     deep accent stop the buttons use, not the translucent glass
+     --bg-soft/--card the rest of the header uses) — same reasoning as
+     .skip-link/.card-open/.pdf-box: this sits over arbitrary hero content
+     and has to stay legible regardless of what's behind it. It also can't
+     lean on backdrop-filter for that legibility even in principle: on real
+     Mobile Safari this popover (position:absolute, transitioning opacity,
+     living inside a position:sticky header) rendered with NO visible blur
+     or tint at all — a confirmed WebKit backdrop-filter compositing gap,
+     not a Chromium-testable one. An opaque background can't fail that way. */
   .site-header nav {
     position: absolute;
-    top: calc(100% + 8px);
-    left: 50%;
-    /* Fixed width + margin-left (not transform: translateX(-50%)) so
-       centering doesn't rely on transform at all — see the note on
-       backdrop-filter below for why that combination is avoided here. */
-    width: 210px;
-    margin-left: -105px;
+    top: 100%;
+    left: 0;
+    right: 0;
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
-    gap: 0.15rem;
-    padding: 0.5rem;
-    /* Deliberately OPAQUE (var(--bg)), not the translucent glass
-       --bg-soft/--card the rest of the header uses — same reasoning as
-       .skip-link/.card-open/.pdf-box: this sits over arbitrary hero
-       content (photo, prose) and has to stay legible regardless of
-       what's behind it. It also can't lean on backdrop-filter for that
-       legibility even in principle: on real Mobile Safari this popover
-       (position:absolute, transitioning opacity, living inside a
-       position:sticky header) rendered with NO visible blur or tint at
-       all — a confirmed WebKit backdrop-filter compositing gap, not a
-       Chromium-testable one. An opaque background can't fail that way. */
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    gap: 0;
+    padding: 0.5rem 1.5rem;
+    background: var(--grad-btn);
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
@@ -1562,8 +1515,20 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
     opacity: 1;
     pointer-events: auto;
   }
-  .site-header nav a { padding: 0.55rem 0.75rem; border-radius: var(--radius-sm); }
-  .site-header nav a:hover { background: var(--card); color: var(--text); }
+  .site-header nav a {
+    padding: 0.9rem 0;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-weight: 600;
+    font-size: var(--fs-108);
+  }
+  .site-header nav a:last-child { border-bottom: none; }
+  .site-header nav a:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+  /* The default focus ring is var(--accent) — invisible against a panel
+     that IS var(--grad-btn), a stop of that same hue. White reads clearly
+     against it instead. */
+  .site-header nav a:focus-visible { outline-color: #fff; }
 }
 
 /* Tablet & phone spacing */
@@ -1758,23 +1723,3 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   .nav-resume-btn span { display: none; }
 }
 
-/* ===== Glassmorphism: backdrop blur =====
-   The translucent --card/--bg-soft backgrounds above only read as GLASS
-   once whatever's behind them is blurred -- one combined rule for every
-   surface that uses those tokens, appended last so it doesn't need to
-   touch each rule's own background/border/shadow individually. Skips:
-   - .skip-link, .card-open: deliberately opaque (var(--bg)) -- they need
-     to stay legible against WHATEVER arbitrary content sits behind them
-     (page content / a project photo), not blend into it.
-   - .pdf-box, .pdf-toolbar, .pdf-tool-btn: also opaque (var(--bg)) -- this
-     modal already sits over its own dedicated dark, blurred backdrop, so
-     stacking glass on glass let that backdrop bleed through inconsistently
-     between themes (near-invisible in light, an ugly dark halo in dark).
-   - plain opaque photos (card-img, project-hero, logos): blurring what's
-     behind a fully opaque image is invisible, so there's no point. */
-.theme-toggle, .nav-toggle, .hero-card, .btn, .tl-card, .skill-group,
-.cert-card, .edu-card, .card, .project-page, .tag,
-.project-content .callout, .project-content code, .project-content pre {
-  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
-}
