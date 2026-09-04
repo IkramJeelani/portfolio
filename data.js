@@ -68,7 +68,7 @@ const SECTIONS = [
    this block entirely. */
 const ABOUT =
   "I work across mechanical design, " +
-  "electronics, control systems, and software. I'm aiming to become a design " +
+  "electronics, control systems, and programming. I'm aiming to become a design " +
   "engineer in the field of robotics and automation. Outside of that: gaming, cricket, and good food.";
 
 /* ---------- 3. EXPERIENCE ----------
