@@ -42,8 +42,8 @@ if not FONT_BOLD.exists():
     sys.exit(f"generate-og-images: font not found at {FONT_BOLD}")
 
 THEMES = {
-    "dark": dict(bg="#14161c", text="#ece7de", accent="#f97316", out="assets/og-image-dark.png"),
-    "light": dict(bg="#f6f3ec", text="#1d1a17", accent="#c2410c", out="assets/og-image-light.png"),
+    "dark": dict(bg="#24262d", text="#ece7de", accent="#f97316", out="assets/og-image-dark.png"),
+    "light": dict(bg="#e6eaf0", text="#262a33", accent="#c2410c", out="assets/og-image-light.png"),
 }
 
 

@@ -67,9 +67,7 @@ const SECTIONS = [
    use simple HTML like <strong>…</strong> if you want). Leave it "" to hide
    this block entirely. */
 const ABOUT =
-  "I got into engineering for the freedom of it; with enough knowledge, " +
-  "you're limited only by your imagination. That pull toward building complete " +
-  "systems led me to mechatronics, where I work across mechanical design, " +
+  "I work across mechanical design, " +
   "electronics, control systems, and software. I'm aiming to become a design " +
   "engineer in the field of robotics and automation. Outside of that: gaming, cricket, and good food.";
 
@@ -125,7 +123,7 @@ const SKILLS = [
     ],
   },
   {
-    category: "Software",
+    category: "Programming",
     items: ["Python", "MATLAB", "C", "C++", "Git/GitHub"],
   },
   {
