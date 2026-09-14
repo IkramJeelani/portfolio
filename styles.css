@@ -1,44 +1,40 @@
 ﻿/* ===== Theme tokens ===== */
-/* ===== Minimalist Neumorphism =====
-   Every "surface" (card/bg-soft) is a plain OPAQUE tone a few percent off
-   the page background — no translucency, no backdrop-filter, no blur. Shape
-   comes entirely from the paired light/dark soft shadow: --shadow reads as
-   raised, --shadow-pressed (its inset counterpart) reads as recessed, for
-   :active/pressed states and "sunken" content (code blocks, callouts).
-   --border is intentionally near-invisible (shadow does the defining work,
-   not an outline) — kept just barely present as an anti-aliasing edge.
-   --divider is the one genuinely visible line, reserved for STRUCTURAL
-   dividers (timeline rail, TOC rail, table rows, blockquote) that need to
-   read as an actual line rather than a surface edge. */
+/* ===== Technical Minimal =====
+   Flat, not soft: a real 1px --border does the defining work (not a shadow
+   halo), corners are small/crisp rather than pill-rounded, and --font-mono
+   carries labels, numbers and dates — the "spec sheet" register that reads
+   as engineering rather than generic app-UI. One accent color, used with
+   real restraint. --shadow/--shadow-sm/--shadow-pressed are kept as tokens
+   (many components still reference them) but are now plain, single-
+   direction shadows instead of the old dual-tone neumorphic pair. */
 :root {
-  --bg: #24262d;
-  --bg-soft: #2b2e36;
-  --card: #2b2e36;
-  --border: rgba(255, 255, 255, 0.03);
-  --divider: rgba(255, 255, 255, 0.12);
-  --shadow-dark: rgba(0, 0, 0, 0.55);
-  --shadow-light: rgba(255, 255, 255, 0.035);
-  --shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
-  --shadow-sm: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
-  --shadow-pressed: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
-  --text: #ece7de;
+  --bg: #0b0d10;
+  --bg-soft: #14171b;
+  --card: #14171b;
+  --border: rgba(255, 255, 255, 0.1);
+  --divider: rgba(255, 255, 255, 0.14);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-pressed: inset 0 1px 4px rgba(0, 0, 0, 0.4);
+  --text: #f4f5f7;
   /* long-form copy: a notch dimmer than headings to avoid halation on dark */
-  --text-body: #c9d1d9;
-  --muted: #8b8fa0;
-  --accent: #f97316;
-  --accent-hover: #fb923c;
-  --accent-rgb: 249, 115, 22; /* #f97316 as r,g,b — for rgba() glows/washes */
+  --text-body: #b6bac2;
+  --muted: #6b7280;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-rgb: 59, 130, 246; /* #3b82f6 as r,g,b — for rgba() glows/washes */
   /* B&W + one accent: flat solid fills instead of the old purple->pink
      gradient, so the palette reads as one hue, not two. Kept as --grad/
      --grad-btn (not a rename) so every consumer — brand mark, hero name,
      underlines, buttons — picks this up with zero changes on their end. */
   --grad: var(--accent);
-  /* Plain --accent (#f97316) is too light with white text for the bold
+  /* Plain --accent (#3b82f6) is too light with white text for the bold
      button labels that sit on it — this deeper stop clears the 4.5:1 AA
      floor with real margin. */
-  --grad-btn: #c2410c;
+  --grad-btn: #2563eb;
   --font-display: "Sora", "Segoe UI", sans-serif;
   --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
   /* Type scale — every font-size below is one of these tokens, named
      by its rem value x100 (e.g. --fs-100 = 1rem). Nothing in this file
      sets a bare font-size number anymore, so a difference between two
@@ -70,41 +66,35 @@
   --fs-200: 2rem;
   --fs-215: 2.15rem;
   --fs-240: 2.4rem;
-  /* Radius scale: xs for fine/text-level elements (inline code, PDF canvas),
-     sm for small square UI chips (logos, toolbar buttons, dock rows —
-     previously a mix of 7/8/9/10px with no reasoning behind which got which),
-     the base radius for everything else — cards/panels AND buttons/tags,
-     so every rounded corner on the site shares the same curve. */
-  --radius-xs: 7px;
-  --radius-sm: 11px;
-  --radius: 18px;
+  /* Radius scale: small and crisp on purpose — a technical panel, not a
+     soft app card. xs for fine/text-level elements (inline code, PDF
+     canvas), sm for small square UI chips (logos, toolbar buttons, dock
+     rows), the base radius for everything else — cards/panels AND
+     buttons/tags, so every rounded corner on the site shares the same curve. */
+  --radius-xs: 3px;
+  --radius-sm: 5px;
+  --radius: 8px;
   --max: 1100px;
 }
 
 /* ===== Light theme ===== */
 :root[data-theme="light"] {
-  --bg: #e6eaf0;
-  --bg-soft: #eef1f6;
-  --card: #eef1f6;
-  /* No glass-edge highlight to worry about anymore — plain opaque surfaces
-     define their own shape via --shadow instead. --border stays here only
-     as a near-invisible anti-aliasing edge, not a boundary you're meant to
-     actually see. */
-  --border: rgba(0, 0, 0, 0.04);
-  --divider: rgba(0, 0, 0, 0.12);
-  --shadow-dark: rgba(163, 170, 186, 0.55);
-  --shadow-light: rgba(255, 255, 255, 0.9);
-  --shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
-  --shadow-sm: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
-  --shadow-pressed: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
-  --text: #262a33;
-  --text-body: #262a33; /* no halation on light — full contrast is fine */
+  --bg: #fafafa;
+  --bg-soft: #ffffff;
+  --card: #ffffff;
+  --border: rgba(0, 0, 0, 0.12);
+  --divider: rgba(0, 0, 0, 0.14);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-pressed: inset 0 1px 4px rgba(0, 0, 0, 0.1);
+  --text: #0b0d10;
+  --text-body: #40454e; /* no halation on light — full contrast is fine */
   /* Kept deep enough to clear the 4.5:1 AA floor on both --bg-soft and
      --card (dock-num digits, the PDF zoom label, cert-issuer text). */
   --muted: #6b7280;
-  --accent: #c2410c; /* deeper than dark mode's orange so small text clears AA on cream */
-  --accent-hover: #9a3412;
-  --accent-rgb: 194, 65, 12; /* #c2410c as r,g,b — for rgba() glows/washes */
+  --accent: #2563eb; /* deeper than dark mode's blue so small text clears AA on white */
+  --accent-hover: #1d4ed8;
+  --accent-rgb: 37, 99, 235; /* #2563eb as r,g,b — for rgba() glows/washes */
   --grad: var(--accent);
   --grad-btn: var(--accent); /* deep enough to clear AA with white text */
 }
@@ -112,7 +102,7 @@
    stays plain --text — clean black/white typography — with the accent
    reserved for smaller, purposeful spots (eyebrow, buttons, links, tags)
    instead of colorizing the largest element on the page too. */
-:root[data-theme="light"] .project-content strong { color: #262a33; }
+:root[data-theme="light"] .project-content strong { color: #0b0d10; }
 
 * { box-sizing: border-box; }
 
@@ -183,6 +173,14 @@ h1, h2, h3,
   font-family: var(--font-display);
   letter-spacing: -0.01em;
   color: var(--text); /* headings keep full brightness; body copy is a notch dimmer */
+}
+
+/* ===== Monospace for labels/dates/tags =====
+   The one deliberate "technical" typographic signature: every date, tag
+   and section index reads like a spec sheet rather than prose. */
+.card-date, .cert-date, .tl-date, .edu-date, .project-date,
+.tag, .eyebrow {
+  font-family: var(--font-mono);
 }
 
 /* ===== Header ===== */
@@ -518,33 +516,37 @@ h1, h2, h3,
 }
 .btn-primary:hover { filter: brightness(1.12); }
 
-/* ===== Section headings ===== */
+/* ===== Section headings =====
+   A "spec sheet" header, not a centered display title: a mono-numbered
+   index (auto-incrementing via CSS counter, so it can't drift out of sync
+   as sections are added/removed/reordered) plus a full-width hairline
+   rather than a small centered underline bar. */
+#sections { counter-reset: section-num; }
 .section-title {
-  text-align: center;
+  counter-increment: section-num;
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  text-align: left;
   font-size: var(--fs-200);
-  margin: 0 0 2rem;
+  margin: 0 0 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--divider);
 }
-.section-title::after {
-  content: "";
-  display: block;
-  width: 54px;
-  height: 3px;
-  margin: 0.7rem auto 0;
-  border-radius: 3px;
-  background: var(--grad);
+.section-title::before {
+  content: counter(section-num, decimal-leading-zero) " /";
+  font-family: var(--font-mono);
+  font-size: var(--fs-90);
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.02em;
 }
 
 /* "Arrival" flash when you navigate to a section from the nav */
 .section.flash .section-title { animation: title-pop 0.9s ease; }
-.section.flash .section-title::after { animation: underline-sweep 0.9s ease; }
 @keyframes title-pop {
-  0%   { opacity: 0.6; }
+  0%   { opacity: 0.5; }
   100% { opacity: 1; }
-}
-@keyframes underline-sweep {
-  0%   { width: 54px; }
-  45%  { width: 210px; }
-  100% { width: 54px; }
 }
 
 /* ===== Generic section wrapper ===== */
