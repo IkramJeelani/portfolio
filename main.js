@@ -9,8 +9,8 @@
   const reduced =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // PROFILE.photo (data.js) decides the hero's layout: set -> name/about on
-  // the left, photo on the right; unset -> everything centered by default
+  // PROFILE.photo (data.js) decides the hero's layout: set -> photo on the
+  // left, name/about on the right; unset -> everything centered by default
   // (the about paragraph itself still stays left-justified within that
   // block — see .hero-about-text in styles.css).
   const photo = ((window.PROFILE || {}).photo || "").trim();
@@ -32,6 +32,36 @@
     photoEl.hidden = false;
     const heroRight = hero && hero.querySelector(".hero-right");
     if (heroRight) heroRight.classList.add("has-photo");
+
+    /* The circular photo's diameter tracks the name/about card's own
+       rendered height, measured directly rather than via CSS
+       align-self:stretch + aspect-ratio — that combination doesn't
+       reliably stretch a replaced element's (<img>'s) cross size across
+       engines, so this measures the card and sets the photo's box
+       explicitly instead, the same approach setupTimelineWidth() below
+       uses for matching Experience/Education card widths. Only applies in
+       the side-by-side row layout; the sub-700px breakpoint stacks them
+       and sizes the photo itself in CSS, so this backs off there. */
+    const syncPhotoSize = () => {
+      const card = hero.querySelector(".hero-card");
+      if (!card) return;
+      if (getComputedStyle(heroRight).flexDirection !== "row") {
+        photoEl.style.width = "";
+        photoEl.style.height = "";
+        return;
+      }
+      const h = card.offsetHeight;
+      photoEl.style.width = h + "px";
+      photoEl.style.height = h + "px";
+    };
+    syncPhotoSize();
+    window.addEventListener("load", syncPhotoSize);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncPhotoSize);
+    let photoResizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(photoResizeTimer);
+      photoResizeTimer = setTimeout(syncPhotoSize, 150);
+    });
   }
 
   /* Run `cb` whenever the display's pixel density changes — e.g. the window is
@@ -235,20 +265,59 @@
     return { title: "Education", cls: "education", html: `<div class="edu-timeline">${items}</div>` };
   }
 
+  // One icon per contact row — falls back to a generic link glyph for
+  // anything not explicitly named here, so a future CONTACTS entry never
+  // renders with no icon at all.
+  const CONTACT_ICONS = {
+    location:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>',
+    email:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>',
+    linkedin:
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13ZM7.11 20.45H3.55V9h3.56v11.45Z"/></svg>',
+    default:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+  };
+
+  // Shared by both the clickable (CONTACTS) rows and the plain (Location)
+  // row below, so all three end up visually identical.
+  function contactRow(label, valueHtml, tag, attrs) {
+    const icon = CONTACT_ICONS[label.toLowerCase()] || CONTACT_ICONS.default;
+    return `
+      <${tag} class="contact-row"${attrs || ""}>
+        <span class="contact-icon" aria-hidden="true">${icon}</span>
+        <span class="contact-row-text">
+          <span class="contact-row-label">${label}</span>
+          <span class="contact-row-value">${valueHtml}</span>
+        </span>
+      </${tag}>`;
+  }
+
   function buildContact() {
     const list = window.CONTACTS || [];
-    if (!list.length) return null;
-    const links = list
-      .map((c) => {
-        const ext = /^https?:/i.test(c.url) ? ` target="_blank" rel="noopener"` : "";
-        return `<a class="btn" href="${c.url}"${ext}>${c.label}</a>`;
-      })
-      .join("");
+    const location = ((window.PROFILE || {}).location || "").trim();
+    if (!list.length && !location) return null;
+    const locationRow = location ? contactRow("Location", location, "div") : "";
+    const rows =
+      locationRow +
+      list
+        .map((c) => {
+          const ext = /^https?:/i.test(c.url) ? ` target="_blank" rel="noopener"` : "";
+          // Same value shown as the link's destination, just trimmed of the
+          // scheme/mailto noise and a trailing slash — "linkedin.com/in/x",
+          // not "https://www.linkedin.com/in/x/".
+          const display = c.url
+            .replace(/^mailto:/, "")
+            .replace(/^https?:\/\/(www\.)?/, "")
+            .replace(/\/$/, "");
+          return contactRow(c.label, display, "a", ` href="${c.url}"${ext}`);
+        })
+        .join("");
     return {
       title: "Contact",
       cls: "contact",
       html: `<p class="contact-intro reveal">Interested in working together or want to know more? Get in touch.</p>
-             <div class="contact-links reveal">${links}</div>`,
+             <div class="contact-rows reveal">${rows}</div>`,
     };
   }
 

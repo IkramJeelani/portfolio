@@ -390,30 +390,30 @@ h1, h2, h3,
 }
 .hero-text { max-width: 600px; }
 .hero-text .subtitle { margin: 0 auto; }
-/* PROFILE.photo is set: card on the left, photo on the right — a
-   contained, centered composition (max-width, not the full hero width)
-   rather than a row stretched edge-to-edge. */
+/* PROFILE.photo is set: photo on the left, card on the right (matches DOM
+   order — the <img> comes first in index.html) — a contained, centered
+   composition (max-width, not the full hero width) rather than a row
+   stretched edge-to-edge. align-items:stretch (not center) so the photo's
+   own align-self:stretch in .hero-about-photo can size its height to
+   match the card exactly, whatever the card's content-driven height ends
+   up being. */
 .hero-right.has-photo {
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
   max-width: 900px;
   gap: 2.5rem;
 }
 .hero-right.has-photo .hero-card {
-  /* Fixed (not flex-grow-to-fill) so moving the photo out from inside this
-     card didn't shift its on-page position or size — the card used to be
-     implicitly ~502px (900 max-width minus the photo's 260px minus the
-     2.5rem gap minus the OLD single shared padding), which flex-grow no
-     longer reproduces now that the card has its own padding on both
-     sides. Pinned to the exact value that keeps the photo's position and
-     dimensions pixel-identical to before this split, verified in-browser. */
+  /* Fixed (not flex-grow-to-fill) so the card has a stable, predictable
+     width regardless of how tall its content makes it — and, in turn,
+     how wide the height-matched circular photo ends up being. */
   flex: 0 0 502px;
   align-items: flex-start;
   text-align: left;
 }
 .hero-right.has-photo .hero-text { max-width: none; }
 .hero-right.has-photo .hero-text .subtitle { margin: 0; }
-/* Below ~700px a text+photo row gets cramped — stack the photo under the card. */
+/* Below ~700px a text+photo row gets cramped — stack the photo above the card. */
 @media (max-width: 700px) {
   .hero-right.has-photo {
     flex-direction: column;
@@ -541,7 +541,6 @@ h1, h2, h3,
   color: var(--accent);
   letter-spacing: 0.02em;
 }
-
 /* "Arrival" flash when you navigate to a section from the nav */
 .section.flash .section-title { animation: title-pop 0.9s ease; }
 @keyframes title-pop {
@@ -564,19 +563,27 @@ h1, h2, h3,
 .hero-about-text {
   margin: 1rem 0 0;
   color: var(--text-body);
-  /* Tuned (not arbitrary) so the card's total height, with the name now
-     on one line, lands within a pixel of the photo's fixed 444px height
-     — verified in-browser. */
   font-size: var(--fs-112);
   text-align: left;
 }
+/* A circle whose diameter always equals the name/about card's own height.
+   width/height here are just a pre-JS placeholder (aspect-ratio:1, no
+   fixed size) — main.js's syncPhotoSize() measures the actual card and
+   sets explicit pixel width/height once it knows them, since flexbox's
+   align-self:stretch doesn't reliably stretch a replaced element's
+   (<img>'s) cross size the way it does an ordinary block box. */
 .hero-about-photo {
   flex: 0 0 auto;
-  width: 260px;
-  height: 444px;
-  align-self: center;
+  width: auto;
+  aspect-ratio: 1 / 1;
+  /* Belt-and-braces: the card's fixed 502px width bounds how tall it can
+     realistically get for normal content, but caps the photo's width
+     anyway so unusually tall content can't blow the row past its
+     max-width and force it to wrap or overflow. */
+  max-width: 380px;
+  align-self: stretch;
   object-fit: cover;
-  border-radius: var(--radius);
+  border-radius: 50%;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
 }
@@ -1120,14 +1127,50 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   padding: 4rem 1.5rem 5rem;
   text-align: center;
 }
-.contact p { color: var(--text); }
-.contact-links {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1.5rem;
+.contact-intro {
+  max-width: 560px;
+  margin: 0 auto;
+  color: var(--text-body);
 }
+/* Location, Email, LinkedIn — a plain vertical list, not cards: no border
+   or background box around each row, just the icon and a two-line label/
+   value stack, left-aligned and centered as a block. */
+.contact-rows {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin: 3rem auto 0;
+}
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text);
+  text-align: left;
+}
+.contact-icon {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  color: var(--accent);
+  transition: border-color 0.2s;
+}
+a.contact-row:hover .contact-icon { border-color: var(--accent); }
+.contact-icon svg { width: 18px; height: 18px; display: block; }
+.contact-row-text { display: flex; flex-direction: column; min-width: 0; }
+.contact-row-label {
+  font-size: var(--fs-85);
+  font-weight: 600;
+  color: var(--muted);
+}
+.contact-row-value { color: var(--text); word-break: break-word; }
 
 /* ===== Footer ===== */
 .site-footer {

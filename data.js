@@ -15,6 +15,7 @@ const PROFILE = {
   name: "Ikram Jeelani",
   initials: "IJ", // shown top-left AND as the browser-tab icon (kept in sync)
   role: "Mechatronic Engineering Student",
+  location: "Dubai, UAE", // shown as the first row of Contact Information
   bio: "",
   // Shown beside the About text under your name. Put the file in assets/,
   // e.g. "assets/me.jpg". "" (or false) = no photo — About is then centered
