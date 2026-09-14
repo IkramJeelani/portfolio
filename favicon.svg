@@ -2,6 +2,6 @@
   <!-- Static fallback only: branding.js replaces this at runtime with a
        theme-synced version. Kept identical to the JS output for the default
        (light) theme so the icon doesn't visibly swap after load. -->
-  <rect width="64" height="64" rx="14" fill="#f6f3ec"/>
-  <text x="32" y="33" dominant-baseline="central" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="800" fill="#c2410c" text-anchor="middle">IJ</text>
+  <rect width="64" height="64" rx="14" fill="#fafafa"/>
+  <text x="32" y="33" dominant-baseline="central" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="800" fill="#2563eb" text-anchor="middle">IJ</text>
 </svg>

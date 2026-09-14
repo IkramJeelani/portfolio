@@ -5,17 +5,21 @@
   const initials = (p.initials || "").trim();
 
   // Keep the browser-chrome colour (Android address bar etc.) in sync with
-  // the active theme — a hardcoded dark value on a light page renders a
-  // mismatched dark bar around light content.
+  // the active theme — a stale value here renders a mismatched bar around
+  // the page's real background. Reads the live --bg custom property
+  // instead of a hardcoded per-theme hex pair: --bg already resolves to
+  // whichever theme is active via the normal CSS cascade, so this can't
+  // drift out of sync the next time the palette changes in styles.css —
+  // a hardcoded copy here already has, more than once.
   const syncThemeColor = () => {
-    const light = document.documentElement.getAttribute("data-theme") === "light";
+    const bg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
     let meta = document.querySelector('meta[name="theme-color"]');
     if (!meta) {
       meta = document.createElement("meta");
       meta.name = "theme-color";
       document.head.appendChild(meta);
     }
-    meta.content = light ? "#f6f3ec" : "#14161c";
+    meta.content = bg || meta.content;
   };
   syncThemeColor();
 
@@ -26,15 +30,15 @@
   const fontSize = initials.length > 2 ? 22 : 32;
   const buildFavicon = () => {
     const light = document.documentElement.getAttribute("data-theme") === "light";
-    const bg = light ? "#f6f3ec" : "#14161c";
-    // B&W + one accent: solid fill (was a purple->pink gradient) to match
-    // the on-page logo, which is now solid too. Read live off --accent
-    // (not a hardcoded hex per theme) so the two can't silently drift out
-    // of sync the next time the accent color changes — that's exactly what
-    // happened here before this fix: the on-page .brand mark picks up
-    // var(--accent) automatically, but this hex was a frozen duplicate.
+    // Both read live off the custom properties (not hardcoded per-theme
+    // hex pairs) so they can't silently drift out of sync the next time
+    // the palette changes — exactly what happened here before this fix,
+    // twice: --accent already got this treatment once; --bg was still a
+    // frozen duplicate sitting right next to it.
+    const bg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() ||
+      (light ? "#fafafa" : "#0b0d10");
     const fg = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() ||
-      (light ? "#c2410c" : "#f97316");
+      (light ? "#2563eb" : "#3b82f6");
     const svg =
       "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>" +
       "<rect width='64' height='64' rx='14' fill='" + bg + "'/>" +
