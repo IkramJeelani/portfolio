@@ -13,9 +13,12 @@ Uses Segoe UI (Windows-bundled), the same fallback branding.js's
 buildFavicon() already uses instead of trying to load the site's real
 Sora/Manrope webfonts for a synthetically-generated asset.
 
-Colors are the exact --bg/--text/--accent hex values from styles.css'
-:root and :root[data-theme="light"] blocks — keep these two in sync by
-hand if the palette ever changes there.
+Colors are read directly from styles.css' :root and
+:root[data-theme="light"] blocks (see theme_colors() below) — not a
+hand-maintained duplicate. That duplicate existed before and went stale
+three separate times across one redesign session, each time silently
+leaving the share cards on an old palette; parsing the real values
+instead of copying them means this can't happen again.
 
 Runs as a git pre-commit hook (see .githooks/pre-commit), alongside
 sync-og-image.py and generate-share-pages.py, so the image can't drift out
@@ -29,6 +32,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_JS = ROOT / "data.js"
+STYLES_CSS = ROOT / "styles.css"
 W, H = 1200, 630
 FONT_DIR = Path(r"C:\Windows\Fonts")
 FONT_BOLD = FONT_DIR / "segoeuib.ttf"
@@ -41,10 +45,43 @@ except ImportError:
 if not FONT_BOLD.exists():
     sys.exit(f"generate-og-images: font not found at {FONT_BOLD}")
 
-THEMES = {
-    "dark": dict(bg="#24262d", text="#ece7de", accent="#f97316", out="assets/og-image-dark.png"),
-    "light": dict(bg="#e6eaf0", text="#262a33", accent="#c2410c", out="assets/og-image-light.png"),
-}
+
+def theme_colors():
+    """--bg/--text/--accent for both themes, parsed straight out of
+    styles.css' :root and :root[data-theme="light"] blocks."""
+    css = STYLES_CSS.read_text(encoding="utf-8")
+
+    def block(pattern):
+        m = re.search(pattern, css, re.S)
+        if not m:
+            sys.exit(f"generate-og-images: couldn't find a {pattern!r} block in styles.css")
+        return m.group(1)
+
+    def token(block_text, name):
+        m = re.search(rf"--{name}:\s*(#[0-9a-fA-F]{{3,8}})", block_text)
+        if not m:
+            sys.exit(f"generate-og-images: couldn't find --{name} in styles.css")
+        return m.group(1)
+
+    # The first bare `:root { ... }` block is the (unthemed/dark) token
+    # set; `:root[data-theme="light"] { ... }` overrides it for light.
+    dark_block = block(r":root\s*\{(.*?)\n\}")
+    light_block = block(r':root\[data-theme="light"\]\s*\{(.*?)\n\}')
+
+    return {
+        "dark": dict(
+            bg=token(dark_block, "bg"),
+            text=token(dark_block, "text"),
+            accent=token(dark_block, "accent"),
+            out="assets/og-image-dark.png",
+        ),
+        "light": dict(
+            bg=token(light_block, "bg"),
+            text=token(light_block, "text"),
+            accent=token(light_block, "accent"),
+            out="assets/og-image-light.png",
+        ),
+    }
 
 
 def profile_name():
@@ -84,7 +121,7 @@ def render(theme, name):
 
 def main():
     name = profile_name()
-    for theme in THEMES.values():
+    for theme in theme_colors().values():
         path = render(theme, name)
         print(f"generate-og-images: wrote {path.relative_to(ROOT)}")
 
