@@ -585,7 +585,13 @@ h1, h2, h3,
   object-fit: cover;
   border-radius: 50%;
   border: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  /* Subtle accent-colored glow ring: a slim solid ring plus a soft blurred
+     halo, both low-opacity so it reads as a refined highlight rather than
+     a neon effect. */
+  box-shadow:
+    var(--shadow),
+    0 0 0 3px rgba(var(--accent-rgb), 0.18),
+    0 0 24px rgba(var(--accent-rgb), 0.3);
 }
 
 /* ===== Experience: timeline laid out exactly like Education ===== */
