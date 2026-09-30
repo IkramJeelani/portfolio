@@ -422,7 +422,7 @@ h1, h2, h3,
   /* Undo the desktop row's fixed 502px flex-basis — in column direction
      that would set the card's HEIGHT to 502px instead of its width. */
   .hero-right.has-photo .hero-card { flex: 1 1 auto; width: 100%; align-items: center; text-align: center; }
-  .hero-right.has-photo .hero-about-photo {
+  .hero-right.has-photo .hero-about-photo-wrap {
     width: 140px;
     height: 140px;
     /* Reset the desktop row's align-self:stretch — left unset, it still
@@ -571,8 +571,12 @@ h1, h2, h3,
    fixed size) — main.js's syncPhotoSize() measures the actual card and
    sets explicit pixel width/height once it knows them, since flexbox's
    align-self:stretch doesn't reliably stretch a replaced element's
-   (<img>'s) cross size the way it does an ordinary block box. */
-.hero-about-photo {
+   (<img>'s) cross size the way it does an ordinary block box. The wrapper
+   (not the <img>) carries that sizing role so its ::before — a rotating,
+   accent-colored conic gradient standing in for the glow — has a
+   non-replaced element to render on; the <img> just fills it at 100%. */
+.hero-about-photo-wrap {
+  position: relative;
   flex: 0 0 auto;
   width: auto;
   aspect-ratio: 1 / 1;
@@ -582,56 +586,52 @@ h1, h2, h3,
      max-width and force it to wrap or overflow. */
   max-width: 380px;
   align-self: stretch;
+  border-radius: 50%;
+}
+/* Six arcs of alternating intensity (bright/near-dark) instead of one flat
+   ring, so it reads as uneven, per-arc "energy" rather than a plain halo —
+   then slowly rotated so which arc is brightest keeps changing, like a
+   calm visualizer rather than a static glow. Kept low-opacity/blurred so
+   even the brightest arc stays a soft highlight, not a neon edge. */
+.hero-about-photo-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  z-index: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(var(--accent-rgb), 0.32) 0deg,
+    rgba(var(--accent-rgb), 0.03) 55deg,
+    rgba(var(--accent-rgb), 0.22) 130deg,
+    rgba(var(--accent-rgb), 0.03) 190deg,
+    rgba(var(--accent-rgb), 0.26) 250deg,
+    rgba(var(--accent-rgb), 0.04) 310deg,
+    rgba(var(--accent-rgb), 0.32) 360deg
+  );
+  filter: blur(10px);
+  animation: photo-glow-spin 9s linear infinite;
+}
+@keyframes photo-glow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-about-photo-wrap::before {
+    animation: none;
+  }
+}
+.hero-about-photo {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: 50%;
   border: 1px solid var(--border);
-  /* Accent-colored glow ring that breathes rather than sitting static —
-     an uneven, multi-stop pulse (not a plain sine wave) reads closer to a
-     visualizer's motion, while staying within the same low-opacity range
-     as the resting state so it never turns garish. */
-  box-shadow:
-    var(--shadow),
-    0 0 0 3px rgba(var(--accent-rgb), 0.18),
-    0 0 24px rgba(var(--accent-rgb), 0.3);
-  animation: photo-glow-pulse 3.2s ease-in-out infinite;
-}
-@keyframes photo-glow-pulse {
-  0%, 100% {
-    box-shadow:
-      var(--shadow),
-      0 0 0 3px rgba(var(--accent-rgb), 0.18),
-      0 0 22px rgba(var(--accent-rgb), 0.28);
-  }
-  25% {
-    box-shadow:
-      var(--shadow),
-      0 0 0 5px rgba(var(--accent-rgb), 0.28),
-      0 0 34px rgba(var(--accent-rgb), 0.48);
-  }
-  48% {
-    box-shadow:
-      var(--shadow),
-      0 0 0 4px rgba(var(--accent-rgb), 0.22),
-      0 0 26px rgba(var(--accent-rgb), 0.34);
-  }
-  70% {
-    box-shadow:
-      var(--shadow),
-      0 0 0 7px rgba(var(--accent-rgb), 0.34),
-      0 0 44px rgba(var(--accent-rgb), 0.58);
-  }
-  85% {
-    box-shadow:
-      var(--shadow),
-      0 0 0 4px rgba(var(--accent-rgb), 0.24),
-      0 0 28px rgba(var(--accent-rgb), 0.38);
-  }
-}
-/* Respect reduced-motion preference: keep the glow, drop the pulsing. */
-@media (prefers-reduced-motion: reduce) {
-  .hero-about-photo {
-    animation: none;
-  }
+  box-shadow: var(--shadow), 0 0 0 1px rgba(var(--accent-rgb), 0.14);
 }
 
 /* ===== Experience: timeline laid out exactly like Education ===== */

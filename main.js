@@ -25,11 +25,12 @@
   }
 
   // Photo beside the name/about — auto-hides if PROFILE.photo is unset.
+  const photoWrapEl = document.getElementById("heroAboutPhotoWrap");
   const photoEl = document.getElementById("heroAboutPhoto");
-  if (photoEl && photo) {
+  if (photoWrapEl && photoEl && photo) {
     photoEl.src = photo;
     photoEl.alt = (window.PROFILE || {}).name ? `${window.PROFILE.name} — photo` : "";
-    photoEl.hidden = false;
+    photoWrapEl.hidden = false;
     const heroRight = hero && hero.querySelector(".hero-right");
     if (heroRight) heroRight.classList.add("has-photo");
 
@@ -37,22 +38,23 @@
        rendered height, measured directly rather than via CSS
        align-self:stretch + aspect-ratio — that combination doesn't
        reliably stretch a replaced element's (<img>'s) cross size across
-       engines, so this measures the card and sets the photo's box
-       explicitly instead, the same approach setupTimelineWidth() below
-       uses for matching Experience/Education card widths. Only applies in
-       the side-by-side row layout; the sub-700px breakpoint stacks them
-       and sizes the photo itself in CSS, so this backs off there. */
+       engines, so this measures the card and sets the WRAPPER's box
+       explicitly instead (the img just fills it at 100%/100%), the same
+       approach setupTimelineWidth() below uses for matching
+       Experience/Education card widths. Only applies in the side-by-side
+       row layout; the sub-700px breakpoint stacks them and sizes the
+       photo itself in CSS, so this backs off there. */
     const syncPhotoSize = () => {
       const card = hero.querySelector(".hero-card");
       if (!card) return;
       if (getComputedStyle(heroRight).flexDirection !== "row") {
-        photoEl.style.width = "";
-        photoEl.style.height = "";
+        photoWrapEl.style.width = "";
+        photoWrapEl.style.height = "";
         return;
       }
       const h = card.offsetHeight;
-      photoEl.style.width = h + "px";
-      photoEl.style.height = h + "px";
+      photoWrapEl.style.width = h + "px";
+      photoWrapEl.style.height = h + "px";
     };
     syncPhotoSize();
     window.addEventListener("load", syncPhotoSize);
