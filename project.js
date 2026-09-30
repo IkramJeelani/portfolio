@@ -105,6 +105,18 @@
     if (!img.hasAttribute("loading")) img.loading = "lazy";
   });
 
+  // A data table's fixed per-column widths (needed for clean numeric
+  // alignment — see .project-content table in styles.css) don't actually
+  // shrink to fit a narrow viewport in real browsers; wrapping each table in
+  // its own horizontally-scrollable container keeps that overflow contained
+  // to the table instead of widening the whole page.
+  page.querySelectorAll(".project-content table").forEach((table) => {
+    const wrap = document.createElement("div");
+    wrap.className = "table-scroll";
+    table.parentNode.insertBefore(wrap, table);
+    wrap.appendChild(table);
+  });
+
   // Table of contents: built from the body's own h2/h3 headings, fixed to
   // the left edge of the viewport on wide screens. Replaces the old
   // floating project-dock (which listed OTHER projects) with something

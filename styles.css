@@ -19,7 +19,13 @@
   --text: #f4f5f7;
   /* long-form copy: a notch dimmer than headings to avoid halation on dark */
   --text-body: #b6bac2;
-  --muted: #6b7280;
+  /* #6b7280 (the light theme's --muted, which clears AA there against its
+     near-white backgrounds) only reaches ~3.7-4.0:1 against this theme's
+     dark --bg/--card/--bg-soft — under the 4.5:1 AA floor for normal text,
+     which footer copy, timeline locations, the TOC, and cert issuer/date
+     text all render at. Lightened just for dark mode so every one of those
+     clears AA again (5.2:1+ against both --bg and --card). */
+  --muted: #858b94;
   --accent: #3b82f6;
   --accent-hover: #60a5fa;
   --accent-rgb: 59, 130, 246; /* #3b82f6 as r,g,b — for rgba() glows/washes */
@@ -393,10 +399,19 @@ h1, h2, h3,
 /* PROFILE.photo is set: photo on the left, card on the right (matches DOM
    order — the <img> comes first in index.html) — a contained, centered
    composition (max-width, not the full hero width) rather than a row
-   stretched edge-to-edge. align-items:stretch (not center) so the photo's
-   own align-self:stretch in .hero-about-photo can size its height to
-   match the card exactly, whatever the card's content-driven height ends
-   up being. */
+   stretched edge-to-edge. align-items:stretch (not center) on the
+   container so the photo's own align-self:stretch in
+   .hero-about-photo-wrap can size its height to match the card exactly,
+   whatever the card's content-driven height ends up being — but the card
+   itself opts OUT of that same stretch below (align-self:flex-start), so
+   the size relationship only ever runs one way, card -> photo. Without
+   that opt-out, both children stretch to match whichever is currently
+   tallest: if the photo were ever even slightly taller than the card's
+   own content for any reason, the card would stretch to match IT, and the
+   next re-measure would size the photo off that now-inflated card height
+   — a real feedback loop, confirmed landing on two different heights
+   (330px vs. 380px) across otherwise-identical reloads at the same
+   viewport before this was scoped to one direction. */
 .hero-right.has-photo {
   flex-direction: row;
   align-items: stretch;
@@ -408,13 +423,23 @@ h1, h2, h3,
      width regardless of how tall its content makes it — and, in turn,
      how wide the height-matched circular photo ends up being. */
   flex: 0 0 502px;
+  align-self: flex-start; /* intrinsic height only — see the comment above */
   align-items: flex-start;
   text-align: left;
 }
 .hero-right.has-photo .hero-text { max-width: none; }
 .hero-right.has-photo .hero-text .subtitle { margin: 0; }
-/* Below ~700px a text+photo row gets cramped — stack the photo above the card. */
-@media (max-width: 700px) {
+/* The row's width isn't actually bounded: the card is a fixed 502px and the
+   photo's width tracks the card's content-driven HEIGHT (see
+   .hero-about-photo-wrap), so how wide the row gets depends on how tall
+   today's name/eyebrow/about text makes the card — currently ~330px,
+   which with the 502px card + 40px gap needs ~872px just for the row
+   itself, before the hero's own side padding. Measured the real
+   breakeven live (not guessed): overflowing down to ~880-890px viewport
+   width, clean at 900px+. 920px clears that with margin instead of
+   sitting right on the edge, so a future content change that makes the
+   card a little taller doesn't immediately reopen this. */
+@media (max-width: 920px) {
   .hero-right.has-photo {
     flex-direction: column;
     align-items: center;
@@ -566,15 +591,13 @@ h1, h2, h3,
   font-size: var(--fs-112);
   text-align: left;
 }
-/* A circle whose diameter always equals the name/about card's own height.
-   width/height here are just a pre-JS placeholder (aspect-ratio:1, no
-   fixed size) — main.js's syncPhotoSize() measures the actual card and
-   sets explicit pixel width/height once it knows them, since flexbox's
-   align-self:stretch doesn't reliably stretch a replaced element's
-   (<img>'s) cross size the way it does an ordinary block box. The wrapper
-   (not the <img>) carries that sizing role so its ::before — a rotating,
-   accent-colored conic gradient standing in for the glow — has a
-   non-replaced element to render on; the <img> just fills it at 100%. */
+/* A circle whose diameter always equals the name/about card's own height —
+   purely via align-self:stretch + aspect-ratio:1 below; see the "card
+   opts out of stretch" comment on .hero-right.has-photo .hero-card for why
+   that's now stable (it wasn't, briefly, when this was two-way). The
+   wrapper (not the <img>) carries that sizing role so its ::before — a
+   rotating, accent-colored conic gradient standing in for the glow — has
+   a non-replaced element to render on; the <img> just fills it at 100%. */
 .hero-about-photo-wrap {
   position: relative;
   flex: 0 0 auto;
@@ -1074,7 +1097,6 @@ a.cert-card:focus-visible .cert-open { opacity: 1; transform: translate(1px, -1p
   /* min(100%, 290px) prevents horizontal overflow on very narrow phones */
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
   gap: 1.5rem;
-  perspective: 1100px; /* enables the 3D tilt of cards */
 }
 /* Projects grid: centred so partial rows are symmetric (like certifications) */
 .projects .card-grid {
@@ -1383,12 +1405,26 @@ a.contact-row:hover .contact-icon { border-color: var(--accent); }
 }
 
 /* Table */
+/* table-layout:fixed + a fixed per-column width (needed so numeric columns
+   line up cleanly) doesn't actually respect the table's own max-width in
+   real browsers once the column-width sum exceeds the viewport — the table
+   renders at its full intrinsic width and pushes the whole page into
+   horizontal scroll instead of shrinking. project.js wraps every table in
+   a .table-scroll div specifically so that overflow is contained to a
+   scrollbar on the table itself rather than blowing out the page — the
+   correct fix for a data table that has real columns worth keeping
+   readable, not something to paper over with `overflow-x:hidden` on the
+   page (which would just clip the data instead of letting you reach it). */
+.table-scroll {
+  overflow-x: auto;
+  margin: 1.8rem 0;
+}
 .project-content table {
   width: auto;
   max-width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
-  margin: 1.8rem auto;
+  margin: 0 auto;
   font-size: var(--fs-95);
 }
 .project-content th,

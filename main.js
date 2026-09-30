@@ -35,26 +35,34 @@
     if (heroRight) heroRight.classList.add("has-photo");
 
     /* The circular photo's diameter tracks the name/about card's own
-       rendered height, measured directly rather than via CSS
-       align-self:stretch + aspect-ratio — that combination doesn't
-       reliably stretch a replaced element's (<img>'s) cross size across
-       engines, so this measures the card and sets the WRAPPER's box
-       explicitly instead (the img just fills it at 100%/100%), the same
-       approach setupTimelineWidth() below uses for matching
-       Experience/Education card widths. Only applies in the side-by-side
+       rendered height. Pure CSS (align-self:stretch + aspect-ratio:1 on
+       .hero-about-photo-wrap, no JS at all) was tried here and doesn't
+       actually work: with both of the wrapper's own dimensions "auto",
+       the browser resolves its PRE-stretch hypothetical size from
+       max-width alone (380px square) before stretch ever gets a chance to
+       shrink it to the card's real height — confirmed it just sits at
+       380x380 regardless of the card. So this still measures the card and
+       sets the wrapper's height explicitly (width follows for free via
+       aspect-ratio). What changed from the version that used to be here:
+       .hero-card now has align-self:flex-start (styles.css) instead of
+       inheriting the container's align-items:stretch, so the card can
+       never be stretched to match the PHOTO back — without that, this
+       same JS reading the card's (sometimes already-inflated) height and
+       re-applying it to the photo formed a real feedback loop, confirmed
+       landing on two different heights (330px vs. 380px) across
+       otherwise-identical reloads at the same viewport. With the card's
+       height now guaranteed intrinsic, re-measuring here is safe no
+       matter how many times it re-runs. Only applies in the side-by-side
        row layout; the sub-700px breakpoint stacks them and sizes the
        photo itself in CSS, so this backs off there. */
     const syncPhotoSize = () => {
       const card = hero.querySelector(".hero-card");
       if (!card) return;
       if (getComputedStyle(heroRight).flexDirection !== "row") {
-        photoWrapEl.style.width = "";
         photoWrapEl.style.height = "";
         return;
       }
-      const h = card.offsetHeight;
-      photoWrapEl.style.width = h + "px";
-      photoWrapEl.style.height = h + "px";
+      photoWrapEl.style.height = card.offsetHeight + "px";
     };
     syncPhotoSize();
     window.addEventListener("load", syncPhotoSize);
@@ -191,7 +199,7 @@
           (c.issuer ? `<span class="cert-issuer">${c.issuer}</span>` : "") +
           (c.date ? `<span class="cert-date">${c.date}</span>` : "");
         // hasPdf is the single gate: a real credential PDF is available, so the
-        // card becomes a clickable link, shows the open-in icon, and tilts on
+        // card becomes a clickable link, shows the open-in icon, and lifts on
         // hover. Without it (cert earned but no PDF yet) the card is a static tile.
         const hasCred = c.hasPdf === true && !!c.url;
         const logo = c.logo
