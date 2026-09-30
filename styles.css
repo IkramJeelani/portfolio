@@ -585,13 +585,53 @@ h1, h2, h3,
   object-fit: cover;
   border-radius: 50%;
   border: 1px solid var(--border);
-  /* Subtle accent-colored glow ring: a slim solid ring plus a soft blurred
-     halo, both low-opacity so it reads as a refined highlight rather than
-     a neon effect. */
+  /* Accent-colored glow ring that breathes rather than sitting static —
+     an uneven, multi-stop pulse (not a plain sine wave) reads closer to a
+     visualizer's motion, while staying within the same low-opacity range
+     as the resting state so it never turns garish. */
   box-shadow:
     var(--shadow),
     0 0 0 3px rgba(var(--accent-rgb), 0.18),
     0 0 24px rgba(var(--accent-rgb), 0.3);
+  animation: photo-glow-pulse 3.2s ease-in-out infinite;
+}
+@keyframes photo-glow-pulse {
+  0%, 100% {
+    box-shadow:
+      var(--shadow),
+      0 0 0 3px rgba(var(--accent-rgb), 0.18),
+      0 0 22px rgba(var(--accent-rgb), 0.28);
+  }
+  25% {
+    box-shadow:
+      var(--shadow),
+      0 0 0 5px rgba(var(--accent-rgb), 0.28),
+      0 0 34px rgba(var(--accent-rgb), 0.48);
+  }
+  48% {
+    box-shadow:
+      var(--shadow),
+      0 0 0 4px rgba(var(--accent-rgb), 0.22),
+      0 0 26px rgba(var(--accent-rgb), 0.34);
+  }
+  70% {
+    box-shadow:
+      var(--shadow),
+      0 0 0 7px rgba(var(--accent-rgb), 0.34),
+      0 0 44px rgba(var(--accent-rgb), 0.58);
+  }
+  85% {
+    box-shadow:
+      var(--shadow),
+      0 0 0 4px rgba(var(--accent-rgb), 0.24),
+      0 0 28px rgba(var(--accent-rgb), 0.38);
+  }
+}
+/* Respect reduced-motion preference: keep the glow, drop the pulsing. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-about-photo {
+    animation: none;
+  }
 }
 
 /* ===== Experience: timeline laid out exactly like Education ===== */
