@@ -604,10 +604,16 @@ h1, h2, h3,
   width: auto;
   aspect-ratio: 1 / 1;
   /* Belt-and-braces: the card's fixed 502px width bounds how tall it can
-     realistically get for normal content, but caps the photo's width
-     anyway so unusually tall content can't blow the row past its
-     max-width and force it to wrap or overflow. */
+     realistically get for normal content, but caps the photo's size
+     anyway so unusually tall content (a long About) can't blow the row
+     past its max-width and force it to wrap or overflow. max-height has
+     to match max-width here, not just the width alone — align-self:stretch
+     sets this box's height to the card's height directly, which wins over
+     aspect-ratio:1/1 once that height exceeds max-width, so without an
+     equal max-height the photo stops being square and stretches into an
+     oval instead of staying capped at a circle. */
   max-width: 380px;
+  max-height: 380px;
   align-self: stretch;
   border-radius: 50%;
 }

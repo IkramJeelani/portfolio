@@ -68,9 +68,15 @@ const SECTIONS = [
    use simple HTML like <strong>…</strong> if you want). Leave it "" to hide
    this block entirely. */
 const ABOUT =
-  "I work across mechanical design, " +
-  "electronics, control systems, and programming. I'm aiming to become a design " +
-  "engineer in the field of robotics and automation. Outside of that: gaming, cricket, and good food.";
+  "Mechatronics student who designs robots end to end." +
+  "<br><br>" +
+  "I'm doing my B.Eng (Hons) in Mechatronic Engineering at the University of Wollongong in Dubai, " +
+  "after starting at Simon Fraser University in Canada." +
+  "<br><br>" +
+  "My goal is to become a design engineer in robotics and automation. I'm looking for internships " +
+  "in robotics, automation, or mechatronic design in the UAE." +
+  "<br><br>" +
+  "I love food and One Piece.";
 
 /* ---------- 3. EXPERIENCE ----------
    ADD/REMOVE a role by copying or deleting a { ... } block.
