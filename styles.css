@@ -614,7 +614,17 @@ h1, h2, h3,
      oval instead of staying capped at a circle. */
   max-width: 380px;
   max-height: 380px;
-  align-self: stretch;
+  /* center, not stretch: main.js still sets this box's height explicitly
+     to match the card (see syncPhotoSize), so align-self only controls
+     POSITION, not size, here — and per spec, "stretch" on a box whose
+     cross-size isn't auto (ours isn't; it's that explicit height) behaves
+     like flex-start anyway, not an actual stretch. That's invisible while
+     the photo's capped height equals the card's real height (normal-length
+     About text), but once a longer About makes the card taller than the
+     380px cap, the photo is now shorter than the row — and flex-start
+     pinned it to the top instead of centering it against the text block
+     beside it. */
+  align-self: center;
   border-radius: 50%;
 }
 /* Six arcs of alternating intensity (bright/near-dark) instead of one flat
