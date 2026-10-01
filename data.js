@@ -185,6 +185,15 @@ const CERTIFICATIONS = [
     hasPdf: true,
   },
   {
+    name: "Certified SOLIDWORKS Simulation Associate (CSWA-S)",
+    issuer: "Dassault Systèmes",
+    date: "Sep 2026",
+    logo: "assets/Logos/Dassault_Systèmes_logo.jpg",
+    preview: "assets/Certifications/previews/CSWA-S.jpg",
+    url: "assets/Certifications/CSWA-S.pdf",
+    hasPdf: true,
+  },
+  {
     name: "MATLAB Onramp",
     issuer: "MathWorks",
     date: "Jul 2026",
