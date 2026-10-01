@@ -655,7 +655,18 @@
         if (token !== openToken || doc !== pdfDoc) return;
         const page = await doc.getPage(n);
         const vp1 = page.getViewport({ scale: 1 });
-        const fit = (box.clientWidth - 44) / vp1.width; // fit page to the modal width
+        // Single-page documents (every certificate so far) fit to BOTH
+        // dimensions, not just width — fitting to width alone left a
+        // document whose page is slightly taller-than-wide relative to the
+        // box just barely overflowing the box's height, forcing a vertical
+        // scrollbar to reach a sliver of page that "100%" shouldn't have
+        // needed scrolling for in the first place. A multi-page document
+        // still fits to width only: it needs to scroll between pages
+        // regardless, so fitting its height too would just make every page
+        // a different, cropped-feeling size for no benefit.
+        const fitW = (box.clientWidth - 44) / vp1.width;
+        const fit =
+          doc.numPages === 1 ? Math.min(fitW, (box.clientHeight - 44) / vp1.height) : fitW;
         const vp = page.getViewport({ scale: fit * zoom * dpr });
         const canvas = document.createElement("canvas");
         canvas.width = vp.width;
