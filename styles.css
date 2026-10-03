@@ -629,20 +629,20 @@ h1, h2, h3,
 .hero-about-photo-wrap::before {
   content: "";
   position: absolute;
-  inset: -7px;
+  inset: -12px;
   z-index: 0;
   border-radius: 50%;
   background: conic-gradient(
     from 0deg,
-    rgba(var(--accent-rgb), 0.32) 0deg,
-    rgba(var(--accent-rgb), 0.03) 55deg,
-    rgba(var(--accent-rgb), 0.22) 130deg,
-    rgba(var(--accent-rgb), 0.03) 190deg,
-    rgba(var(--accent-rgb), 0.26) 250deg,
-    rgba(var(--accent-rgb), 0.04) 310deg,
-    rgba(var(--accent-rgb), 0.32) 360deg
+    rgba(var(--accent-rgb), 0.85) 0deg,
+    rgba(var(--accent-rgb), 0.08) 55deg,
+    rgba(var(--accent-rgb), 0.6) 130deg,
+    rgba(var(--accent-rgb), 0.08) 190deg,
+    rgba(var(--accent-rgb), 0.7) 250deg,
+    rgba(var(--accent-rgb), 0.1) 310deg,
+    rgba(var(--accent-rgb), 0.85) 360deg
   );
-  filter: blur(10px);
+  filter: blur(14px);
   animation: photo-glow-spin 9s linear infinite;
 }
 @keyframes photo-glow-spin {
@@ -664,7 +664,7 @@ h1, h2, h3,
   object-fit: cover;
   border-radius: 50%;
   border: 1px solid var(--border);
-  box-shadow: var(--shadow), 0 0 0 1px rgba(var(--accent-rgb), 0.14);
+  box-shadow: var(--shadow), 0 0 0 1px rgba(var(--accent-rgb), 0.35);
 }
 
 /* ===== Experience: timeline laid out exactly like Education ===== */
