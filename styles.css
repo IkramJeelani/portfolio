@@ -410,8 +410,8 @@ h1, h2, h3,
 .hero-right.has-photo {
   flex-direction: row;
   align-items: stretch;
-  max-width: 900px;
-  gap: 2.5rem;
+  max-width: 960px;
+  gap: 4rem;
 }
 .hero-right.has-photo .hero-card {
   /* Fixed (not flex-grow-to-fill) so the card has a stable, predictable
@@ -427,14 +427,12 @@ h1, h2, h3,
 /* The row's width isn't actually bounded: the card is a fixed 502px and the
    photo's width tracks the card's content-driven HEIGHT (see
    .hero-about-photo-wrap), so how wide the row gets depends on how tall
-   today's name/eyebrow/about text makes the card — currently ~330px,
-   which with the 502px card + 40px gap needs ~872px just for the row
-   itself, before the hero's own side padding. Measured the real
-   breakeven live (not guessed): overflowing down to ~880-890px viewport
-   width, clean at 900px+. 920px clears that with margin instead of
-   sitting right on the edge, so a future content change that makes the
-   card a little taller doesn't immediately reopen this. */
-@media (max-width: 920px) {
+   today's name/eyebrow/about text makes the card. With the 502px card,
+   the 4rem (64px) gap and the photo's 380px cap, the row needs ~946px
+   before the hero's own side padding and scrollbar (~1010px viewport).
+   1040px clears that with margin so a future content change doesn't
+   reopen this. */
+@media (max-width: 1040px) {
   .hero-right.has-photo {
     flex-direction: column;
     align-items: center;
